@@ -1,0 +1,70 @@
+{
+	"root": true,
+	"ignorePatterns": ["dist", "node_modules", "src/version.ts"],
+
+	"extends": [
+		"strictest/eslint",
+		"strictest/promise",
+		"strictest/typescript-eslint",
+		"strictest/unicorn",
+		"eslint:recommended",
+		"plugin:@typescript-eslint/recommended",
+		"plugin:@typescript-eslint/recommended-requiring-type-checking",
+		"plugin:prettier/recommended"
+	],
+	"plugins": ["prettier", "unicorn", "promise", "@typescript-eslint", "deprecation"],
+	"parser": "@typescript-eslint/parser",
+	"parserOptions": {
+		"project": "./tsconfig.prod.json",
+		"tsconfigRootDir": "./"
+	},
+	"env": {
+		"node": true
+	},
+	"rules": {
+		"deprecation/deprecation": "warn",
+		"prettier/prettier": "warn",
+		"no-constant-condition": "warn",
+		"no-console": "warn", // TODO: Decide what to do about logging. I wanna use winston or some other extensible logging system, but I'm open to suggestions
+		"no-dupe-else-if": "warn",
+		"spaced-comment": ["warn", "always", { "exceptions": ["*"] }], // doc comments exist
+		"consistent-return": "off", // TS handles this
+		"no-duplicate-imports": "off", // typescript-eslint handles this
+		"@typescript-eslint/no-duplicate-imports": "error",
+		"@typescript-eslint/no-empty-interface": "off",
+		"@typescript-eslint/require-await": "warn",
+		"@typescript-eslint/no-inferrable-types": "off",
+		"@typescript-eslint/no-invalid-void-type": ["error", { "allowAsThisParameter": true }],
+		"@typescript-eslint/explicit-member-accessibility": [
+			"error",
+			{ "accessibility": "no-public", "overrides": { "properties": "off" } }
+		],
+		"@typescript-eslint/explicit-function-return-type": [
+			"error",
+			{ "allowConciseArrowFunctionExpressionsStartingWithVoid": true }
+		],
+		"@typescript-eslint/consistent-type-definitions": ["warn", "interface"],
+		"@typescript-eslint/array-type": ["warn", { "default": "generic" }],
+		"@typescript-eslint/dot-notation": "off",
+		"unicorn/catch-error-name": ["warn", { "name": "error" }],
+		"unicorn/import-index": ["error", { "ignoreImports": true }]
+	},
+
+	"overrides": [
+		{
+			"files": ["src/**/*.test.ts", "src/**/__mocks__/**/*.ts"],
+			"extends": ["plugin:jest/recommended"],
+			"plugins": ["jest"],
+			"parserOptions": {
+				"project": "./tsconfig.test.json"
+			},
+			"env": {
+				"jest": true
+			},
+			"rules": {
+				"prettier/prettier": "warn",
+				"max-nested-callbacks": "off" // unit tests involve a lot of nested callbacks
+			}
+		}
+	]
+}
