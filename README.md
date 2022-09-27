@@ -8,7 +8,9 @@
 
 This list is updated as contributors contribute.
 
-- [**AverageHelper**](https://github.com/AverageHelper) - _Contributor_
+- [**gmacgre**](https://github.com/gmacgre)
+- [**JstnMcBrd**](https://github.com/JstnMcBrd)
+- [**AverageHelper**](https://github.com/AverageHelper)
 
 ## Table of contents
 
