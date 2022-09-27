@@ -1,4 +1,3 @@
-import 'jest-extended';
 import type { CommandContext, GuildedCommandContext } from '../../CommandContext';
 import type { Guild, GuildMember } from 'discord.js';
 import { ChannelType } from 'discord.js';

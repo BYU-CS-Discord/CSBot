@@ -1,4 +1,3 @@
-import 'jest-extended';
 import { DiscordAPIError } from 'discord.js';
 import { isDiscordError } from './isDiscordError';
 
