@@ -17,7 +17,6 @@
     },
     "homepage": "https://github.com/BYU-CS-Discord/CSBot#readme",
     "devDependencies": {
-        "@types/sqlite3": "^3.1.8",
         "@typescript-eslint/eslint-plugin": "^5.38.1",
         "@typescript-eslint/parser": "^5.38.1",
         "eslint": "^8.24.0",
