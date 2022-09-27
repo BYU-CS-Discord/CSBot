@@ -46,8 +46,9 @@
 		"@typescript-eslint/dot-notation": "off",
 		"unicorn/catch-error-name": ["warn", { "name": "error" }],
 		"unicorn/import-index": ["error", { "ignoreImports": true }],
+		"unicorn/no-process-exit": "off", // we are a command-line app that might need to exit early
 		"arrow-spacing": ["warn", { "before": true, "after": true }],
-		"brace-style": ["error", "stroustrup", { "allowSingleLine": true }],
+		"brace-style": ["error"],
 		"comma-dangle": ["error", "always-multiline"],
 		"comma-spacing": "error",
 		"comma-style": "error",
@@ -61,11 +62,11 @@
 		"no-console": "off", // TODO: Decide what to do about logging. I wanna use winston or some other extensible logging system, but I'm open to suggestions
 		"no-empty-function": "error",
 		"no-floating-decimal": "error",
-		"no-inline-comments": "error",
+		"no-inline-comments": "off", // in case we wanna add a lil clarification to a complicated line, or just throw in something silly
 		"no-lonely-if": "error",
 		"no-multi-spaces": "error",
 		"no-multiple-empty-lines": ["error", { "max": 2, "maxEOF": 1, "maxBOF": 0 }],
-		"no-shadow": ["error", { "allow": ["err", "resolve", "reject"] }],
+		"no-shadow": ["error", { "allow": ["err", "resolve", "reject", "client"] }],
 		"no-trailing-spaces": ["error"],
 		"no-var": "error",
 		"object-curly-spacing": ["error", "always"],
