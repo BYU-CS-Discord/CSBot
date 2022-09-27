@@ -20,8 +20,8 @@
 		"build": "npm run build:only",
 		"build:only": "rm -rf dist && ./node_modules/.bin/tsc -p tsconfig.prod.json",
 		"export-version": "./node_modules/.bin/genversion ./src/version.ts -esd",
-		"test": "./node_modules/.bin/jest # export DATABASE_URL=\"file:$(pwd)/tests/db-test/db.sqlite\"; ./node_modules/.bin/prisma migrate reset --force && ./node_modules/.bin/jest",
-		"test:watch": "npm run test:src -- --watch --coverage=false"
+		"test": "./node_modules/.bin/jest",
+		"test:watch": "npm run test -- --watch --coverage=false"
 	},
 	"repository": {
 		"type": "git",
