@@ -1,0 +1,29 @@
+{
+    "name": "csbot",
+    "version": "1.0.0",
+    "description": "A bot to help manage the BYUCS Discord, successor to Ze Kaiser (https://github.com/arkenstorm/ze-kaiser)",
+    "main": "bot.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/BYU-CS-Discord/CSBot.git"
+    },
+    "author": "",
+    "license": "Unlicense",
+    "bugs": {
+        "url": "https://github.com/BYU-CS-Discord/CSBot/issues"
+    },
+    "homepage": "https://github.com/BYU-CS-Discord/CSBot#readme",
+    "devDependencies": {
+        "@typescript-eslint/eslint-plugin": "^5.38.1",
+        "@typescript-eslint/parser": "^5.38.1",
+        "eslint": "^8.24.0",
+        "eslint-config-prettier": "^8.5.0",
+        "eslint-plugin-prettier": "^4.2.1",
+        "prettier": "^2.7.1",
+        "prisma": "^4.3.1",
+        "typescript": "^4.8.3"
+    }
+}
