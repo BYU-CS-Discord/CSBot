@@ -1,3 +1,20 @@
-node_modules
-dist
+# OS files
+.DS_Store
+
+# Secret files
 .env
+
+# Useless files
+*.log
+logs
+
+# Generated files
+node_modules
+db
+dist
+coverage
+src/version.ts
+tmp
+temp
+.vs
+stats.html

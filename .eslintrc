@@ -1,52 +1,108 @@
 {
-    "root": true,
-    "parser": "@typescript-eslint/parser",
-    "plugins": [
-      "@typescript-eslint"
-    ],
-    "extends": [
-      "eslint:recommended",
-      "plugin:@typescript-eslint/eslint-recommended",
-      "plugin:@typescript-eslint/recommended"
-    ],
-    "rules": {
-      "arrow-spacing": ["warn", { "before": true, "after": true }],
-      "brace-style": ["error", "stroustrup", { "allowSingleLine": true }],
-      "comma-dangle": ["error", "always-multiline"],
-      "comma-spacing": "error",
-      "comma-style": "error",
-      "curly": ["error", "multi-line", "consistent"],
-      "dot-location": ["error", "property"],
-      "handle-callback-err": "off",
-      "indent": ["error", "tab"],
-      "keyword-spacing": "error",
-      "max-nested-callbacks": ["error", { "max": 4 }],
-      "max-statements-per-line": ["error", { "max": 2 }],
-      "no-console": "off",
-      "no-empty-function": "error",
-      "no-floating-decimal": "error",
-      "no-inline-comments": "error",
-      "no-lonely-if": "error",
-      "no-multi-spaces": "error",
-      "no-multiple-empty-lines": ["error", { "max": 2, "maxEOF": 1, "maxBOF": 0 }],
-      "no-shadow": ["error", { "allow": ["err", "resolve", "reject"] }],
-      "no-trailing-spaces": ["error"],
-      "no-var": "error",
-      "object-curly-spacing": ["error", "always"],
-      "prefer-const": "error",
-      "quotes": ["error", "single"],
-      "semi": ["error", "always"],
-      "space-before-blocks": "error",
-      "space-before-function-paren": ["error", {
-        "anonymous": "never",
-        "named": "never",
-        "asyncArrow": "always"
-      }],
-      "space-in-parens": "error",
-      "space-infix-ops": "error",
-      "space-unary-ops": "error",
-      "spaced-comment": "error",
-      "yoda": "error"
-    },
-    "ignorePatterns": ["dist/"]
-  }
+	"root": true,
+	"ignorePatterns": ["dist", "node_modules", "src/version.ts"],
+
+	"extends": [
+		"strictest/eslint",
+		"strictest/promise",
+		"strictest/typescript-eslint",
+		"strictest/unicorn",
+		"eslint:recommended",
+		"plugin:@typescript-eslint/recommended",
+		"plugin:@typescript-eslint/recommended-requiring-type-checking",
+		"plugin:prettier/recommended"
+	],
+	"plugins": ["prettier", "unicorn", "promise", "@typescript-eslint", "deprecation"],
+	"parser": "@typescript-eslint/parser",
+	"parserOptions": {
+		"project": "./tsconfig.prod.json",
+		"tsconfigRootDir": "./"
+	},
+	"env": {
+		"node": true
+	},
+	"rules": {
+		"deprecation/deprecation": "warn",
+		"prettier/prettier": "warn",
+		"no-constant-condition": "warn",
+		"no-dupe-else-if": "warn",
+		"consistent-return": "off", // TS handles this
+		"no-duplicate-imports": "off", // typescript-eslint handles this
+		"@typescript-eslint/no-duplicate-imports": "error",
+		"@typescript-eslint/no-empty-interface": "off",
+		"@typescript-eslint/require-await": "warn",
+		"@typescript-eslint/no-inferrable-types": "off",
+		"@typescript-eslint/no-invalid-void-type": ["error", { "allowAsThisParameter": true }],
+		"@typescript-eslint/explicit-member-accessibility": [
+			"error",
+			{ "accessibility": "no-public", "overrides": { "properties": "off" } }
+		],
+		"@typescript-eslint/explicit-function-return-type": [
+			"error",
+			{ "allowConciseArrowFunctionExpressionsStartingWithVoid": true }
+		],
+		"@typescript-eslint/consistent-type-definitions": ["warn", "interface"],
+		"@typescript-eslint/array-type": ["warn", { "default": "generic" }],
+		"@typescript-eslint/dot-notation": "off",
+		"unicorn/catch-error-name": ["warn", { "name": "error" }],
+		"unicorn/import-index": ["error", { "ignoreImports": true }],
+		"arrow-spacing": ["warn", { "before": true, "after": true }],
+		"brace-style": ["error", "stroustrup", { "allowSingleLine": true }],
+		"comma-dangle": ["error", "always-multiline"],
+		"comma-spacing": "error",
+		"comma-style": "error",
+		"curly": ["error", "multi-line", "consistent"],
+		"dot-location": ["error", "property"],
+		"handle-callback-err": "off",
+		"indent": ["error", "tab"],
+		"keyword-spacing": "error",
+		"max-nested-callbacks": ["error", { "max": 4 }],
+		"max-statements-per-line": ["error", { "max": 2 }],
+		"no-console": "off", // TODO: Decide what to do about logging. I wanna use winston or some other extensible logging system, but I'm open to suggestions
+		"no-empty-function": "error",
+		"no-floating-decimal": "error",
+		"no-inline-comments": "error",
+		"no-lonely-if": "error",
+		"no-multi-spaces": "error",
+		"no-multiple-empty-lines": ["error", { "max": 2, "maxEOF": 1, "maxBOF": 0 }],
+		"no-shadow": ["error", { "allow": ["err", "resolve", "reject"] }],
+		"no-trailing-spaces": ["error"],
+		"no-var": "error",
+		"object-curly-spacing": ["error", "always"],
+		"prefer-const": "error",
+		"quotes": ["error", "single"],
+		"semi": ["error", "always"],
+		"space-before-blocks": "error",
+		"space-before-function-paren": [
+			"error",
+			{
+				"anonymous": "never",
+				"named": "never",
+				"asyncArrow": "always"
+			}
+		],
+		"space-in-parens": "error",
+		"space-infix-ops": "error",
+		"space-unary-ops": "error",
+		"spaced-comment": ["warn", "always", { "exceptions": ["*"] }], // doc comments exist
+		"yoda": "error"
+	},
+
+	"overrides": [
+		{
+			"files": ["src/**/*.test.ts", "src/**/__mocks__/**/*.ts"],
+			"extends": ["plugin:jest/recommended"],
+			"plugins": ["jest"],
+			"parserOptions": {
+				"project": "./tsconfig.test.json"
+			},
+			"env": {
+				"jest": true
+			},
+			"rules": {
+				"prettier/prettier": "warn",
+				"max-nested-callbacks": "off" // unit tests involve a lot of nested callbacks
+			}
+		}
+	]
+}
