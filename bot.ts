@@ -1,3 +1,3 @@
-//entry point for the bot
+// entry point for the bot
 
-console.log('Hello World!')
+console.log('Hello World!');
