@@ -6,11 +6,8 @@
 	"testPathIgnorePatterns": ["/node_modules/"],
 	"modulePathIgnorePatterns": ["<rootDir>/.*/__mocks__"],
 	"testRegex": ["src/.*\\.test\\.(t|j)s$"],
-	"globals": {
-		"ts-jest": {
-			"tsconfig": "./tsconfig.test.json",
-			"useESM": true
-		}
+	"transform": {
+		"\\.tsx?$": ["ts-jest", { "tsconfig": "./tsconfig.test.json" }]
 	},
 	"extensionsToTreatAsEsm": [".ts"],
 	"moduleNameMapper": {
