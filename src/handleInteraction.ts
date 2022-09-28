@@ -34,11 +34,12 @@ export async function handleInteraction(
 	const command = allCommands.get(interaction.commandName);
 	if (!command) return;
 
+	const SPACES_TO_INDENT = 2;
 	logger.debug(
 		`Calling command handler '${command.name}' with options ${JSON.stringify(
 			interaction.options,
-			undefined,
-			2
+			undefined, // plain results
+			SPACES_TO_INDENT
 		)}`
 	);
 
