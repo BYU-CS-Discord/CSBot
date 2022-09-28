@@ -121,7 +121,6 @@ export async function replyPrivately(
 	if (message === null) {
 		// Inform the user that we tried to DM them, but they have their DMs off
 		if ('author' in source) {
-			// TODO: Tried to DM about what? Be more specific
 			await source.channel?.send(
 				`<@!${source.author.id}> I tried to DM you just now, but it looks like your DMs are off. :slight_frown:`
 			);

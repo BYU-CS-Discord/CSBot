@@ -3,5 +3,5 @@
 	"editor.detectIndentation": false,
 	"editor.insertSpaces": false,
 	"git.branchProtection": ["main"],
-	"todo-tree.filtering.excludeGlobs": ["**/dist/**"]
+	"todo-tree.filtering.excludeGlobs": ["**/dist/**", "node_modules/**"]
 }

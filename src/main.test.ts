@@ -12,60 +12,85 @@ const mockInteraction = {
 const mockToken = 'TEST_TOKEN';
 process.env['DISCORD_TOKEN'] = mockToken;
 
-let didRegisterErrorListener = false;
+class MockClient {
+	login = mockLogin;
 
-const mockClient = {
-	login: mockLogin,
-	user: {
+	user = {
 		setActivity: mockSetActivity,
-	},
-	on(eventName: string | symbol, listener: (...args: Array<unknown>) => void): unknown {
+	};
+
+	constructor(...args: Array<unknown>) {
+		mockConstructClient(...args);
+	}
+
+	on(eventName: string | symbol, listener: (...args: Array<unknown>) => void): this {
 		switch (eventName) {
 			case 'ready':
-				listener(mockClient);
-				return mockClient;
+				listener(this);
+				return this;
 			case 'error':
 				listener(mockClientError);
-				didRegisterErrorListener = true;
-				return mockClient;
+				return this;
 			case 'interactionCreate':
 				listener(mockInteraction);
-				return mockClient;
+				return this;
 			default:
-				return mockClient;
+				return this;
 		}
-	},
-};
+	}
+
+	destroy(): void {
+		// nop
+	}
+}
 
 const { ActivityType, GatewayIntentBits, Partials } =
 	jest.requireActual<typeof import('discord.js')>('discord.js');
 
 jest.mock('discord.js', () => ({
 	ActivityType,
-	Client: mockConstructClient.mockImplementation(() => mockClient),
+	Client: MockClient,
 	GatewayIntentBits,
 	Partials,
 }));
+
+jest.mock('./helpers/actions/deployCommands');
+import { deployCommands } from './helpers/actions/deployCommands';
+const mockDeployCommands = deployCommands as jest.Mock;
 
 jest.mock('./handleInteraction');
 import { handleInteraction } from './handleInteraction';
 const mockHandleInteraction = handleInteraction as jest.Mock;
 
-async function run(): Promise<void> {
-	await import('./main');
-}
+import type { Args } from './helpers/parseArgs';
+const mockParseArgs = jest.fn<Args, []>();
+jest.mock('./helpers/parseArgs', () => ({ parseArgs: mockParseArgs }));
+
+jest.mock('./helpers/actions/revokeCommands');
+import { revokeCommands } from './helpers/actions/revokeCommands';
+const mockRevokeCommands = revokeCommands as jest.Mock;
+
+import { _main } from './main';
 
 describe('main', () => {
+	let mockConsoleError: jest.SpyInstance;
+
 	beforeEach(() => {
-		jest.spyOn(global.console, 'info').mockImplementation(() => undefined);
 		jest.spyOn(global.console, 'debug').mockImplementation(() => undefined);
-		jest.spyOn(global.console, 'error').mockImplementation(() => undefined);
+		jest.spyOn(global.console, 'info').mockImplementation(() => undefined);
+		mockConsoleError = jest.spyOn(global.console, 'error').mockImplementation(() => undefined);
 
 		mockConstructClient.mockReturnValue(undefined);
 		mockLogin.mockResolvedValue('TEST');
 		mockSetActivity.mockReturnValue({});
 		mockInteractionIsCommand.mockReturnValue(true);
 		mockHandleInteraction.mockResolvedValue(undefined);
+		mockDeployCommands.mockResolvedValue(undefined);
+		mockRevokeCommands.mockResolvedValue(undefined);
+		mockParseArgs.mockReturnValue({
+			deploy: false,
+			revoke: false,
+		});
 	});
 
 	afterEach(() => {
@@ -73,7 +98,7 @@ describe('main', () => {
 	});
 
 	test('disables @everyone pings', async () => {
-		await expect(run()).resolves.toBeUndefined();
+		await expect(_main()).resolves.toBeUndefined();
 		expect(mockConstructClient).toHaveBeenCalledOnce();
 		expect(mockConstructClient).toHaveBeenCalledWith(
 			expect.objectContaining({
@@ -85,43 +110,83 @@ describe('main', () => {
 		);
 	});
 
+	test("doesn't touch commands if the `deploy` and `revoke` flags are not set", async () => {
+		mockParseArgs.mockReturnValue({
+			deploy: false,
+			revoke: false,
+		});
+		await expect(_main()).resolves.toBeUndefined();
+		expect(mockDeployCommands).not.toHaveBeenCalled();
+		expect(mockRevokeCommands).not.toHaveBeenCalled();
+	});
+
+	test('deploys commands if the `deploy` flag is set', async () => {
+		mockParseArgs.mockReturnValue({
+			deploy: true,
+			revoke: false,
+		});
+		await expect(_main()).resolves.toBeUndefined();
+		expect(mockDeployCommands).toHaveBeenCalledOnce();
+		expect(mockRevokeCommands).not.toHaveBeenCalled();
+	});
+
+	test('revokes commands if the `revoke` flag is set', async () => {
+		mockParseArgs.mockReturnValue({
+			deploy: false,
+			revoke: true,
+		});
+		await expect(_main()).resolves.toBeUndefined();
+		expect(mockDeployCommands).not.toHaveBeenCalled();
+		expect(mockRevokeCommands).toHaveBeenCalledOnce();
+	});
+
+	test('deploys commands if both the `revoke` and `deploy` flags are set', async () => {
+		mockParseArgs.mockReturnValue({
+			deploy: true,
+			revoke: true,
+		});
+		await expect(_main()).resolves.toBeUndefined();
+		expect(mockDeployCommands).toHaveBeenCalledOnce();
+		expect(mockRevokeCommands).not.toHaveBeenCalled();
+	});
+
 	test("doesn't call interaction handler if the interaction isn't a command", async () => {
 		mockInteractionIsCommand.mockReturnValue(false);
-		await expect(run()).resolves.toBeUndefined();
+		await expect(_main()).resolves.toBeUndefined();
 		expect(mockHandleInteraction).not.toHaveBeenCalled();
 	});
 
 	test('calls login', async () => {
-		await expect(run()).resolves.toBeUndefined();
-		// FIXME: For some reason, this mock check doesn't work:
-		// expect(mockLogin).toHaveBeenCalledOnce();
-		// expect(mockLogin).toHaveBeenCalledWith(mockToken);
+		await expect(_main()).resolves.toBeUndefined();
+		expect(mockLogin).toHaveBeenCalledOnce();
+		expect(mockLogin).toHaveBeenCalledWith(mockToken);
 	});
 
 	test('reports login errors', async () => {
 		const loginError = new Error('Failed to log in. This is a test.');
 		mockLogin.mockRejectedValueOnce(loginError);
-		await expect(run()).resolves.toBeUndefined();
-		// TODO: Assert the logger was called:
-		// expect(mockConsoleError).toHaveBeenCalledWith(
-		// 	expect.stringContaining('log in'), //
-		// 	loginError
-		// );
+		await expect(_main()).resolves.toBeUndefined();
+		expect(mockConsoleError).toHaveBeenCalledWith(
+			expect.stringContaining('log in'), //
+			loginError
+		);
 	});
 
 	test('reports interaction errors', async () => {
 		const interactionError = new Error('Failed to handle ineracion. This is a test.');
 		mockHandleInteraction.mockRejectedValueOnce(interactionError);
-		await expect(run()).resolves.toBeUndefined();
-		// TODO: Assert the logger was called:
-		// expect(mockConsoleError).toHaveBeenCalledWith(
-		// 	expect.stringContaining('handle interaction'),
-		// 	interactionError
-		// );
+		await expect(_main()).resolves.toBeUndefined();
+		expect(mockConsoleError).toHaveBeenCalledWith(
+			expect.stringContaining('handle interaction'),
+			interactionError
+		);
 	});
 
 	test('reports client errors', async () => {
-		await expect(run()).resolves.toBeUndefined();
-		expect(didRegisterErrorListener).toBeTrue();
+		await expect(_main()).resolves.toBeUndefined();
+		expect(mockConsoleError).toHaveBeenCalledWith(
+			expect.stringContaining('client error'),
+			mockClientError
+		);
 	});
 });
