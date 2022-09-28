@@ -1,4 +1,3 @@
-import type { CommandContext } from './Command';
 import type { CommandInteraction, DMChannel, GuildMember, GuildTextBasedChannel } from 'discord.js';
 import { allCommands } from './commands';
 import { ChannelType } from 'discord.js';

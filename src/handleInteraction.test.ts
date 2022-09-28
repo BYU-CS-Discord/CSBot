@@ -1,5 +1,4 @@
 import type { CommandInteraction } from 'discord.js';
-import type { Command } from './Command';
 import { ChannelType } from 'discord.js';
 
 const mockExecute = jest.fn();

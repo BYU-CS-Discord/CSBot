@@ -1,4 +1,3 @@
-import type { CommandContext } from '../CommandContext';
 import { help } from './help';
 
 describe('help', () => {

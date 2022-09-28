@@ -1,4 +1,3 @@
-import type { Command } from '../Command';
 import { _add, allCommands } from './index';
 
 describe('allCommands', () => {

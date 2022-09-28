@@ -1,4 +1,3 @@
-import type { CommandContext, GuildedCommandContext } from '../../CommandContext';
 import { ChannelType } from 'discord.js';
 
 export function isGuildedCommandContext(tbd: CommandContext): tbd is GuildedCommandContext {

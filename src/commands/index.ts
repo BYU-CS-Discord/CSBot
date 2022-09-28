@@ -1,5 +1,3 @@
-import type { Command } from '../Command';
-
 export const allCommands = new Map<string, Command>();
 
 /**  Install commands here:  **/
