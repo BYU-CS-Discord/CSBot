@@ -9,7 +9,16 @@ import { replyPrivately, sendMessageInChannel } from './helpers/actions/messages
  * Performs actions from a Discord command interaction.
  * The command is ignored if the interaction is from a bot.
  *
- * @param interaction The Discord interaction to handle.
+ * Constructs a context object to send to command executors.
+ * This context handles many edge cases and gotchas with interactions,
+ * including follow-up responses, long-running commands,
+ * typing indicators, ephemeral replies, partial fields,
+ * and error handling.
+ *
+ * The goal is for us devs to not have to worry about how exactly
+ * things get done when we're writing command handlers, only
+ * that what we say goes.
+ *
  * @param logger The place to write system messages.
  */
 export async function handleInteraction(
@@ -57,15 +66,16 @@ export async function handleInteraction(
 		interaction,
 		options: interaction.options.data,
 		logger,
-		prepareForLongRunningTasks: async (ephemeral?: boolean) => {
+		async prepareForLongRunningTasks(ephemeral) {
 			try {
 				await interaction.deferReply({ ephemeral });
 			} catch (error) {
 				logger.error('Failed to defer reply to interaction:', error);
 			}
 		},
-		replyPrivately: async (options, viaDM: boolean = false) => {
+		async replyPrivately(options, viaDM: boolean = false) {
 			if (viaDM) {
+				// We need to say *something* to the interaction itself, or Discord will think we died.
 				const content = ':paperclip: Check your DMs';
 				if (interaction.deferred) {
 					try {
@@ -98,7 +108,7 @@ export async function handleInteraction(
 				}
 			}
 		},
-		reply: async options => {
+		async reply(options) {
 			if (interaction.deferred) {
 				try {
 					await interaction.editReply(options);
@@ -136,12 +146,11 @@ export async function handleInteraction(
 				);
 			}
 		},
-		followUp: async options => {
+		async followUp(options) {
 			if (
 				typeof options !== 'string' &&
 				(!('reply' in options) || options.reply === false || options.reply === undefined) &&
-				interaction.channel &&
-				interaction.channel.isTextBased()
+				interaction.channel?.isTextBased() === true
 			) {
 				return (
 					(await sendMessageInChannel(interaction.channel, { ...options, reply: undefined })) ??
@@ -155,7 +164,7 @@ export async function handleInteraction(
 				return false;
 			}
 		},
-		sendTyping: () => {
+		sendTyping() {
 			void interaction.channel?.sendTyping();
 			logger.debug(
 				`Typing in channel ${interaction.channel?.id ?? 'nowhere'} due to Context.sendTyping`
