@@ -74,8 +74,8 @@ export async function handleInteraction(
 				logger.error('Failed to defer reply to interaction:', error);
 			}
 		},
-		async replyPrivately(options, viaDM: boolean = false) {
-			if (viaDM) {
+		async replyPrivately(options, viaDm: boolean = false) {
+			if (viaDm) {
 				// We need to say *something* to the interaction itself, or Discord will think we died.
 				const content = ':paperclip: Check your DMs';
 				if (interaction.deferred) {
@@ -92,7 +92,7 @@ export async function handleInteraction(
 					}
 				}
 			}
-			if (interaction.deferred && !viaDM) {
+			if (interaction.deferred && !viaDm) {
 				try {
 					if (typeof options === 'string') {
 						await interaction.followUp({ ephemeral: true, content: options });
@@ -103,7 +103,7 @@ export async function handleInteraction(
 					logger.error('Failed to follow up on interaction:', error);
 				}
 			} else {
-				const reply = await replyPrivately(interaction, options, viaDM);
+				const reply = await replyPrivately(interaction, options, viaDm);
 				if (reply === false) {
 					logger.info(`User ${logUser(interaction.user)} has DMs turned off.`);
 				}
