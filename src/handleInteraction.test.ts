@@ -89,7 +89,6 @@ describe('Command event handler', () => {
 		test('edits interaction reply if deferred', async () => {
 			interaction = { ...interaction, deferred: true } as unknown as CommandInteraction;
 			await expect(handleInteraction(interaction, mockConsole)).resolves.toBeUndefined();
-			expect(mockInteractionEditReply).toHaveBeenCalled();
 			expect(mockInteractionEditReply).toHaveBeenCalledWith('yo');
 		});
 
@@ -98,27 +97,22 @@ describe('Command event handler', () => {
 
 			interaction = { ...interaction, deferred: true } as unknown as CommandInteraction;
 			await expect(handleInteraction(interaction, mockConsole)).resolves.toBeUndefined();
-			expect(mockInteractionEditReply).toHaveBeenCalled();
 			expect(mockInteractionEditReply).toHaveBeenCalledWith('yo');
-			expect(mockInteractionFollowUp).toHaveBeenCalled();
 			expect(mockInteractionFollowUp).toHaveBeenCalledWith('yo');
 		});
 
 		test('sends public reply to interaction with text', async () => {
 			await expect(handleInteraction(interaction, mockConsole)).resolves.toBeUndefined();
-			expect(mockInteractionReply).toHaveBeenCalled();
 			expect(mockInteractionReply).toHaveBeenCalledWith('yo');
 		});
 
 		test('sends a followup message to the interaction', async () => {
 			await expect(handleInteraction(interaction, mockConsole)).resolves.toBeUndefined();
-			expect(mockInteractionFollowUp).toHaveBeenCalled();
 			expect(mockInteractionFollowUp).toHaveBeenCalledWith('yo again');
 		});
 
 		test('sends an ephemeral reply to the interaction', async () => {
 			await expect(handleInteraction(interaction, mockConsole)).resolves.toBeUndefined();
-			expect(mockInteractionReply).toHaveBeenCalled();
 			expect(mockInteractionReply).toHaveBeenCalledWith({
 				content: 'yo in secret',
 				ephemeral: true,
@@ -128,7 +122,6 @@ describe('Command event handler', () => {
 		test('sends an ephemeral follow-up message to the interaction if the interaction is deferred', async () => {
 			interaction = { ...interaction, deferred: true } as unknown as CommandInteraction;
 			await expect(handleInteraction(interaction, mockConsole)).resolves.toBeUndefined();
-			expect(mockInteractionFollowUp).toHaveBeenCalled();
 			expect(mockInteractionFollowUp).toHaveBeenCalledWith({
 				content: 'yo in secret',
 				ephemeral: true,
@@ -138,7 +131,6 @@ describe('Command event handler', () => {
 		test('sends an ephemeral follow-up message from options to the interaction if the interaction is deferred', async () => {
 			interaction = { ...interaction, deferred: true } as unknown as CommandInteraction;
 			await expect(handleInteraction(interaction, mockConsole)).resolves.toBeUndefined();
-			expect(mockInteractionFollowUp).toHaveBeenCalled();
 			expect(mockInteractionFollowUp).toHaveBeenCalledWith({
 				content: 'yo object in secret',
 				ephemeral: true,
@@ -147,23 +139,19 @@ describe('Command event handler', () => {
 
 		test('sends an ephemeral reply to check DMs', async () => {
 			await expect(handleInteraction(interaction, mockConsole)).resolves.toBeUndefined();
-			expect(mockInteractionReply).toHaveBeenCalled();
 			expect(mockInteractionReply).toHaveBeenCalledWith({
 				content: expect.stringContaining('Check your DMs') as string,
 				ephemeral: true,
 			});
-			expect(mockUserSend).toHaveBeenCalled();
 			expect(mockUserSend).toHaveBeenCalledWith('yo DMs');
 		});
 
 		test('edits the reply message to check DMs if the interaction was deferred', async () => {
 			interaction = { ...interaction, deferred: true } as unknown as CommandInteraction;
 			await expect(handleInteraction(interaction, mockConsole)).resolves.toBeUndefined();
-			expect(mockInteractionEditReply).toHaveBeenCalled();
 			expect(mockInteractionEditReply).toHaveBeenCalledWith(
 				expect.stringContaining('Check your DMs') as string
 			);
-			expect(mockUserSend).toHaveBeenCalled();
 			expect(mockUserSend).toHaveBeenCalledWith({ content: 'yo DMs object' });
 		});
 	});
