@@ -3,6 +3,7 @@ export const help: GlobalCommand = {
 	description: 'Prints the list of commands',
 	requiresGuild: false,
 	async execute({ reply }) {
+		// TODO: finish this command
 		await reply('Hello, world!');
 	},
 };
