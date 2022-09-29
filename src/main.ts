@@ -85,13 +85,9 @@ export async function _main(): Promise<void> {
 	}
 }
 
-// Istanbul was Constantinople
-// Now it's Istanbul, not Constantinople
-// Been a long time gone, Constantinople:
 /* istanbul ignore next */
+// Not Constantinople
 if (process.env['NODE_ENV'] !== 'test') {
 	// Jest will never hit this without hax:
 	void _main();
 }
-// Why did Constantinople get the works?
-// That's nobody's business but the Turks
