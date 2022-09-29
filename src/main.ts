@@ -33,7 +33,7 @@ export async function _main(): Promise<void> {
 	console.debug(`Node ${process.version}`);
 
 	client.on('ready', async client => {
-		// If we're only here to revoke commands, do that and then exit
+		// If we're only here to deploy commands, do that and then exit
 		if (args.deploy) {
 			await deployCommands(client, console);
 			client.destroy();
