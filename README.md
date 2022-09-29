@@ -72,7 +72,7 @@ DISCORD_TOKEN=YOUR_TOKEN_GOES_HERE
 
 ### Invite your bot to your server
 
-Go to https://discordapi.com/permissions.html#377957215296 and paste in your bot's client ID to get an invite link.
+Go to https://discordapi.com/permissions.html#378091424832 and paste in your bot's client ID to get an invite link.
 
 ### Build the bot server
 

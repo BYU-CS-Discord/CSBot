@@ -33,4 +33,7 @@ jobs:
         run: npm test
         env:
           CI: true
-          NODE_ENV: "test"
+          NODE_ENV: 'test'
+
+      - name: Report test coverage
+        uses: ArtiomTr/jest-coverage-report-action@v2.1.1
