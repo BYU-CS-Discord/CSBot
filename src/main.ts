@@ -29,10 +29,10 @@ export async function _main(): Promise<void> {
 	const args = parseArgs();
 
 	console.info('*Yawn* Good morning!');
-	console.info(`Starting CS Bot v${version}...`);
-	console.debug(`Node ${process.version}`);
 
 	client.on('ready', async client => {
+		console.info(`Starting ${client.user.username} v${version}...`);
+
 		// If we're only here to deploy commands, do that and then exit
 		if (args.deploy) {
 			await deployCommands(client, console);
