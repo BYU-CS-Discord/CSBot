@@ -13,8 +13,10 @@ import type {
 } from 'discord.js';
 
 declare global {
-	/** Information relevant to a command invocation. */
-	interface CommandContext {
+	interface BaseCommandContext {
+		/** Where the guild was executed. */
+		readonly source: 'guild' | 'dm';
+
 		/** The command invocation interaction. */
 		readonly interaction: CommandInteraction;
 
@@ -92,12 +94,36 @@ declare global {
 		) => Promise<Message | boolean>;
 	}
 
-	/**
-	 * Information relevant to a command invocation.
-	 */
-	type GuildedCommandContext = CommandContext & {
+	/** Information relevant to a command invocation in a DM. */
+	interface DMCommandContext extends BaseCommandContext {
+		/** Where the guild was executed. */
+		readonly source: 'dm';
+
+		/** The guild in which the command was invoked. */
+		readonly guild: null;
+
+		/** The guild member who invoked the command. */
+		readonly member: null;
+
+		/** The channel in which the command was invoked. */
+		readonly channel: DMChannel | null;
+	}
+
+	/**  Information relevant to a command invocation in a guild.*/
+	interface GuildedCommandContext extends BaseCommandContext {
+		/** Where the guild was executed. */
+		readonly source: 'guild';
+
+		/** The guild in which the command was invoked. */
 		readonly guild: Guild;
+
+		/** The guild member who invoked the command. */
 		readonly member: GuildMember;
+
+		/** The channel in which the command was invoked. */
 		readonly channel: GuildTextBasedChannel | null;
-	};
+	}
+
+	/** Information relevant to a command invocation. */
+	type CommandContext = DMCommandContext | GuildedCommandContext;
 }
