@@ -4,12 +4,11 @@ export const help: GlobalCommand = {
 	name: 'help',
 	description: 'Prints the list of commands',
 	requiresGuild: false,
-	async execute({ guild, reply }) {
+	async execute({ source, reply }) {
 		// Dynamic import here b/c ./index depends on this file
 		const { allCommands } = await import('./index');
 
-		const embed = new EmbedBuilder() //
-			.setTitle('All commands');
+		const embed = new EmbedBuilder({ title: 'All commands' });
 
 		function embedCommand(command: Command): void {
 			embed.addFields({
@@ -19,7 +18,7 @@ export const help: GlobalCommand = {
 		}
 
 		for (const command of allCommands.values()) {
-			if (guild) {
+			if (source === 'guild') {
 				// We're in a guild. We should check the user's permissions,
 				// and skip this command if they aren't allowed to use it.
 				// TODO: Grab the guild's configured permissions for this channel
