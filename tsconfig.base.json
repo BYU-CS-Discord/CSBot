@@ -19,7 +19,7 @@
 		"noUncheckedIndexedAccess": true,
 		"typeRoots": ["./node_modules/@types", "./src"],
 		"types": ["node"],
-		"skipLibCheck": false,
+		"skipLibCheck": true,
 		"forceConsistentCasingInFileNames": true
 	}
 }
