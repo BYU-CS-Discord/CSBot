@@ -49,6 +49,7 @@ export async function _main(): Promise<void> {
 		}
 
 		// Sanity check for commands
+		console.info('Verifying command deployments...');
 		await verifyCommandDeployments(client, console);
 
 		// Register interaction listeners
