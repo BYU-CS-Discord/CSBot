@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`help presents an ephemeral embed with all available global and guild-bound commands 1`] = `
+Object {
+  "fields": Array [
+    Object {
+      "name": "\`/help\`",
+      "value": "Prints the list of commands",
+    },
+  ],
+  "title": "All commands",
+}
+`;
+
+exports[`help presents an ephemeral embed with all available global commands 1`] = `
+Object {
+  "fields": Array [
+    Object {
+      "name": "\`/help\`",
+      "value": "Prints the list of commands",
+    },
+  ],
+  "title": "All commands",
+}
+`;
