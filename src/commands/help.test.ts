@@ -17,13 +17,13 @@ describe('help', () => {
 		realAllCommands.forEach((value, key) => mockAllCommands.set(key, value));
 
 		context = {
-			guild: null,
+			source: 'dm',
 			reply: mockReply,
 		} as unknown as CommandContext;
 	});
 
 	test('presents an ephemeral embed with all available global commands', async () => {
-		context = { ...context, guild: null };
+		context = { ...context, source: 'dm' } as unknown as CommandContext;
 
 		await expect(help.execute(context)).resolves.toBeUndefined();
 		expect(mockReply).toHaveBeenCalledOnce();
@@ -38,10 +38,7 @@ describe('help', () => {
 	});
 
 	test('presents an ephemeral embed with all available global and guild-bound commands', async () => {
-		context = {
-			...context,
-			guild: { id: 'the-guild-1234' },
-		} as unknown as CommandContext;
+		context = { ...context, source: 'guild' } as unknown as CommandContext;
 
 		await expect(help.execute(context)).resolves.toBeUndefined();
 		expect(mockReply).toHaveBeenCalledOnce();
