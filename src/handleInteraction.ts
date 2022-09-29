@@ -35,7 +35,10 @@ export async function handleInteraction(
 	logger.debug(`User ${logUser(interaction.user)} sent command: '${interaction.commandName}'`);
 
 	const command = allCommands.get(interaction.commandName);
-	if (!command) return; // TODO: Complain, yell, send a message, do something when we get an interaction name we don't recognize. This should only happen when Discord bugs out their back-end, or we forget to deploy an updated command list.
+	if (!command) {
+		logger.warn(`Received request to execute unknown command named '${interaction.commandName}'`);
+		return;
+	}
 
 	const SPACES_TO_INDENT = 2;
 	logger.debug(
