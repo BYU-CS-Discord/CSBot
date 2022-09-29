@@ -1,6 +1,6 @@
 import type { CommandInteraction } from 'discord.js';
-import { replyPrivately as _replyPrivately } from '../helpers/actions/messages/replyToMessage';
 import { logUser } from '../helpers/logUser';
+import { replyWithPrivateMessage } from '../helpers/actions/messages/replyToMessage';
 
 export function replyPrivatelyFactory(
 	interaction: CommandInteraction,
@@ -35,8 +35,10 @@ export function replyPrivatelyFactory(
 				logger.error('Failed to follow up on interaction:', error);
 			}
 		} else {
-			const reply = await _replyPrivately(interaction, options, viaDm);
+			const reply = await replyWithPrivateMessage(interaction, options, viaDm);
 			if (reply === false) {
+				// We failed to send the DM, probably because the user has those disabled.
+				// `replyWithPrivateMessage` already handled telling the user this.
 				logger.info(`User ${logUser(interaction.user)} has DMs turned off.`);
 			}
 		}

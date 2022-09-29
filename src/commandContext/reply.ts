@@ -1,4 +1,4 @@
-import type { CommandInteraction } from 'discord.js';
+import type { CommandInteraction, InteractionReplyOptions } from 'discord.js';
 import { logUser } from '../helpers/logUser';
 
 export function replyFactory(
@@ -22,13 +22,21 @@ export function replyFactory(
 					options.shouldMention === undefined ||
 					options.shouldMention
 				) {
-					// Doesn't say whether to mention, default to `true`
-					await interaction.reply(options);
-				} else {
-					// Really shouldn't mention
-					await interaction.reply({
+					// Doesn't say whether to mention, use discord.js' default:
+					const intermediateOptions: InteractionReplyOptions & { shouldMention?: boolean } = {
 						...options,
-						allowedMentions: { users: [] },
+					};
+					delete intermediateOptions.shouldMention;
+					await interaction.reply(intermediateOptions);
+				} else {
+					// Really shouldn't mention anyone
+					const intermediateOptions: InteractionReplyOptions & { shouldMention?: boolean } = {
+						...options,
+					};
+					delete intermediateOptions.shouldMention;
+					await interaction.reply({
+						...intermediateOptions,
+						allowedMentions: { users: [], repliedUser: false },
 					});
 				}
 			} catch (error) {

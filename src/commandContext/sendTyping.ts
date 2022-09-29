@@ -6,8 +6,6 @@ export function sendTypingFactory(
 ): CommandContext['sendTyping'] {
 	return function sendTyping() {
 		void interaction.channel?.sendTyping();
-		logger.debug(
-			`Typing in channel ${interaction.channel?.id ?? 'nowhere'} due to Context.sendTyping`
-		);
+		logger.debug(`Typing in channel ${interaction.channel?.id ?? 'undefined'}`);
 	};
 }
