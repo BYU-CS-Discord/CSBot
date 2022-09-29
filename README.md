@@ -64,8 +64,6 @@ Create a file called `.env` in the root of this project folder. Paste your token
 
 DISCORD_TOKEN=YOUR_TOKEN_GOES_HERE
 # required, token for your Discord bot
-
-# TODO: Document other configurations as needed
 ```
 
 **Do not commit this file to git** or your bot _will_ get "hacked".
