@@ -4,9 +4,7 @@ import { help } from './help';
 const { allCommands: realAllCommands } = jest.requireActual<typeof import('./index')>('./index');
 const mockAllCommands = new Map<string, Command>();
 
-jest.mock('./index', () => ({
-	allCommands: mockAllCommands,
-}));
+jest.mock('./index', () => ({ allCommands: mockAllCommands }));
 
 describe('help', () => {
 	const mockReply = jest.fn();
@@ -58,9 +56,7 @@ describe('help', () => {
 			description: "Can't touch this. (This is a test.)",
 			requiresGuild: true,
 			dmPermission: false,
-			execute() {
-				// nop
-			},
+			execute: () => undefined,
 		};
 		mockAllCommands.set(cmd.name, cmd);
 

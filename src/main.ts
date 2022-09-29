@@ -5,6 +5,7 @@ import { deployCommands } from './helpers/actions/deployCommands';
 import { handleInteraction } from './handleInteraction';
 import { parseArgs } from './helpers/parseArgs';
 import { revokeCommands } from './helpers/actions/revokeCommands';
+import { verifyCommandDeployments } from './helpers/actions/verifyCommandDeployments';
 import { version } from './version';
 
 // We *could* do all of this at the top level, but then
@@ -47,6 +48,9 @@ export async function _main(): Promise<void> {
 			return;
 		}
 
+		// Sanity check for commands
+		await verifyCommandDeployments(client, console);
+
 		// Register interaction listeners
 		client.on('interactionCreate', async interaction => {
 			if (interaction.isCommand()) {
@@ -68,8 +72,6 @@ export async function _main(): Promise<void> {
 			name: 'Source: github.com/BYU-CS-Discord/CSBot',
 			url: 'https://github.com/BYU-CS-Discord/CSBot',
 		});
-
-		// TODO: Verify that the deployed command list is up-to-date, and yell if it's not
 
 		console.info('Ready!');
 	});
