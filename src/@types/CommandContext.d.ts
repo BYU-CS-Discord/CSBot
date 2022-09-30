@@ -58,14 +58,14 @@ declare global {
 		 * edit the public reply. The message sent here will then be public.
 		 *
 		 * @param options The message payload to send.
-		 * @param viaDm Whether we should reply in DMs.
+		 * @param viaDM Whether we should reply in DMs.
 		 */
 		replyPrivately: (
 			options:
 				| string //
 				| Omit<MessageReplyOptions, 'flags'>
 				| Omit<InteractionReplyOptions, 'flags'>,
-			viaDm?: true
+			viaDM?: true
 		) => Promise<void>;
 
 		/** Replies to the command invocation, optionally pinging the command's sender. */

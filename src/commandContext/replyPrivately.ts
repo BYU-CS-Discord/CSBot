@@ -6,8 +6,8 @@ export function replyPrivatelyFactory(
 	interaction: CommandInteraction,
 	logger: Console
 ): CommandContext['replyPrivately'] {
-	return async function replyPrivately(options, viaDm: boolean = false) {
-		if (viaDm) {
+	return async function replyPrivately(options, viaDM: boolean = false) {
+		if (viaDM) {
 			// We need to say *something* to the interaction itself, or Discord will think we died.
 			const content = ':paperclip: Check your DMs';
 			if (interaction.deferred) {
@@ -24,7 +24,7 @@ export function replyPrivatelyFactory(
 				}
 			}
 		}
-		if (interaction.deferred && !viaDm) {
+		if (interaction.deferred && !viaDM) {
 			try {
 				if (typeof options === 'string') {
 					await interaction.followUp({ ephemeral: true, content: options });
@@ -35,7 +35,7 @@ export function replyPrivatelyFactory(
 				logger.error('Failed to follow up on interaction:', error);
 			}
 		} else {
-			const reply = await replyWithPrivateMessage(interaction, options, viaDm);
+			const reply = await replyWithPrivateMessage(interaction, options, viaDM);
 			if (reply === false) {
 				// We failed to send the DM, probably because the user has those disabled.
 				// `replyWithPrivateMessage` already handled telling the user this.

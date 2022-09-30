@@ -2,12 +2,12 @@ import type { CommandInteraction } from 'discord.js';
 
 jest.mock('../helpers/actions/messages/replyToMessage');
 import { replyWithPrivateMessage } from '../helpers/actions/messages/replyToMessage';
-const mockSendDm = replyWithPrivateMessage as jest.Mock;
+const mockSendDM = replyWithPrivateMessage as jest.Mock;
 
 import { replyPrivatelyFactory as factory } from './replyPrivately';
 
 describe('ephemeral and DM replies', () => {
-	mockSendDm.mockResolvedValue(true);
+	mockSendDM.mockResolvedValue(true);
 	const mockInteractionReply = jest.fn();
 	const mockInteractionEditReply = jest.fn();
 	const mockInteractionFollowUp = jest.fn();
@@ -40,7 +40,7 @@ describe('ephemeral and DM replies', () => {
 			content: expect.stringContaining('Check your DMs') as string,
 			ephemeral: true,
 		});
-		expect(mockSendDm).toHaveBeenCalledWith(interaction, 'yo DMs', true);
+		expect(mockSendDM).toHaveBeenCalledWith(interaction, 'yo DMs', true);
 	});
 
 	test('logs an error if the initial ephemeral reply fails', async () => {
@@ -53,17 +53,17 @@ describe('ephemeral and DM replies', () => {
 		});
 		expect(mockConsoleError).toHaveBeenCalledOnce();
 		expect(mockConsoleError).toHaveBeenCalledWith(expect.stringContaining('to reply'), testError);
-		expect(mockSendDm).toHaveBeenCalledWith(interaction, 'yo DMs', true);
+		expect(mockSendDM).toHaveBeenCalledWith(interaction, 'yo DMs', true);
 	});
 
 	test('logs a notice if the user has DMs turned off', async () => {
-		mockSendDm.mockResolvedValueOnce(false);
+		mockSendDM.mockResolvedValueOnce(false);
 		await expect(replyPrivately('yo DMs', true)).resolves.toBeUndefined();
 		expect(mockInteractionReply).toHaveBeenCalledWith({
 			content: expect.stringContaining('Check your DMs') as string,
 			ephemeral: true,
 		});
-		expect(mockSendDm).toHaveBeenCalledWith(interaction, 'yo DMs', true);
+		expect(mockSendDM).toHaveBeenCalledWith(interaction, 'yo DMs', true);
 		expect(mockConsoleInfo).toHaveBeenCalledWith(expect.stringContaining('DMs turned off'));
 		// TODO: Check also the other flows
 	});
@@ -76,7 +76,7 @@ describe('ephemeral and DM replies', () => {
 		expect(mockInteractionEditReply).toHaveBeenCalledWith(
 			expect.stringContaining('Check your DMs')
 		);
-		expect(mockSendDm).toHaveBeenCalledWith(interaction, 'yo DMs', true);
+		expect(mockSendDM).toHaveBeenCalledWith(interaction, 'yo DMs', true);
 	});
 
 	test('edits the previous reply message if deferred, sending a DM with object', async () => {
@@ -87,7 +87,7 @@ describe('ephemeral and DM replies', () => {
 		expect(mockInteractionEditReply).toHaveBeenCalledWith(
 			expect.stringContaining('Check your DMs')
 		);
-		expect(mockSendDm).toHaveBeenCalledWith(interaction, { content: 'yo DMs' }, true);
+		expect(mockSendDM).toHaveBeenCalledWith(interaction, { content: 'yo DMs' }, true);
 	});
 
 	test('logs an error if the initial reply edit failed', async () => {
@@ -102,7 +102,7 @@ describe('ephemeral and DM replies', () => {
 		);
 		expect(mockConsoleError).toHaveBeenCalledOnce();
 		expect(mockConsoleError).toHaveBeenCalledWith(expect.stringContaining('edit reply'), testError);
-		expect(mockSendDm).toHaveBeenCalledWith(interaction, { content: 'yo' }, true);
+		expect(mockSendDM).toHaveBeenCalledWith(interaction, { content: 'yo' }, true);
 	});
 
 	test('sends an ephemeral follow-up message to the interaction if the interaction is deferred', async () => {
