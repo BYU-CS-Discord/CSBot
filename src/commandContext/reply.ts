@@ -6,6 +6,8 @@ export function replyFactory(
 	logger: Console
 ): CommandContext['reply'] {
 	return async function reply(options) {
+		let didFailToReply = false;
+
 		if (interaction.deferred) {
 			try {
 				await interaction.editReply(options);
@@ -42,11 +44,16 @@ export function replyFactory(
 				}
 			} catch (error) {
 				logger.error('Failed to reply to interaction:', error);
+				didFailToReply = true;
 			}
 		}
 
-		if (typeof options !== 'string' && 'ephemeral' in options && options?.ephemeral === true) {
-			// FIXME: We didn't actually send the reply if we errored out
+		if (
+			typeof options !== 'string' &&
+			'ephemeral' in options &&
+			options?.ephemeral === true &&
+			!didFailToReply
+		) {
 			logger.info(
 				`Sent ephemeral reply to User ${logUser(interaction.user)}: ${JSON.stringify(options)}`
 			);
