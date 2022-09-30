@@ -12,6 +12,7 @@ import { handleInteraction } from './handleInteraction';
 describe('Command event handler', () => {
 	const selfUid = 'self-1234';
 	const otherUid = 'other-1234';
+	const channelId = 'the-channel-1234';
 	const mockConsole = {
 		debug: () => undefined,
 		info: () => undefined,
@@ -39,6 +40,7 @@ describe('Command event handler', () => {
 				bot: true,
 				id: otherUid,
 			},
+			channelId,
 			inCachedGuild: () => false,
 			inGuild: () => false,
 			member: null,
@@ -70,6 +72,7 @@ describe('Command event handler', () => {
 				bot: false,
 				id: selfUid,
 			},
+			channelId,
 			inCachedGuild: () => false,
 			inGuild: () => false,
 			member: null,
@@ -101,6 +104,7 @@ describe('Command event handler', () => {
 				bot: false,
 				id: otherUid,
 			},
+			channelId,
 			inCachedGuild: () => false,
 			inGuild: () => false,
 			member: null,
@@ -132,6 +136,7 @@ describe('Command event handler', () => {
 				bot: false,
 				id: otherUid,
 			},
+			channelId,
 			inCachedGuild: () => true,
 			inGuild: () => true,
 			member: { id: otherUid },
@@ -163,6 +168,7 @@ describe('Command event handler', () => {
 				bot: false,
 				id: otherUid,
 			},
+			channelId,
 			inCachedGuild: () => false,
 			inGuild: () => false,
 			member: null,
@@ -194,6 +200,7 @@ describe('Command event handler', () => {
 				bot: false,
 				id: otherUid,
 			},
+			channelId,
 			inCachedGuild: () => true,
 			inGuild: () => true,
 			member: { id: otherUid },
@@ -228,6 +235,7 @@ describe('Command event handler', () => {
 				bot: false,
 				id: otherUid,
 			},
+			channelId,
 			inCachedGuild: () => false,
 			inGuild: () => false,
 			guild: null,
