@@ -1,12 +1,12 @@
 import 'source-map-support/register';
 import 'dotenv/config';
-import { ActivityType, Client, GatewayIntentBits, Partials } from 'discord.js';
+import { appVersion } from './constants/meta';
+import { Client, GatewayIntentBits, Partials } from 'discord.js';
 import { deployCommands } from './helpers/actions/deployCommands';
 import { handleInteraction } from './handleInteraction';
 import { parseArgs } from './helpers/parseArgs';
 import { revokeCommands } from './helpers/actions/revokeCommands';
 import { verifyCommandDeployments } from './helpers/actions/verifyCommandDeployments';
-import { version } from './version';
 
 // We *could* do all of this at the top level, but then
 // none of this setup would be testable :P
@@ -32,7 +32,7 @@ export async function _main(): Promise<void> {
 	console.info('*Yawn* Good morning!');
 
 	client.on('ready', async client => {
-		console.info(`Starting ${client.user.username} v${version}...`);
+		console.info(`Starting ${client.user.username} v${appVersion}...`);
 
 		// If we're only here to deploy commands, do that and then exit
 		if (args.deploy) {
@@ -61,17 +61,6 @@ export async function _main(): Promise<void> {
 					console.error('Failed to handle interaction:', error);
 				}
 			}
-		});
-
-		// Shout out our source code.
-		client.user.setActivity({
-			// ActivityType.Playing looks like crap, but it's the only way
-			// to show a custom multiline string on the bot's user profile.
-			// I'd put the URL in "About Me", but Discord seems to delete
-			// those sometimes, and I'd like to stay on Discord's good side.
-			type: ActivityType.Playing,
-			name: 'Source: github.com/BYU-CS-Discord/CSBot',
-			url: 'https://github.com/BYU-CS-Discord/CSBot',
 		});
 
 		console.info('Ready!');
