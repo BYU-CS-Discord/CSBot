@@ -5,9 +5,9 @@ export const help: GlobalCommand = {
 	name: 'help',
 	description: 'Prints useful info about the bot',
 	requiresGuild: false,
-	async execute({ client, reply }) {
+	async execute({ reply }) {
 		const embed = new EmbedBuilder()
-			.setTitle(`${client.user.username}`)
+			.setTitle('Help')
 			.setDescription(
 				`To see the list of commands, type \`/\` in your message field.\n[Visit our GitHub](${repo.href}) for more details!`
 			)
