@@ -1,10 +1,4 @@
-import { ChannelType } from 'discord.js';
-
+/** @deprecated Check `tbd.source === 'guild'` instead. */
 export function isGuildedCommandContext(tbd: CommandContext): tbd is GuildedCommandContext {
-	return (
-		tbd.guild !== null &&
-		tbd.member !== null &&
-		tbd.channel !== null &&
-		tbd.channel.type !== ChannelType.DM
-	);
+	return tbd.source === 'guild';
 }

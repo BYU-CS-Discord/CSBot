@@ -1,3 +1,4 @@
+/* eslint-disable deprecation/deprecation */
 import type { Guild, GuildMember } from 'discord.js';
 import { ChannelType } from 'discord.js';
 import { isGuildedCommandContext } from './isGuildedCommandContext';
@@ -5,6 +6,7 @@ import { isGuildedCommandContext } from './isGuildedCommandContext';
 describe('isGuildedCommandContext', () => {
 	test('returns true for GuildedCommandContext instances', () => {
 		const context: GuildedCommandContext = {
+			source: 'guild',
 			guild: {},
 			member: {},
 			channel: {
@@ -16,6 +18,7 @@ describe('isGuildedCommandContext', () => {
 
 	test('returns false for DM CommandContext instances', () => {
 		let context: CommandContext = {
+			source: 'dm',
 			guild: null,
 			member: null,
 			channel: {
@@ -25,11 +28,11 @@ describe('isGuildedCommandContext', () => {
 		expect(isGuildedCommandContext(context)).toBeFalse();
 
 		const guild: Guild = {} as unknown as Guild;
-		context = { ...context, guild, member: null };
+		context = { ...context, guild, member: null } as unknown as DMCommandContext;
 		expect(isGuildedCommandContext(context)).toBeFalse();
 
 		const member: GuildMember = {} as unknown as GuildMember;
-		context = { ...context, guild: null, member };
+		context = { ...context, guild: null, member } as unknown as DMCommandContext;
 		expect(isGuildedCommandContext(context)).toBeFalse();
 	});
 });

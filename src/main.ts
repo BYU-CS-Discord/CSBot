@@ -5,6 +5,7 @@ import { deployCommands } from './helpers/actions/deployCommands';
 import { handleInteraction } from './handleInteraction';
 import { parseArgs } from './helpers/parseArgs';
 import { revokeCommands } from './helpers/actions/revokeCommands';
+import { verifyCommandDeployments } from './helpers/actions/verifyCommandDeployments';
 import { version } from './version';
 
 // We *could* do all of this at the top level, but then
@@ -29,10 +30,10 @@ export async function _main(): Promise<void> {
 	const args = parseArgs();
 
 	console.info('*Yawn* Good morning!');
-	console.info(`Starting CS Bot v${version}...`);
-	console.debug(`Node ${process.version}`);
 
 	client.on('ready', async client => {
+		console.info(`Starting ${client.user.username} v${version}...`);
+
 		// If we're only here to deploy commands, do that and then exit
 		if (args.deploy) {
 			await deployCommands(client, console);
@@ -46,6 +47,10 @@ export async function _main(): Promise<void> {
 			client.destroy();
 			return;
 		}
+
+		// Sanity check for commands
+		console.info('Verifying command deployments...');
+		await verifyCommandDeployments(client, console);
 
 		// Register interaction listeners
 		client.on('interactionCreate', async interaction => {
@@ -69,8 +74,6 @@ export async function _main(): Promise<void> {
 			url: 'https://github.com/BYU-CS-Discord/CSBot',
 		});
 
-		// TODO: Verify that the deployed command list is up-to-date, and yell if it's not
-
 		console.info('Ready!');
 	});
 
@@ -85,7 +88,9 @@ export async function _main(): Promise<void> {
 	}
 }
 
+/* istanbul ignore next */
+// Not Constantinople
 if (process.env['NODE_ENV'] !== 'test') {
-	// Jest needs to test this, so avoid calling out of context
+	// Jest will never hit this without hax:
 	void _main();
 }

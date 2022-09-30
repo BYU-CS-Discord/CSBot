@@ -4,9 +4,7 @@ import { help } from './help';
 const { allCommands: realAllCommands } = jest.requireActual<typeof import('./index')>('./index');
 const mockAllCommands = new Map<string, Command>();
 
-jest.mock('./index', () => ({
-	allCommands: mockAllCommands,
-}));
+jest.mock('./index', () => ({ allCommands: mockAllCommands }));
 
 describe('help', () => {
 	const mockReply = jest.fn();
@@ -17,13 +15,13 @@ describe('help', () => {
 		realAllCommands.forEach((value, key) => mockAllCommands.set(key, value));
 
 		context = {
-			guild: null,
+			source: 'dm',
 			reply: mockReply,
 		} as unknown as CommandContext;
 	});
 
 	test('presents an ephemeral embed with all available global commands', async () => {
-		context = { ...context, guild: null };
+		context = { ...context, source: 'dm' } as unknown as CommandContext;
 
 		await expect(help.execute(context)).resolves.toBeUndefined();
 		expect(mockReply).toHaveBeenCalledOnce();
@@ -38,10 +36,7 @@ describe('help', () => {
 	});
 
 	test('presents an ephemeral embed with all available global and guild-bound commands', async () => {
-		context = {
-			...context,
-			guild: { id: 'the-guild-1234' },
-		} as unknown as CommandContext;
+		context = { ...context, source: 'guild' } as unknown as CommandContext;
 
 		await expect(help.execute(context)).resolves.toBeUndefined();
 		expect(mockReply).toHaveBeenCalledOnce();
@@ -61,9 +56,7 @@ describe('help', () => {
 			description: "Can't touch this. (This is a test.)",
 			requiresGuild: true,
 			dmPermission: false,
-			execute() {
-				// nop
-			},
+			execute: () => undefined,
 		};
 		mockAllCommands.set(cmd.name, cmd);
 
