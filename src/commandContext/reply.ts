@@ -22,7 +22,8 @@ export function replyFactory(
 					options.shouldMention === undefined ||
 					options.shouldMention
 				) {
-					// Doesn't say whether to mention, use discord.js' default:
+					// We should mention, or caller didn't specify.
+					// discord.js defaults to `true`, so we let it do that:
 					const intermediateOptions: InteractionReplyOptions & { shouldMention?: boolean } = {
 						...options,
 					};
