@@ -1,10 +1,16 @@
 import type { EmbedBuilder } from 'discord.js';
-import { help } from './help';
 
-const { allCommands: realAllCommands } = jest.requireActual<typeof import('./index')>('./index');
 const mockAllCommands = new Map<string, Command>();
-
+const { allCommands: realAllCommands } = jest.requireActual<typeof import('./index')>('./index');
 jest.mock('./index', () => ({ allCommands: mockAllCommands }));
+
+jest.mock('../constants/meta', () => ({
+	// Version changes more frequently than commands, so use a consistent version number to test with:
+	appVersion: 'X.X.X',
+	repo: jest.requireActual<typeof import('../constants/meta')>('../constants/meta').repo,
+}));
+
+import { help } from './help';
 
 describe('help', () => {
 	const mockReply = jest.fn();

@@ -2,24 +2,34 @@
 
 exports[`help presents an ephemeral embed with all available global and guild-bound commands 1`] = `
 Object {
+  "description": "[Visit our GitHub](https://github.com/BYU-CS-Discord/CSBot)",
   "fields": Array [
     Object {
       "name": "\`/help\`",
       "value": "Prints the list of commands",
     },
   ],
+  "footer": Object {
+    "icon_url": undefined,
+    "text": "vX.X.X",
+  },
   "title": "All commands",
 }
 `;
 
 exports[`help presents an ephemeral embed with all available global commands 1`] = `
 Object {
+  "description": "[Visit our GitHub](https://github.com/BYU-CS-Discord/CSBot)",
   "fields": Array [
     Object {
       "name": "\`/help\`",
       "value": "Prints the list of commands",
     },
   ],
+  "footer": Object {
+    "icon_url": undefined,
+    "text": "vX.X.X",
+  },
   "title": "All commands",
 }
 `;

@@ -1,3 +1,4 @@
+import { appVersion, repo } from '../constants/meta';
 import { EmbedBuilder } from 'discord.js';
 
 export const help: GlobalCommand = {
@@ -8,7 +9,10 @@ export const help: GlobalCommand = {
 		// Dynamic import here b/c ./index depends on this file
 		const { allCommands } = await import('./index');
 
-		const embed = new EmbedBuilder({ title: 'All commands' });
+		const embed = new EmbedBuilder()
+			.setTitle('All commands')
+			.setDescription(`[Visit our GitHub](${repo.href})`)
+			.setFooter({ text: `v${appVersion}` });
 
 		function embedCommand(command: Command): void {
 			embed.addFields({
