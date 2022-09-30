@@ -14,7 +14,7 @@ import type {
 
 declare global {
 	interface BaseCommandContext {
-		/** Where the guild was executed. */
+		/** Where the command was invoked. */
 		readonly source: 'guild' | 'dm';
 
 		/** The command invocation interaction. */
@@ -96,7 +96,7 @@ declare global {
 
 	/** Information relevant to a command invocation in a DM. */
 	interface DMCommandContext extends BaseCommandContext {
-		/** Where the guild was executed. */
+		/** Where the command was invoked. */
 		readonly source: 'dm';
 
 		/** The guild in which the command was invoked. */
@@ -111,7 +111,7 @@ declare global {
 
 	/**  Information relevant to a command invocation in a guild.*/
 	interface GuildedCommandContext extends BaseCommandContext {
-		/** Where the guild was executed. */
+		/** Where the command was invoked. */
 		readonly source: 'guild';
 
 		/** The guild in which the command was invoked. */
