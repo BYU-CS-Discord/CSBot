@@ -3,40 +3,15 @@ import { EmbedBuilder } from 'discord.js';
 
 export const help: GlobalCommand = {
 	name: 'help',
-	description: 'Prints the list of commands',
+	description: 'Prints useful info about the bot',
 	requiresGuild: false,
-	async execute({ source, reply }) {
-		// Dynamic import here b/c ./index depends on this file
-		const { allCommands } = await import('./index');
-
+	async execute({ client, reply }) {
 		const embed = new EmbedBuilder()
-			.setTitle('All commands')
-			.setDescription(`[Visit our GitHub](${repo.href})`)
+			.setTitle(`${client.user.username}`)
+			.setDescription(
+				`To see the list of commands, type \`/\` in your message field.\n[Visit our GitHub](${repo.href}) for more details!`
+			)
 			.setFooter({ text: `v${appVersion}` });
-
-		function embedCommand(command: Command): void {
-			embed.addFields({
-				name: `\`/${command.name}\``, // i.e. `/help`
-				value: command.description,
-			});
-		}
-
-		for (const command of allCommands.values()) {
-			if (source === 'guild') {
-				// We're in a guild. We should check the user's permissions,
-				// and skip this command if they aren't allowed to use it.
-				// TODO: Grab the guild's configured permissions for this channel
-				embedCommand(command);
-				continue;
-			}
-
-			// We're in DMs; command should have dmPermission if we're to print it.
-			// Discord defaults dmPermission to `true`, so `undefined` should behave that way.
-			// See https://discordjs.guide/interactions/slash-commands.html#dm-permission
-			if (command.dmPermission === false) continue;
-
-			embedCommand(command);
-		}
 
 		await reply({
 			embeds: [embed],
