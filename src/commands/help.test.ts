@@ -14,12 +14,6 @@ describe('help', () => {
 
 	beforeEach(() => {
 		context = {
-			source: 'dm',
-			client: {
-				user: {
-					username: 'Ze Kaiser Jr.',
-				},
-			},
 			reply: mockReply,
 		} as unknown as CommandContext;
 	});
