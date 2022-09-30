@@ -1,4 +1,4 @@
-import type { Client } from 'discord.js';
+import type { Client, Guild } from 'discord.js';
 import { allCommands } from '../../commands';
 
 /**
@@ -11,11 +11,55 @@ export async function verifyCommandDeployments(
 	client: Client<true>,
 	logger: Console
 ): Promise<void> {
-	await verifyGlobalCommandDeployments(client, logger);
-	await verifyGuildCommandDeployments(client, logger);
+	const globalDiff = await diffGlobalCommandDeployments(client);
+	if (globalDiff) {
+		const issue = globalDiff.issue;
+		const expected = globalDiff.expected;
+		const actual = globalDiff.actual;
+		switch (issue) {
+			case 'content':
+				logger.warn(
+					`The deployed commands differ from the expected command list: Expected a command named '${expected}', but found '${actual}'. Please redeploy.`
+				);
+				break;
+			case 'length':
+				logger.warn(
+					`The deployed commands differ from the expected command list: Expected ${expected} global command(s), but Discord returned ${actual}. Please redeploy.`
+				);
+				break;
+			default:
+				/* istanbul ignore next */
+				assertUnreachable(issue);
+		}
+	}
+
+	const guildedDiff = await diffGuildCommandDeployments(client);
+	if (guildedDiff) {
+		const issue = guildedDiff.issue;
+		const expected = guildedDiff.expected;
+		const actual = guildedDiff.actual;
+		const guildId = guildedDiff.guild.id;
+		switch (issue) {
+			case 'content':
+				logger.warn(
+					`The deployed commands in guild '${guildId}' differ from the expected command list: Expected a command named '${expected}', but found '${actual}'. Please redeploy.`
+				);
+				break;
+			case 'length':
+				logger.warn(
+					`The deployed commands in guild '${guildId}' differ from the expected command list: Expected ${expected} command(s), but Discord returned ${actual}. Please redeploy.`
+				);
+				break;
+			default:
+				/* istanbul ignore next */
+				assertUnreachable(issue);
+		}
+	}
 }
 
-async function verifyGuildCommandDeployments(client: Client<true>, logger: Console): Promise<void> {
+async function diffGuildCommandDeployments(
+	client: Client<true>
+): Promise<(Diff & { guild: Guild }) | null> {
 	const oAuthGuilds = await client.guilds.fetch();
 	const guilds = await Promise.all(oAuthGuilds.map(g => g.fetch()));
 
@@ -29,30 +73,14 @@ async function verifyGuildCommandDeployments(client: Client<true>, logger: Conso
 			.map(c => c.name)
 			.sort(sortAlphabetically);
 
-		if (actualCommandNames.length !== expectedCommandNames.length) {
-			logger.warn(
-				`The deployed commands in guild '${guild.id}' differ from the expected command list: Expected ${expectedCommandNames.length} command(s), but Discord returned ${actualCommandNames.length}. Please redeploy.`
-			);
-			return;
-		}
-
-		for (let idx = 0; idx < actualCommandNames.length; idx++) {
-			const deployedName = actualCommandNames[idx] ?? '';
-			const expectedName = expectedCommandNames[idx] ?? '';
-			if (deployedName !== expectedName) {
-				logger.warn(
-					`The deployed commands in guild '${guild.id}' differ from the expected command list: Expected a command named '${expectedName}', but found '${deployedName}'. Please redeploy.`
-				);
-				break;
-			}
-		}
+		const diff = diffArrays(expectedCommandNames, actualCommandNames);
+		if (diff) return { ...diff, guild };
 	}
+
+	return null; // all clear!
 }
 
-async function verifyGlobalCommandDeployments(
-	client: Client<true>,
-	logger: Console
-): Promise<void> {
+async function diffGlobalCommandDeployments(client: Client<true>): Promise<Diff | null> {
 	const expectedCommandNames = Array.from(allCommands.values())
 		.filter(c => c.requiresGuild === false)
 		.map(c => c.name)
@@ -62,25 +90,46 @@ async function verifyGlobalCommandDeployments(
 		.map(c => c.name)
 		.sort(sortAlphabetically);
 
-	if (actualCommandNames.length !== expectedCommandNames.length) {
-		logger.warn(
-			`The deployed commands differ from the expected command list: Expected ${expectedCommandNames.length} global command(s), but Discord returned ${actualCommandNames.length}. Please redeploy.`
-		);
-		return;
+	return diffArrays(expectedCommandNames, actualCommandNames);
+}
+
+// MARK: - Difference between arrays
+
+interface Diff {
+	readonly issue: 'length' | 'content';
+	expected: string | number;
+	actual: string | number;
+}
+
+function diffArrays(expected: Array<string>, actual: Array<string>): Diff | null {
+	if (actual.length !== expected.length) {
+		return {
+			issue: 'length',
+			expected: expected.length,
+			actual: actual.length,
+		};
 	}
 
-	for (let idx = 0; idx < actualCommandNames.length; idx++) {
-		const deployedName = actualCommandNames[idx] ?? '';
-		const expectedName = expectedCommandNames[idx] ?? '';
+	for (let idx = 0; idx < actual.length; idx++) {
+		const deployedName = actual[idx] ?? '';
+		const expectedName = expected[idx] ?? '';
 		if (deployedName !== expectedName) {
-			logger.warn(
-				`The deployed commands differ from the expected command list: Expected a command named '${expectedName}', but found '${deployedName}'. Please redeploy.`
-			);
-			break;
+			return {
+				issue: 'content',
+				expected: expectedName,
+				actual: deployedName,
+			};
 		}
 	}
+
+	return null; // all clear!
 }
 
 function sortAlphabetically(a: string, b: string): number {
 	return a.localeCompare(b);
+}
+
+/* istanbul ignore next */
+function assertUnreachable(value: never): never {
+	throw new EvalError(`Unreachable case: ${JSON.stringify(value)}`);
 }
