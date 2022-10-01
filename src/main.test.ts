@@ -1,5 +1,6 @@
 const mockConstructClient = jest.fn();
 const mockLogin = jest.fn();
+const mockSetActivity = jest.fn();
 const mockInteractionIsCommand = jest.fn();
 
 const mockClientError = new Error('This is a test error');
@@ -16,6 +17,7 @@ class MockClient {
 
 	user = {
 		username: 'Ze Kaiser Jr.',
+		setActivity: mockSetActivity,
 	};
 
 	constructor(...args: Array<unknown>) {
@@ -85,6 +87,7 @@ describe('main', () => {
 
 		mockConstructClient.mockReturnValue(undefined);
 		mockLogin.mockResolvedValue('TEST');
+		mockSetActivity.mockReturnValue({});
 		mockInteractionIsCommand.mockReturnValue(true);
 		mockHandleInteraction.mockResolvedValue(undefined);
 		mockDeployCommands.mockResolvedValue(undefined);

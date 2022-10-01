@@ -1,7 +1,7 @@
 import 'source-map-support/register';
 import 'dotenv/config';
+import { ActivityType, Client, GatewayIntentBits, Partials } from 'discord.js';
 import { appVersion } from './constants/meta';
-import { Client, GatewayIntentBits, Partials } from 'discord.js';
 import { deployCommands } from './helpers/actions/deployCommands';
 import { handleInteraction } from './handleInteraction';
 import { parseArgs } from './helpers/parseArgs';
@@ -61,6 +61,12 @@ export async function _main(): Promise<void> {
 					console.error('Failed to handle interaction:', error);
 				}
 			}
+		});
+
+		// Let users know where to go for info
+		client.user.setActivity({
+			type: ActivityType.Playing,
+			name: '/help for info',
 		});
 
 		console.info('Ready!');
