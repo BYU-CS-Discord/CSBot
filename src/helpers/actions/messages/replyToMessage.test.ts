@@ -1,5 +1,5 @@
 import type { CommandInteraction, Message, User } from 'discord.js';
-import { replyPrivately } from './replyToMessage';
+import { replyWithPrivateMessage } from './replyToMessage';
 
 describe('Message replies', () => {
 	const mockUserSend = jest.fn().mockResolvedValue({});
@@ -19,7 +19,7 @@ describe('Message replies', () => {
 
 		test('sends an ephemeral reply with text', async () => {
 			const content = 'yo';
-			await expect(replyPrivately(interaction, content, false)).resolves.toBeTrue();
+			await expect(replyWithPrivateMessage(interaction, content, false)).resolves.toBeTrue();
 			expect(mockReply).toHaveBeenCalledOnce();
 			expect(mockReply).toHaveBeenCalledWith({ content, ephemeral: true });
 		});
@@ -29,7 +29,7 @@ describe('Message replies', () => {
 
 			mockReply.mockRejectedValueOnce(new Error('This ia a test'));
 			const content = 'yo';
-			await expect(replyPrivately(interaction, content, false)).resolves.toBeFalse();
+			await expect(replyWithPrivateMessage(interaction, content, false)).resolves.toBeFalse();
 			expect(mockReply).toHaveBeenCalledOnce();
 			expect(mockReply).toHaveBeenCalledWith({ content, ephemeral: true });
 
@@ -38,7 +38,7 @@ describe('Message replies', () => {
 
 		test('sends an ephemeral reply with options', async () => {
 			const content = 'yo';
-			await expect(replyPrivately(interaction, { content }, false)).resolves.toBeTrue();
+			await expect(replyWithPrivateMessage(interaction, { content }, false)).resolves.toBeTrue();
 			expect(mockReply).toHaveBeenCalledOnce();
 			expect(mockReply).toHaveBeenCalledWith({ content, ephemeral: true });
 		});
@@ -48,7 +48,7 @@ describe('Message replies', () => {
 
 			mockReply.mockRejectedValueOnce(new Error('This ia a test'));
 			const content = 'yo';
-			await expect(replyPrivately(interaction, { content }, false)).resolves.toBeFalse();
+			await expect(replyWithPrivateMessage(interaction, { content }, false)).resolves.toBeFalse();
 			expect(mockReply).toHaveBeenCalledOnce();
 			expect(mockReply).toHaveBeenCalledWith({ content, ephemeral: true });
 
@@ -79,7 +79,7 @@ describe('Message replies', () => {
 
 		test('sends a DM with a return prefix from text', async () => {
 			const content = 'yo';
-			await expect(replyPrivately(message, content, true)).resolves.toBeTruthy();
+			await expect(replyWithPrivateMessage(message, content, true)).resolves.toBeTruthy();
 			expect(mockReply).not.toHaveBeenCalled();
 			expect(mockChannelSend).not.toHaveBeenCalled();
 			expect(mockUserSend).toHaveBeenCalledOnce();
@@ -89,7 +89,9 @@ describe('Message replies', () => {
 		});
 
 		test('sends a DM with a return prefix from missing text', async () => {
-			await expect(replyPrivately(message, { content: undefined }, true)).resolves.toBeTruthy();
+			await expect(
+				replyWithPrivateMessage(message, { content: undefined }, true)
+			).resolves.toBeTruthy();
 			expect(mockReply).not.toHaveBeenCalled();
 			expect(mockChannelSend).not.toHaveBeenCalled();
 			expect(mockUserSend).toHaveBeenCalledOnce();
@@ -100,7 +102,7 @@ describe('Message replies', () => {
 
 		test('sends a DM with a return prefix from options', async () => {
 			const content = 'yo';
-			await expect(replyPrivately(message, { content }, true)).resolves.toBeTruthy();
+			await expect(replyWithPrivateMessage(message, { content }, true)).resolves.toBeTruthy();
 			expect(mockReply).not.toHaveBeenCalled();
 			expect(mockChannelSend).not.toHaveBeenCalled();
 			expect(mockUserSend).toHaveBeenCalledOnce();
@@ -114,7 +116,7 @@ describe('Message replies', () => {
 
 			mockUserSend.mockRejectedValueOnce(new Error('This is a test'));
 			const content = 'yo';
-			await expect(replyPrivately(message, content, true)).resolves.toBeFalse();
+			await expect(replyWithPrivateMessage(message, content, true)).resolves.toBeFalse();
 			expect(mockReply).not.toHaveBeenCalled();
 			expect(mockUserSend).toHaveBeenCalledOnce();
 			expect(mockUserSend).toHaveBeenCalledWith(

@@ -9,12 +9,15 @@ import type {
 	InteractionReplyOptions,
 	Message,
 	MessageReplyOptions,
+	Snowflake,
 	User,
 } from 'discord.js';
 
 declare global {
-	/** Information relevant to a command invocation. */
-	interface CommandContext {
+	interface BaseCommandContext {
+		/** Where the command was invoked. */
+		readonly source: 'guild' | 'dm';
+
 		/** The command invocation interaction. */
 		readonly interaction: CommandInteraction;
 
@@ -26,6 +29,9 @@ declare global {
 
 		/** The guild in which the command was invoked. */
 		readonly guild: Guild | null;
+
+		/** The ID of the channel in which the command was invoked. */
+		readonly channelId: Snowflake;
 
 		/** The channel in which the command was invoked. */
 		readonly channel: GuildTextBasedChannel | DMChannel | null;
@@ -56,14 +62,14 @@ declare global {
 		 * edit the public reply. The message sent here will then be public.
 		 *
 		 * @param options The message payload to send.
-		 * @param viaDm Whether we should reply in DMs.
+		 * @param viaDM Whether we should reply in DMs.
 		 */
 		replyPrivately: (
 			options:
 				| string //
 				| Omit<MessageReplyOptions, 'flags'>
 				| Omit<InteractionReplyOptions, 'flags'>,
-			viaDm?: true
+			viaDM?: true
 		) => Promise<void>;
 
 		/** Replies to the command invocation, optionally pinging the command's sender. */
@@ -92,12 +98,36 @@ declare global {
 		) => Promise<Message | boolean>;
 	}
 
-	/**
-	 * Information relevant to a command invocation.
-	 */
-	type GuildedCommandContext = CommandContext & {
+	/** Information relevant to a command invocation in a DM. */
+	interface DMCommandContext extends BaseCommandContext {
+		/** Where the command was invoked. */
+		readonly source: 'dm';
+
+		/** The guild in which the command was invoked. */
+		readonly guild: null;
+
+		/** The guild member who invoked the command. */
+		readonly member: null;
+
+		/** The channel in which the command was invoked. */
+		readonly channel: DMChannel | null;
+	}
+
+	/**  Information relevant to a command invocation in a guild.*/
+	interface GuildedCommandContext extends BaseCommandContext {
+		/** Where the command was invoked. */
+		readonly source: 'guild';
+
+		/** The guild in which the command was invoked. */
 		readonly guild: Guild;
+
+		/** The guild member who invoked the command. */
 		readonly member: GuildMember;
+
+		/** The channel in which the command was invoked. */
 		readonly channel: GuildTextBasedChannel | null;
-	};
+	}
+
+	/** Information relevant to a command invocation. */
+	type CommandContext = DMCommandContext | GuildedCommandContext;
 }

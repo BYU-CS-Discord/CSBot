@@ -90,7 +90,7 @@ async function sendEphemeralReply(
  * @returns a `Promise` that resolves with a reference to the message sent,
  * or a boolean value indicating whether an ephemeral reply succeeded or failed.
  */
-export async function replyPrivately(
+export async function replyWithPrivateMessage(
 	source: Message | CommandInteraction,
 	options: string | Omit<MessageCreateOptions, 'reply' | 'flags'>,
 	preferDMs: boolean

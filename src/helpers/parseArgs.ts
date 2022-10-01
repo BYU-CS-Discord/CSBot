@@ -1,5 +1,5 @@
+import { appVersion } from '../constants/meta';
 import { hideBin } from 'yargs/helpers';
-import { version } from '../version';
 import yargs from 'yargs';
 
 export interface Args {
@@ -24,9 +24,9 @@ export function parseArgs(): Args {
 			type: 'boolean',
 			default: false,
 		})
-		.version(version)
+		.version(appVersion)
 		.help()
-		.alias('help', 'h')
-		.alias('version', 'v')
+		.alias('h', 'help')
+		.alias('v', 'version')
 		.parseSync();
 }

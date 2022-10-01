@@ -1,11 +1,12 @@
 import 'source-map-support/register';
 import 'dotenv/config';
 import { ActivityType, Client, GatewayIntentBits, Partials } from 'discord.js';
+import { appVersion } from './constants/meta';
 import { deployCommands } from './helpers/actions/deployCommands';
 import { handleInteraction } from './handleInteraction';
 import { parseArgs } from './helpers/parseArgs';
 import { revokeCommands } from './helpers/actions/revokeCommands';
-import { version } from './version';
+import { verifyCommandDeployments } from './helpers/actions/verifyCommandDeployments';
 
 // We *could* do all of this at the top level, but then
 // none of this setup would be testable :P
@@ -29,10 +30,10 @@ export async function _main(): Promise<void> {
 	const args = parseArgs();
 
 	console.info('*Yawn* Good morning!');
-	console.info(`Starting CS Bot v${version}...`);
-	console.debug(`Node ${process.version}`);
 
 	client.on('ready', async client => {
+		console.info(`Starting ${client.user.username} v${appVersion}...`);
+
 		// If we're only here to deploy commands, do that and then exit
 		if (args.deploy) {
 			await deployCommands(client, console);
@@ -47,6 +48,10 @@ export async function _main(): Promise<void> {
 			return;
 		}
 
+		// Sanity check for commands
+		console.info('Verifying command deployments...');
+		await verifyCommandDeployments(client, console);
+
 		// Register interaction listeners
 		client.on('interactionCreate', async interaction => {
 			if (interaction.isCommand()) {
@@ -58,18 +63,11 @@ export async function _main(): Promise<void> {
 			}
 		});
 
-		// Shout out our source code.
+		// Let users know where to go for info
 		client.user.setActivity({
-			// ActivityType.Playing looks like crap, but it's the only way
-			// to show a custom multiline string on the bot's user profile.
-			// I'd put the URL in "About Me", but Discord seems to delete
-			// those sometimes, and I'd like to stay on Discord's good side.
 			type: ActivityType.Playing,
-			name: 'Source: github.com/BYU-CS-Discord/CSBot',
-			url: 'https://github.com/BYU-CS-Discord/CSBot',
+			name: '/help for info',
 		});
-
-		// TODO: Verify that the deployed command list is up-to-date, and yell if it's not
 
 		console.info('Ready!');
 	});
@@ -85,7 +83,9 @@ export async function _main(): Promise<void> {
 	}
 }
 
+/* istanbul ignore next */
+// Not Constantinople
 if (process.env['NODE_ENV'] !== 'test') {
-	// Jest needs to test this, so avoid calling out of context
+	// Jest will never hit this without hax:
 	void _main();
 }

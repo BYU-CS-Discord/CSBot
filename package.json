@@ -1,6 +1,6 @@
 {
 	"name": "csbot",
-	"version": "0.0.0",
+	"version": "0.1.3",
 	"description": "The One beneath the Supreme Overlord's rule. A bot to help manage the BYU CS Discord, successor to Ze Kaiser (https://github.com/arkenstorm/ze-kaiser)",
 	"private": true,
 	"scripts": {
@@ -19,7 +19,7 @@
 		"prebuild": "npm run lint",
 		"build": "npm run build:only",
 		"build:only": "rm -rf dist && ./node_modules/.bin/tsc -p tsconfig.prod.json",
-		"export-version": "./node_modules/.bin/genversion ./src/version.ts -esd",
+		"export-version": "./node_modules/.bin/genversion ./src/constants/version.ts -es",
 		"test": "./node_modules/.bin/jest",
 		"test:watch": "npm run test -- --watch --coverage=false"
 	},

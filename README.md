@@ -64,8 +64,6 @@ Create a file called `.env` in the root of this project folder. Paste your token
 
 DISCORD_TOKEN=YOUR_TOKEN_GOES_HERE
 # required, token for your Discord bot
-
-# TODO: Document other configurations as needed
 ```
 
 **Do not commit this file to git** or your bot _will_ get "hacked".
@@ -76,10 +74,11 @@ Go to https://discordapi.com/permissions.html#378091424832 and paste in your bot
 
 ### Build the bot server
 
-Be sure to install dependencies:
+Be sure to install dependencies, and run a quick lint to generate needed files:
 
 ```sh
 $ npm ci
+$ npm run lint
 ```
 
 The first time you download the source, and each time the source code changes, you'll need to run this command before you run the bot:
@@ -112,7 +111,9 @@ $ pm2 start .
 
 ## Commands
 
-\[TBD\]
+### /help
+
+Prints the list of commands.
 
 ## Contributing
 

@@ -16,6 +16,7 @@ class MockClient {
 	login = mockLogin;
 
 	user = {
+		username: 'Ze Kaiser Jr.',
 		setActivity: mockSetActivity,
 	};
 
@@ -69,6 +70,10 @@ jest.mock('./helpers/parseArgs', () => ({ parseArgs: mockParseArgs }));
 jest.mock('./helpers/actions/revokeCommands');
 import { revokeCommands } from './helpers/actions/revokeCommands';
 const mockRevokeCommands = revokeCommands as jest.Mock;
+
+jest.mock('./helpers/actions/verifyCommandDeployments');
+import { verifyCommandDeployments } from './helpers/actions/verifyCommandDeployments';
+const mockVerifyCommandDeployments = verifyCommandDeployments as jest.Mock;
 
 import { _main } from './main';
 
@@ -148,6 +153,11 @@ describe('main', () => {
 		await expect(_main()).resolves.toBeUndefined();
 		expect(mockDeployCommands).toHaveBeenCalledOnce();
 		expect(mockRevokeCommands).not.toHaveBeenCalled();
+	});
+
+	test('verifies command deployments', async () => {
+		await expect(_main()).resolves.toBeUndefined();
+		expect(mockVerifyCommandDeployments).toHaveBeenCalledOnce();
 	});
 
 	test("doesn't call interaction handler if the interaction isn't a command", async () => {
