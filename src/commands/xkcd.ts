@@ -1,6 +1,5 @@
 import { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
 import axios from 'axios';
-import { appVersion } from '../constants/meta';
 
 // defining the response
 interface GetComicResponse {
@@ -15,6 +14,11 @@ interface GetComicResponse {
 	title: string;
 	day: string;
 	img: string;
+}
+
+async function _latestCheck(): Promise<GetComicResponse> {
+	const { data } = await axios.get<GetComicResponse>('https://xkcd.now.sh/?comic=latest');
+	return data;
 }
 
 export const xkcd: GlobalCommand = {
@@ -45,46 +49,61 @@ export const xkcd: GlobalCommand = {
 			transcript: '',
 		};
 
-		// let the users know that we are getting a post, and determine which to get
+		// let the users know that we are getting a post, and determine which comic to getto get
 		sendTyping;
+		const latestComic = await _latestCheck(); // a  sanity check, getting the most recent comic to know the valid range of comics
+
 		const param = options[0];
 		if (param?.value !== undefined) {
+			// number was provided in the command
 			comic = `${param.value as number}`;
-			if (param.value < 0) {
-				// error checking, no negative comics
-				comic = 'latest';
+			if (param.value < 1 || param.value > latestComic.num) {
+				// error checking, no negative comics or comic 0. Instead get the latest
+				await reply({
+					ephemeral: true,
+					content: `Please insert a valid comic number. The range is 1-${latestComic.num}.`,
+				});
+				return;
 			}
 		} else {
 			// no number given, just get the latest
 			comic = 'latest';
 		}
-
-		// get the comic from the API
-		try {
-			const { data, status } = await axios.get<GetComicResponse>(
-				`https://xkcd.now.sh/?comic=${comic}`
-			);
-			if (status !== 200) {
-				console.log('Axios failed to get a comic');
-				await reply('Oopsie! I did a poopie.');
+		if (comic !== 'latest') {
+			// get the comic from the API
+			try {
+				const { data, status } = await axios.get<GetComicResponse>(
+					`https://xkcd.now.sh/?comic=${comic}`
+				);
+				if (status !== 200) {
+					console.log('Axios failed to get a comic');
+					await reply({ content: 'XKCD call failed. Please try later.', ephemeral: true });
+					return;
+				}
+				results = data;
+			} catch (error) {
+				console.log('Axios failed to get due to exception');
+				console.log(error);
+				await reply({ content: 'XKCD call failed. Please try later.', ephemeral: true });
 				return;
 			}
-			results = data;
-		} catch {
-			console.log('Axios failed to get due to exception');
-			await reply('Oopsie! I did a poopie.');
-			return;
+		} else {
+			// just use the OG call to build the embed
+			results = latestComic;
 		}
 
 		// we should have the data in response, build the embed.
 		const embed = new EmbedBuilder()
 			.setTitle(results.safe_title)
-			.setAuthor({ name: `${results.month} - ${results.day} ${results.year}` })
+			.setAuthor({
+				name: `xkcd #${results.num}`,
+			})
+			.setURL(`https://xkcd.com/${results.num}/`)
+			.setImage(results.img)
 			.setDescription(`${results.alt}`)
-			.setURL(`https://xkcd.com/${comic}/`)
 			.setColor(0x2b96f3)
 			.setTimestamp()
-			.setFooter({ text: `v${appVersion}` });
+			.setFooter({ text: `Posted ${results.month}-${results.day}-${results.year}` });
 
 		// send the embed back
 		await reply({
