@@ -5,5 +5,6 @@
 	"git.branchProtection": ["main"],
 	"todo-tree.filtering.excludeGlobs": ["**/dist/**", "**/node_modules/**"],
 	"files.eol": "auto",
-	"terminal.integrated.defaultProfile.windows": "Git Bash"
+	"terminal.integrated.defaultProfile.windows": "Git Bash",
+	"editor.formatOnSave": true
 }
