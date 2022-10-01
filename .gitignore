@@ -13,7 +13,7 @@ node_modules
 db
 dist
 coverage
-src/version.ts
+src/constants/version.ts
 tmp
 temp
 .vs

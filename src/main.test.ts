@@ -16,6 +16,7 @@ class MockClient {
 	login = mockLogin;
 
 	user = {
+		username: 'Ze Kaiser Jr.',
 		setActivity: mockSetActivity,
 	};
 

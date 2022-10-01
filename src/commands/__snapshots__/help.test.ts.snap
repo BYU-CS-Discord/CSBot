@@ -1,25 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`help presents an ephemeral embed with all available global and guild-bound commands 1`] = `
+exports[`help presents an ephemeral embed with general info 1`] = `
 Object {
-  "fields": Array [
-    Object {
-      "name": "\`/help\`",
-      "value": "Prints the list of commands",
-    },
-  ],
-  "title": "All commands",
-}
-`;
-
-exports[`help presents an ephemeral embed with all available global commands 1`] = `
-Object {
-  "fields": Array [
-    Object {
-      "name": "\`/help\`",
-      "value": "Prints the list of commands",
-    },
-  ],
-  "title": "All commands",
+  "description": "To see the list of commands, type \`/\` in your message field.
+[Visit our GitHub](https://github.com/BYU-CS-Discord/CSBot) for more details!",
+  "footer": Object {
+    "icon_url": undefined,
+    "text": "vX.X.X",
+  },
+  "title": "Help",
 }
 `;

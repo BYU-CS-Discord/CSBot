@@ -143,11 +143,6 @@ export async function replyWithPrivateMessage(
 }
 
 /**
- * @deprecated Use {@link replyWithPrivateMessage} instead
- */
-export const replyPrivately = replyWithPrivateMessage;
-
-/**
  * Attempts to send a message in the provided channel.
  *
  * @param channel The text channel in which to send the message.

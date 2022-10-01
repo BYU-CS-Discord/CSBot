@@ -49,11 +49,13 @@ export async function handleInteraction(
 		)}`
 	);
 
+	const guild = interaction.guild;
+
 	let member: GuildMember | null;
 	if (interaction.inCachedGuild()) {
 		member = interaction.member;
 	} else {
-		member = (await interaction.guild?.members.fetch(interaction.user)) ?? null;
+		member = (await guild?.members.fetch(interaction.user)) ?? null;
 	}
 
 	let channel: GuildTextBasedChannel | DMChannel | null;
@@ -67,7 +69,8 @@ export async function handleInteraction(
 		createdTimestamp: interaction.createdTimestamp,
 		user: interaction.user,
 		member,
-		guild: interaction.guild,
+		guild,
+		channelId: interaction.channelId,
 		channel,
 		client: interaction.client,
 		interaction,

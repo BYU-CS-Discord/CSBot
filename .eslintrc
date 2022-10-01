@@ -1,6 +1,6 @@
 {
 	"root": true,
-	"ignorePatterns": ["dist", "node_modules", "src/version.ts"],
+	"ignorePatterns": ["dist", "node_modules", "src/constants/version.ts"],
 
 	"extends": [
 		"strictest/eslint",

@@ -9,6 +9,7 @@ import type {
 	InteractionReplyOptions,
 	Message,
 	MessageReplyOptions,
+	Snowflake,
 	User,
 } from 'discord.js';
 
@@ -28,6 +29,9 @@ declare global {
 
 		/** The guild in which the command was invoked. */
 		readonly guild: Guild | null;
+
+		/** The ID of the channel in which the command was invoked. */
+		readonly channelId: Snowflake;
 
 		/** The channel in which the command was invoked. */
 		readonly channel: GuildTextBasedChannel | DMChannel | null;
