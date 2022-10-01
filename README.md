@@ -72,6 +72,18 @@ DISCORD_TOKEN=YOUR_TOKEN_GOES_HERE
 
 Go to https://discordapi.com/permissions.html#378091424832 and paste in your bot's client ID to get an invite link.
 
+### Important Note for Windows Users
+
+If you're on Windows, `npm` scripts will not working unless you tell `npm` to use Git Bash as its default shell when running commands.
+
+Before continuing, run this command:
+
+```sh
+npm config set script-shell "C:\\Program Files\\Git\\bin\\bash.exe"
+```
+
+You must have [Git for Windows](https://git-scm.com/download/win) installed. See this [StackOverflow answer](https://stackoverflow.com/a/46006249) for more details.
+
 ### Build the bot server
 
 Be sure to install dependencies, and run a quick lint to generate needed files:
