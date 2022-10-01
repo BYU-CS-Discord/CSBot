@@ -1,13 +1,20 @@
 import { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
 import axios from 'axios';
+import { appVersion } from '../constants/meta';
 
 // defining the response
 interface GetComicResponse {
 	month: string;
 	num: number;
+	link: string;
+	news: string;
+	safe_title: string;
+	transcript: string;
+	alt: string;
 	year: string;
 	title: string;
 	day: string;
+	img: string;
 }
 
 export const xkcd: GlobalCommand = {
@@ -23,22 +30,36 @@ export const xkcd: GlobalCommand = {
 	],
 	async execute({ options, reply, sendTyping }) {
 		let comic: string = '';
+		// not making this nullable, instead filling with dummy data to be later filled
 		let results: GetComicResponse = {
 			month: '',
 			num: 0,
 			year: '',
 			title: '',
 			day: '',
+			img: '',
+			link: '',
+			news: '',
+			safe_title: '',
+			alt: '',
+			transcript: '',
 		};
+
+		// let the users know that we are getting a post, and determine which to get
 		sendTyping;
 		const param = options[0];
 		if (param?.value !== undefined) {
 			comic = `${param.value as number}`;
-			// await reply(`You sent a param! ${param.value as number}`);
+			if (param.value < 0) {
+				// error checking, no negative comics
+				comic = 'latest';
+			}
 		} else {
+			// no number given, just get the latest
 			comic = 'latest';
-			// await reply('You did not send a param.');
 		}
+
+		// get the comic from the API
 		try {
 			const { data, status } = await axios.get<GetComicResponse>(
 				`https://xkcd.now.sh/?comic=${comic}`
@@ -56,7 +77,19 @@ export const xkcd: GlobalCommand = {
 		}
 
 		// we should have the data in response, build the embed.
-		// TODO: POST MERGE WITH MAIN, ADD THE FOOTER APPVERSION
-		const embed = new EmbedBuilder().setTitle(results.title).setColor(0x2b96f3);
+		const embed = new EmbedBuilder()
+			.setTitle(results.safe_title)
+			.setAuthor({ name: `${results.month} - ${results.day} ${results.year}` })
+			.setDescription(`${results.alt}`)
+			.setURL(`https://xkcd.com/${comic}/`)
+			.setColor(0x2b96f3)
+			.setTimestamp()
+			.setFooter({ text: `v${appVersion}` });
+
+		// send the embed back
+		await reply({
+			embeds: [embed],
+			ephemeral: false,
+		});
 	},
 };
