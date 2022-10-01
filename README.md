@@ -75,7 +75,7 @@ Go to https://discordapi.com/permissions.html#378091424832 and paste in your bot
 
 ### Important Note for Windows Users
 
-If you're on Windows, `npm` scripts will not working unless you tell `npm` to use Git Bash as its default shell when running commands.
+If you're on Windows, `npm` scripts will not work unless you tell `npm` to use Git Bash as its default shell when running commands.
 
 Before continuing, run this command:
 
