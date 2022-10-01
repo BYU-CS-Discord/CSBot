@@ -80,7 +80,7 @@ If you're on Windows, `npm` scripts will not work unless you tell `npm` to use G
 Before continuing, run this command:
 
 ```sh
-npm config set script-shell "C:\\Program Files\\Git\\bin\\bash.exe"
+$ npm config set script-shell "C:\\Program Files\\Git\\bin\\bash.exe"
 ```
 
 You must have [Git for Windows](https://git-scm.com/download/win) installed. See this [StackOverflow answer](https://stackoverflow.com/a/46006249) for more details.
