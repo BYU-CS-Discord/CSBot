@@ -9,8 +9,11 @@ import { allCommands } from '../../commands';
 import { isNonEmptyArray } from '../guards/isNonEmptyArray';
 import { revokeCommands } from './revokeCommands';
 
-export async function deployCommands(client: Client<true>, logger: Console): Promise<void> {
-	await revokeCommands(client, logger); // fresh start!
+import { getLogger } from '../../logger';
+const logger = getLogger();
+
+export async function deployCommands(client: Client<true>): Promise<void> {
+	await revokeCommands(client); // fresh start!
 
 	logger.info('Deploying commands...');
 	const commands: Array<Command> = Array.from(allCommands.values());
@@ -28,10 +31,10 @@ export async function deployCommands(client: Client<true>, logger: Console): Pro
 	}
 
 	if (isNonEmptyArray(globalCommands)) {
-		await prepareGlobalCommands(globalCommands, client, logger);
+		await prepareGlobalCommands(globalCommands, client);
 	}
 	if (isNonEmptyArray(guildCommands)) {
-		await prepareGuildedCommands(guildCommands, client, logger);
+		await prepareGuildedCommands(guildCommands, client);
 	}
 
 	logger.info(
@@ -41,8 +44,7 @@ export async function deployCommands(client: Client<true>, logger: Console): Pro
 
 async function prepareGlobalCommands(
 	globalCommands: NonEmptyArray<GlobalCommand>,
-	client: Client<true>,
-	logger: Console
+	client: Client<true>
 ): Promise<void> {
 	logger.info(
 		`${globalCommands.length} command(s) will be set globally: ${JSON.stringify(
@@ -60,8 +62,7 @@ async function prepareGlobalCommands(
 
 async function prepareGuildedCommands(
 	guildCommands: NonEmptyArray<GuildedCommand>,
-	client: Client<true>,
-	logger: Console
+	client: Client<true>
 ): Promise<void> {
 	logger.info(
 		`${guildCommands.length} command(s) require a guild: ${JSON.stringify(
@@ -70,13 +71,12 @@ async function prepareGuildedCommands(
 	);
 	const oAuthGuilds = await client.guilds.fetch();
 	const guilds = await Promise.all(oAuthGuilds.map(g => g.fetch()));
-	await Promise.all(guilds.map(guild => prepareCommandsForGuild(guild, guildCommands, logger)));
+	await Promise.all(guilds.map(guild => prepareCommandsForGuild(guild, guildCommands)));
 }
 
 async function prepareCommandsForGuild(
 	guild: Guild,
-	guildCommands: Array<GuildedCommand>,
-	logger: Console
+	guildCommands: Array<GuildedCommand>
 ): Promise<void> {
 	logger.info(`Deploying ${guildCommands.length} guild-bound command(s):`);
 

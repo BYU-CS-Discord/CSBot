@@ -8,6 +8,9 @@ import { replyFactory } from './commandContext/reply';
 import { replyPrivatelyFactory } from './commandContext/replyPrivately';
 import { sendTypingFactory } from './commandContext/sendTyping';
 
+import { getLogger } from './logger';
+const logger = getLogger();
+
 /**
  * Performs actions from a Discord command interaction.
  * The command is ignored if the interaction is from a bot.
@@ -24,10 +27,7 @@ import { sendTypingFactory } from './commandContext/sendTyping';
  *
  * @param logger The place to write system messages.
  */
-export async function handleInteraction(
-	interaction: CommandInteraction,
-	logger: Console
-): Promise<void> {
+export async function handleInteraction(interaction: CommandInteraction): Promise<void> {
 	// Don't respond to bots or ourselves
 	if (interaction.user.bot) return;
 	if (interaction.user.id === interaction.client.user.id) return;
