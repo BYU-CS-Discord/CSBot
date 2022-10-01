@@ -23,6 +23,7 @@ This list is updated as contributors contribute.
     - [Get your own bot token](#get-your-own-bot-token)
     - [Configure the bot](#configure-the-bot)
     - [Invite your bot to your server](#invite-your-bot-to-your-server)
+    - [Important Note for Windows Users](#important-note-for-windows-users)
     - [Build the bot server](#build-the-bot-server)
     - [Register Slash Commands](#register-slash-commands)
     - [Run the bot](#run-the-bot)
