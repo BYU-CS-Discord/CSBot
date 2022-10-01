@@ -8,6 +8,7 @@
 
 This list is updated as contributors contribute.
 
+- [**ZYancey**](https://github.com/zyancey)
 - [**gmacgre**](https://github.com/gmacgre)
 - [**JstnMcBrd**](https://github.com/JstnMcBrd)
 - [**AverageHelper**](https://github.com/AverageHelper)
