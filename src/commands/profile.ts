@@ -7,7 +7,7 @@ export const profile: GlobalCommand = {
 		{
 			name: 'user',
 			description: 'The user to get the profile picture of',
-			type: ApplicationCommandOptionType.User,
+			type: ApplicationCommandOptionType?.User,
 		},
 	],
 	requiresGuild: false,
