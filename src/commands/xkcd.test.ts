@@ -97,7 +97,7 @@ describe('xkcd', () => {
 	test('Returning an embed with a comic given by a number parameter', async () => {
 		mockedAxios.get.mockResolvedValue(chosenGood);
 		mockedAxios.get.mockResolvedValueOnce(latestGood);
-		context = { ...context, options: [{ value: 35 }] } as unknown as CommandContext;
+		context = { ...context, options: [{ value: chosen.num }] } as unknown as CommandContext;
 		await expect(xkcd.execute(context)).resolves.toBeUndefined();
 		expect(mockReply).toHaveBeenCalledOnce();
 		expect(mockSendTyping).toHaveBeenCalledOnce();
@@ -110,7 +110,7 @@ describe('xkcd', () => {
 	test('Checking when a second call to the API fails', async () => {
 		mockedAxios.get.mockResolvedValue(badResponse);
 		mockedAxios.get.mockResolvedValueOnce(latestGood);
-		context = { ...context, options: [{ value: 35 }] } as unknown as CommandContext;
+		context = { ...context, options: [{ value: chosen.num }] } as unknown as CommandContext;
 		await expect(xkcd.execute(context)).resolves.toBeUndefined();
 		expect(mockReply).toHaveBeenCalledOnce();
 		expect(mockSendTyping).toHaveBeenCalledOnce();
@@ -122,7 +122,7 @@ describe('xkcd', () => {
 
 	test('Checking when a first call to the API fails', async () => {
 		mockedAxios.get.mockResolvedValue(badResponse);
-		context = { ...context, options: [{ value: 35 }] } as unknown as CommandContext;
+		context = { ...context, options: [{ value: chosen.num }] } as unknown as CommandContext;
 		await expect(xkcd.execute(context)).resolves.toBeUndefined();
 		expect(mockReply).toHaveBeenCalledOnce();
 		expect(mockSendTyping).toHaveBeenCalledOnce();
