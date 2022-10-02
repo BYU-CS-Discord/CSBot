@@ -15,14 +15,31 @@ interface GetComicResponse {
 	img: string;
 }
 
-// a quick call to see the latest comic.
-// @return the data of the most recent comic, or an empty response with num set to -1 to indicate an error.
+/**
+ * a quick call to see the latest comic.
+ * @return the data of the most recent comic, or an empty response with num set to -1 to indicate an error.
+ */
 async function _latestCheck(): Promise<GetComicResponse> {
+	const response = _getComic('latest');
+	return await response;
+}
+
+/**
+ * The actual function call to the API.
+ * @param endpoint: either a string or number that is the location of the comic.
+ * @return data- either a -1 in num to signify failure or the contents of the request.
+ */
+
+async function _getComic(endpoint: string | number): Promise<GetComicResponse> {
 	try {
-		const { data, status } = await axios.get<GetComicResponse>('https://xkcd.now.sh/?comic=latest');
+		const { data, status } = await axios.get<GetComicResponse>(
+			`https://xkcd.now.sh/?comic=${endpoint}`
+		);
+		// TODO: BUILD A TYPE GUARD AROUND THIS
 		if (status !== 200) throw new Error(`${status}`);
 		return data;
 	} catch (error_) {
+		console.log('Error in getting an XKCD comic:');
 		console.log(error_);
 		const error: GetComicResponse = {
 			month: '',
@@ -35,7 +52,7 @@ async function _latestCheck(): Promise<GetComicResponse> {
 			year: '',
 			title: '',
 			day: '',
-			img: '',
+			img: 'ERR',
 		};
 		return error;
 	}
@@ -55,14 +72,15 @@ export const xkcd: GlobalCommand = {
 
 	// entry point for command execution
 	async execute({ options, reply, sendTyping }) {
-		// sends an ephemeral message to the user
-		// @param reply: the reply method given in the execute method's CommandContext
-		// @param content: the string that should be sent to the client to let them know the error.
-		const _sendErr = async (content: string): Promise<void> => {
+		/**
+		 * Sends an ephemeral message to the user.]
+		 * @param content: the string that should be sent to the client to let them know the error.
+		 */
+		async function _sendErr(content: string): Promise<void> {
 			await reply({ content: content, ephemeral: true });
-		};
+		}
 		let comic: string = '';
-		// not making this nullable, instead filling with dummy data to be later filled
+		// not making this nullable, instead filling with dummy data to be later filled.
 		let results: GetComicResponse = {
 			month: '',
 			num: 0,
@@ -77,16 +95,16 @@ export const xkcd: GlobalCommand = {
 			transcript: '',
 		};
 
-		// let the users know that we are getting a post, and determine which comic to getto get
+		// let the users know that we are getting a post, and determine which comic to get.
 		sendTyping();
-		const latestComic = await _latestCheck(); // a  sanity check, getting the most recent comic to know the valid range of comics
+		const latestComic = await _latestCheck(); // a sanity check, getting the most recent comic to know the valid range of comics.
 
 		if (latestComic.num === -1) {
 			await _sendErr('XKCD call failed. Please try again later.');
 			return;
 		}
 
-		// determinining if a number was passed as an arg
+		// determining if a number was passed as an argument.
 		const param = options[0];
 		if (param?.value !== undefined) {
 			// number was provided in the command
@@ -97,27 +115,19 @@ export const xkcd: GlobalCommand = {
 				return;
 			}
 		} else {
-			// no number given, just get the latest
+			// no number given, just get the latest comic.
 			comic = 'latest';
 		}
 		if (comic !== 'latest') {
-			// get the comic from the API
-			try {
-				const { data, status } = await axios.get<GetComicResponse>(
-					`https://xkcd.now.sh/?comic=${comic}`
-				);
-				if (status !== 200) {
-					throw new Error(`${status}`);
-				}
-				results = data;
-			} catch (error) {
-				console.log('Axios failed to get due to exception, or a non-200 status code.');
-				console.log(error);
+			// get the comic from the API.
+			const requestedComic = await _getComic(comic);
+			if (requestedComic.num === -1) {
 				await _sendErr('XKCD call failed. Please try again later.');
 				return;
 			}
+			results = requestedComic;
 		} else {
-			// just use the OG call to build the embed
+			// just use the OG call to build the embed, since they want the latest.
 			results = latestComic;
 		}
 
@@ -133,7 +143,7 @@ export const xkcd: GlobalCommand = {
 			.setTimestamp()
 			.setFooter({ text: `Posted ${results.month}-${results.day}-${results.year}` });
 
-		// send the embed back
+		// send the embed back to the client.
 		await reply({
 			embeds: [embed],
 			ephemeral: false,
