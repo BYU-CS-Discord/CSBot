@@ -1,12 +1,6 @@
-import {
-	ApplicationCommandOptionType,
-	EmbedBuilder,
-	InteractionReplyOptions,
-	MessageReplyOptions,
-} from 'discord.js';
+import { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
 import axios from 'axios';
 
-// defining the response
 interface GetComicResponse {
 	month: string;
 	num: number;
@@ -26,7 +20,7 @@ interface GetComicResponse {
 async function _latestCheck(): Promise<GetComicResponse> {
 	try {
 		const { data, status } = await axios.get<GetComicResponse>('https://xkcd.now.sh/?comic=latest');
-		if (status !== 200) throw new Error('No good status');
+		if (status !== 200) throw new Error(`${status}`);
 		return data;
 	} catch (error_) {
 		console.log(error_);
@@ -47,28 +41,9 @@ async function _latestCheck(): Promise<GetComicResponse> {
 	}
 }
 
-// this is kinda cursed, but its the best way that I can pass "reply" as a parameter to minimize
-// code duplication
-// sends an ephemeral message to the user
-// @param reply: the reply method given in the execute method's CommandContext
-// @param content: the string that should be sent to the client to let them know the error.
-async function _sendErr(
-	reply: (
-		options:
-			| string
-			| Omit<MessageReplyOptions, 'flags'>
-			| (Omit<InteractionReplyOptions, 'flags'> & {
-					shouldMention?: boolean;
-			  })
-	) => Promise<void>,
-	content: string
-): Promise<void> {
-	await reply({ content: content, ephemeral: true });
-}
-
 export const xkcd: GlobalCommand = {
 	name: 'xkcd',
-	description: 'Fetches the most recent xkcd comic, or a selected ',
+	description: 'Fetches the most recent xkcd comic, or a selected one.',
 	requiresGuild: false,
 	options: [
 		{
@@ -77,7 +52,15 @@ export const xkcd: GlobalCommand = {
 			type: ApplicationCommandOptionType.Integer,
 		},
 	],
+
+	// entry point for command execution
 	async execute({ options, reply, sendTyping }) {
+		// sends an ephemeral message to the user
+		// @param reply: the reply method given in the execute method's CommandContext
+		// @param content: the string that should be sent to the client to let them know the error.
+		const _sendErr = async (content: string): Promise<void> => {
+			await reply({ content: content, ephemeral: true });
+		};
 		let comic: string = '';
 		// not making this nullable, instead filling with dummy data to be later filled
 		let results: GetComicResponse = {
@@ -99,7 +82,7 @@ export const xkcd: GlobalCommand = {
 		const latestComic = await _latestCheck(); // a  sanity check, getting the most recent comic to know the valid range of comics
 
 		if (latestComic.num === -1) {
-			await _sendErr(reply, 'XKCD call failed. Please try again later.');
+			await _sendErr('XKCD call failed. Please try again later.');
 			return;
 		}
 
@@ -110,10 +93,7 @@ export const xkcd: GlobalCommand = {
 			comic = `${param.value as number}`;
 			if (param.value < 1 || param.value > latestComic.num) {
 				// error checking, no negative comics or comic 0. Instead send an error message
-				await _sendErr(
-					reply,
-					`Please insert a valid comic number. The range is 1-${latestComic.num}.`
-				);
+				await _sendErr(`Please insert a valid comic number. The range is 1-${latestComic.num}.`);
 				return;
 			}
 		} else {
@@ -128,14 +108,14 @@ export const xkcd: GlobalCommand = {
 				);
 				if (status !== 200) {
 					console.log('Axios failed to get a comic');
-					await _sendErr(reply, 'XKCD call returned an error. Please try again later.');
+					await _sendErr('XKCD call returned an error. Please try again later.');
 					return;
 				}
 				results = data;
 			} catch (error) {
 				console.log('Axios failed to get due to exception');
 				console.log(error);
-				await _sendErr(reply, 'XKCD call failed. Please try again later.');
+				await _sendErr('XKCD call failed. Please try again later.');
 				return;
 			}
 		} else {
@@ -152,7 +132,6 @@ export const xkcd: GlobalCommand = {
 			.setURL(`https://xkcd.com/${results.num}/`)
 			.setImage(results.img)
 			.setDescription(`${results.alt}`)
-			.setColor(0x2b96f3)
 			.setTimestamp()
 			.setFooter({ text: `Posted ${results.month}-${results.day}-${results.year}` });
 
