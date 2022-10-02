@@ -40,12 +40,15 @@ describe('allEvents', () => {
 	});
 
 	test('properly registers events', () => {
-		allEventHandlers.clear();
-
 		// To test if event handler registration is working correctly,
 		// this test adds an arbitrary amount of event handlers (both 'on' and 'once'),
 		// registers them, and then checks to make sure the correct number of handlers
 		// were registered for 'on' and 'once'.
+
+		// Be sure to clear all the auto-added event handlers first, or else they'll mess up our count.
+		// Casting a read-only list into a regular list is bad practice, but this is for testing purposes.
+		// Don't do this at home.
+		(allEventHandlers as Map<string, EventHandler>).clear();
 
 		// Set these values to anything you want, doesn't matter
 		const numOnTests = 3;
