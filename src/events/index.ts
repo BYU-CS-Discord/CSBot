@@ -1,7 +1,7 @@
 // Dependencies
 import type { Client } from 'discord.js';
 
-// Logger
+// Internal dependencies
 import { getLogger } from '../logger';
 const logger = getLogger();
 

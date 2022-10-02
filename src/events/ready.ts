@@ -1,7 +1,9 @@
+// Dependencies
 import type { Client, ClientPresence } from 'discord.js';
 import { ActivityType } from 'discord.js';
 import { parseArgs } from '../helpers/parseArgs';
 
+// Internal dependencies
 import { deployCommands } from '../helpers/actions/deployCommands';
 import { revokeCommands } from '../helpers/actions/revokeCommands';
 import { verifyCommandDeployments } from '../helpers/actions/verifyCommandDeployments';
