@@ -1,5 +1,5 @@
 // Dependencies
-import type { Interaction, CommandInteraction } from 'discord.js';
+import type { Interaction, CommandInteraction, TextBasedChannel } from 'discord.js';
 import { ChannelType } from 'discord.js';
 
 // Mock allCommands to isolate our test code
@@ -49,51 +49,33 @@ const selfUid = 'self-1234';
 const otherUid = 'other-1234';
 const channelId = 'the-channel-1234';
 
-// This method helps reduce code duplication
-// It takes an arbitrarily-long list of strings that specify settings
-// Defaults are global, nonBot, fromOther, inGuild, nonPartial, and isCommand
-// Options are guilded, bot, fromSelf, DM, partial, and notCommand
-function interactionGenerator(...args: Array<any>): Interaction {
-	const guilded = args.includes('guilded');
-	const bot = args.includes('bot');
-	const fromSelf = args.includes('fromSelf');
-	const DM = args.includes('DM');
-	const partial = args.includes('partial');
-	const isCommand = !args.includes('notCommand');
+// Helper function to create Interactions
+// Reduces code duplication
+function defaultInteraction(): Interaction {
 	return {
-		commandName: guilded ? mockGuildedCommand.name : mockGlobalCommand.name,
+		commandName: mockGlobalCommand.name,
 		options: { data: [] },
-		client: {
-			user: { id: selfUid },
-		},
+		client: { user: { id: selfUid } },
 		user: {
-			bot: bot,
-			id: fromSelf ? selfUid : otherUid,
+			bot: false,
+			id: otherUid,
 		},
 		channelId,
-		inCachedGuild: () => !DM,
-		inGuild: () => !DM,
-		member: DM ? null : { id: otherUid },
-		guild: DM ? null : { id: 'guild-1234' },
+		inCachedGuild: () => true,
+		inGuild: () => true,
+		member: { id: otherUid },
+		guild: { id: 'guild-1234' },
 		channel: {
-			type: DM ? ChannelType.DM : ChannelType.GuildText,
-			partial: partial,
+			type: ChannelType.GuildText,
+			partial: false,
 		},
-		isCommand: () => isCommand,
+		isCommand: () => true,
 	} as unknown as Interaction;
 }
 
 describe('on(interactionCreate)', () => {
-	beforeEach(() => {
-		// nothing for now
-	});
-
-	afterEach(() => {
-		// jest.restoreAllMocks();
-	});
-
-	test('reports interaction errors', async () => {
-		const interaction = interactionGenerator();
+	test('logs interaction errors', async () => {
+		const interaction = defaultInteraction();
 		interaction.isCommand = (): boolean => {
 			throw interactionError;
 		};
@@ -106,28 +88,31 @@ describe('on(interactionCreate)', () => {
 	});
 
 	test("does nothing if the interaction isn't a command", async () => {
-		const interaction = interactionGenerator('notCommand');
+		const interaction = defaultInteraction();
+		interaction.isCommand = (): boolean => false;
 
 		await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 		expect(mockGlobalExecute).not.toHaveBeenCalled();
 	});
 
 	test('does nothing if the sender is a bot', async () => {
-		const interaction = interactionGenerator('bot');
+		const interaction = defaultInteraction();
+		interaction.user.bot = true;
 
 		await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 		expect(mockGlobalExecute).not.toHaveBeenCalled();
 	});
 
 	test('does nothing if the sender is us', async () => {
-		const interaction = interactionGenerator('fromSelf');
+		const interaction = defaultInteraction();
+		interaction.user.id = selfUid;
 
 		await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 		expect(mockGlobalExecute).not.toHaveBeenCalled();
 	});
 
 	test('does nothing if the command is not found', async () => {
-		const interaction = interactionGenerator();
+		const interaction = defaultInteraction();
 		(interaction as CommandInteraction).commandName = 'nop';
 
 		await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
@@ -135,47 +120,96 @@ describe('on(interactionCreate)', () => {
 	});
 
 	test('calls the `execute` method of a global command from a guild', async () => {
-		const interaction = interactionGenerator();
+		const interaction = defaultInteraction();
 
 		await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 		expect(mockGlobalExecute).toHaveBeenCalledOnce();
 	});
 
 	test('calls the `execute` method of a global command from DMs', async () => {
-		const interaction = interactionGenerator('DM');
+		let interaction = defaultInteraction();
+		interaction.inCachedGuild = (): boolean => false;
+		interaction.inGuild = (): boolean => false;
+		interaction.member = null;
+
+		const channel = {
+			type: ChannelType.DM,
+		} as unknown as TextBasedChannel;
+
+		const guild = null;
+
+		// Overwrite 'read-only' parameters of Interaction
+		interaction = {
+			...interaction,
+			guild: guild,
+			channel: channel,
+		} as unknown as Interaction;
 
 		await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 		expect(mockGlobalExecute).toHaveBeenCalledOnce();
 	});
 
 	test('calls the `execute` method of a guilded command from a guild', async () => {
-		const interaction = interactionGenerator('guilded');
+		const interaction = defaultInteraction();
+		(interaction as CommandInteraction).commandName = mockGuildedCommand.name;
 
 		await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 		expect(mockGuildedExecute).toHaveBeenCalledOnce();
 	});
 
 	test('tells the user off when they try to execute a guilded command from DMs', async () => {
-		const interaction = interactionGenerator('guilded', 'DM');
+		let interaction = defaultInteraction();
+		(interaction as CommandInteraction).commandName = mockGuildedCommand.name;
+		interaction.inCachedGuild = (): boolean => false;
+		interaction.inGuild = (): boolean => false;
+		interaction.member = null;
+
+		const channel = {
+			type: ChannelType.DM,
+		} as unknown as TextBasedChannel;
+
+		const guild = null;
+
+		// Overwrite 'read-only' parameters of Interaction
+		interaction = {
+			...interaction,
+			guild: guild,
+			channel: channel,
+		} as unknown as Interaction;
+
 		const mockInteractionReply = jest.fn();
 		(interaction as CommandInteraction).reply = mockInteractionReply;
 
 		await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 		expect(mockGuildedExecute).not.toHaveBeenCalled();
-		expect(mockInteractionReply).toHaveBeenCalledOnce();
 		expect(mockInteractionReply).toHaveBeenCalledWith({
 			content: "Can't do that here",
 			ephemeral: true,
 		});
 	});
 
+	// This is for 100% code coverage
 	test('fetches the channel when a command comes from a partial DM channel', async () => {
-		// This is for 100% code coverage
-		const interaction = interactionGenerator('DM', 'partial');
+		let interaction = defaultInteraction();
+		interaction.inCachedGuild = (): boolean => false;
+		interaction.inGuild = (): boolean => false;
+		interaction.member = null;
+
 		const mockChannelFetch = jest.fn();
-		if (interaction.channel) {
-			interaction.channel.fetch = mockChannelFetch;
-		}
+		const channel = {
+			type: ChannelType.DM,
+			partial: true,
+			fetch: mockChannelFetch,
+		} as unknown as TextBasedChannel;
+
+		const guild = null;
+
+		// Overwrite 'read-only' parameters of Interaction
+		interaction = {
+			...interaction,
+			guild: guild,
+			channel: channel,
+		} as unknown as Interaction;
 
 		await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 		expect(mockChannelFetch).toHaveBeenCalledOnce();
