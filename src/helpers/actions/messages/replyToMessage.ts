@@ -10,6 +10,9 @@ import type {
 import { ChannelType } from 'discord.js';
 import { logUser } from '../../logUser';
 
+import { getLogger } from '../../../logger';
+const logger = getLogger();
+
 /**
  * Attempts to send a direct message to a user.
  *
@@ -23,7 +26,7 @@ async function sendDM(user: User, content: string | MessageCreateOptions): Promi
 	try {
 		return await user.send(content);
 	} catch (error) {
-		console.error(`Failed to send direct message to user ${logUser(user)}:`, error);
+		logger.error(`Failed to send direct message to user ${logUser(user)}:`, error);
 		return null;
 	}
 }
@@ -50,7 +53,7 @@ async function sendDMReply(
 		}
 		return await sendDM(user, { ...options, content: response });
 	} catch (error) {
-		console.error(`Failed to send direct message to user ${logUser(user)}:`, error);
+		logger.error(`Failed to send direct message to user ${logUser(user)}:`, error);
 		return null;
 	}
 }
@@ -66,12 +69,10 @@ async function sendEphemeralReply(
 		} else {
 			await source.reply({ ...options, ephemeral: true });
 		}
-		console.info(
-			`Sent ephemeral reply to User ${logUser(source.user)}: ${JSON.stringify(options)}`
-		);
+		logger.info(`Sent ephemeral reply to User ${logUser(source.user)}: ${JSON.stringify(options)}`);
 		return true;
 	} catch (error) {
-		console.error('Failed to send ephemeral message:', error);
+		logger.error('Failed to send ephemeral message:', error);
 		return false;
 	}
 }
@@ -155,7 +156,7 @@ export async function sendMessageInChannel(
 	try {
 		return await channel.send(content);
 	} catch (error) {
-		console.error(`Failed to send message ${JSON.stringify(content)}:`, error);
+		logger.error(`Failed to send message ${JSON.stringify(content)}:`, error);
 		return null;
 	}
 }

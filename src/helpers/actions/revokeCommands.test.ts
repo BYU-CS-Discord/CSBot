@@ -1,16 +1,23 @@
 import type { Client } from 'discord.js';
+
+jest.mock('../../logger');
+import { getLogger } from '../../logger';
+const mockGetLogger = getLogger as jest.Mock;
+mockGetLogger.mockImplementation(() => {
+	return {
+		debug: () => undefined,
+		info: () => undefined,
+		warn: () => undefined,
+		error: () => undefined,
+	} as unknown as Console;
+});
+
 import { revokeCommands } from './revokeCommands';
 
 describe('Command revocations', () => {
 	const mockApplicationCommandsSet = jest.fn();
 	const mockGuildCommandsSet = jest.fn();
 	const mockFetchOauthGuilds = jest.fn();
-	const mockConsole = {
-		debug: () => undefined,
-		info: () => undefined,
-		warn: () => undefined,
-		error: () => undefined,
-	} as unknown as Console;
 
 	const mockClient = {
 		application: {
@@ -49,12 +56,12 @@ describe('Command revocations', () => {
 	});
 
 	test('clears global commands', async () => {
-		await expect(revokeCommands(mockClient, mockConsole)).resolves.toBeUndefined();
+		await expect(revokeCommands(mockClient)).resolves.toBeUndefined();
 		expect(mockApplicationCommandsSet).toHaveBeenCalledOnce();
 	});
 
 	test('clears commands for each guild', async () => {
-		await expect(revokeCommands(mockClient, mockConsole)).resolves.toBeUndefined();
+		await expect(revokeCommands(mockClient)).resolves.toBeUndefined();
 		expect(mockGuildCommandsSet).toHaveBeenCalledTimes(2);
 	});
 });

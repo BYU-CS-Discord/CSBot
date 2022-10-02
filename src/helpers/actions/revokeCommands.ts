@@ -1,9 +1,12 @@
 import type { Client } from 'discord.js';
 
+import { getLogger } from '../../logger';
+const logger = getLogger();
+
 /**
  * Unregisters all command interactions globally and in each guild for this account.
  */
-export async function revokeCommands(client: Client<true>, logger: Console): Promise<void> {
+export async function revokeCommands(client: Client<true>): Promise<void> {
 	logger.info('Revoking global commands...');
 	await client.application?.commands.set([]);
 	logger.info('Revoked global commands');

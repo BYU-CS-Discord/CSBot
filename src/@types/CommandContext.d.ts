@@ -24,9 +24,6 @@ declare global {
 		/** Our own signed-in Discord client. */
 		readonly client: Client<true>;
 
-		/** The place to submit informative debug messages. */
-		readonly logger: Console; // TODO: More extensible logger than `console`?
-
 		/** The guild in which the command was invoked. */
 		readonly guild: Guild | null;
 

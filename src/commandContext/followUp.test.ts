@@ -4,17 +4,22 @@ jest.mock('../helpers/actions/messages/replyToMessage');
 import { sendMessageInChannel } from '../helpers/actions/messages/replyToMessage';
 const mockSendMessageInChannel = sendMessageInChannel as jest.Mock;
 
+jest.mock('../logger');
+import { getLogger } from '../logger';
+const mockGetLogger = getLogger as jest.Mock;
+const mockConsoleError = jest.fn();
+mockGetLogger.mockImplementation(() => {
+	return {
+		error: mockConsoleError,
+	} as unknown as Console;
+});
+
 import { followUpFactory as factory } from './followUp';
 
 describe('follow-up message', () => {
 	const testMessage = { id: 'test-message' };
 	mockSendMessageInChannel.mockResolvedValue(testMessage);
 	const mockInteractionFollowUp = jest.fn().mockResolvedValue(testMessage);
-	const mockConsoleError = jest.fn();
-
-	const mockConsole = {
-		error: mockConsoleError,
-	} as unknown as Console;
 
 	const interaction = {
 		channel: {
@@ -24,7 +29,7 @@ describe('follow-up message', () => {
 		followUp: mockInteractionFollowUp,
 	} as unknown as CommandInteraction;
 
-	const followUp = factory(interaction, mockConsole);
+	const followUp = factory(interaction);
 
 	test('sends a followup message to the interaction', async () => {
 		await expect(followUp('yo')).resolves.toBe(testMessage);

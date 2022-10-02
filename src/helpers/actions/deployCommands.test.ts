@@ -1,8 +1,19 @@
 import type { Client } from 'discord.js';
 import { ApplicationCommandOptionType } from 'discord.js';
 
-const mockAllCommands = new Map<string, Command>();
+jest.mock('../../logger');
+import { getLogger } from '../../logger';
+const mockGetLogger = getLogger as jest.Mock;
+mockGetLogger.mockImplementation(() => {
+	return {
+		debug: () => undefined,
+		info: () => undefined,
+		warn: () => undefined,
+		error: () => undefined,
+	} as unknown as Console;
+});
 
+const mockAllCommands = new Map<string, Command>();
 jest.mock('../../commands', () => ({
 	allCommands: mockAllCommands,
 }));
@@ -17,12 +28,7 @@ describe('Command deployments', () => {
 	const mockApplicationCommandsSet = jest.fn();
 	const mockGuildCommandsSet = jest.fn();
 	const mockFetchOauthGuilds = jest.fn();
-	const mockConsole = {
-		debug: () => undefined,
-		info: () => undefined,
-		warn: () => undefined,
-		error: () => undefined,
-	} as unknown as Console;
+
 	const mockClient = {
 		application: {
 			commands: {
@@ -108,7 +114,7 @@ describe('Command deployments', () => {
 
 	test('does no deployments if there are no commands to deploy', async () => {
 		mockAllCommands.clear();
-		await expect(deployCommands(mockClient, mockConsole)).resolves.toBeUndefined();
+		await expect(deployCommands(mockClient)).resolves.toBeUndefined();
 		expect(mockRevokeCommands).toHaveBeenCalledOnce();
 		expect(mockApplicationCommandsSet).not.toHaveBeenCalled();
 		expect(mockGuildCommandsSet).not.toHaveBeenCalled();
@@ -116,7 +122,7 @@ describe('Command deployments', () => {
 	});
 
 	test('calls mockRevokeCommands before any deployments', async () => {
-		await expect(deployCommands(mockClient, mockConsole)).resolves.toBeUndefined();
+		await expect(deployCommands(mockClient)).resolves.toBeUndefined();
 		expect(mockRevokeCommands).toHaveBeenCalledOnce();
 		expect(mockRevokeCommands).toHaveBeenCalledBefore(mockApplicationCommandsSet);
 		expect(mockRevokeCommands).toHaveBeenCalledBefore(mockGuildCommandsSet);
@@ -125,7 +131,7 @@ describe('Command deployments', () => {
 
 	test('continues deployments if global commands fail to deploy', async () => {
 		mockApplicationCommandsSet.mockRejectedValueOnce(new Error('This is a test'));
-		await expect(deployCommands(mockClient, mockConsole)).resolves.toBeUndefined();
+		await expect(deployCommands(mockClient)).resolves.toBeUndefined();
 		expect(mockRevokeCommands).toHaveBeenCalledOnce();
 		expect(mockRevokeCommands).toHaveBeenCalledBefore(mockApplicationCommandsSet);
 		expect(mockRevokeCommands).toHaveBeenCalledBefore(mockGuildCommandsSet);
@@ -134,7 +140,7 @@ describe('Command deployments', () => {
 
 	test('continues deployments if guild-bound commands fail to deploy', async () => {
 		mockGuildCommandsSet.mockRejectedValueOnce(new Error('This is a test'));
-		await expect(deployCommands(mockClient, mockConsole)).resolves.toBeUndefined();
+		await expect(deployCommands(mockClient)).resolves.toBeUndefined();
 		expect(mockRevokeCommands).toHaveBeenCalledOnce();
 		expect(mockRevokeCommands).toHaveBeenCalledBefore(mockApplicationCommandsSet);
 		expect(mockRevokeCommands).toHaveBeenCalledBefore(mockGuildCommandsSet);

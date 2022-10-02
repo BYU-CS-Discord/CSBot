@@ -1,10 +1,10 @@
 import type { CommandInteraction, InteractionReplyOptions } from 'discord.js';
 import { sendMessageInChannel } from '../helpers/actions/messages/replyToMessage';
 
-export function followUpFactory(
-	interaction: CommandInteraction,
-	logger: Console
-): CommandContext['followUp'] {
+import { getLogger } from '../logger';
+const logger = getLogger();
+
+export function followUpFactory(interaction: CommandInteraction): CommandContext['followUp'] {
 	return async function followUp(options) {
 		if (
 			typeof options !== 'string' &&
