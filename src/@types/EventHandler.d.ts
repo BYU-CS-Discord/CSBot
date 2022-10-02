@@ -13,7 +13,6 @@ declare global {
 
 		/**
 		 * Whether this event can only fire once
-		 * Defaults to false
 		 */
 		once: boolean;
 
