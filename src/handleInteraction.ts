@@ -24,8 +24,6 @@ const logger = getLogger();
  * The goal is for us devs to not have to worry about how exactly
  * things get done when we're writing command handlers, only
  * that what we say goes.
- *
- * @param logger The place to write system messages.
  */
 export async function handleInteraction(interaction: CommandInteraction): Promise<void> {
 	// Don't respond to bots or ourselves
@@ -75,12 +73,11 @@ export async function handleInteraction(interaction: CommandInteraction): Promis
 		client: interaction.client,
 		interaction,
 		options: interaction.options.data,
-		logger,
-		prepareForLongRunningTasks: prepareForLongRunningTasksFactory(interaction, logger),
-		replyPrivately: replyPrivatelyFactory(interaction, logger),
-		reply: replyFactory(interaction, logger),
-		followUp: followUpFactory(interaction, logger),
-		sendTyping: sendTypingFactory(interaction, logger),
+		prepareForLongRunningTasks: prepareForLongRunningTasksFactory(interaction),
+		replyPrivately: replyPrivatelyFactory(interaction),
+		reply: replyFactory(interaction),
+		followUp: followUpFactory(interaction),
+		sendTyping: sendTypingFactory(interaction),
 	};
 
 	let context: CommandContext;

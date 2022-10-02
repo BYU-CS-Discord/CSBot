@@ -1,10 +1,10 @@
 import type { CommandInteraction, InteractionReplyOptions } from 'discord.js';
 import { logUser } from '../helpers/logUser';
 
-export function replyFactory(
-	interaction: CommandInteraction,
-	logger: Console
-): CommandContext['reply'] {
+import { getLogger } from '../logger';
+const logger = getLogger();
+
+export function replyFactory(interaction: CommandInteraction): CommandContext['reply'] {
 	return async function reply(options) {
 		let didFailToReply = false;
 

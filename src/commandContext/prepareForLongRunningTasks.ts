@@ -1,8 +1,10 @@
 import type { CommandInteraction } from 'discord.js';
 
+import { getLogger } from '../logger';
+const logger = getLogger();
+
 export function prepareForLongRunningTasksFactory(
-	interaction: CommandInteraction,
-	logger: Console
+	interaction: CommandInteraction
 ): CommandContext['prepareForLongRunningTasks'] {
 	return async function prepareForLongRunningTasks(ephemeral) {
 		try {

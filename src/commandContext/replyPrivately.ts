@@ -2,9 +2,11 @@ import type { CommandInteraction } from 'discord.js';
 import { logUser } from '../helpers/logUser';
 import { replyWithPrivateMessage } from '../helpers/actions/messages/replyToMessage';
 
+import { getLogger } from '../logger';
+const logger = getLogger();
+
 export function replyPrivatelyFactory(
-	interaction: CommandInteraction,
-	logger: Console
+	interaction: CommandInteraction
 ): CommandContext['replyPrivately'] {
 	return async function replyPrivately(options, viaDM: boolean = false) {
 		if (viaDM) {

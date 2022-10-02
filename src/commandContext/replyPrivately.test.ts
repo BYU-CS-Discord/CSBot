@@ -4,6 +4,18 @@ jest.mock('../helpers/actions/messages/replyToMessage');
 import { replyWithPrivateMessage } from '../helpers/actions/messages/replyToMessage';
 const mockSendDM = replyWithPrivateMessage as jest.Mock;
 
+jest.mock('../logger');
+import { getLogger } from '../logger';
+const mockGetLogger = getLogger as jest.Mock;
+const mockConsoleInfo = jest.fn();
+const mockConsoleError = jest.fn();
+mockGetLogger.mockImplementation(() => {
+	return {
+		info: mockConsoleInfo,
+		error: mockConsoleError,
+	} as unknown as Console;
+});
+
 import { replyPrivatelyFactory as factory } from './replyPrivately';
 
 describe('ephemeral and DM replies', () => {
@@ -11,13 +23,6 @@ describe('ephemeral and DM replies', () => {
 	const mockInteractionReply = jest.fn();
 	const mockInteractionEditReply = jest.fn();
 	const mockInteractionFollowUp = jest.fn();
-	const mockConsoleInfo = jest.fn();
-	const mockConsoleError = jest.fn();
-
-	const mockConsole = {
-		info: mockConsoleInfo,
-		error: mockConsoleError,
-	} as unknown as Console;
 
 	let interaction: CommandInteraction;
 	let replyPrivately: CommandContext['replyPrivately'];
@@ -31,7 +36,7 @@ describe('ephemeral and DM replies', () => {
 			followUp: mockInteractionFollowUp,
 		} as unknown as CommandInteraction;
 
-		replyPrivately = factory(interaction, mockConsole);
+		replyPrivately = factory(interaction);
 	});
 
 	test('sends an ephemeral reply to check DMs', async () => {
@@ -70,7 +75,7 @@ describe('ephemeral and DM replies', () => {
 
 	test('edits the previous reply message if deferred, sending a DM with text', async () => {
 		interaction = { ...interaction, deferred: true } as unknown as CommandInteraction;
-		replyPrivately = factory(interaction, mockConsole);
+		replyPrivately = factory(interaction);
 
 		await expect(replyPrivately('yo DMs', true)).resolves.toBeUndefined();
 		expect(mockInteractionEditReply).toHaveBeenCalledWith(
@@ -81,7 +86,7 @@ describe('ephemeral and DM replies', () => {
 
 	test('edits the previous reply message if deferred, sending a DM with object', async () => {
 		interaction = { ...interaction, deferred: true } as unknown as CommandInteraction;
-		replyPrivately = factory(interaction, mockConsole);
+		replyPrivately = factory(interaction);
 
 		await expect(replyPrivately({ content: 'yo DMs' }, true)).resolves.toBeUndefined();
 		expect(mockInteractionEditReply).toHaveBeenCalledWith(
@@ -94,7 +99,7 @@ describe('ephemeral and DM replies', () => {
 		const testError = new Error('This is a test');
 		mockInteractionEditReply.mockRejectedValueOnce(testError);
 		interaction = { ...interaction, deferred: true } as unknown as CommandInteraction;
-		replyPrivately = factory(interaction, mockConsole);
+		replyPrivately = factory(interaction);
 
 		await expect(replyPrivately({ content: 'yo' }, true)).resolves.toBeUndefined();
 		expect(mockInteractionEditReply).toHaveBeenCalledWith(
@@ -107,7 +112,7 @@ describe('ephemeral and DM replies', () => {
 
 	test('sends an ephemeral follow-up message to the interaction if the interaction is deferred', async () => {
 		interaction = { ...interaction, deferred: true } as unknown as CommandInteraction;
-		replyPrivately = factory(interaction, mockConsole);
+		replyPrivately = factory(interaction);
 
 		await expect(replyPrivately('yo in secret')).resolves.toBeUndefined();
 		expect(mockInteractionFollowUp).toHaveBeenCalledWith({
@@ -118,7 +123,7 @@ describe('ephemeral and DM replies', () => {
 
 	test('sends an ephemeral follow-up message from options to the interaction if the interaction is deferred', async () => {
 		interaction = { ...interaction, deferred: true } as unknown as CommandInteraction;
-		replyPrivately = factory(interaction, mockConsole);
+		replyPrivately = factory(interaction);
 
 		await expect(replyPrivately({ content: 'yo object in secret' })).resolves.toBeUndefined();
 		expect(mockInteractionFollowUp).toHaveBeenCalledWith({
@@ -131,7 +136,7 @@ describe('ephemeral and DM replies', () => {
 		const testError = new Error('This is a test');
 		mockInteractionFollowUp.mockRejectedValueOnce(testError);
 		interaction = { ...interaction, deferred: true } as unknown as CommandInteraction;
-		replyPrivately = factory(interaction, mockConsole);
+		replyPrivately = factory(interaction);
 
 		await expect(replyPrivately('yo in secret')).resolves.toBeUndefined();
 		expect(mockInteractionFollowUp).toHaveBeenCalledWith({
@@ -146,7 +151,7 @@ describe('ephemeral and DM replies', () => {
 		const testError = new Error('This is a test');
 		mockInteractionFollowUp.mockRejectedValueOnce(testError);
 		interaction = { ...interaction, deferred: true } as unknown as CommandInteraction;
-		replyPrivately = factory(interaction, mockConsole);
+		replyPrivately = factory(interaction);
 
 		await expect(replyPrivately({ content: 'yo object in secret' })).resolves.toBeUndefined();
 		expect(mockInteractionFollowUp).toHaveBeenCalledWith({

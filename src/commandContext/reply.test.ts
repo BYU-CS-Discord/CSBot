@@ -1,22 +1,28 @@
 import type { CommandInteraction } from 'discord.js';
+
+jest.mock('../logger');
+import { getLogger } from '../logger';
+const mockGetLogger = getLogger as jest.Mock;
+const mockConsoleInfo = jest.fn();
+const mockConsoleError = jest.fn();
+mockGetLogger.mockImplementation(() => {
+	return {
+		info: mockConsoleInfo,
+		error: mockConsoleError,
+	} as unknown as Console;
+});
+
 import { replyFactory as factory } from './reply';
 
 describe('public reply', () => {
 	const mockInteractionReply = jest.fn();
-	const mockConsoleInfo = jest.fn();
-	const mockConsoleError = jest.fn();
-
-	const mockConsole = {
-		info: mockConsoleInfo,
-		error: mockConsoleError,
-	} as unknown as Console;
 
 	const interaction = {
 		user: { id: 'user-id-1234' },
 		reply: mockInteractionReply,
 	} as unknown as CommandInteraction;
 
-	const reply = factory(interaction, mockConsole);
+	const reply = factory(interaction);
 
 	test('sends public reply to interaction with text', async () => {
 		await expect(reply('yo')).resolves.toBeUndefined();
