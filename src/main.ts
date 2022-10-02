@@ -2,7 +2,7 @@ import 'source-map-support/register';
 import 'dotenv/config';
 import { Client, GatewayIntentBits, Partials } from 'discord.js';
 
-import { registerEventHandlers } from './events'; // TODO update tests to reflect new event handlers
+import { registerEventHandlers } from './events';
 import { getLogger } from './logger';
 const logger = getLogger();
 

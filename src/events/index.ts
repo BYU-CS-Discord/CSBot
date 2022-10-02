@@ -1,16 +1,15 @@
-export const allEventHandlers = new Map<string, EventHandler>();
+// Dependencies
 import type { Client } from 'discord.js';
 
+// Logger
 import { getLogger } from '../logger';
 const logger = getLogger();
 
-// Install event handlers
-import { error } from './error';
-_add(error);
-import { interactionCreate } from './interactionCreate';
-_add(interactionCreate);
-import { ready } from './ready';
-_add(ready);
+/**
+ * The list of all event handlers. DO NOT EDIT DIRECTLY.
+ * registerEventHandlers() will pull from this list.
+ */
+export const allEventHandlers = new Map<string, EventHandler>();
 
 /**
  * Adds an event handler to the list of all handlers.
@@ -45,6 +44,14 @@ export function registerEventHandlers(client: Client): void {
 			client.on(eventName, eventHandler.execute);
 		}
 
-		logger.debug(`Registered event handler ${eventHandler.once ? 'once' : 'on'}(${eventName})`);
+		logger.info(`Registered event handler ${eventHandler.once ? 'once' : 'on'}(${eventName})`);
 	});
 }
+
+// Install event handlers
+import { error } from './error';
+_add(error);
+import { interactionCreate } from './interactionCreate';
+_add(interactionCreate);
+import { ready } from './ready';
+_add(ready);

@@ -1,8 +1,8 @@
-// TODO tests
-
+// Dependencies
 import type { Interaction } from 'discord.js';
 import { handleInteraction } from '../handleInteraction';
 
+// Logger
 import { getLogger } from '../logger';
 const logger = getLogger();
 
