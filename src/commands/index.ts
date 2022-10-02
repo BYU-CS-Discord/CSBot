@@ -2,7 +2,9 @@ export const allCommands = new Map<string, Command>();
 
 /**  Install commands here:  **/
 import { help } from './help';
+import { xkcd } from './xkcd';
 _add(help);
+_add(xkcd);
 
 export function _add(cmd: Command): void {
 	const name = cmd.name;

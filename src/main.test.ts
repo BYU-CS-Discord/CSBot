@@ -45,7 +45,7 @@ class MockClient {
 	}
 }
 
-const { ActivityType, GatewayIntentBits, Partials } =
+const { ActivityType, GatewayIntentBits, Partials, ApplicationCommandOptionType } =
 	jest.requireActual<typeof import('discord.js')>('discord.js');
 
 jest.mock('discord.js', () => ({
@@ -53,6 +53,7 @@ jest.mock('discord.js', () => ({
 	Client: MockClient,
 	GatewayIntentBits,
 	Partials,
+	ApplicationCommandOptionType,
 }));
 
 jest.mock('./helpers/actions/deployCommands');
