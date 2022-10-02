@@ -107,13 +107,11 @@ export const xkcd: GlobalCommand = {
 					`https://xkcd.now.sh/?comic=${comic}`
 				);
 				if (status !== 200) {
-					console.log('Axios failed to get a comic');
-					await _sendErr('XKCD call returned an error. Please try again later.');
-					return;
+					throw new Error(`${status}`);
 				}
 				results = data;
 			} catch (error) {
-				console.log('Axios failed to get due to exception');
+				console.log('Axios failed to get due to exception, or a non-200 status code.');
 				console.log(error);
 				await _sendErr('XKCD call failed. Please try again later.');
 				return;

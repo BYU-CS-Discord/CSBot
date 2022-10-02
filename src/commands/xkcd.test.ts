@@ -115,7 +115,7 @@ describe('xkcd', () => {
 		expect(mockReply).toHaveBeenCalledOnce();
 		expect(mockSendTyping).toHaveBeenCalledOnce();
 		expect(mockReply).toHaveBeenCalledWith({
-			content: 'XKCD call returned an error. Please try again later.',
+			content: 'XKCD call failed. Please try again later.',
 			ephemeral: true,
 		});
 	});
