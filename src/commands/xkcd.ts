@@ -1,6 +1,9 @@
 import { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
 import axios from 'axios';
 
+import { getLogger } from '../logger';
+const logger = getLogger();
+
 interface GetComicResponse {
 	month: string;
 	num: number;
@@ -39,8 +42,8 @@ async function _getComic(endpoint: string | number): Promise<GetComicResponse> {
 		if (status !== 200) throw new Error(`${status}`);
 		return data;
 	} catch (error_) {
-		console.log('Error in getting an XKCD comic:');
-		console.log(error_);
+		logger.error('Error in getting an XKCD comic:');
+		logger.error(error_);
 		const error: GetComicResponse = {
 			month: '',
 			num: -1,
