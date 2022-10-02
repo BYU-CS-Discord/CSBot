@@ -5,8 +5,8 @@ import { getLogger } from '../logger';
 const logger = getLogger();
 
 // Install event handlers
-// import { error } from './error';
-// _add(error);
+import { error } from './error';
+_add(error);
 // import { interactionCreate } from './interactionCreate';
 // _add(interactionCreate);
 // import { ready } from './ready';

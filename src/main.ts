@@ -3,6 +3,7 @@ import 'dotenv/config';
 import { ActivityType, Client, GatewayIntentBits, Partials } from 'discord.js';
 import { appVersion } from './constants/meta';
 import { deployCommands } from './helpers/actions/deployCommands';
+import { registerEventHandlers } from './events';
 import { handleInteraction } from './handleInteraction';
 import { parseArgs } from './helpers/parseArgs';
 import { revokeCommands } from './helpers/actions/revokeCommands';
@@ -75,9 +76,7 @@ export async function _main(): Promise<void> {
 		logger.info('Ready!');
 	});
 
-	client.on('error', error => {
-		logger.error('Received client error:', error);
-	});
+	registerEventHandlers(client);
 
 	try {
 		await client.login(process.env['DISCORD_TOKEN']);
