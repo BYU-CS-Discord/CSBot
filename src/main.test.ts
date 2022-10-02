@@ -26,14 +26,21 @@ class MockClient {
 
 	on(eventName: string | symbol, listener: (...args: Array<unknown>) => void): this {
 		switch (eventName) {
-			case 'ready':
-				listener(this);
-				return this;
 			case 'error':
 				listener(mockClientError);
 				return this;
 			case 'interactionCreate':
 				listener(mockInteraction);
+				return this;
+			default:
+				return this;
+		}
+	}
+
+	once(eventName: string | symbol, listener: (...args: Array<unknown>) => void): this {
+		switch (eventName) {
+			case 'ready':
+				listener(this);
 				return this;
 			default:
 				return this;
@@ -92,7 +99,6 @@ mockGetLogger.mockImplementation(() => {
 import { _main } from './main';
 
 describe('main', () => {
-
 	beforeEach(() => {
 		mockConstructClient.mockReturnValue(undefined);
 		mockLogin.mockResolvedValue('TEST');

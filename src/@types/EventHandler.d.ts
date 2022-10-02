@@ -15,7 +15,7 @@ declare global {
 		 * Whether this event can only fire once
 		 * Defaults to false
 		 */
-		once: false;
+		once: boolean;
 
 		/**
 		 * The event implementation. Receives any number of arguments, depending on the event.

@@ -11,8 +11,8 @@ import { error } from './error';
 _add(error);
 import { interactionCreate } from './interactionCreate';
 _add(interactionCreate);
-// import { ready } from './ready';
-// _add(ready);
+import { ready } from './ready';
+_add(ready);
 
 /**
  * Adds an event handler to the list of all handlers.
