@@ -3,7 +3,7 @@ import 'dotenv/config';
 import { ActivityType, Client, GatewayIntentBits, Partials } from 'discord.js';
 import { appVersion } from './constants/meta';
 import { deployCommands } from './helpers/actions/deployCommands';
-import { registerEventHandlers } from './events';
+import { registerEventHandlers } from './events'; // TODO update tests to reflect new event handlers
 import { parseArgs } from './helpers/parseArgs';
 import { revokeCommands } from './helpers/actions/revokeCommands';
 import { verifyCommandDeployments } from './helpers/actions/verifyCommandDeployments';

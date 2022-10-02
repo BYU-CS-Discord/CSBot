@@ -1,3 +1,5 @@
+// TODO tests
+
 import type { Interaction } from 'discord.js';
 import { handleInteraction } from '../handleInteraction';
 

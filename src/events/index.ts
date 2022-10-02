@@ -1,3 +1,5 @@
+// TODO tests
+
 export const allEventHandlers = new Map<string, EventHandler>();
 import type { Client } from 'discord.js';
 

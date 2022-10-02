@@ -1,3 +1,5 @@
+// TODO tests
+
 import { getLogger } from '../logger';
 const logger = getLogger();
 
