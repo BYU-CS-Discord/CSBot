@@ -4,7 +4,6 @@ import { ActivityType, Client, GatewayIntentBits, Partials } from 'discord.js';
 import { appVersion } from './constants/meta';
 import { deployCommands } from './helpers/actions/deployCommands';
 import { registerEventHandlers } from './events';
-import { handleInteraction } from './handleInteraction';
 import { parseArgs } from './helpers/parseArgs';
 import { revokeCommands } from './helpers/actions/revokeCommands';
 import { verifyCommandDeployments } from './helpers/actions/verifyCommandDeployments';
@@ -55,17 +54,6 @@ export async function _main(): Promise<void> {
 		// Sanity check for commands
 		logger.info('Verifying command deployments...');
 		await verifyCommandDeployments(client);
-
-		// Register interaction listeners
-		client.on('interactionCreate', async interaction => {
-			if (interaction.isCommand()) {
-				try {
-					await handleInteraction(interaction);
-				} catch (error) {
-					logger.error('Failed to handle interaction:', error);
-				}
-			}
-		});
 
 		// Let users know where to go for info
 		client.user.setActivity({
