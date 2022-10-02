@@ -1,19 +1,25 @@
 import type { CommandInteraction } from 'discord.js';
+
+jest.mock('../logger');
+import { getLogger } from '../logger';
+const mockGetLogger = getLogger as jest.Mock;
+const mockConsoleError = jest.fn();
+mockGetLogger.mockImplementation(() => {
+	return {
+		error: mockConsoleError,
+	} as unknown as Console;
+});
+
 import { prepareForLongRunningTasksFactory as factory } from './prepareForLongRunningTasks';
 
 describe('prepareForLongRunningTasks', () => {
 	const mockInteractionDeferReply = jest.fn();
-	const mockConsoleError = jest.fn();
-
-	const mockConsole = {
-		error: mockConsoleError,
-	} as unknown as Console;
 
 	const interaction = {
 		deferReply: mockInteractionDeferReply,
 	} as unknown as CommandInteraction;
 
-	const prepareForLongRunningTasks = factory(interaction, mockConsole);
+	const prepareForLongRunningTasks = factory(interaction);
 
 	test('requests interaction deferrment', async () => {
 		await expect(prepareForLongRunningTasks()).resolves.toBeUndefined();

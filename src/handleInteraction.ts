@@ -8,6 +8,9 @@ import { replyFactory } from './commandContext/reply';
 import { replyPrivatelyFactory } from './commandContext/replyPrivately';
 import { sendTypingFactory } from './commandContext/sendTyping';
 
+import { getLogger } from './logger';
+const logger = getLogger();
+
 /**
  * Performs actions from a Discord command interaction.
  * The command is ignored if the interaction is from a bot.
@@ -21,13 +24,8 @@ import { sendTypingFactory } from './commandContext/sendTyping';
  * The goal is for us devs to not have to worry about how exactly
  * things get done when we're writing command handlers, only
  * that what we say goes.
- *
- * @param logger The place to write system messages.
  */
-export async function handleInteraction(
-	interaction: CommandInteraction,
-	logger: Console
-): Promise<void> {
+export async function handleInteraction(interaction: CommandInteraction): Promise<void> {
 	// Don't respond to bots or ourselves
 	if (interaction.user.bot) return;
 	if (interaction.user.id === interaction.client.user.id) return;
@@ -75,12 +73,11 @@ export async function handleInteraction(
 		client: interaction.client,
 		interaction,
 		options: interaction.options.data,
-		logger,
-		prepareForLongRunningTasks: prepareForLongRunningTasksFactory(interaction, logger),
-		replyPrivately: replyPrivatelyFactory(interaction, logger),
-		reply: replyFactory(interaction, logger),
-		followUp: followUpFactory(interaction, logger),
-		sendTyping: sendTypingFactory(interaction, logger),
+		prepareForLongRunningTasks: prepareForLongRunningTasksFactory(interaction),
+		replyPrivately: replyPrivatelyFactory(interaction),
+		reply: replyFactory(interaction),
+		followUp: followUpFactory(interaction),
+		sendTyping: sendTypingFactory(interaction),
 	};
 
 	let context: CommandContext;

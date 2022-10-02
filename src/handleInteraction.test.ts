@@ -1,8 +1,19 @@
 import type { CommandInteraction } from 'discord.js';
 import { ChannelType } from 'discord.js';
 
-const mockAllCommands = new Map<string, Command>();
+jest.mock('./logger');
+import { getLogger } from './logger';
+const mockGetLogger = getLogger as jest.Mock;
+mockGetLogger.mockImplementation(() => {
+	return {
+		debug: () => undefined,
+		info: () => undefined,
+		warn: () => undefined,
+		error: () => undefined,
+	} as unknown as Console;
+});
 
+const mockAllCommands = new Map<string, Command>();
 jest.mock('./commands', () => ({
 	allCommands: mockAllCommands,
 }));
@@ -13,12 +24,6 @@ describe('Command event handler', () => {
 	const selfUid = 'self-1234';
 	const otherUid = 'other-1234';
 	const channelId = 'the-channel-1234';
-	const mockConsole = {
-		debug: () => undefined,
-		info: () => undefined,
-		warn: () => undefined,
-		error: () => undefined,
-	} as unknown as Console;
 
 	test('does nothing if the sender is a bot', async () => {
 		const mockExecute = jest.fn();
@@ -48,7 +53,7 @@ describe('Command event handler', () => {
 			channel: { type: ChannelType.DM },
 		} as unknown as CommandInteraction;
 
-		await expect(handleInteraction(interaction, mockConsole)).resolves.toBeUndefined();
+		await expect(handleInteraction(interaction)).resolves.toBeUndefined();
 		expect(mockExecute).not.toHaveBeenCalled();
 	});
 
@@ -80,7 +85,7 @@ describe('Command event handler', () => {
 			channel: { type: ChannelType.DM },
 		} as unknown as CommandInteraction;
 
-		await expect(handleInteraction(interaction, mockConsole)).resolves.toBeUndefined();
+		await expect(handleInteraction(interaction)).resolves.toBeUndefined();
 		expect(mockExecute).not.toHaveBeenCalled();
 	});
 
@@ -112,7 +117,7 @@ describe('Command event handler', () => {
 			channel: { type: ChannelType.DM },
 		} as unknown as CommandInteraction;
 
-		await expect(handleInteraction(interaction, mockConsole)).resolves.toBeUndefined();
+		await expect(handleInteraction(interaction)).resolves.toBeUndefined();
 		expect(mockExecute).not.toHaveBeenCalled();
 	});
 
@@ -144,7 +149,7 @@ describe('Command event handler', () => {
 			channel: { type: ChannelType.GuildText },
 		} as unknown as CommandInteraction;
 
-		await expect(handleInteraction(interaction, mockConsole)).resolves.toBeUndefined();
+		await expect(handleInteraction(interaction)).resolves.toBeUndefined();
 		expect(mockExecute).toHaveBeenCalledOnce();
 	});
 
@@ -176,7 +181,7 @@ describe('Command event handler', () => {
 			channel: { type: ChannelType.DM },
 		} as unknown as CommandInteraction;
 
-		await expect(handleInteraction(interaction, mockConsole)).resolves.toBeUndefined();
+		await expect(handleInteraction(interaction)).resolves.toBeUndefined();
 		expect(mockExecute).toHaveBeenCalledOnce();
 	});
 
@@ -208,7 +213,7 @@ describe('Command event handler', () => {
 			channel: { type: ChannelType.GuildText },
 		} as unknown as CommandInteraction;
 
-		await expect(handleInteraction(interaction, mockConsole)).resolves.toBeUndefined();
+		await expect(handleInteraction(interaction)).resolves.toBeUndefined();
 		expect(mockExecute).toHaveBeenCalledOnce();
 	});
 
@@ -244,7 +249,7 @@ describe('Command event handler', () => {
 			reply: mockInteractionReply,
 		} as unknown as CommandInteraction;
 
-		await expect(handleInteraction(interaction, mockConsole)).resolves.toBeUndefined();
+		await expect(handleInteraction(interaction)).resolves.toBeUndefined();
 		expect(mockExecute).not.toHaveBeenCalled();
 		expect(mockInteractionReply).toHaveBeenCalledOnce();
 		expect(mockInteractionReply).toHaveBeenCalledWith({

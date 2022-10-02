@@ -8,6 +8,9 @@ import { parseArgs } from './helpers/parseArgs';
 import { revokeCommands } from './helpers/actions/revokeCommands';
 import { verifyCommandDeployments } from './helpers/actions/verifyCommandDeployments';
 
+import { getLogger } from './logger';
+const logger = getLogger();
+
 // We *could* do all of this at the top level, but then
 // none of this setup would be testable :P
 
@@ -29,36 +32,36 @@ export async function _main(): Promise<void> {
 
 	const args = parseArgs();
 
-	console.info('*Yawn* Good morning!');
+	logger.info('*Yawn* Good morning!');
 
 	client.on('ready', async client => {
-		console.info(`Starting ${client.user.username} v${appVersion}...`);
+		logger.info(`Starting ${client.user.username} v${appVersion}...`);
 
 		// If we're only here to deploy commands, do that and then exit
 		if (args.deploy) {
-			await deployCommands(client, console);
+			await deployCommands(client);
 			client.destroy();
 			return;
 		}
 
 		// If we're only here to revoke commands, do that and then exit
 		if (args.revoke) {
-			await revokeCommands(client, console);
+			await revokeCommands(client);
 			client.destroy();
 			return;
 		}
 
 		// Sanity check for commands
-		console.info('Verifying command deployments...');
-		await verifyCommandDeployments(client, console);
+		logger.info('Verifying command deployments...');
+		await verifyCommandDeployments(client);
 
 		// Register interaction listeners
 		client.on('interactionCreate', async interaction => {
 			if (interaction.isCommand()) {
 				try {
-					await handleInteraction(interaction, console);
+					await handleInteraction(interaction);
 				} catch (error) {
-					console.error('Failed to handle interaction:', error);
+					logger.error('Failed to handle interaction:', error);
 				}
 			}
 		});
@@ -69,17 +72,17 @@ export async function _main(): Promise<void> {
 			name: '/help for info',
 		});
 
-		console.info('Ready!');
+		logger.info('Ready!');
 	});
 
 	client.on('error', error => {
-		console.error('Received client error:', error);
+		logger.error('Received client error:', error);
 	});
 
 	try {
 		await client.login(process.env['DISCORD_TOKEN']);
 	} catch (error) {
-		console.error('Failed to log in:', error);
+		logger.error('Failed to log in:', error);
 	}
 }
 
