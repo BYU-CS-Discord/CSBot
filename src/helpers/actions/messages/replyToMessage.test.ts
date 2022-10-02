@@ -1,4 +1,15 @@
 import type { CommandInteraction, Message, User } from 'discord.js';
+
+jest.mock('../../../logger');
+import { getLogger } from '../../../logger';
+const mockGetLogger = getLogger as jest.Mock;
+mockGetLogger.mockImplementation(() => {
+	return {
+		info: () => undefined,
+		error: () => undefined,
+	} as unknown as Console;
+});
+
 import { replyWithPrivateMessage } from './replyToMessage';
 
 describe('Message replies', () => {
@@ -25,15 +36,11 @@ describe('Message replies', () => {
 		});
 
 		test('returns false when an ephemeral reply with text fails', async () => {
-			jest.spyOn(global.console, 'error').mockImplementation(() => undefined);
-
-			mockReply.mockRejectedValueOnce(new Error('This ia a test'));
+			mockReply.mockRejectedValueOnce(new Error('This is a test'));
 			const content = 'yo';
 			await expect(replyWithPrivateMessage(interaction, content, false)).resolves.toBeFalse();
 			expect(mockReply).toHaveBeenCalledOnce();
 			expect(mockReply).toHaveBeenCalledWith({ content, ephemeral: true });
-
-			jest.restoreAllMocks();
 		});
 
 		test('sends an ephemeral reply with options', async () => {
@@ -44,15 +51,11 @@ describe('Message replies', () => {
 		});
 
 		test('returns false when an ephemeral reply with options fails', async () => {
-			jest.spyOn(global.console, 'error').mockImplementation(() => undefined);
-
-			mockReply.mockRejectedValueOnce(new Error('This ia a test'));
+			mockReply.mockRejectedValueOnce(new Error('This is a test'));
 			const content = 'yo';
 			await expect(replyWithPrivateMessage(interaction, { content }, false)).resolves.toBeFalse();
 			expect(mockReply).toHaveBeenCalledOnce();
 			expect(mockReply).toHaveBeenCalledWith({ content, ephemeral: true });
-
-			jest.restoreAllMocks();
 		});
 	});
 
@@ -112,8 +115,6 @@ describe('Message replies', () => {
 		});
 
 		test('informs the user when DMs failed', async () => {
-			jest.spyOn(global.console, 'error').mockImplementation(() => undefined);
-
 			mockUserSend.mockRejectedValueOnce(new Error('This is a test'));
 			const content = 'yo';
 			await expect(replyWithPrivateMessage(message, content, true)).resolves.toBeFalse();
@@ -124,8 +125,6 @@ describe('Message replies', () => {
 			);
 			expect(mockChannelSend).toHaveBeenCalledOnce();
 			expect(mockChannelSend).toHaveBeenCalledWith(expect.stringContaining('tried to DM you'));
-
-			jest.restoreAllMocks();
 		});
 	});
 });

@@ -1,16 +1,16 @@
 import type { Client, Guild } from 'discord.js';
 import { allCommands } from '../../commands';
 
+import { getLogger } from '../../logger';
+const logger = getLogger();
+
 /**
  * Verify that the deployed command list is up-to-date, and yell in the console if it's not.
  *
  * @param client The Discord.js client whose commands to validate.
  * @param logger The place to send error messages
  */
-export async function verifyCommandDeployments(
-	client: Client<true>,
-	logger: Console
-): Promise<void> {
+export async function verifyCommandDeployments(client: Client<true>): Promise<void> {
 	const globalDiff = await diffGlobalCommandDeployments(client);
 	if (globalDiff) {
 		const issue = globalDiff.issue;

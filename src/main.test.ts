@@ -45,7 +45,7 @@ class MockClient {
 	}
 }
 
-const { ActivityType, GatewayIntentBits, Partials } =
+const { ActivityType, GatewayIntentBits, Partials, ApplicationCommandOptionType } =
 	jest.requireActual<typeof import('discord.js')>('discord.js');
 
 jest.mock('discord.js', () => ({
@@ -53,6 +53,7 @@ jest.mock('discord.js', () => ({
 	Client: MockClient,
 	GatewayIntentBits,
 	Partials,
+	ApplicationCommandOptionType,
 }));
 
 jest.mock('./helpers/actions/deployCommands');
@@ -75,16 +76,24 @@ jest.mock('./helpers/actions/verifyCommandDeployments');
 import { verifyCommandDeployments } from './helpers/actions/verifyCommandDeployments';
 const mockVerifyCommandDeployments = verifyCommandDeployments as jest.Mock;
 
+jest.mock('./logger');
+import { getLogger } from './logger';
+const mockGetLogger = getLogger as jest.Mock;
+const mockConsoleError = jest.fn();
+mockGetLogger.mockImplementation(() => {
+	return {
+		debug: () => undefined,
+		info: () => undefined,
+		warn: () => undefined,
+		error: mockConsoleError,
+	} as unknown as Console;
+});
+
 import { _main } from './main';
 
 describe('main', () => {
-	let mockConsoleError: jest.SpyInstance;
 
 	beforeEach(() => {
-		jest.spyOn(global.console, 'debug').mockImplementation(() => undefined);
-		jest.spyOn(global.console, 'info').mockImplementation(() => undefined);
-		mockConsoleError = jest.spyOn(global.console, 'error').mockImplementation(() => undefined);
-
 		mockConstructClient.mockReturnValue(undefined);
 		mockLogin.mockResolvedValue('TEST');
 		mockSetActivity.mockReturnValue({});
