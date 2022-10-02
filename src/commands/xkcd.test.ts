@@ -67,7 +67,7 @@ describe('xkcd', () => {
 		expect(mockReply).toHaveBeenCalledOnce();
 		expect(mockSendTyping).toHaveBeenCalledOnce();
 		expect(mockReply).toHaveBeenCalledWith({
-			content: 'Please insert a valid comic number. The range is 1-2679.',
+			content: `Please insert a valid comic number. The range is 1-${latestGood.data.num}.`,
 			ephemeral: true,
 		});
 
@@ -77,7 +77,7 @@ describe('xkcd', () => {
 		expect(mockReply).toHaveBeenCalledTimes(2);
 		expect(mockSendTyping).toHaveBeenCalledTimes(2);
 		expect(mockReply).toHaveBeenCalledWith({
-			content: 'Please insert a valid comic number. The range is 1-2679.',
+			content: `Please insert a valid comic number. The range is 1-${latestGood.data.num}.`,
 			ephemeral: true,
 		});
 	});
