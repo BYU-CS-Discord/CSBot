@@ -1,5 +1,5 @@
 // Dependencies
-import type { Client } from 'discord.js';
+import type { Client, ClientEvents } from 'discord.js';
 
 // Internal dependencies
 import { getLogger } from '../logger';
@@ -9,13 +9,13 @@ const logger = getLogger();
  * The private list of all event handlers. You can use this to edit the list within this file.
  * @private
  */
-const _allEventHandlers = new Map<string, EventHandler>();
+const _allEventHandlers = new Map<keyof ClientEvents, EventHandler>();
 
 /**
  * A read-only list of all event handlers.
  * @public
  */
-export const allEventHandlers: ReadonlyMap<string, EventHandler> = _allEventHandlers;
+export const allEventHandlers: ReadonlyMap<keyof ClientEvents, EventHandler> = _allEventHandlers;
 
 /**
  * Adds an event handler to the list of all handlers.
@@ -25,7 +25,7 @@ export const allEventHandlers: ReadonlyMap<string, EventHandler> = _allEventHand
  * @private
  */
 export function _add(eventHandler: EventHandler): void {
-	const name: string = eventHandler.name;
+	const name: keyof ClientEvents = eventHandler.name;
 
 	if (_allEventHandlers.has(name)) {
 		throw new TypeError(
@@ -42,7 +42,7 @@ export function _add(eventHandler: EventHandler): void {
  * @public
  */
 export function registerEventHandlers(client: Client): void {
-	_allEventHandlers.forEach((eventHandler: EventHandler, eventName: string) => {
+	_allEventHandlers.forEach((eventHandler: EventHandler, eventName: keyof ClientEvents) => {
 		// Register the event handler with the correct endpoint
 		if (eventHandler.once) {
 			client.once(eventName, eventHandler.execute);

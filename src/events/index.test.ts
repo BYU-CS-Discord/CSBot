@@ -1,3 +1,6 @@
+// Dependencies
+import type { ClientEvents } from 'discord.js';
+
 // Create a mocked client to track 'on' and 'once' calls
 const mockOn = jest.fn();
 const mockOnce = jest.fn();
@@ -41,41 +44,31 @@ describe('allEvents', () => {
 
 	test('properly registers events', () => {
 		// To test if event handler registration is working correctly,
-		// this test adds an arbitrary amount of event handlers (both 'on' and 'once'),
-		// registers them, and then checks to make sure the correct number of handlers
-		// were registered for 'on' and 'once'.
+		// this test creates fake handlers and then registers them,
+		// and then checks that the client's registration methods were
+		// given the correct fake event handler.
 
 		// Be sure to clear all the auto-added event handlers first, or else they'll mess up our count.
 		// Casting a read-only list into a regular list is bad practice, but this is for testing purposes.
 		// Don't do this at home.
-		(allEventHandlers as Map<string, EventHandler>).clear();
+		(allEventHandlers as Map<keyof ClientEvents, EventHandler>).clear();
 
-		// Set these values to anything you want, doesn't matter
-		const numOnTests = 3;
-		const numOnceTests = 5;
-
-		for (let i = 0; i < numOnTests; i++) {
-			expect(
-				_add({
-					name: `testOn${i}`,
-					once: false,
-					execute: () => undefined,
-				})
-			).toBeUndefined();
-		}
-		for (let i = 0; i < numOnceTests; i++) {
-			expect(
-				_add({
-					name: `testOnce${i}`,
-					once: true,
-					execute: () => undefined,
-				})
-			).toBeUndefined();
-		}
+		const fakeReadyEvent: EventHandler = {
+			name: 'ready',
+			once: true,
+			execute: () => undefined,
+		};
+		const fakeMessageEvent: EventHandler = {
+			name: 'messageCreate',
+			once: false,
+			execute: () => undefined,
+		};
+		expect(_add(fakeReadyEvent)).toBeUndefined();
+		expect(_add(fakeMessageEvent)).toBeUndefined();
 
 		expect(registerEventHandlers(client)).toBeUndefined();
 
-		expect(mockOn).toHaveBeenCalledTimes(numOnTests);
-		expect(mockOnce).toHaveBeenCalledTimes(numOnceTests);
+		expect(mockOnce).toHaveBeenCalledWith(fakeReadyEvent.name, fakeReadyEvent.execute);
+		expect(mockOn).toHaveBeenCalledWith(fakeMessageEvent.name, fakeMessageEvent.execute);
 	});
 });

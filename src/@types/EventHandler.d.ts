@@ -1,5 +1,4 @@
-// IDK why this line is necessary, but if I remove it, I can't use EventHandler anywhere
-import type { Awaitable } from 'discord.js';
+import type { Awaitable, ClientEvents } from 'discord.js';
 
 declare global {
 	/**
@@ -8,8 +7,9 @@ declare global {
 	interface EventHandler {
 		/**
 		 * The name of the event this handler is for
+		 * Must match one of the events as defined in ClientEvents
 		 */
-		name: string;
+		name: keyof ClientEvents;
 
 		/**
 		 * Whether this event can only fire once
