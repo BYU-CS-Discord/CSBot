@@ -87,7 +87,7 @@ describe('once(ready)', () => {
 			revoke: false,
 		});
 		await expect(ready.execute(client)).resolves.toBeUndefined();
-		expect(mockDeployCommands).toHaveBeenCalledWith(new MockClient());
+		expect(mockDeployCommands).toHaveBeenCalledWith(client);
 		expect(mockRevokeCommands).not.toHaveBeenCalled();
 	});
 
@@ -98,7 +98,7 @@ describe('once(ready)', () => {
 		});
 		await expect(ready.execute(client)).resolves.toBeUndefined();
 		expect(mockDeployCommands).not.toHaveBeenCalled();
-		expect(mockRevokeCommands).toHaveBeenCalledWith(new MockClient());
+		expect(mockRevokeCommands).toHaveBeenCalledWith(client);
 	});
 
 	test('deploys commands if both the `revoke` and `deploy` flags are set', async () => {
@@ -107,13 +107,13 @@ describe('once(ready)', () => {
 			revoke: true,
 		});
 		await expect(ready.execute(client)).resolves.toBeUndefined();
-		expect(mockDeployCommands).toHaveBeenCalledWith(new MockClient());
+		expect(mockDeployCommands).toHaveBeenCalledWith(client);
 		expect(mockRevokeCommands).not.toHaveBeenCalled();
 	});
 
 	test('verifies command deployments', async () => {
 		await expect(ready.execute(client)).resolves.toBeUndefined();
-		expect(mockVerifyCommandDeployments).toHaveBeenCalledWith(new MockClient());
+		expect(mockVerifyCommandDeployments).toHaveBeenCalledWith(client);
 	});
 
 	test('sets user activity', async () => {
