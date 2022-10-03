@@ -20,7 +20,7 @@ export const allEventHandlers: ReadonlyMap<string, EventHandler> = _allEventHand
 /**
  * Adds an event handler to the list of all handlers.
  * Does NOT register the event handler with the client. Use registerEventHandlers(Client) to update handlers.
- * Only public for testing purposes. Avoid using.
+ * Only public for testing purposes. Do not use outside this file or its tests.
  * @param eventHandler The event handler to add
  * @private
  */

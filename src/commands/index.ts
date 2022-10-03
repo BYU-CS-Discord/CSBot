@@ -11,8 +11,8 @@ const _allCommands = new Map<string, Command>();
 export const allCommands: ReadonlyMap<string, Command> = _allCommands;
 
 /**
- * Adds an command to the list of all commands.
- * Only public for testing purposes. Avoid using.
+ * Adds a command to the list of all commands.
+ * Only public for testing purposes. Do not use outside this file or its tests.
  * @param cmd The command to add
  * @private
  */
