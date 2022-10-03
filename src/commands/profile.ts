@@ -21,7 +21,7 @@ export const profile: GlobalCommand = {
 				content:
 					target.avatarURL({ extension: 'png', size: 2048 }) ??
 					"Something went wrong, This user doesn't have an avatar!",
-				ephemeral: false,
+				ephemeral: target.avatarURL() === null,
 			});
 		} else {
 			// This should never happen but we can guard against it,
