@@ -92,7 +92,6 @@ mockGetLogger.mockImplementation(() => {
 import { _main } from './main';
 
 describe('main', () => {
-
 	beforeEach(() => {
 		mockConstructClient.mockReturnValue(undefined);
 		mockLogin.mockResolvedValue('TEST');
@@ -192,7 +191,7 @@ describe('main', () => {
 	});
 
 	test('reports interaction errors', async () => {
-		const interactionError = new Error('Failed to handle ineraction. This is a test.');
+		const interactionError = new Error('Failed to handle interaction. This is a test.');
 		mockHandleInteraction.mockRejectedValueOnce(interactionError);
 		await expect(_main()).resolves.toBeUndefined();
 		expect(mockConsoleError).toHaveBeenCalledWith(
