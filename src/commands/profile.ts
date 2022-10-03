@@ -15,13 +15,11 @@ export const profile: GlobalCommand = {
 		const param = options[0];
 		const target = param ? param.user : user;
 		// if the user is not null, then we will use that user, otherwise we will use the user that invoked the command.
-
 		if (target) {
+			const content = target.avatarURL({ extension: 'png', size: 2048 });
 			await reply({
-				content:
-					target.avatarURL({ extension: 'png', size: 2048 }) ??
-					"Something went wrong, This user doesn't have an avatar!",
-				ephemeral: target.avatarURL() === null,
+				content: content ?? "Something went wrong, This user doesn't have an avatar!",
+				ephemeral: content === null,
 			});
 		} else {
 			// This should never happen but we can guard against it,
