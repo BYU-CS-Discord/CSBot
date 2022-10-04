@@ -35,7 +35,7 @@ import { _add, allEventHandlers, registerEventHandlers } from './index';
 
 describe('allEvents', () => {
 	test('index is not empty', () => {
-		expect(Object.keys(allEventHandlers).length).toBeGreaterThan(0);
+		expect(allEventHandlers.size).toBeGreaterThan(0);
 	});
 
 	test('fails to install another event handler with the same name', () => {
@@ -52,10 +52,7 @@ describe('allEvents', () => {
 		// Be sure to clear all the auto-added event handlers first, or else they'll mess up our count.
 		// Casting a read-only list into a regular list is bad practice, but this is for testing purposes.
 		// Don't do this at home.
-		for (const key of Object.keys(allEventHandlers)) {
-			// eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-			delete allEventHandlers[key as keyof typeof allEventHandlers];
-		}
+		(allEventHandlers as Map<string, unknown>).clear();
 
 		const fakeReadyEvent: EventHandler<'ready'> = {
 			name: 'ready',
