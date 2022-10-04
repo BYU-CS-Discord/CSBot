@@ -1,6 +1,6 @@
 // Dependencies
 import type { Client, ClientPresence } from 'discord.js';
-import { ActivityType, ClientEvents } from 'discord.js';
+import { ActivityType } from 'discord.js';
 import { parseArgs } from '../helpers/parseArgs';
 
 // Internal dependencies
