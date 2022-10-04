@@ -1,8 +1,19 @@
 import axios from 'axios';
-import { xkcd } from './xkcd';
 jest.mock('axios');
 
 const mockedAxios = axios as jest.Mocked<typeof axios>;
+
+jest.mock('../logger');
+import { getLogger } from '../logger';
+const mockGetLogger = getLogger as jest.Mock;
+mockGetLogger.mockImplementation(() => {
+	return {
+		debug: () => undefined,
+		info: () => undefined,
+		warn: () => undefined,
+		error: () => undefined,
+	} as unknown as Console;
+});
 
 const latestGood = {
 	status: 200,
@@ -45,6 +56,8 @@ const badResponse = {
 	status: 400,
 	data: null,
 };
+
+import { xkcd } from './xkcd';
 
 describe('xkcd', () => {
 	const mockReply = jest.fn();
