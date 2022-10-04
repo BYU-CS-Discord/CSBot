@@ -1,15 +1,40 @@
-import type { CommandInteraction, DMChannel, GuildMember, GuildTextBasedChannel } from 'discord.js';
-import { allCommands } from './commands';
+// Dependencies
+import type {
+	Interaction,
+	CommandInteraction,
+	DMChannel,
+	GuildMember,
+	GuildTextBasedChannel,
+} from 'discord.js';
 import { ChannelType } from 'discord.js';
-import { followUpFactory } from './commandContext/followUp';
-import { logUser } from './helpers/logUser';
-import { prepareForLongRunningTasksFactory } from './commandContext/prepareForLongRunningTasks';
-import { replyFactory } from './commandContext/reply';
-import { replyPrivatelyFactory } from './commandContext/replyPrivately';
-import { sendTypingFactory } from './commandContext/sendTyping';
 
-import { getLogger } from './logger';
+// Internal dependencies
+import { logUser } from '../helpers/logUser';
+import { allCommands } from '../commands';
+import { followUpFactory } from '../commandContext/followUp';
+import { prepareForLongRunningTasksFactory } from '../commandContext/prepareForLongRunningTasks';
+import { replyFactory } from '../commandContext/reply';
+import { replyPrivatelyFactory } from '../commandContext/replyPrivately';
+import { sendTypingFactory } from '../commandContext/sendTyping';
+import { getLogger } from '../logger';
 const logger = getLogger();
+
+/**
+ * The event handler for Discord Interactions (usually chat commands)
+ */
+export const interactionCreate: EventHandler = {
+	name: 'interactionCreate',
+	once: false,
+	async execute(interaction: Interaction) {
+		try {
+			if (interaction.isCommand()) {
+				await handleInteraction(interaction);
+			}
+		} catch (error) {
+			logger.error('Failed to handle interaction:', error);
+		}
+	},
+};
 
 /**
  * Performs actions from a Discord command interaction.
@@ -25,7 +50,7 @@ const logger = getLogger();
  * things get done when we're writing command handlers, only
  * that what we say goes.
  */
-export async function handleInteraction(interaction: CommandInteraction): Promise<void> {
+async function handleInteraction(interaction: CommandInteraction): Promise<void> {
 	// Don't respond to bots or ourselves
 	if (interaction.user.bot) return;
 	if (interaction.user.id === interaction.client.user.id) return;
