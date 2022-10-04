@@ -1,16 +1,7 @@
 import type { CommandInteraction } from 'discord.js';
 
-jest.mock('../logger');
-import { getLogger } from '../logger';
-const mockGetLogger = getLogger as jest.Mock;
-const mockConsoleInfo = jest.fn();
-const mockConsoleError = jest.fn();
-mockGetLogger.mockImplementation(() => {
-	return {
-		info: mockConsoleInfo,
-		error: mockConsoleError,
-	} as unknown as Console;
-});
+// Mock the logger to track output
+import { error as mockLoggerError } from '../helpers/testing/mockLogger';
 
 import { replyFactory as factory } from './reply';
 
@@ -31,7 +22,7 @@ describe('public reply', () => {
 
 	test('sends an ephemeral reply to the interaction', async () => {
 		await expect(reply({ content: 'yo in secret', ephemeral: true })).resolves.toBeUndefined();
-		expect(mockConsoleError).not.toHaveBeenCalled();
+		expect(mockLoggerError).not.toHaveBeenCalled();
 		expect(mockInteractionReply).toHaveBeenCalledWith({
 			content: 'yo in secret',
 			ephemeral: true,
@@ -40,13 +31,13 @@ describe('public reply', () => {
 
 	test('trusts that discord.js defaults to mentioning the other user', async () => {
 		await expect(reply({ content: 'yo', shouldMention: true })).resolves.toBeUndefined();
-		expect(mockConsoleError).not.toHaveBeenCalled();
+		expect(mockLoggerError).not.toHaveBeenCalled();
 		expect(mockInteractionReply).toHaveBeenCalledWith({ content: 'yo' });
 	});
 
 	test('requests that the other user not be mentioned', async () => {
 		await expect(reply({ content: 'yo', shouldMention: false })).resolves.toBeUndefined();
-		expect(mockConsoleError).not.toHaveBeenCalled();
+		expect(mockLoggerError).not.toHaveBeenCalled();
 		expect(mockInteractionReply).toHaveBeenCalledWith({
 			content: 'yo',
 			allowedMentions: { users: [], repliedUser: false },
@@ -57,8 +48,8 @@ describe('public reply', () => {
 		const testError = new Error('This is a test');
 		mockInteractionReply.mockRejectedValueOnce(testError);
 		await expect(reply('yo')).resolves.toBeUndefined();
-		expect(mockConsoleError).toHaveBeenCalledOnce();
-		expect(mockConsoleError).toHaveBeenCalledWith(
+		expect(mockLoggerError).toHaveBeenCalledOnce();
+		expect(mockLoggerError).toHaveBeenCalledWith(
 			expect.stringContaining('reply to interaction'),
 			testError
 		);

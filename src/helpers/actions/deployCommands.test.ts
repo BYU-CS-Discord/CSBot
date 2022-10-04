@@ -1,17 +1,8 @@
 import type { Client } from 'discord.js';
 import { ApplicationCommandOptionType } from 'discord.js';
 
-jest.mock('../../logger');
-import { getLogger } from '../../logger';
-const mockGetLogger = getLogger as jest.Mock;
-mockGetLogger.mockImplementation(() => {
-	return {
-		debug: () => undefined,
-		info: () => undefined,
-		warn: () => undefined,
-		error: () => undefined,
-	} as unknown as Console;
-});
+// Mock the logger so nothing is printed
+import {} from '../testing/mockLogger';
 
 const mockAllCommands = new Map<string, Command>();
 jest.mock('../../commands', () => ({

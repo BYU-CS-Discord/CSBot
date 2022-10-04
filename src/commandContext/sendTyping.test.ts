@@ -1,14 +1,7 @@
 import type { CommandInteraction } from 'discord.js';
 
-jest.mock('../logger');
-import { getLogger } from '../logger';
-const mockGetLogger = getLogger as jest.Mock;
-const mockConsoleDebug = jest.fn();
-mockGetLogger.mockImplementation(() => {
-	return {
-		debug: mockConsoleDebug,
-	} as unknown as Console;
-});
+// Mock the logger so nothing is printed
+import {} from '../helpers/testing/mockLogger';
 
 import { sendTypingFactory as factory } from './sendTyping';
 

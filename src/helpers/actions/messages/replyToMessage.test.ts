@@ -1,14 +1,7 @@
 import type { CommandInteraction, Message, User } from 'discord.js';
 
-jest.mock('../../../logger');
-import { getLogger } from '../../../logger';
-const mockGetLogger = getLogger as jest.Mock;
-mockGetLogger.mockImplementation(() => {
-	return {
-		info: () => undefined,
-		error: () => undefined,
-	} as unknown as Console;
-});
+// Mock the logger so nothing is printed
+import {} from '../../testing/mockLogger';
 
 import { replyWithPrivateMessage } from './replyToMessage';
 

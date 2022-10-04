@@ -42,15 +42,8 @@ jest.mock('../helpers/actions/verifyCommandDeployments');
 import { verifyCommandDeployments } from '../helpers/actions/verifyCommandDeployments';
 const mockVerifyCommandDeployments = verifyCommandDeployments as jest.Mock;
 
-// Mock the logger so the code doesn't print to the console
-jest.mock('../logger');
-import { getLogger } from '../logger';
-const mockGetLogger = getLogger as jest.Mock;
-mockGetLogger.mockImplementation(() => {
-	return {
-		info: () => undefined,
-	} as unknown as Console;
-});
+// Mock the logger so nothing is printed
+import {} from '../helpers/testing/mockLogger';
 
 // Import the code to test
 import { ready } from './ready';

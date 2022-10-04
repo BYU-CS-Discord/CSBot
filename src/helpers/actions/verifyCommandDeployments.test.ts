@@ -4,15 +4,8 @@ import { Collection } from 'discord.js';
 const mockAllCommands = new Map<string, Command>();
 jest.mock('../../commands', () => ({ allCommands: mockAllCommands }));
 
-jest.mock('../../logger');
-import { getLogger } from '../../logger';
-const mockGetLogger = getLogger as jest.Mock;
-const mockConsoleWarn = jest.fn();
-mockGetLogger.mockImplementation(() => {
-	return {
-		warn: mockConsoleWarn,
-	} as unknown as Console;
-});
+// Mock the logger to track output
+import { warn as mockLoggerWarn } from '../testing/mockLogger';
 
 import { verifyCommandDeployments } from './verifyCommandDeployments';
 
@@ -98,7 +91,7 @@ describe('Verify command deployments', () => {
 		test('does nothing if the actual commands match expectations', async () => {
 			await expect(verifyCommandDeployments(mockClient)).resolves.toBeUndefined();
 			expect(mockFetchGuildCommands).toHaveBeenCalledOnce();
-			expect(mockConsoleWarn).not.toHaveBeenCalled();
+			expect(mockLoggerWarn).not.toHaveBeenCalled();
 		});
 
 		test('logs a warning if the number of commands differs', async () => {
@@ -106,10 +99,10 @@ describe('Verify command deployments', () => {
 
 			await expect(verifyCommandDeployments(mockClient)).resolves.toBeUndefined();
 			expect(mockFetchGuildCommands).toHaveBeenCalledOnce();
-			expect(mockConsoleWarn).toHaveBeenCalledWith(
+			expect(mockLoggerWarn).toHaveBeenCalledWith(
 				expect.stringContaining("commands in guild 'guild1' differ")
 			);
-			expect(mockConsoleWarn).toHaveBeenCalledWith(expect.stringContaining('Expected 1'));
+			expect(mockLoggerWarn).toHaveBeenCalledWith(expect.stringContaining('Expected 1'));
 		});
 
 		test('logs a warning if the command lists differ', async () => {
@@ -123,10 +116,10 @@ describe('Verify command deployments', () => {
 
 			await expect(verifyCommandDeployments(mockClient)).resolves.toBeUndefined();
 			expect(mockFetchGuildCommands).toHaveBeenCalledOnce();
-			expect(mockConsoleWarn).toHaveBeenCalledWith(
+			expect(mockLoggerWarn).toHaveBeenCalledWith(
 				expect.stringContaining("commands in guild 'guild1' differ")
 			);
-			expect(mockConsoleWarn).toHaveBeenCalledWith(
+			expect(mockLoggerWarn).toHaveBeenCalledWith(
 				expect.stringContaining("Expected a command named 'dent'")
 			);
 		});
@@ -136,7 +129,7 @@ describe('Verify command deployments', () => {
 		test('does nothing if the actual commands match expectations', async () => {
 			await expect(verifyCommandDeployments(mockClient)).resolves.toBeUndefined();
 			expect(mockFetchApplicationCommands).toHaveBeenCalledOnce();
-			expect(mockConsoleWarn).not.toHaveBeenCalled();
+			expect(mockLoggerWarn).not.toHaveBeenCalled();
 		});
 
 		test('logs a warning if the number of commands differs', async () => {
@@ -144,8 +137,8 @@ describe('Verify command deployments', () => {
 
 			await expect(verifyCommandDeployments(mockClient)).resolves.toBeUndefined();
 			expect(mockFetchApplicationCommands).toHaveBeenCalledOnce();
-			expect(mockConsoleWarn).toHaveBeenCalledWith(expect.stringContaining('commands differ'));
-			expect(mockConsoleWarn).toHaveBeenCalledWith(expect.stringContaining('Expected 1'));
+			expect(mockLoggerWarn).toHaveBeenCalledWith(expect.stringContaining('commands differ'));
+			expect(mockLoggerWarn).toHaveBeenCalledWith(expect.stringContaining('Expected 1'));
 		});
 
 		test('logs a warning if the command lists differ', async () => {
@@ -159,8 +152,8 @@ describe('Verify command deployments', () => {
 
 			await expect(verifyCommandDeployments(mockClient)).resolves.toBeUndefined();
 			expect(mockFetchApplicationCommands).toHaveBeenCalledOnce();
-			expect(mockConsoleWarn).toHaveBeenCalledWith(expect.stringContaining('commands differ'));
-			expect(mockConsoleWarn).toHaveBeenCalledWith(
+			expect(mockLoggerWarn).toHaveBeenCalledWith(expect.stringContaining('commands differ'));
+			expect(mockLoggerWarn).toHaveBeenCalledWith(
 				expect.stringContaining("Expected a command named 'marvin'")
 			);
 		});
