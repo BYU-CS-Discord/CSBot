@@ -9,13 +9,16 @@ const logger = getLogger();
  * The private list of all event handlers. You can use this to edit the list within this file.
  * @private
  */
-const _allEventHandlers = new Map<keyof ClientEvents, EventHandler>();
+const _allEventHandlers = new Map<string, EventHandler<keyof ClientEvents>>();
 
 /**
  * A read-only list of all event handlers.
  * @public
  */
-export const allEventHandlers: ReadonlyMap<keyof ClientEvents, EventHandler> = _allEventHandlers;
+export const allEventHandlers: ReadonlyMap<
+	string,
+	EventHandler<keyof ClientEvents>
+> = _allEventHandlers;
 
 /**
  * Adds an event handler to the list of all handlers.
@@ -24,8 +27,8 @@ export const allEventHandlers: ReadonlyMap<keyof ClientEvents, EventHandler> = _
  * @param eventHandler The event handler to add
  * @private
  */
-export function _add(eventHandler: EventHandler): void {
-	const name: keyof ClientEvents = eventHandler.name;
+export function _add(eventHandler: EventHandler<keyof ClientEvents>): void {
+	const name = eventHandler.name;
 
 	if (_allEventHandlers.has(name)) {
 		throw new TypeError(
@@ -42,8 +45,9 @@ export function _add(eventHandler: EventHandler): void {
  * @public
  */
 export function registerEventHandlers(client: Client): void {
-	_allEventHandlers.forEach((eventHandler: EventHandler, eventName: keyof ClientEvents) => {
+	_allEventHandlers.forEach(eventHandler => {
 		// Register the event handler with the correct endpoint
+		const eventName = eventHandler.name;
 		if (eventHandler.once) {
 			client.once(eventName, eventHandler.execute);
 		} else {
@@ -58,6 +62,8 @@ export function registerEventHandlers(client: Client): void {
 import { error } from './error';
 import { interactionCreate } from './interactionCreate';
 import { ready } from './ready';
-_add(error);
-_add(interactionCreate);
-_add(ready);
+
+_add(error as EventHandler<keyof ClientEvents>);
+_add(interactionCreate as EventHandler<keyof ClientEvents>);
+_add(ready as EventHandler<keyof ClientEvents>);
+// Not sure why these type casts are necessary, but they seem sound. We can remove them when TS gets smarter, or we learn what I did wrong

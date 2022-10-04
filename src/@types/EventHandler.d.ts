@@ -4,21 +4,21 @@ declare global {
 	/**
 	 * Defines an event handler.
 	 */
-	interface EventHandler {
+	interface EventHandler<K extends keyof ClientEvents> {
 		/**
 		 * The name of the event this handler is for
 		 * Must match one of the events as defined in ClientEvents
 		 */
-		name: keyof ClientEvents;
+		readonly name: K;
 
 		/**
 		 * Whether this event can only fire once
 		 */
-		once: boolean;
+		readonly once: boolean;
 
 		/**
 		 * The event implementation. Receives any number of arguments, depending on the event.
 		 */
-		execute: (...args: Array<any>) => Awaitable<void>;
+		readonly execute: (...args: ClientEvents[K]) => Awaitable<void>;
 	}
 }

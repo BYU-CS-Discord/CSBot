@@ -14,10 +14,10 @@ const logger = getLogger();
 /**
  * The event handler for when the Discord Client is ready for action
  */
-export const ready: EventHandler = {
+export const ready: EventHandler<'ready'> = {
 	name: 'ready',
 	once: true,
-	async execute(client: Client<true>) {
+	async execute(client) {
 		logger.info(`Starting ${client.user.username} v${appVersion}...`);
 
 		const args = parseArgs();

@@ -1,11 +1,5 @@
 // Dependencies
-import type {
-	Interaction,
-	CommandInteraction,
-	DMChannel,
-	GuildMember,
-	GuildTextBasedChannel,
-} from 'discord.js';
+import type { CommandInteraction, DMChannel, GuildMember, GuildTextBasedChannel } from 'discord.js';
 import { ChannelType } from 'discord.js';
 
 // Internal dependencies
@@ -22,10 +16,10 @@ const logger = getLogger();
 /**
  * The event handler for Discord Interactions (usually chat commands)
  */
-export const interactionCreate: EventHandler = {
+export const interactionCreate: EventHandler<'interactionCreate'> = {
 	name: 'interactionCreate',
 	once: false,
-	async execute(interaction: Interaction) {
+	async execute(interaction) {
 		try {
 			if (interaction.isCommand()) {
 				await handleInteraction(interaction);

@@ -35,11 +35,12 @@ import { _add, allEventHandlers, registerEventHandlers } from './index';
 
 describe('allEvents', () => {
 	test('index is not empty', () => {
-		expect(allEventHandlers.size).toBeGreaterThan(0);
+		expect(Object.keys(allEventHandlers).length).toBeGreaterThan(0);
 	});
 
 	test('fails to install another event handler with the same name', () => {
-		expect(() => _add({ name: 'error' } as unknown as EventHandler)).toThrow(TypeError);
+		const mockErrorHandler = { name: 'error' } as unknown as EventHandler<keyof ClientEvents>;
+		expect(() => _add(mockErrorHandler)).toThrow(TypeError);
 	});
 
 	test('properly registers events', () => {
@@ -51,20 +52,23 @@ describe('allEvents', () => {
 		// Be sure to clear all the auto-added event handlers first, or else they'll mess up our count.
 		// Casting a read-only list into a regular list is bad practice, but this is for testing purposes.
 		// Don't do this at home.
-		(allEventHandlers as Map<keyof ClientEvents, EventHandler>).clear();
+		for (const key of Object.keys(allEventHandlers)) {
+			// eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+			delete allEventHandlers[key as keyof typeof allEventHandlers];
+		}
 
-		const fakeReadyEvent: EventHandler = {
+		const fakeReadyEvent: EventHandler<'ready'> = {
 			name: 'ready',
 			once: true,
 			execute: () => undefined,
 		};
-		const fakeMessageEvent: EventHandler = {
+		const fakeMessageEvent: EventHandler<'messageCreate'> = {
 			name: 'messageCreate',
 			once: false,
 			execute: () => undefined,
 		};
-		expect(_add(fakeReadyEvent)).toBeUndefined();
-		expect(_add(fakeMessageEvent)).toBeUndefined();
+		expect(_add(fakeReadyEvent as EventHandler<keyof ClientEvents>)).toBeUndefined();
+		expect(_add(fakeMessageEvent as EventHandler<keyof ClientEvents>)).toBeUndefined();
 
 		expect(registerEventHandlers(client)).toBeUndefined();
 

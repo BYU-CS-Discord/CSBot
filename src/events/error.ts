@@ -5,10 +5,10 @@ const logger = getLogger();
 /**
  * The event handler for Discord Client errors
  */
-export const error: EventHandler = {
+export const error: EventHandler<'error'> = {
 	name: 'error',
 	once: false,
-	execute(err: Error) {
+	execute(err) {
 		logger.error('Received client error:', err);
 	},
 };
