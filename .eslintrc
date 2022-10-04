@@ -90,7 +90,7 @@
 
 	"overrides": [
 		{
-			"files": ["src/**/*.test.ts", "src/**/__mocks__/**/*.ts"],
+			"files": ["src/**/*.test.ts", "src/**/__mocks__/**/*.ts", "src/**/testing/**/*.ts"],
 			"extends": ["plugin:jest/recommended"],
 			"plugins": ["jest"],
 			"parserOptions": {
@@ -101,7 +101,8 @@
 			},
 			"rules": {
 				"prettier/prettier": "warn",
-				"max-nested-callbacks": "off" // unit tests involve a lot of nested callbacks
+				"max-nested-callbacks": "off", // unit tests involve a lot of nested callbacks
+				"@typescript-eslint/unbound-method": "off" // unit tests also involve passing unbounded methods
 			}
 		}
 	]
