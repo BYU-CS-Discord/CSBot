@@ -11,13 +11,13 @@ import { replyFactory } from '../commandContext/reply';
 import { replyPrivatelyFactory } from '../commandContext/replyPrivately';
 import { sendTypingFactory } from '../commandContext/sendTyping';
 import { getLogger } from '../logger';
+import { onEvent } from '../helpers/onEvent';
 const logger = getLogger();
 
 /**
  * The event handler for Discord Interactions (usually chat commands)
  */
-export const interactionCreate: EventHandler<'interactionCreate'> = {
-	name: 'interactionCreate',
+export const interactionCreate = onEvent('interactionCreate', {
 	once: false,
 	async execute(interaction) {
 		try {
@@ -28,7 +28,7 @@ export const interactionCreate: EventHandler<'interactionCreate'> = {
 			logger.error('Failed to handle interaction:', error);
 		}
 	},
-};
+});
 
 /**
  * Performs actions from a Discord command interaction.

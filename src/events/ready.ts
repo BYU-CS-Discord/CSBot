@@ -1,7 +1,6 @@
 // Dependencies
 import type { Client, ClientPresence } from 'discord.js';
 import { ActivityType } from 'discord.js';
-import { parseArgs } from '../helpers/parseArgs';
 
 // Internal dependencies
 import { deployCommands } from '../helpers/actions/deployCommands';
@@ -9,13 +8,14 @@ import { revokeCommands } from '../helpers/actions/revokeCommands';
 import { verifyCommandDeployments } from '../helpers/actions/verifyCommandDeployments';
 import { appVersion } from '../constants/meta';
 import { getLogger } from '../logger';
+import { onEvent } from '../helpers/onEvent';
+import { parseArgs } from '../helpers/parseArgs';
 const logger = getLogger();
 
 /**
  * The event handler for when the Discord Client is ready for action
  */
-export const ready: EventHandler<'ready'> = {
-	name: 'ready',
+export const ready = onEvent('ready', {
 	once: true,
 	async execute(client) {
 		logger.info(`Starting ${client.user.username} v${appVersion}...`);
@@ -46,7 +46,7 @@ export const ready: EventHandler<'ready'> = {
 
 		logger.info('Ready!');
 	},
-};
+});
 
 function setActivity(client: Client<true>): ClientPresence {
 	// Let users know where to go for info
