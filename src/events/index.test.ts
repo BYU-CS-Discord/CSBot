@@ -1,6 +1,3 @@
-// Dependencies
-import type { ClientEvents } from 'discord.js';
-
 // Create a mocked client to track 'on' and 'once' calls
 const mockOn = jest.fn();
 const mockOnce = jest.fn();
@@ -39,7 +36,7 @@ describe('allEvents', () => {
 	});
 
 	test('fails to install another event handler with the same name', () => {
-		const mockErrorHandler = { name: 'error' } as unknown as EventHandler<keyof ClientEvents>;
+		const mockErrorHandler = { name: 'error' } as unknown as EventHandler;
 		expect(() => _add(mockErrorHandler)).toThrow(TypeError);
 	});
 
@@ -54,18 +51,18 @@ describe('allEvents', () => {
 		// Don't do this at home.
 		(allEventHandlers as Map<string, unknown>).clear();
 
-		const fakeReadyEvent: EventHandler<'ready'> = {
+		const fakeReadyEvent: EventHandler = {
 			name: 'ready',
 			once: true,
 			execute: () => undefined,
 		};
-		const fakeMessageEvent: EventHandler<'messageCreate'> = {
+		const fakeMessageEvent: EventHandler = {
 			name: 'messageCreate',
 			once: false,
 			execute: () => undefined,
 		};
-		expect(_add(fakeReadyEvent as EventHandler<keyof ClientEvents>)).toBeUndefined();
-		expect(_add(fakeMessageEvent as EventHandler<keyof ClientEvents>)).toBeUndefined();
+		expect(_add(fakeReadyEvent)).toBeUndefined();
+		expect(_add(fakeMessageEvent)).toBeUndefined();
 
 		expect(registerEventHandlers(client)).toBeUndefined();
 

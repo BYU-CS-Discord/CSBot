@@ -1,5 +1,5 @@
 // Dependencies
-import type { Client, ClientEvents } from 'discord.js';
+import type { Client } from 'discord.js';
 
 // Internal dependencies
 import { getLogger } from '../logger';
@@ -9,16 +9,13 @@ const logger = getLogger();
  * The private list of all event handlers. You can use this to edit the list within this file.
  * @private
  */
-const _allEventHandlers = new Map<string, EventHandler<keyof ClientEvents>>();
+const _allEventHandlers = new Map<string, EventHandler>();
 
 /**
  * A read-only list of all event handlers.
  * @public
  */
-export const allEventHandlers: ReadonlyMap<
-	string,
-	EventHandler<keyof ClientEvents>
-> = _allEventHandlers;
+export const allEventHandlers: ReadonlyMap<string, EventHandler> = _allEventHandlers;
 
 /**
  * Adds an event handler to the list of all handlers.
@@ -27,7 +24,7 @@ export const allEventHandlers: ReadonlyMap<
  * @param eventHandler The event handler to add
  * @private
  */
-export function _add(eventHandler: EventHandler<keyof ClientEvents>): void {
+export function _add(eventHandler: EventHandler): void {
 	const name = eventHandler.name;
 
 	if (_allEventHandlers.has(name)) {
@@ -63,7 +60,7 @@ import { error } from './error';
 import { interactionCreate } from './interactionCreate';
 import { ready } from './ready';
 
-_add(error as EventHandler<keyof ClientEvents>);
-_add(interactionCreate as EventHandler<keyof ClientEvents>);
-_add(ready as EventHandler<keyof ClientEvents>);
+_add(error as EventHandler);
+_add(interactionCreate as EventHandler);
+_add(ready as EventHandler);
 // Not sure why these type casts are necessary, but they seem sound. We can remove them when TS gets smarter, or we learn what I did wrong

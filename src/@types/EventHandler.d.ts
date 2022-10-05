@@ -4,7 +4,7 @@ declare global {
 	/**
 	 * Defines an event handler.
 	 */
-	interface EventHandler<K extends keyof ClientEvents> {
+	interface EventHandler<K extends keyof ClientEvents = keyof ClientEvents> {
 		/**
 		 * The name of the event to be handled. Must match one of
 		 * the discord.js event names defined in {@link ClientEvents}.
