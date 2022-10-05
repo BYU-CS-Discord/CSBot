@@ -1,7 +1,7 @@
 /**
  * Import this file from test scripts to mock the default logger.
  * To simply overwrite the default logger to prevent output, use
- * `import {} from './testing/mockLogger';`
+ * `import './testing/mockLogger';`
  * If you wish to monitor the usage of one of the endpoints, you can import
  * the specific endpoints you want. For example, if you wish to track error output, use
  * `import { error as mockErrorLogger } from './testing/mockLogger';`

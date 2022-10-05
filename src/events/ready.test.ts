@@ -43,7 +43,7 @@ import { verifyCommandDeployments } from '../helpers/actions/verifyCommandDeploy
 const mockVerifyCommandDeployments = verifyCommandDeployments as jest.Mock;
 
 // Mock the logger so nothing is printed
-import {} from '../helpers/testing/mockLogger';
+import '../helpers/testing/mockLogger';
 
 // Import the code to test
 import { ready } from './ready';

@@ -21,7 +21,7 @@ import { Client } from 'discord.js';
 const client = new Client({ intents: [] });
 
 // Mock the logger so nothing is printed
-import {} from '../helpers/testing/mockLogger';
+import '../helpers/testing/mockLogger';
 
 // Import the code to test
 import { _add, allEventHandlers, registerEventHandlers } from './index';
