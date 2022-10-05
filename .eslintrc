@@ -101,8 +101,7 @@
 			},
 			"rules": {
 				"prettier/prettier": "warn",
-				"max-nested-callbacks": "off", // unit tests involve a lot of nested callbacks
-				"@typescript-eslint/unbound-method": "off" // unit tests also involve passing unbounded methods
+				"max-nested-callbacks": "off" // unit tests involve a lot of nested callbacks
 			}
 		}
 	]

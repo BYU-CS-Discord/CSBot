@@ -12,40 +12,49 @@ jest.mock('../../logger');
 import { getLogger } from '../../logger';
 const mockGetLogger = getLogger as jest.Mock;
 
-const mockLogger = {
-	debug: jest.fn(),
-	info: jest.fn(),
-	warn: jest.fn(),
-	error: jest.fn(),
-} as unknown as Console;
-mockGetLogger.mockImplementation(() => mockLogger);
-
-/**
- * The entire mocked Logger, with every endpoint as a jest Mock for output tracking purposes.
- * Only import from test scripts.
- */
-export default mockLogger;
-
 /**
  * The jest Mock serving as the 'debug' endpoint of the logger.
  * Only import from test scripts.
+ * @public
  */
-export const debug = mockLogger.debug;
+const debug = jest.fn();
 
 /**
  * The jest Mock serving as the 'info' endpoint of the logger.
  * Only import from test scripts.
+ * @public
  */
-export const info = mockLogger.info;
+const info = jest.fn();
 
 /**
  * The jest Mock serving as the 'warn' endpoint of the logger.
  * Only import from test scripts.
+ * @public
  */
-export const warn = mockLogger.warn;
+const warn = jest.fn();
 
 /**
  * The jest Mock serving as the 'error' endpoint of the logger.
  * Only import from test scripts.
+ * @public
  */
-export const error = mockLogger.error;
+const error = jest.fn();
+
+/**
+ * The entire mocked Logger, with every endpoint as a jest Mock for output tracking purposes.
+ * Only import from test scripts.
+ * @public
+ */
+const mockLogger = {
+	debug,
+	info,
+	warn,
+	error,
+} as unknown as Console;
+
+// Set getLogger to automatically return the mocked logger
+mockGetLogger.mockImplementation(() => mockLogger);
+
+// Export mocks for test file usage
+export default mockLogger;
+export { debug, info, warn, error };
