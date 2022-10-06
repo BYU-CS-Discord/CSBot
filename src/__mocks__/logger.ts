@@ -2,32 +2,28 @@
  * The jest Mock serving as the `debug` endpoint of the logger.
  * @public
  */
-const debug = jest.fn();
-export { debug };
+export const debug = jest.fn();
 
 /**
  * The jest Mock serving as the `info` endpoint of the logger.
  * @public
  */
-const info = jest.fn();
-export { info };
+export const info = jest.fn();
 
 /**
  * The jest Mock serving as the `warn` endpoint of the logger.
  * @public
  */
-const warn = jest.fn();
-export { warn };
+export const warn = jest.fn();
 
 /**
  * The jest Mock serving as the `error` endpoint of the logger.
  * @public
  */
-const error = jest.fn();
-export { error };
+export const error = jest.fn();
 
 /**
- * The entire mocked Logger, with every endpoint as a jest Mock for output tracking purposes.
+ * The entire mocked logger, with every endpoint as a jest Mock for output tracking purposes.
  * @public
  */
 const logger = {
