@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * The jest Mock serving as the `debug` endpoint of the logger.
  * @public
