@@ -1,10 +1,11 @@
 import 'source-map-support/register';
+// External dependencies
 import 'dotenv/config';
 import { Client, GatewayIntentBits, Partials } from 'discord.js';
 
+// Internal dependencies
+import logger from './logger';
 import { registerEventHandlers } from './events';
-import { getLogger } from './logger';
-const logger = getLogger();
 
 // We *could* do all of this at the top level, but then
 // none of this setup would be testable :P

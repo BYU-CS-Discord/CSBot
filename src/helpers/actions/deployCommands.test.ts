@@ -2,7 +2,7 @@ import type { Client } from 'discord.js';
 import { ApplicationCommandOptionType } from 'discord.js';
 
 // Mock the logger so nothing is printed
-import '../testing/mockLogger';
+jest.mock('../../logger');
 
 const mockAllCommands = new Map<string, Command>();
 jest.mock('../../commands', () => ({

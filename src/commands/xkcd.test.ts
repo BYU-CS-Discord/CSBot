@@ -4,7 +4,7 @@ jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
 // Mock the logger so nothing is printed
-import '../helpers/testing/mockLogger';
+jest.mock('../logger');
 
 const latestGood = {
 	status: 200,

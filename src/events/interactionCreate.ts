@@ -1,4 +1,4 @@
-// Dependencies
+// External dependencies
 import type {
 	Interaction,
 	CommandInteraction,
@@ -9,6 +9,7 @@ import type {
 import { ChannelType } from 'discord.js';
 
 // Internal dependencies
+import logger from '../logger';
 import { logUser } from '../helpers/logUser';
 import { allCommands } from '../commands';
 import { followUpFactory } from '../commandContext/followUp';
@@ -16,8 +17,6 @@ import { prepareForLongRunningTasksFactory } from '../commandContext/prepareForL
 import { replyFactory } from '../commandContext/reply';
 import { replyPrivatelyFactory } from '../commandContext/replyPrivately';
 import { sendTypingFactory } from '../commandContext/sendTyping';
-import { getLogger } from '../logger';
-const logger = getLogger();
 
 /**
  * The event handler for Discord Interactions (usually chat commands)

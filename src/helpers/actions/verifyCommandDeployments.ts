@@ -1,8 +1,9 @@
+// External dependencies
 import type { Client, Guild } from 'discord.js';
-import { allCommands } from '../../commands';
 
-import { getLogger } from '../../logger';
-const logger = getLogger();
+// Internal dependencies
+import logger from '../../logger';
+import { allCommands } from '../../commands';
 
 /**
  * Verify that the deployed command list is up-to-date, and yell in the console if it's not.

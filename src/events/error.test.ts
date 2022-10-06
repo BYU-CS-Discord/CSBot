@@ -1,5 +1,6 @@
 // Mock the logger to track output
-import { error as mockLoggerError } from '../helpers/testing/mockLogger';
+jest.mock('../logger');
+import { error as mockLoggerError } from '../logger';
 
 // Import the code to test
 import { error } from './error';

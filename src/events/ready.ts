@@ -1,15 +1,14 @@
-// Dependencies
+// External dependencies
 import type { Client, ClientPresence } from 'discord.js';
 import { ActivityType } from 'discord.js';
 import { parseArgs } from '../helpers/parseArgs';
 
 // Internal dependencies
+import logger from '../logger';
 import { deployCommands } from '../helpers/actions/deployCommands';
 import { revokeCommands } from '../helpers/actions/revokeCommands';
 import { verifyCommandDeployments } from '../helpers/actions/verifyCommandDeployments';
 import { appVersion } from '../constants/meta';
-import { getLogger } from '../logger';
-const logger = getLogger();
 
 /**
  * The event handler for when the Discord Client is ready for action

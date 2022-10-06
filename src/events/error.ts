@@ -1,6 +1,5 @@
 // Internal dependencies
-import { getLogger } from '../logger';
-const logger = getLogger();
+import logger from '../logger';
 
 /**
  * The event handler for Discord Client errors

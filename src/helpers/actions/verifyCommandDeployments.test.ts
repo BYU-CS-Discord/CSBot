@@ -5,7 +5,8 @@ const mockAllCommands = new Map<string, Command>();
 jest.mock('../../commands', () => ({ allCommands: mockAllCommands }));
 
 // Mock the logger to track output
-import { warn as mockLoggerWarn } from '../testing/mockLogger';
+jest.mock('../../logger');
+import { warn as mockLoggerWarn } from '../../logger';
 
 import { verifyCommandDeployments } from './verifyCommandDeployments';
 

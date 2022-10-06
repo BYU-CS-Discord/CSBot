@@ -1,7 +1,7 @@
 import type { CommandInteraction } from 'discord.js';
 
 // Mock the logger so nothing is printed
-import '../helpers/testing/mockLogger';
+jest.mock('../logger');
 
 import { sendTypingFactory as factory } from './sendTyping';
 

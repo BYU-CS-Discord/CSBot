@@ -1,7 +1,7 @@
 import type { CommandInteraction, Message, User } from 'discord.js';
 
 // Mock the logger so nothing is printed
-import '../../testing/mockLogger';
+jest.mock('../../../logger');
 
 import { replyWithPrivateMessage } from './replyToMessage';
 

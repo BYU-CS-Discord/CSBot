@@ -1,8 +1,9 @@
+// External dependencies
 import type { CommandInteraction, InteractionReplyOptions } from 'discord.js';
-import { logUser } from '../helpers/logUser';
 
-import { getLogger } from '../logger';
-const logger = getLogger();
+// Internal dependencies
+import logger from '../logger';
+import { logUser } from '../helpers/logUser';
 
 export function replyFactory(interaction: CommandInteraction): CommandContext['reply'] {
 	return async function reply(options) {

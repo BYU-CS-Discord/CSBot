@@ -1,3 +1,4 @@
+// External dependencies
 import type {
 	CommandInteraction,
 	InteractionReplyOptions,
@@ -8,10 +9,10 @@ import type {
 	User,
 } from 'discord.js';
 import { ChannelType } from 'discord.js';
-import { logUser } from '../../logUser';
 
-import { getLogger } from '../../../logger';
-const logger = getLogger();
+// Internal dependencies
+import logger from '../../../logger';
+import { logUser } from '../../logUser';
 
 /**
  * Attempts to send a direct message to a user.

@@ -5,7 +5,8 @@ import { replyWithPrivateMessage } from '../helpers/actions/messages/replyToMess
 const mockSendDM = replyWithPrivateMessage as jest.Mock;
 
 // Mock the logger to track output
-import { info as mockLoggerInfo, error as mockLoggerError } from '../helpers/testing/mockLogger';
+jest.mock('../logger');
+import { info as mockLoggerInfo, error as mockLoggerError } from '../logger';
 
 import { replyPrivatelyFactory as factory } from './replyPrivately';
 

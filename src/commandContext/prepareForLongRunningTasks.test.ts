@@ -1,7 +1,8 @@
 import type { CommandInteraction } from 'discord.js';
 
 // Mock the logger to track output
-import { error as mockLoggerError } from '../helpers/testing/mockLogger';
+jest.mock('../logger');
+import { error as mockLoggerError } from '../logger';
 
 import { prepareForLongRunningTasksFactory as factory } from './prepareForLongRunningTasks';
 
