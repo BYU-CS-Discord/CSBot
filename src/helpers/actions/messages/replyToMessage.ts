@@ -11,7 +11,7 @@ import type {
 import { ChannelType } from 'discord.js';
 
 // Internal dependencies
-import logger from '../../../logger';
+import * as logger from '../../../logger';
 import { logUser } from '../../logUser';
 
 /**

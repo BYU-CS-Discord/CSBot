@@ -1,5 +1,5 @@
 // Internal dependencies
-import logger from '../logger';
+import * as logger from '../logger';
 
 /**
  * The event handler for Discord Client errors

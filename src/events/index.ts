@@ -2,7 +2,7 @@
 import type { Client, ClientEvents } from 'discord.js';
 
 // Internal dependencies
-import logger from '../logger';
+import * as logger from '../logger';
 
 /**
  * The private list of all event handlers. You can use this to edit the list within this file.

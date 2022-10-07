@@ -8,7 +8,7 @@ import type {
 import { ApplicationCommandType } from 'discord.js';
 
 // Internal dependencies
-import logger from '../../logger';
+import * as logger from '../../logger';
 import { allCommands } from '../../commands';
 import { isNonEmptyArray } from '../guards/isNonEmptyArray';
 import { revokeCommands } from './revokeCommands';

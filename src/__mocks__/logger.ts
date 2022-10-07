@@ -21,15 +21,3 @@ export const warn = jest.fn();
  * @public
  */
 export const error = jest.fn();
-
-/**
- * The entire mocked logger, with every endpoint as a jest Mock for output tracking purposes.
- * @public
- */
-const logger = {
-	debug,
-	info,
-	warn,
-	error,
-} as unknown as Console;
-export default logger;

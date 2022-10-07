@@ -2,7 +2,7 @@
 import type { CommandInteraction } from 'discord.js';
 
 // Internal dependencies
-import logger from '../logger';
+import * as logger from '../logger';
 
 export function sendTypingFactory(interaction: CommandInteraction): CommandContext['sendTyping'] {
 	return function sendTyping() {

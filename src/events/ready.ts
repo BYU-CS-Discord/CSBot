@@ -4,7 +4,7 @@ import { ActivityType } from 'discord.js';
 import { parseArgs } from '../helpers/parseArgs';
 
 // Internal dependencies
-import logger from '../logger';
+import * as logger from '../logger';
 import { deployCommands } from '../helpers/actions/deployCommands';
 import { revokeCommands } from '../helpers/actions/revokeCommands';
 import { verifyCommandDeployments } from '../helpers/actions/verifyCommandDeployments';

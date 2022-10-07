@@ -2,7 +2,7 @@
 import type { CommandInteraction, InteractionReplyOptions } from 'discord.js';
 
 // Internal dependencies
-import logger from '../logger';
+import * as logger from '../logger';
 import { logUser } from '../helpers/logUser';
 
 export function replyFactory(interaction: CommandInteraction): CommandContext['reply'] {

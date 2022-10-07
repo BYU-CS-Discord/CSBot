@@ -4,7 +4,7 @@ import 'dotenv/config';
 import { Client, GatewayIntentBits, Partials } from 'discord.js';
 
 // Internal dependencies
-import logger from './logger';
+import * as logger from './logger';
 import { registerEventHandlers } from './events';
 
 // We *could* do all of this at the top level, but then

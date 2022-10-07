@@ -2,7 +2,7 @@
 import type { CommandInteraction } from 'discord.js';
 
 // Internal dependencies
-import logger from '../logger';
+import * as logger from '../logger';
 import { logUser } from '../helpers/logUser';
 import { replyWithPrivateMessage } from '../helpers/actions/messages/replyToMessage';
 

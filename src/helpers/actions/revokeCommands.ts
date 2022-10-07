@@ -2,7 +2,7 @@
 import type { Client } from 'discord.js';
 
 // Internal dependencies
-import logger from '../../logger';
+import * as logger from '../../logger';
 
 /**
  * Unregisters all command interactions globally and in each guild for this account.

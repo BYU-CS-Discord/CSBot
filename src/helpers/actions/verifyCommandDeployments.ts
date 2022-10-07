@@ -2,7 +2,7 @@
 import type { Client, Guild } from 'discord.js';
 
 // Internal dependencies
-import logger from '../../logger';
+import * as logger from '../../logger';
 import { allCommands } from '../../commands';
 
 /**

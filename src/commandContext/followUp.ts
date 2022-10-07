@@ -2,7 +2,7 @@
 import type { CommandInteraction, InteractionReplyOptions } from 'discord.js';
 
 // Internal dependencies
-import logger from '../logger';
+import * as logger from '../logger';
 import { sendMessageInChannel } from '../helpers/actions/messages/replyToMessage';
 
 export function followUpFactory(interaction: CommandInteraction): CommandContext['followUp'] {

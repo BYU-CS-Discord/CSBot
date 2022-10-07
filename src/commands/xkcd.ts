@@ -3,7 +3,7 @@ import { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
 import axios from 'axios';
 
 // Internal dependencies
-import logger from '../logger';
+import * as logger from '../logger';
 
 interface GetComicResponse {
 	month: string;
