@@ -3,8 +3,7 @@ import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 
 const builder = new SlashCommandBuilder()
 	.setName('help')
-	.setDescription('Prints useful info about the bot')
-	.setDMPermission(true);
+	.setDescription('Prints useful info about the bot');
 
 export const help: GlobalCommand = {
 	commandBuilder: builder,

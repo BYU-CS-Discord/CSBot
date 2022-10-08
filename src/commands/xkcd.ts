@@ -65,7 +65,6 @@ async function _getComic(endpoint: string | number): Promise<GetComicResponse> {
 const builder = new SlashCommandBuilder()
 	.setName('xkcd')
 	.setDescription('Fetches the most recent xkcd comic, or a selected one.')
-	.setDMPermission(true)
 	.addIntegerOption(option =>
 		option
 			.setName('number')

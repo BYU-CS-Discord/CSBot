@@ -3,7 +3,6 @@ import { SlashCommandBuilder } from 'discord.js';
 const builder = new SlashCommandBuilder()
 	.setName('profile')
 	.setDescription('Responds with the Profile Picture of the mentioned user')
-	.setDMPermission(true)
 	.addUserOption(option =>
 		option.setName('user').setDescription('The user to get the profile picture of')
 	);
