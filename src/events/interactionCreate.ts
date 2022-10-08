@@ -56,14 +56,9 @@ async function handleInteraction(interaction: CommandInteraction): Promise<void>
 		logger.warn(`Received request to execute unknown command named '${interaction.commandName}'`);
 		return;
 	}
-
-	const SPACES_TO_INDENT = 2;
 	logger.debug(
-		`Calling command handler '${command.name}' with options ${JSON.stringify(
-			interaction.options,
-			undefined, // plain results
-			SPACES_TO_INDENT
-		)}`
+		`Calling command handler '${command.commandBuilder.name}'`
+		// with options ${command.commandBuilder.toJSON()}`
 	);
 
 	const guild = interaction.guild;
@@ -115,14 +110,16 @@ async function handleInteraction(interaction: CommandInteraction): Promise<void>
 
 	if (!command.requiresGuild) {
 		// No guild required
-		logger.debug(`Command '${command.name}' does not require guild information.`);
+		logger.debug(`Command '${command.commandBuilder.name}' does not require guild information.`);
 		logger.debug('Proceeding...');
 		return await command.execute(context);
 	}
 
 	if (context.source === 'dm') {
 		// No guild found
-		logger.debug(`Command '${command.name}' requires guild information, but none was found.`);
+		logger.debug(
+			`Command '${command.commandBuilder.name}' requires guild information, but none was found.`
+		);
 		return await context.reply({
 			content: "Can't do that here",
 			ephemeral: true,

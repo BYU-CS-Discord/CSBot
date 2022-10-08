@@ -1,5 +1,5 @@
 import type { Client } from 'discord.js';
-import { ApplicationCommandOptionType } from 'discord.js';
+import { SlashCommandBuilder } from 'discord.js';
 
 jest.mock('../../logger');
 import { getLogger } from '../../logger';
@@ -43,7 +43,7 @@ describe('Command deployments', () => {
 	beforeEach(() => {
 		mockRevokeCommands.mockResolvedValue(undefined);
 		mockApplicationCommandsSet.mockResolvedValue(undefined);
-		mockGuildCommandsSet.mockImplementation(vals => Promise.resolve(vals));
+		mockGuildCommandsSet.mockImplementation(values => Promise.resolve(values));
 		mockFetchOauthGuilds.mockResolvedValue([
 			{
 				fetch: (): Promise<unknown> =>
@@ -57,58 +57,62 @@ describe('Command deployments', () => {
 		]);
 		const mockCommands: NonEmptyArray<Command> = [
 			{
-				name: 'test1',
-				description: '',
+				commandBuilder: new SlashCommandBuilder().setName('test1').setDescription(' '),
 				requiresGuild: false,
 				execute: () => undefined,
 			},
 			{
-				name: 'test2',
-				nameLocalizations: {},
-				description: '',
+				commandBuilder: new SlashCommandBuilder()
+					.setName('test2')
+					.setDescription(' ')
+					.setNameLocalizations({}),
 				requiresGuild: true,
 				execute: () => undefined,
 			},
 			{
-				name: 'test3',
-				nameLocalizations: {},
-				description: '',
-				descriptionLocalizations: {},
+				commandBuilder: new SlashCommandBuilder()
+					.setName('test3')
+					.setDescription(' ')
+					.setNameLocalizations({})
+					.setDescriptionLocalizations({}),
 				requiresGuild: true,
 				execute: () => undefined,
 			},
 			{
-				name: 'test4',
-				nameLocalizations: {},
-				description: '',
-				descriptionLocalizations: {},
+				commandBuilder: new SlashCommandBuilder()
+					.setName('test4')
+					.setDescription(' ')
+					.setNameLocalizations({})
+					.setDescriptionLocalizations({})
+					.addStringOption(option => option.setName('c').setDescription(' ')),
 				requiresGuild: true,
-				options: [{ name: '', description: '', type: ApplicationCommandOptionType.String }],
 				execute: () => undefined,
 			},
 			{
-				name: 'test5',
-				nameLocalizations: {},
-				description: '',
-				descriptionLocalizations: {},
+				commandBuilder: new SlashCommandBuilder()
+					.setName('test5')
+					.setDescription(' ')
+					.setNameLocalizations({})
+					.setDescriptionLocalizations({})
+					.setDefaultMemberPermissions(null)
+					.addStringOption(option => option.setName('c').setDescription(' ')),
 				requiresGuild: true,
-				options: [{ name: '', description: '', type: ApplicationCommandOptionType.String }],
-				defaultMemberPermissions: [],
 				execute: () => undefined,
 			},
 			{
-				name: 'test6',
-				nameLocalizations: {},
-				description: '',
-				descriptionLocalizations: {},
+				commandBuilder: new SlashCommandBuilder()
+					.setName('test6')
+					.setDescription(' ')
+					.setNameLocalizations({})
+					.setDescriptionLocalizations({})
+					.setDMPermission(false)
+					.addStringOption(option => option.setName('c').setDescription(' ')),
 				requiresGuild: true,
-				options: [{ name: '', description: '', type: ApplicationCommandOptionType.String }],
-				dmPermission: false,
 				execute: () => undefined,
 			},
 		];
 		for (const cmd of mockCommands) {
-			mockAllCommands.set(cmd.name, cmd);
+			mockAllCommands.set(cmd.commandBuilder.name, cmd);
 		}
 	});
 

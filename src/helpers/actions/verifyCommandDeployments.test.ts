@@ -1,5 +1,5 @@
 import type { Client } from 'discord.js';
-import { Collection } from 'discord.js';
+import { Collection, SlashCommandBuilder } from 'discord.js';
 
 const mockAllCommands = new Map<string, Command>();
 jest.mock('../../commands', () => ({ allCommands: mockAllCommands }));
@@ -20,28 +20,24 @@ describe('Verify command deployments', () => {
 	const commands: Array<Command> = [
 		// Global Commands
 		{
-			name: 'zaphod',
-			description: '',
+			commandBuilder: new SlashCommandBuilder().setName('zaphod').setDescription(' '),
 			requiresGuild: false,
 			execute: () => undefined,
 		},
 		{
-			name: 'beeblebrox',
-			description: '',
+			commandBuilder: new SlashCommandBuilder().setName('beeblebrox').setDescription(' '),
 			requiresGuild: false,
 			execute: () => undefined,
 		},
 
 		// Guild-bound Commands
 		{
-			name: 'arthur',
-			description: '',
+			commandBuilder: new SlashCommandBuilder().setName('arthur').setDescription(' '),
 			requiresGuild: true,
 			execute: () => undefined,
 		},
 		{
-			name: 'dent',
-			description: '',
+			commandBuilder: new SlashCommandBuilder().setName('dent').setDescription(' '),
 			requiresGuild: true,
 			execute: () => undefined,
 		},
@@ -85,11 +81,11 @@ describe('Verify command deployments', () => {
 		mockFetchGuildCommands.mockResolvedValue(deployedGuild);
 
 		for (const cmd of commands) {
-			mockAllCommands.set(cmd.name, cmd);
+			mockAllCommands.set(cmd.commandBuilder.name, cmd);
 			if (cmd.requiresGuild) {
-				deployedGuild.set(cmd.name, cmd);
+				deployedGuild.set(cmd.commandBuilder.name, cmd);
 			} else {
-				deployedGlobal.set(cmd.name, cmd);
+				deployedGlobal.set(cmd.commandBuilder.name, cmd);
 			}
 		}
 	});
@@ -115,8 +111,7 @@ describe('Verify command deployments', () => {
 		test('logs a warning if the command lists differ', async () => {
 			mockAllCommands.delete('arthur');
 			mockAllCommands.set('ford', {
-				name: 'ford',
-				description: '',
+				commandBuilder: new SlashCommandBuilder().setName('ford').setDescription(' '),
 				requiresGuild: true,
 				execute: () => undefined,
 			});
@@ -151,8 +146,7 @@ describe('Verify command deployments', () => {
 		test('logs a warning if the command lists differ', async () => {
 			mockAllCommands.delete('zaphod');
 			mockAllCommands.set('marvin', {
-				name: 'marvin',
-				description: '',
+				commandBuilder: new SlashCommandBuilder().setName('marvin').setDescription(' '),
 				requiresGuild: false,
 				execute: () => undefined,
 			});

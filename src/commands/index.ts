@@ -17,7 +17,7 @@ export const allCommands: ReadonlyMap<string, Command> = _allCommands;
  * @private
  */
 export function _add(cmd: Command): void {
-	const name = cmd.name;
+	const name = cmd.commandBuilder.name;
 
 	if (_allCommands.has(name)) {
 		throw new TypeError(
