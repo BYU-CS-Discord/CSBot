@@ -4,21 +4,22 @@ declare global {
 	/**
 	 * Defines an event handler.
 	 */
-	interface EventHandler {
+	interface EventHandler<K extends keyof ClientEvents = keyof ClientEvents> {
 		/**
-		 * The name of the event this handler is for
-		 * Must match one of the events as defined in ClientEvents
+		 * The name of the event to be handled. Must match one of
+		 * the discord.js event names defined in {@link ClientEvents}.
 		 */
-		name: keyof ClientEvents;
+		readonly name: K;
 
 		/**
-		 * Whether this event can only fire once
+		 * Whether this handler should only execute the first time
+		 * the event occurs.
 		 */
-		once: boolean;
+		readonly once: boolean;
 
 		/**
-		 * The event implementation. Receives any number of arguments, depending on the event.
+		 * A function that is called with the event's context.
 		 */
-		execute: (...args: Array<any>) => Awaitable<void>;
+		readonly execute: (...args: ClientEvents[K]) => Awaitable<void>;
 	}
 }

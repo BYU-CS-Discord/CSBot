@@ -1,6 +1,3 @@
-// Dependencies
-import type { ClientEvents } from 'discord.js';
-
 // Create a mocked client to track 'on' and 'once' calls
 const mockOn = jest.fn();
 const mockOnce = jest.fn();
@@ -39,7 +36,8 @@ describe('allEvents', () => {
 	});
 
 	test('fails to install another event handler with the same name', () => {
-		expect(() => _add({ name: 'error' } as unknown as EventHandler)).toThrow(TypeError);
+		const mockErrorHandler = { name: 'error' } as unknown as EventHandler;
+		expect(() => _add(mockErrorHandler)).toThrow(TypeError);
 	});
 
 	test('properly registers events', () => {
@@ -51,7 +49,7 @@ describe('allEvents', () => {
 		// Be sure to clear all the auto-added event handlers first, or else they'll mess up our count.
 		// Casting a read-only list into a regular list is bad practice, but this is for testing purposes.
 		// Don't do this at home.
-		(allEventHandlers as Map<keyof ClientEvents, EventHandler>).clear();
+		(allEventHandlers as Map<string, unknown>).clear();
 
 		const fakeReadyEvent: EventHandler = {
 			name: 'ready',

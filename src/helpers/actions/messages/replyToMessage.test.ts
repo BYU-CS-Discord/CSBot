@@ -1,21 +1,22 @@
-import type { CommandInteraction, Message, User } from 'discord.js';
+import type { CommandInteraction, Message, TextChannel, User } from 'discord.js';
 
 jest.mock('../../../logger');
 import { getLogger } from '../../../logger';
 const mockGetLogger = getLogger as jest.Mock;
+const mockLoggerError = jest.fn();
 mockGetLogger.mockImplementation(() => {
 	return {
 		info: () => undefined,
-		error: () => undefined,
+		error: mockLoggerError,
 	} as unknown as Console;
 });
 
-import { replyWithPrivateMessage } from './replyToMessage';
+import { replyWithPrivateMessage, sendMessageInChannel } from './replyToMessage';
 
-describe('Message replies', () => {
+describe('Replies', () => {
 	const mockUserSend = jest.fn().mockResolvedValue({});
 
-	describe('interaction replies', () => {
+	describe('to interactions', () => {
 		const mockReply = jest.fn();
 		let interaction: CommandInteraction;
 
@@ -59,7 +60,7 @@ describe('Message replies', () => {
 		});
 	});
 
-	describe('message replies', () => {
+	describe('to messages', () => {
 		const mockReply = jest.fn();
 		const mockChannelSend = jest.fn();
 		let author: User;
@@ -126,5 +127,28 @@ describe('Message replies', () => {
 			expect(mockChannelSend).toHaveBeenCalledOnce();
 			expect(mockChannelSend).toHaveBeenCalledWith(expect.stringContaining('tried to DM you'));
 		});
+	});
+});
+
+describe('Cold calls', () => {
+	const mockChannelSend = jest.fn().mockResolvedValue({ id: 'the-message' });
+	const mockChannel = {
+		send: mockChannelSend,
+	} as unknown as TextChannel;
+
+	test('sends a message in the given channel', async () => {
+		await expect(sendMessageInChannel(mockChannel, 'yo')).resolves.toBeObject();
+		expect(mockChannelSend).toHaveBeenCalledOnce();
+		expect(mockChannelSend).toHaveBeenCalledWith('yo');
+		expect(mockLoggerError).not.toHaveBeenCalled();
+	});
+
+	test('logs an error and returns null if the send fails', async () => {
+		const error = new Error('This is a test');
+		mockChannelSend.mockRejectedValueOnce(error);
+		await expect(sendMessageInChannel(mockChannel, 'yo')).resolves.toBeNull();
+		expect(mockChannelSend).toHaveBeenCalledOnce();
+		expect(mockLoggerError).toHaveBeenCalledOnce();
+		expect(mockLoggerError).toHaveBeenCalledWith(expect.stringContaining('send message'), error);
 	});
 });
