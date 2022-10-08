@@ -77,8 +77,12 @@ describe('Verify command deployments', () => {
 		mockAllCommands.clear();
 		const deployedGlobal = new Collection<string, Command>();
 		const deployedGuild = new Collection<string, Command>();
-		mockFetchApplicationCommands.mockResolvedValue(deployedGlobal);
-		mockFetchGuildCommands.mockResolvedValue(deployedGuild);
+		mockFetchApplicationCommands.mockImplementation(() =>
+			deployedGlobal.map(c => c.commandBuilder.toJSON())
+		);
+		mockFetchGuildCommands.mockImplementation(() =>
+			deployedGuild.map(c => c.commandBuilder.toJSON())
+		);
 
 		for (const cmd of commands) {
 			mockAllCommands.set(cmd.commandBuilder.name, cmd);
