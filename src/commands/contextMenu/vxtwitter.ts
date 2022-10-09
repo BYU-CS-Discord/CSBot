@@ -25,7 +25,7 @@ export const vxtwitter: MessageContextMenuCommand = {
 					urls.push(url);
 				}
 			} catch {
-				continue; // Not a URL, so skip to the next one
+				continue; // Not actually a URL, so skip to the next one
 			}
 		}
 
