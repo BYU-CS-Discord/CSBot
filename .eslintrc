@@ -58,7 +58,7 @@
 		"keyword-spacing": "error",
 		"max-nested-callbacks": ["error", { "max": 4 }],
 		"max-statements-per-line": ["error", { "max": 2 }],
-		"no-console": "off", // TODO: Decide what to do about logging. I wanna use winston or some other extensible logging system, but I'm open to suggestions
+		"no-console": "warn",
 		"no-empty-function": "error",
 		"no-floating-decimal": "error",
 		"no-inline-comments": "off", // in case we wanna add a lil clarification to a complicated line, or just throw in something silly
