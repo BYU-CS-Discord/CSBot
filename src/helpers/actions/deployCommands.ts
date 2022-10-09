@@ -41,7 +41,7 @@ async function prepareGlobalCommands(
 	globalCommands: NonEmptyArray<GlobalCommand>,
 	client: Client<true>
 ): Promise<void> {
-	const commandBuilders = globalCommands.map(command => command.commandBuilder.toJSON());
+	const commandBuilders = globalCommands.map(command => command.info.toJSON());
 	logger.info(
 		`${globalCommands.length} command(s) will be set globally: ${JSON.stringify(
 			commandBuilders.map(cmd => `${cmd.name}`)
@@ -60,7 +60,7 @@ async function prepareGuildedCommands(
 	guildCommands: NonEmptyArray<GuildedCommand>,
 	client: Client<true>
 ): Promise<void> {
-	const commandBuilders = guildCommands.map(command => command.commandBuilder.toJSON());
+	const commandBuilders = guildCommands.map(command => command.info.toJSON());
 	logger.info(
 		`${guildCommands.length} command(s) require a guild: ${JSON.stringify(
 			commandBuilders.map(cmd => `${cmd.name}`)
@@ -75,7 +75,7 @@ async function prepareCommandsForGuild(
 	guild: Guild,
 	guildCommands: Array<GuildedCommand>
 ): Promise<void> {
-	const commandBuilders = guildCommands.map(command => command.commandBuilder.toJSON());
+	const commandBuilders = guildCommands.map(command => command.info.toJSON());
 	logger.info(
 		`Deploying ${guildCommands.length} guild-bound command(s): ${JSON.stringify(
 			commandBuilders.map(cmd => `${cmd.name}`)

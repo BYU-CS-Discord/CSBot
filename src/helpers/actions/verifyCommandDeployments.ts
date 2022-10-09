@@ -66,7 +66,7 @@ async function diffGuildCommandDeployments(
 
 	const expectedCommandNames = Array.from(allCommands.values())
 		.filter(c => c.requiresGuild)
-		.map(c => c.commandBuilder.name)
+		.map(c => c.info.name)
 		.sort(sortAlphabetically);
 
 	for (const guild of guilds) {
@@ -84,7 +84,7 @@ async function diffGuildCommandDeployments(
 async function diffGlobalCommandDeployments(client: Client<true>): Promise<Diff | null> {
 	const expectedCommandNames = Array.from(allCommands.values())
 		.filter(c => !c.requiresGuild)
-		.map(c => c.commandBuilder.name)
+		.map(c => c.info.name)
 		.sort(sortAlphabetically);
 
 	const actualCommandNames = (await client.application.commands.fetch())

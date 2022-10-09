@@ -74,7 +74,7 @@ const builder = new SlashCommandBuilder()
 
 export const xkcd: GlobalCommand = {
 	requiresGuild: false,
-	commandBuilder: builder,
+	info: builder,
 
 	// entry point for command execution
 	async execute({ options, reply, sendTyping }) {

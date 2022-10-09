@@ -48,12 +48,12 @@ describe('Command deployments', () => {
 		]);
 		const mockCommands: NonEmptyArray<Command> = [
 			{
-				commandBuilder: new SlashCommandBuilder().setName('test1').setDescription(' '),
+				info: new SlashCommandBuilder().setName('test1').setDescription(' '),
 				requiresGuild: false,
 				execute: () => undefined,
 			},
 			{
-				commandBuilder: new SlashCommandBuilder()
+				info: new SlashCommandBuilder()
 					.setName('test2')
 					.setDescription(' ')
 					.setNameLocalizations({}),
@@ -61,7 +61,7 @@ describe('Command deployments', () => {
 				execute: () => undefined,
 			},
 			{
-				commandBuilder: new SlashCommandBuilder()
+				info: new SlashCommandBuilder()
 					.setName('test3')
 					.setDescription(' ')
 					.setNameLocalizations({})
@@ -70,7 +70,7 @@ describe('Command deployments', () => {
 				execute: () => undefined,
 			},
 			{
-				commandBuilder: new SlashCommandBuilder()
+				info: new SlashCommandBuilder()
 					.setName('test4')
 					.setDescription(' ')
 					.setNameLocalizations({})
@@ -80,7 +80,7 @@ describe('Command deployments', () => {
 				execute: () => undefined,
 			},
 			{
-				commandBuilder: new SlashCommandBuilder()
+				info: new SlashCommandBuilder()
 					.setName('test5')
 					.setDescription(' ')
 					.setNameLocalizations({})
@@ -91,7 +91,7 @@ describe('Command deployments', () => {
 				execute: () => undefined,
 			},
 			{
-				commandBuilder: new SlashCommandBuilder()
+				info: new SlashCommandBuilder()
 					.setName('test6')
 					.setDescription(' ')
 					.setNameLocalizations({})
@@ -103,7 +103,7 @@ describe('Command deployments', () => {
 			},
 		];
 		for (const cmd of mockCommands) {
-			mockAllCommands.set(cmd.commandBuilder.name, cmd);
+			mockAllCommands.set(cmd.info.name, cmd);
 		}
 	});
 

@@ -14,24 +14,24 @@ describe('Verify command deployments', () => {
 	const commands: Array<Command> = [
 		// Global Commands
 		{
-			commandBuilder: new SlashCommandBuilder().setName('zaphod').setDescription(' '),
+			info: new SlashCommandBuilder().setName('zaphod').setDescription(' '),
 			requiresGuild: false,
 			execute: () => undefined,
 		},
 		{
-			commandBuilder: new SlashCommandBuilder().setName('beeblebrox').setDescription(' '),
+			info: new SlashCommandBuilder().setName('beeblebrox').setDescription(' '),
 			requiresGuild: false,
 			execute: () => undefined,
 		},
 
 		// Guild-bound Commands
 		{
-			commandBuilder: new SlashCommandBuilder().setName('arthur').setDescription(' '),
+			info: new SlashCommandBuilder().setName('arthur').setDescription(' '),
 			requiresGuild: true,
 			execute: () => undefined,
 		},
 		{
-			commandBuilder: new SlashCommandBuilder().setName('dent').setDescription(' '),
+			info: new SlashCommandBuilder().setName('dent').setDescription(' '),
 			requiresGuild: true,
 			execute: () => undefined,
 		},
@@ -71,19 +71,15 @@ describe('Verify command deployments', () => {
 		mockAllCommands.clear();
 		const deployedGlobal = new Collection<string, Command>();
 		const deployedGuild = new Collection<string, Command>();
-		mockFetchApplicationCommands.mockImplementation(() =>
-			deployedGlobal.map(c => c.commandBuilder.toJSON())
-		);
-		mockFetchGuildCommands.mockImplementation(() =>
-			deployedGuild.map(c => c.commandBuilder.toJSON())
-		);
+		mockFetchApplicationCommands.mockImplementation(() => deployedGlobal.map(c => c.info.toJSON()));
+		mockFetchGuildCommands.mockImplementation(() => deployedGuild.map(c => c.info.toJSON()));
 
 		for (const cmd of commands) {
-			mockAllCommands.set(cmd.commandBuilder.name, cmd);
+			mockAllCommands.set(cmd.info.name, cmd);
 			if (cmd.requiresGuild) {
-				deployedGuild.set(cmd.commandBuilder.name, cmd);
+				deployedGuild.set(cmd.info.name, cmd);
 			} else {
-				deployedGlobal.set(cmd.commandBuilder.name, cmd);
+				deployedGlobal.set(cmd.info.name, cmd);
 			}
 		}
 	});
@@ -109,7 +105,7 @@ describe('Verify command deployments', () => {
 		test('logs a warning if the command lists differ', async () => {
 			mockAllCommands.delete('arthur');
 			mockAllCommands.set('ford', {
-				commandBuilder: new SlashCommandBuilder().setName('ford').setDescription(' '),
+				info: new SlashCommandBuilder().setName('ford').setDescription(' '),
 				requiresGuild: true,
 				execute: () => undefined,
 			});
@@ -144,7 +140,7 @@ describe('Verify command deployments', () => {
 		test('logs a warning if the command lists differ', async () => {
 			mockAllCommands.delete('zaphod');
 			mockAllCommands.set('marvin', {
-				commandBuilder: new SlashCommandBuilder().setName('marvin').setDescription(' '),
+				info: new SlashCommandBuilder().setName('marvin').setDescription(' '),
 				requiresGuild: false,
 				execute: () => undefined,
 			});

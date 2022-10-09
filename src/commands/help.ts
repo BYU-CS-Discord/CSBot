@@ -6,7 +6,7 @@ const builder = new SlashCommandBuilder()
 	.setDescription('Prints useful info about the bot');
 
 export const help: GlobalCommand = {
-	commandBuilder: builder,
+	info: builder,
 	requiresGuild: false,
 	async execute({ reply }) {
 		const embed = new EmbedBuilder()

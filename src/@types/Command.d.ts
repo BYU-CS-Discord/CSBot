@@ -9,7 +9,7 @@ import type {
 
 declare global {
 	interface BaseCommand {
-		commandBuilder:
+		info:
 			| ContextMenuCommandBuilder
 			| SlashCommandBuilder
 			| SlashCommandSubcommandsOnlyBuilder

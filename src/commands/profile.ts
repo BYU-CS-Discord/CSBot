@@ -8,7 +8,7 @@ const builder = new SlashCommandBuilder()
 	);
 
 export const profile: GlobalCommand = {
-	commandBuilder: builder,
+	info: builder,
 	requiresGuild: false,
 	async execute({ user, options, reply }) {
 		const param = options[0];
