@@ -12,7 +12,7 @@
 		"plugin:@typescript-eslint/recommended-requiring-type-checking",
 		"plugin:prettier/recommended"
 	],
-	"plugins": ["prettier", "unicorn", "promise", "@typescript-eslint", "deprecation"],
+	"plugins": ["deprecation", "import", "prettier", "promise", "@typescript-eslint", "unicorn"],
 	"parser": "@typescript-eslint/parser",
 	"parserOptions": {
 		"project": "./tsconfig.prod.json",
@@ -85,7 +85,8 @@
 		"space-infix-ops": "error",
 		"space-unary-ops": "error",
 		"spaced-comment": ["warn", "always", { "exceptions": ["*"] }], // doc comments exist
-		"yoda": "error"
+		"yoda": "error",
+		"import/no-default-export": "error"
 	},
 
 	"overrides": [

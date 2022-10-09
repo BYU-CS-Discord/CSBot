@@ -1,8 +1,9 @@
+// External dependencies
 import type { CommandInteraction, InteractionReplyOptions } from 'discord.js';
-import { sendMessageInChannel } from '../helpers/actions/messages/replyToMessage';
 
-import { getLogger } from '../logger';
-const logger = getLogger();
+// Internal dependencies
+import * as logger from '../logger';
+import { sendMessageInChannel } from '../helpers/actions/messages/replyToMessage';
 
 export function followUpFactory(interaction: CommandInteraction): CommandContext['followUp'] {
 	return async function followUp(options) {

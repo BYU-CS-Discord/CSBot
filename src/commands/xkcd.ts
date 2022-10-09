@@ -1,8 +1,9 @@
+// External dependencies
 import { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
 import axios from 'axios';
 
-import { getLogger } from '../logger';
-const logger = getLogger();
+// Internal dependencies
+import * as logger from '../logger';
 
 interface GetComicResponse {
 	month: string;

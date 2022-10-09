@@ -1,15 +1,8 @@
 import type { CommandInteraction, Message, TextChannel, User } from 'discord.js';
 
+// Mock the logger to track output
 jest.mock('../../../logger');
-import { getLogger } from '../../../logger';
-const mockGetLogger = getLogger as jest.Mock;
-const mockLoggerError = jest.fn();
-mockGetLogger.mockImplementation(() => {
-	return {
-		info: () => undefined,
-		error: mockLoggerError,
-	} as unknown as Console;
-});
+import { error as mockLoggerError } from '../../../logger';
 
 import { replyWithPrivateMessage, sendMessageInChannel } from './replyToMessage';
 

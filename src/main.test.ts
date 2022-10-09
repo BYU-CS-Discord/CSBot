@@ -25,17 +25,9 @@ jest.mock('./events');
 import { registerEventHandlers } from './events';
 const mockRegisterEventHandlers = registerEventHandlers as jest.Mock;
 
-// Mock the logger to track error output
+// Mock the logger to track output
 jest.mock('./logger');
-import { getLogger } from './logger';
-const mockGetLogger = getLogger as jest.Mock;
-const mockConsoleError = jest.fn();
-mockGetLogger.mockImplementation(() => {
-	return {
-		info: () => undefined,
-		error: mockConsoleError,
-	} as unknown as Console;
-});
+import { error as mockLoggerError } from './logger';
 
 // Import the code to test
 import { _main } from './main';
@@ -78,6 +70,6 @@ describe('main', () => {
 	test('reports login errors', async () => {
 		mockLogin.mockRejectedValueOnce(loginError);
 		await expect(_main()).resolves.toBeUndefined();
-		expect(mockConsoleError).toHaveBeenCalledWith(expect.stringContaining('log in'), loginError);
+		expect(mockLoggerError).toHaveBeenCalledWith(expect.stringContaining('log in'), loginError);
 	});
 });

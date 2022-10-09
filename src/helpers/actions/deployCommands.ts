@@ -1,3 +1,4 @@
+// External dependencies
 import type {
 	ApplicationCommandData,
 	ApplicationCommandDataResolvable,
@@ -5,12 +6,12 @@ import type {
 	Guild,
 } from 'discord.js';
 import { ApplicationCommandType } from 'discord.js';
+
+// Internal dependencies
+import * as logger from '../../logger';
 import { allCommands } from '../../commands';
 import { isNonEmptyArray } from '../guards/isNonEmptyArray';
 import { revokeCommands } from './revokeCommands';
-
-import { getLogger } from '../../logger';
-const logger = getLogger();
 
 export async function deployCommands(client: Client<true>): Promise<void> {
 	await revokeCommands(client); // fresh start!

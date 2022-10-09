@@ -1,9 +1,8 @@
-// Dependencies
+// External dependencies
 import type { Client } from 'discord.js';
 
 // Internal dependencies
-import { getLogger } from '../logger';
-const logger = getLogger();
+import * as logger from '../logger';
 
 /**
  * The private list of all event handlers. You can use this to edit the list within this file.

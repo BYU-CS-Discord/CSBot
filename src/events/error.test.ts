@@ -1,13 +1,6 @@
-// Mock the logger to track error output
+// Mock the logger to track output
 jest.mock('../logger');
-import { getLogger } from '../logger';
-const mockGetLogger = getLogger as jest.Mock;
-const mockConsoleError = jest.fn();
-mockGetLogger.mockImplementation(() => {
-	return {
-		error: mockConsoleError,
-	} as unknown as Console;
-});
+import { error as mockLoggerError } from '../logger';
 
 // Import the code to test
 import { error } from './error';
@@ -18,7 +11,7 @@ const mockClientError = new Error('This is a test error');
 describe('on(error)', () => {
 	test('logs client errors', () => {
 		expect(error.execute(mockClientError)).toBeUndefined();
-		expect(mockConsoleError).toHaveBeenCalledWith(
+		expect(mockLoggerError).toHaveBeenCalledWith(
 			expect.stringContaining('client error'),
 			mockClientError
 		);

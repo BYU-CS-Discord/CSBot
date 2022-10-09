@@ -1,8 +1,9 @@
-// Dependencies
+// External dependencies
 import type { CommandInteraction, DMChannel, GuildMember, GuildTextBasedChannel } from 'discord.js';
 import { ChannelType } from 'discord.js';
 
 // Internal dependencies
+import * as logger from '../logger';
 import { logUser } from '../helpers/logUser';
 import { allCommands } from '../commands';
 import { followUpFactory } from '../commandContext/followUp';
@@ -10,9 +11,7 @@ import { prepareForLongRunningTasksFactory } from '../commandContext/prepareForL
 import { replyFactory } from '../commandContext/reply';
 import { replyPrivatelyFactory } from '../commandContext/replyPrivately';
 import { sendTypingFactory } from '../commandContext/sendTyping';
-import { getLogger } from '../logger';
 import { onEvent } from '../helpers/onEvent';
-const logger = getLogger();
 
 /**
  * The event handler for Discord Interactions (usually chat commands)

@@ -1,7 +1,8 @@
+// External dependencies
 import type { CommandInteraction } from 'discord.js';
 
-import { getLogger } from '../logger';
-const logger = getLogger();
+// Internal dependencies
+import * as logger from '../logger';
 
 export function prepareForLongRunningTasksFactory(
 	interaction: CommandInteraction

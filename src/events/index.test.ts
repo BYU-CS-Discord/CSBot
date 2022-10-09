@@ -17,15 +17,8 @@ jest.mock('discord.js', () => ({
 import { Client } from 'discord.js';
 const client = new Client({ intents: [] });
 
-// Mock the logger so the code doesn't print to the console
+// Mock the logger so nothing is printed
 jest.mock('../logger');
-import { getLogger } from '../logger';
-const mockGetLogger = getLogger as jest.Mock;
-mockGetLogger.mockImplementation(() => {
-	return {
-		info: () => undefined,
-	} as unknown as Console;
-});
 
 // Import the code to test
 import { _add, allEventHandlers, registerEventHandlers } from './index';

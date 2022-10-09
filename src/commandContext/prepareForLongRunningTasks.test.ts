@@ -1,14 +1,8 @@
 import type { CommandInteraction } from 'discord.js';
 
+// Mock the logger to track output
 jest.mock('../logger');
-import { getLogger } from '../logger';
-const mockGetLogger = getLogger as jest.Mock;
-const mockConsoleError = jest.fn();
-mockGetLogger.mockImplementation(() => {
-	return {
-		error: mockConsoleError,
-	} as unknown as Console;
-});
+import { error as mockLoggerError } from '../logger';
 
 import { prepareForLongRunningTasksFactory as factory } from './prepareForLongRunningTasks';
 
@@ -24,7 +18,7 @@ describe('prepareForLongRunningTasks', () => {
 	test('requests interaction deferrment', async () => {
 		await expect(prepareForLongRunningTasks()).resolves.toBeUndefined();
 
-		expect(mockConsoleError).not.toHaveBeenCalled();
+		expect(mockLoggerError).not.toHaveBeenCalled();
 		expect(mockInteractionDeferReply).toHaveBeenCalledOnce();
 		expect(mockInteractionDeferReply).toHaveBeenCalledWith({ ephemeral: undefined });
 	});
@@ -32,7 +26,7 @@ describe('prepareForLongRunningTasks', () => {
 	test('requests ephemeral interaction deferrment', async () => {
 		await expect(prepareForLongRunningTasks(true)).resolves.toBeUndefined();
 
-		expect(mockConsoleError).not.toHaveBeenCalled();
+		expect(mockLoggerError).not.toHaveBeenCalled();
 		expect(mockInteractionDeferReply).toHaveBeenCalledOnce();
 		expect(mockInteractionDeferReply).toHaveBeenCalledWith({ ephemeral: true });
 	});
@@ -43,11 +37,8 @@ describe('prepareForLongRunningTasks', () => {
 		await expect(prepareForLongRunningTasks()).resolves.toBeUndefined();
 
 		expect(mockInteractionDeferReply).toHaveBeenCalledOnce();
-		expect(mockConsoleError).toHaveBeenCalledOnce();
-		expect(mockConsoleError).toHaveBeenCalledAfter(mockInteractionDeferReply);
-		expect(mockConsoleError).toHaveBeenCalledWith(
-			expect.stringContaining('defer reply'),
-			testError
-		);
+		expect(mockLoggerError).toHaveBeenCalledOnce();
+		expect(mockLoggerError).toHaveBeenCalledAfter(mockInteractionDeferReply);
+		expect(mockLoggerError).toHaveBeenCalledWith(expect.stringContaining('defer reply'), testError);
 	});
 });
