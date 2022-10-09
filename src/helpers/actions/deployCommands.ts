@@ -22,11 +22,18 @@ export async function deployCommands(client: Client<true>): Promise<void> {
 	logger.info(`Syncing ${commands.length} command(s)...`);
 
 	const guildCommands: Array<GuildedCommand> = [];
-	const globalCommands: Array<GlobalCommand> = [];
+	const globalCommands: Array<GlobalCommand | ContextMenuCommand> = [];
 	for (const cmd of commands) {
-		if (cmd.requiresGuild) {
+		if (
+			(cmd.type === undefined || cmd.type === ApplicationCommandType.ChatInput) &&
+			cmd.requiresGuild
+		) {
 			guildCommands.push(cmd);
-		} else {
+		} else if (
+			cmd.type === ApplicationCommandType.Message ||
+			cmd.type === ApplicationCommandType.User ||
+			!cmd.requiresGuild
+		) {
 			globalCommands.push(cmd);
 		}
 	}
@@ -44,12 +51,12 @@ export async function deployCommands(client: Client<true>): Promise<void> {
 }
 
 async function prepareGlobalCommands(
-	globalCommands: NonEmptyArray<GlobalCommand>,
+	globalCommands: NonEmptyArray<GlobalCommand | ContextMenuCommand>,
 	client: Client<true>
 ): Promise<void> {
 	logger.info(
 		`${globalCommands.length} command(s) will be set globally: ${JSON.stringify(
-			globalCommands.map(cmd => `/${cmd.name}`)
+			globalCommands.map(cmd => `${cmd.name}`)
 		)}`
 	);
 	logger.debug(`Deploying all ${globalCommands.length} global command(s)...`);
@@ -67,7 +74,7 @@ async function prepareGuildedCommands(
 ): Promise<void> {
 	logger.info(
 		`${guildCommands.length} command(s) require a guild: ${JSON.stringify(
-			guildCommands.map(cmd => `/${cmd.name}`)
+			guildCommands.map(cmd => `${cmd.name}`)
 		)}`
 	);
 	const oAuthGuilds = await client.guilds.fetch();
@@ -94,7 +101,7 @@ async function prepareCommandsForGuild(
 	}
 }
 
-function discordCommandPayloadFromCommand(cmd: Command): ApplicationCommandDataResolvable {
+function discordCommandPayloadFromCommand(cmd: ChatInputCommand): ApplicationCommandDataResolvable {
 	const payload: ApplicationCommandData = {
 		description: cmd.description,
 		type: cmd.type ?? ApplicationCommandType.ChatInput,

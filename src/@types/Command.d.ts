@@ -29,7 +29,7 @@ declare global {
 		 *
 		 * @param context Contextual information about the command invocation.
 		 */
-		execute: (context: CommandContext) => void | Promise<void>;
+		execute: (context: TextInputCommandContext) => void | Promise<void>;
 	}
 
 	interface GuildedCommand extends BaseCommand {
@@ -51,7 +51,8 @@ declare global {
 		execute: (context: GuildedCommandContext) => void | Promise<void>;
 	}
 
-	type Command = GlobalCommand | GuildedCommand;
+	type Command = ChatInputCommand | ContextMenuCommand;
+	type ChatInputCommand = GlobalCommand | GuildedCommand;
 
 	interface BaseSubcommand extends ApplicationCommandSubCommandData {
 		type: ApplicationCommandOptionType.Subcommand;
