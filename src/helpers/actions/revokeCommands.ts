@@ -1,7 +1,8 @@
+// External dependencies
 import type { Client } from 'discord.js';
 
-import { getLogger } from '../../logger';
-const logger = getLogger();
+// Internal dependencies
+import * as logger from '../../logger';
 
 /**
  * Unregisters all command interactions globally and in each guild for this account.

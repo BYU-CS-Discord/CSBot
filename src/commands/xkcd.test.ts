@@ -3,17 +3,8 @@ jest.mock('axios');
 
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
+// Mock the logger so nothing is printed
 jest.mock('../logger');
-import { getLogger } from '../logger';
-const mockGetLogger = getLogger as jest.Mock;
-mockGetLogger.mockImplementation(() => {
-	return {
-		debug: () => undefined,
-		info: () => undefined,
-		warn: () => undefined,
-		error: () => undefined,
-	} as unknown as Console;
-});
 
 const latestGood = {
 	status: 200,
@@ -57,6 +48,7 @@ const badResponse = {
 	data: null,
 };
 
+// Import the code to test
 import { xkcd } from './xkcd';
 
 describe('xkcd', () => {

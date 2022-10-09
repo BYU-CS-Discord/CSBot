@@ -1,9 +1,10 @@
+// External dependencies
 import type { CommandInteraction } from 'discord.js';
+
+// Internal dependencies
+import * as logger from '../logger';
 import { logUser } from '../helpers/logUser';
 import { replyWithPrivateMessage } from '../helpers/actions/messages/replyToMessage';
-
-import { getLogger } from '../logger';
-const logger = getLogger();
 
 export function replyPrivatelyFactory(
 	interaction: CommandInteraction
