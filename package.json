@@ -1,82 +1,82 @@
 {
-	"name": "csbot",
-	"version": "0.3.0",
-	"description": "The One beneath the Supreme Overlord's rule. A bot to help manage the BYU CS Discord, successor to Ze Kaiser (https://github.com/arkenstorm/ze-kaiser)",
-	"private": true,
-	"scripts": {
-		"start": "NODE_ENV=development ./node_modules/.bin/nodemon --inspect ./dist/main.js",
-		"setup": "rm -r dist && npm ci && npm run export-version && npm run build:only --production && npm run baseline && npm run prisma:migrate && npm run commands:deploy",
-		"commands:deploy": "node . --deploy",
-		"commands:revoke": "node . --revoke",
-		"baseline": "./node_modules/.bin/prisma migrate resolve --applied 20220915022732_initial_state  # TODO: Use this to set initial tables on the database",
-		"prisma:migrate": "./node_modules/.bin/prisma migrate deploy",
-		"prisma:introspect": "./node_modules/.bin/prisma db pull",
-		"prisma:generate": "./node_modules/.bin/prisma generate --schema ./prisma/schema.prisma",
-		"migrations:generate": "./node_modules/.bin/prisma migrate dev --create-only",
-		"lint": "npm run export-version && npm run lintonly",
-		"lint:fix": "npm run export-version && npm run lintonly -- --fix",
-		"lintonly": "./node_modules/.bin/eslint . --ext .ts",
-		"prebuild": "npm run lint",
-		"build": "npm run build:only",
-		"build:only": "rm -rf dist && ./node_modules/.bin/tsc -p tsconfig.prod.json",
-		"export-version": "./node_modules/.bin/genversion ./src/constants/version.ts -es",
-		"test": "./node_modules/.bin/jest",
-		"test:watch": "npm run test -- --watch --coverage=false"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/BYU-CS-Discord/CSBot.git"
-	},
-	"keywords": [
-		"discord",
-		"bot",
-		"BYU"
-	],
-	"author": "BYU CS",
-	"license": "Unlicense",
-	"bugs": {
-		"url": "https://github.com/BYU-CS-Discord/CSBot/issues"
-	},
-	"homepage": "https://github.com/BYU-CS-Discord/CSBot#readme",
-	"engines": {
-		"node": "^16.10.0"
-	},
-	"main": "./dist/main.js",
-	"type": "commonjs",
-	"dependencies": {
-		"@prisma/client": "4.3.1",
-		"axios": "0.27.2",
-		"discord.js": "14.5.0",
-		"dotenv": "16.0.2",
-		"lodash": "4.17.21",
-		"source-map-support": "0.5.21",
-		"yargs": "17.5.1"
-	},
-	"devDependencies": {
-		"@types/jest": "29.0.3",
-		"@types/lodash": "4.14.185",
-		"@types/node": "16.9.6",
-		"@types/source-map-support": "0.5.6",
-		"@typescript-eslint/eslint-plugin": "5.38.1",
-		"@typescript-eslint/parser": "5.38.1",
-		"eslint": "8.24.0",
-		"eslint-config-prettier": "8.5.0",
-		"eslint-config-strictest": "0.4.0",
-		"eslint-plugin-deprecation": "1.3.2",
-		"eslint-plugin-import": "2.26.0",
-		"eslint-plugin-jest": "27.0.4",
-		"eslint-plugin-node": "11.1.0",
-		"eslint-plugin-prettier": "4.2.1",
-		"eslint-plugin-promise": "6.0.1",
-		"eslint-plugin-unicorn": "43.0.2",
-		"genversion": "3.1.1",
-		"jest": "28.1.3",
-		"jest-environment-node": "28.1.3",
-		"jest-extended": "3.1.0",
-		"nodemon": "2.0.20",
-		"prettier": "2.7.1",
-		"prisma": "4.3.1",
-		"ts-jest": "28.0.8",
-		"typescript": "4.8.3"
-	}
+  "name": "csbot",
+  "version": "0.3.0",
+  "description": "The One beneath the Supreme Overlord's rule. A bot to help manage the BYU CS Discord, successor to Ze Kaiser (https://github.com/arkenstorm/ze-kaiser)",
+  "private": true,
+  "scripts": {
+    "start": "NODE_ENV=development ./node_modules/.bin/nodemon --inspect ./dist/main.js",
+    "setup": "rm -r dist && npm ci && npm run export-version && npm run build:only --production && npm run baseline && npm run prisma:migrate && npm run commands:deploy",
+    "commands:deploy": "node . --deploy",
+    "commands:revoke": "node . --revoke",
+    "baseline": "prisma migrate resolve --applied 20220915022732_initial_state  # TODO: Use this to set initial tables on the database",
+    "prisma:migrate": "prisma migrate deploy",
+    "prisma:introspect": "prisma db pull",
+    "prisma:generate": "prisma generate --schema ./prisma/schema.prisma",
+    "migrations:generate": "prisma migrate dev --create-only",
+    "lint": "npm run export-version && npm run lintonly",
+    "lint:fix": "npm run export-version && npm run lintonly -- --fix",
+    "lintonly": "eslint . --ext .ts",
+    "prebuild": "npm run lint",
+    "build": "npm run build:only",
+    "build:only": "rm -rf dist && ./node_modules/.bin/tsc -p tsconfig.prod.json",
+    "export-version": "genversion ./src/constants/version.ts -es",
+    "test": "jest",
+    "test:watch": "npm run test -- --watch --coverage=false"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BYU-CS-Discord/CSBot.git"
+  },
+  "keywords": [
+    "discord",
+    "bot",
+    "BYU"
+  ],
+  "author": "BYU CS",
+  "license": "Unlicense",
+  "bugs": {
+    "url": "https://github.com/BYU-CS-Discord/CSBot/issues"
+  },
+  "homepage": "https://github.com/BYU-CS-Discord/CSBot#readme",
+  "engines": {
+    "node": "^16.10.0"
+  },
+  "main": "./dist/main.js",
+  "type": "commonjs",
+  "dependencies": {
+    "@prisma/client": "4.3.1",
+    "axios": "0.27.2",
+    "discord.js": "14.5.0",
+    "dotenv": "16.0.2",
+    "lodash": "4.17.21",
+    "source-map-support": "0.5.21",
+    "yargs": "17.5.1"
+  },
+  "devDependencies": {
+    "@types/jest": "29.0.3",
+    "@types/lodash": "4.14.185",
+    "@types/node": "16.9.6",
+    "@types/source-map-support": "0.5.6",
+    "@typescript-eslint/eslint-plugin": "5.38.1",
+    "@typescript-eslint/parser": "5.38.1",
+    "eslint": "8.24.0",
+    "eslint-config-prettier": "8.5.0",
+    "eslint-config-strictest": "0.4.0",
+    "eslint-plugin-deprecation": "1.3.2",
+    "eslint-plugin-import": "2.26.0",
+    "eslint-plugin-jest": "27.0.4",
+    "eslint-plugin-node": "11.1.0",
+    "eslint-plugin-prettier": "4.2.1",
+    "eslint-plugin-promise": "6.0.1",
+    "eslint-plugin-unicorn": "43.0.2",
+    "genversion": "3.1.1",
+    "jest": "28.1.3",
+    "jest-environment-node": "28.1.3",
+    "jest-extended": "3.1.0",
+    "nodemon": "2.0.20",
+    "prettier": "2.7.1",
+    "prisma": "4.3.1",
+    "ts-jest": "28.0.8",
+    "typescript": "4.8.3"
+  }
 }
