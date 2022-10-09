@@ -1,9 +1,20 @@
-import type { MessageApplicationCommandData, UserApplicationCommandData } from 'discord.js';
+import type { ApplicationCommandType, ContextMenuCommandBuilder } from 'discord.js';
 
 declare global {
-	interface UserContextMenuCommand extends UserApplicationCommandData {
+	interface BaseContextMenuCommand {
+		/** Metadata about the command. */
+		info: ContextMenuCommandBuilder;
+
+		/** The type of context menu command. */
+		type: ApplicationCommandType.User | ApplicationCommandType.Message;
+
 		/** Whether the subcommand requires a guild present to execute. */
 		requiresGuild: false; // included here to better fit with `ChatInputCommand` objects
+	}
+
+	interface UserContextMenuCommand extends BaseContextMenuCommand {
+		/** The type of context menu command. */
+		type: ApplicationCommandType.User;
 
 		/**
 		 * The command implementation. Receives contextual information about the
@@ -14,9 +25,9 @@ declare global {
 		execute: (context: UserContextMenuCommandContext) => void | Promise<void>;
 	}
 
-	interface MessageContextMenuCommand extends MessageApplicationCommandData {
-		/** Whether the subcommand requires a guild present to execute. */
-		requiresGuild: false; // included here to better fit with `ChatInputCommand` objects
+	interface MessageContextMenuCommand extends BaseContextMenuCommand {
+		/** The type of context menu command. */
+		type: ApplicationCommandType.Message;
 
 		/**
 		 * The command implementation. Receives contextual information about the

@@ -12,6 +12,7 @@ This list is updated as contributors contribute.
 - [**gmacgre**](https://github.com/gmacgre)
 - [**JstnMcBrd**](https://github.com/JstnMcBrd)
 - [**AverageHelper**](https://github.com/AverageHelper)
+- [**SpencerHastings**](https://github.com/SpencerHastings/)
 
 ## Table of contents
 

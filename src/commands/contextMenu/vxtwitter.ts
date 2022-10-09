@@ -1,10 +1,12 @@
-import { ApplicationCommandType } from 'discord.js';
+import { ApplicationCommandType, ContextMenuCommandBuilder } from 'discord.js';
 import { positionsOfUriInText } from '../../helpers/positionsOfUriInText';
 import { URL } from 'node:url';
 
 export const vxtwitter: MessageContextMenuCommand = {
-	name: 'Fix Twitter Links',
-	type: ApplicationCommandType.Message, // context menu command
+	info: new ContextMenuCommandBuilder()
+		.setName('Fix Twitter Links')
+		.setType(ApplicationCommandType.Message),
+	type: ApplicationCommandType.Message,
 	requiresGuild: false,
 	async execute({ targetMessage, replyPrivately }) {
 		const content = targetMessage.content;

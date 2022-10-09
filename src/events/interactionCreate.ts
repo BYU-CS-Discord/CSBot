@@ -56,7 +56,7 @@ async function handleInteraction(interaction: CommandInteraction): Promise<void>
 		return;
 	}
 
-	logger.debug(`Calling command handler '${command.name}'`);
+	logger.debug(`Calling command handler '${command.info.name}'`);
 
 	const guild = interaction.guild;
 
@@ -111,10 +111,10 @@ async function handleInteraction(interaction: CommandInteraction): Promise<void>
 
 	if (!command.requiresGuild) {
 		// No guild required
-		logger.debug(`Command '${command.name}' does not require guild information.`);
+		logger.debug(`Command '${command.info.name}' does not require guild information.`);
 		logger.debug('Proceeding...');
 
-		if (command.type === ApplicationCommandType.Message) {
+		if ('type' in command && command.type === ApplicationCommandType.Message) {
 			if (!interaction.isMessageContextMenuCommand()) {
 				throw new TypeError('Expected a Message Context Menu Command interaction');
 			}
@@ -128,7 +128,7 @@ async function handleInteraction(interaction: CommandInteraction): Promise<void>
 				options: null,
 			};
 			return await command.execute(messageContextMenuCommandContext);
-		} else if (command.type === ApplicationCommandType.User) {
+		} else if ('type' in command && command.type === ApplicationCommandType.User) {
 			if (!interaction.isUserContextMenuCommand()) {
 				throw new TypeError('Expected a User Context Menu Command interaction');
 			}
@@ -156,7 +156,7 @@ async function handleInteraction(interaction: CommandInteraction): Promise<void>
 
 	if (context.source === 'dm') {
 		// No guild found
-		logger.debug(`Command '${command.name}' requires guild information, but none was found.`);
+		logger.debug(`Command '${command.info.name}' requires guild information, but none was found.`);
 		return await context.reply({
 			content: "Can't do that here",
 			ephemeral: true,

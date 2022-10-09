@@ -9,7 +9,12 @@ import type {
 	MessageContextMenuCommandInteraction,
 	Message,
 } from 'discord.js';
-import { ChannelType, ApplicationCommandType } from 'discord.js';
+import {
+	ApplicationCommandType,
+	ChannelType,
+	ContextMenuCommandBuilder,
+	SlashCommandBuilder,
+} from 'discord.js';
 
 // Mock allCommands to isolate our test code
 const mockAllCommands = new Map<string, Command>();
@@ -20,37 +25,43 @@ jest.mock('../commands', () => ({
 // Create two mock commands to track handler behavior
 const mockGlobalExecute = jest.fn();
 const mockGlobalCommand: ChatInputCommand = {
-	name: 'global-test',
-	description: 'lolcat',
+	info: new SlashCommandBuilder() //
+		.setName('global-test')
+		.setDescription('lolcat'),
 	requiresGuild: false,
 	execute: mockGlobalExecute,
 };
-mockAllCommands.set(mockGlobalCommand.name, mockGlobalCommand);
+mockAllCommands.set(mockGlobalCommand.info.name, mockGlobalCommand);
 
 const mockMessageContextMenuCommand: MessageContextMenuCommand = {
-	name: 'Do The Thing To This Message',
+	info: new ContextMenuCommandBuilder()
+		.setName('Do The Thing To This Message')
+		.setType(ApplicationCommandType.Message),
 	type: ApplicationCommandType.Message,
 	requiresGuild: false,
 	execute: mockGlobalExecute,
 };
-mockAllCommands.set(mockMessageContextMenuCommand.name, mockMessageContextMenuCommand);
+mockAllCommands.set(mockMessageContextMenuCommand.info.name, mockMessageContextMenuCommand);
 
 const mockUserContextMenuCommand: UserContextMenuCommand = {
-	name: 'Do The Thing To This User',
+	info: new ContextMenuCommandBuilder()
+		.setName('Do The Thing To This User')
+		.setType(ApplicationCommandType.User),
 	type: ApplicationCommandType.User,
 	requiresGuild: false,
 	execute: mockGlobalExecute,
 };
-mockAllCommands.set(mockUserContextMenuCommand.name, mockUserContextMenuCommand);
+mockAllCommands.set(mockUserContextMenuCommand.info.name, mockUserContextMenuCommand);
 
 const mockGuildedExecute = jest.fn();
 const mockGuildedCommand: ChatInputCommand = {
-	name: 'guilded-test',
-	description: 'lolcat',
+	info: new SlashCommandBuilder() //
+		.setName('guilded-test')
+		.setDescription('lolcat'),
 	requiresGuild: true,
 	execute: mockGuildedExecute,
 };
-mockAllCommands.set(mockGuildedCommand.name, mockGuildedCommand);
+mockAllCommands.set(mockGuildedCommand.info.name, mockGuildedCommand);
 
 // Mock the logger to track output
 jest.mock('../logger');
@@ -75,7 +86,7 @@ function defaultInteraction(): Interaction {
 		targetMessage: null,
 		targetUser: null,
 		targetMember: null,
-		commandName: mockGlobalCommand.name,
+		commandName: mockGlobalCommand.info.name,
 		options: { data: [] },
 		client: { user: { id: selfUid } },
 		user: {
@@ -178,7 +189,7 @@ describe('on(interactionCreate)', () => {
 
 	test('calls the `execute` method of a guilded command from a guild', async () => {
 		const interaction = defaultInteraction();
-		(interaction as CommandInteraction).commandName = mockGuildedCommand.name;
+		(interaction as CommandInteraction).commandName = mockGuildedCommand.info.name;
 
 		await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 		expect(mockGuildedExecute).toHaveBeenCalledOnce();
@@ -186,7 +197,7 @@ describe('on(interactionCreate)', () => {
 
 	test('tells the user off when they try to execute a guilded command from DMs', async () => {
 		let interaction = defaultInteraction();
-		(interaction as CommandInteraction).commandName = mockGuildedCommand.name;
+		(interaction as CommandInteraction).commandName = mockGuildedCommand.info.name;
 		interaction.inCachedGuild = (): boolean => false;
 		interaction.inGuild = (): boolean => false;
 		interaction.member = null;
@@ -245,7 +256,7 @@ describe('on(interactionCreate)', () => {
 		const interaction = defaultInteraction() as UserContextMenuCommandInteraction;
 		interaction.isUserContextMenuCommand = (): boolean => false;
 		interaction.isMessageContextMenuCommand = (): boolean => false;
-		interaction.commandName = mockUserContextMenuCommand.name;
+		interaction.commandName = mockUserContextMenuCommand.info.name;
 
 		await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 		expect(mockGlobalExecute).not.toHaveBeenCalled();
@@ -259,7 +270,7 @@ describe('on(interactionCreate)', () => {
 		const interaction = defaultInteraction() as UserContextMenuCommandInteraction;
 		interaction.isUserContextMenuCommand = (): boolean => false;
 		interaction.isMessageContextMenuCommand = (): boolean => false;
-		interaction.commandName = mockMessageContextMenuCommand.name;
+		interaction.commandName = mockMessageContextMenuCommand.info.name;
 
 		await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 		expect(mockGlobalExecute).not.toHaveBeenCalled();
@@ -275,7 +286,7 @@ describe('on(interactionCreate)', () => {
 		interaction.inCachedGuild = (): boolean => false;
 		interaction.targetId = 'target-user-1234';
 		(interaction as { targetUser: Pick<User, 'id'> }).targetUser = { id: 'target-user-1234' };
-		interaction.commandName = mockUserContextMenuCommand.name;
+		interaction.commandName = mockUserContextMenuCommand.info.name;
 
 		await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 		expect(mockGuildMembersFetch).toHaveBeenCalledWith(interaction.targetId);
@@ -291,7 +302,7 @@ describe('on(interactionCreate)', () => {
 		(interaction as { targetMember: Pick<GuildMember, 'id'> }).targetMember = {
 			id: 'target-member-1234',
 		};
-		interaction.commandName = mockUserContextMenuCommand.name;
+		interaction.commandName = mockUserContextMenuCommand.info.name;
 
 		await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 		expect(mockGuildMembersFetch).not.toHaveBeenCalled();
@@ -306,7 +317,7 @@ describe('on(interactionCreate)', () => {
 		(interaction as { targetMessage: Pick<Message, 'id'> }).targetMessage = {
 			id: interaction.targetId,
 		};
-		interaction.commandName = mockMessageContextMenuCommand.name;
+		interaction.commandName = mockMessageContextMenuCommand.info.name;
 
 		await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 		expect(mockGlobalExecute).toHaveBeenCalledOnce();
