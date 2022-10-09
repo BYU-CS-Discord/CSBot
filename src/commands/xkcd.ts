@@ -1,5 +1,5 @@
 // External dependencies
-import { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
+import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import axios from 'axios';
 
 // Internal dependencies
@@ -62,17 +62,19 @@ async function _getComic(endpoint: string | number): Promise<GetComicResponse> {
 	}
 }
 
+const builder = new SlashCommandBuilder()
+	.setName('xkcd')
+	.setDescription('Fetches the most recent xkcd comic, or a selected one.')
+	.addIntegerOption(option =>
+		option
+			.setName('number')
+			.setDescription('The index number of the comic you would like to have')
+			.setMinValue(1)
+	);
+
 export const xkcd: GlobalCommand = {
-	name: 'xkcd',
-	description: 'Fetches the most recent xkcd comic, or a selected one.',
 	requiresGuild: false,
-	options: [
-		{
-			name: 'number',
-			description: 'The index number of the comic you would like to have',
-			type: ApplicationCommandOptionType.Integer,
-		},
-	],
+	info: builder,
 
 	// entry point for command execution
 	async execute({ options, reply, sendTyping }) {

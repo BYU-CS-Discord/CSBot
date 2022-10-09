@@ -1,9 +1,12 @@
 import { appVersion, repo } from '../constants/meta';
-import { EmbedBuilder } from 'discord.js';
+import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+
+const builder = new SlashCommandBuilder()
+	.setName('help')
+	.setDescription('Prints useful info about the bot');
 
 export const help: GlobalCommand = {
-	name: 'help',
-	description: 'Prints useful info about the bot',
+	info: builder,
 	requiresGuild: false,
 	async execute({ reply }) {
 		const embed = new EmbedBuilder()

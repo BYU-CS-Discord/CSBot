@@ -1,5 +1,5 @@
 import type { Client } from 'discord.js';
-import { Collection } from 'discord.js';
+import { Collection, SlashCommandBuilder } from 'discord.js';
 
 const mockAllCommands = new Map<string, Command>();
 jest.mock('../../commands', () => ({ allCommands: mockAllCommands }));
@@ -14,28 +14,24 @@ describe('Verify command deployments', () => {
 	const commands: Array<Command> = [
 		// Global Commands
 		{
-			name: 'zaphod',
-			description: '',
+			info: new SlashCommandBuilder().setName('zaphod').setDescription(' '),
 			requiresGuild: false,
 			execute: () => undefined,
 		},
 		{
-			name: 'beeblebrox',
-			description: '',
+			info: new SlashCommandBuilder().setName('beeblebrox').setDescription(' '),
 			requiresGuild: false,
 			execute: () => undefined,
 		},
 
 		// Guild-bound Commands
 		{
-			name: 'arthur',
-			description: '',
+			info: new SlashCommandBuilder().setName('arthur').setDescription(' '),
 			requiresGuild: true,
 			execute: () => undefined,
 		},
 		{
-			name: 'dent',
-			description: '',
+			info: new SlashCommandBuilder().setName('dent').setDescription(' '),
 			requiresGuild: true,
 			execute: () => undefined,
 		},
@@ -75,15 +71,15 @@ describe('Verify command deployments', () => {
 		mockAllCommands.clear();
 		const deployedGlobal = new Collection<string, Command>();
 		const deployedGuild = new Collection<string, Command>();
-		mockFetchApplicationCommands.mockResolvedValue(deployedGlobal);
-		mockFetchGuildCommands.mockResolvedValue(deployedGuild);
+		mockFetchApplicationCommands.mockImplementation(() => deployedGlobal.map(c => c.info.toJSON()));
+		mockFetchGuildCommands.mockImplementation(() => deployedGuild.map(c => c.info.toJSON()));
 
 		for (const cmd of commands) {
-			mockAllCommands.set(cmd.name, cmd);
+			mockAllCommands.set(cmd.info.name, cmd);
 			if (cmd.requiresGuild) {
-				deployedGuild.set(cmd.name, cmd);
+				deployedGuild.set(cmd.info.name, cmd);
 			} else {
-				deployedGlobal.set(cmd.name, cmd);
+				deployedGlobal.set(cmd.info.name, cmd);
 			}
 		}
 	});
@@ -109,8 +105,7 @@ describe('Verify command deployments', () => {
 		test('logs a warning if the command lists differ', async () => {
 			mockAllCommands.delete('arthur');
 			mockAllCommands.set('ford', {
-				name: 'ford',
-				description: '',
+				info: new SlashCommandBuilder().setName('ford').setDescription(' '),
 				requiresGuild: true,
 				execute: () => undefined,
 			});
@@ -145,8 +140,7 @@ describe('Verify command deployments', () => {
 		test('logs a warning if the command lists differ', async () => {
 			mockAllCommands.delete('zaphod');
 			mockAllCommands.set('marvin', {
-				name: 'marvin',
-				description: '',
+				info: new SlashCommandBuilder().setName('marvin').setDescription(' '),
 				requiresGuild: false,
 				execute: () => undefined,
 			});

@@ -1,11 +1,5 @@
 // External dependencies
-import type {
-	ApplicationCommandData,
-	ApplicationCommandDataResolvable,
-	Client,
-	Guild,
-} from 'discord.js';
-import { ApplicationCommandType } from 'discord.js';
+import type { Client, Guild } from 'discord.js';
 
 // Internal dependencies
 import * as logger from '../../logger';
@@ -47,14 +41,15 @@ async function prepareGlobalCommands(
 	globalCommands: NonEmptyArray<GlobalCommand>,
 	client: Client<true>
 ): Promise<void> {
+	const commandBuilders = globalCommands.map(command => command.info.toJSON());
 	logger.info(
 		`${globalCommands.length} command(s) will be set globally: ${JSON.stringify(
-			globalCommands.map(cmd => `/${cmd.name}`)
+			commandBuilders.map(cmd => `${cmd.name}`)
 		)}`
 	);
 	logger.debug(`Deploying all ${globalCommands.length} global command(s)...`);
 	try {
-		await client.application.commands.set(globalCommands);
+		await client.application.commands.set(commandBuilders);
 		logger.info(`Set ${globalCommands.length} global command(s).`);
 	} catch (error) {
 		logger.error('Failed to set global commands:', error);
@@ -65,9 +60,10 @@ async function prepareGuildedCommands(
 	guildCommands: NonEmptyArray<GuildedCommand>,
 	client: Client<true>
 ): Promise<void> {
+	const commandBuilders = guildCommands.map(command => command.info.toJSON());
 	logger.info(
 		`${guildCommands.length} command(s) require a guild: ${JSON.stringify(
-			guildCommands.map(cmd => `/${cmd.name}`)
+			commandBuilders.map(cmd => `${cmd.name}`)
 		)}`
 	);
 	const oAuthGuilds = await client.guilds.fetch();
@@ -79,43 +75,16 @@ async function prepareCommandsForGuild(
 	guild: Guild,
 	guildCommands: Array<GuildedCommand>
 ): Promise<void> {
-	logger.info(`Deploying ${guildCommands.length} guild-bound command(s):`);
-
-	const payloads = guildCommands.map(cmd => {
-		logger.info(`\t'/${cmd.name}'  (requires guild)`);
-		return discordCommandPayloadFromCommand(cmd);
-	});
-
+	const commandBuilders = guildCommands.map(command => command.info.toJSON());
+	logger.info(
+		`Deploying ${guildCommands.length} guild-bound command(s): ${JSON.stringify(
+			commandBuilders.map(cmd => `${cmd.name}`)
+		)}`
+	);
 	try {
-		const result = await guild.commands.set(payloads);
+		const result = await guild.commands.set(commandBuilders);
 		logger.info(`Set ${result.size} command(s) on guild ${guild.id}`);
 	} catch (error) {
 		logger.error(`Failed to set commands on guild ${guild.id}:`, error);
 	}
-}
-
-function discordCommandPayloadFromCommand(cmd: Command): ApplicationCommandDataResolvable {
-	const payload: ApplicationCommandData = {
-		description: cmd.description,
-		type: cmd.type ?? ApplicationCommandType.ChatInput,
-		name: cmd.name,
-	};
-
-	if (cmd.nameLocalizations) {
-		payload.nameLocalizations = cmd.nameLocalizations;
-	}
-	if (cmd.descriptionLocalizations) {
-		payload.descriptionLocalizations = cmd.descriptionLocalizations;
-	}
-	if (cmd.options) {
-		payload.options = cmd.options;
-	}
-	if (cmd.defaultMemberPermissions !== undefined) {
-		payload.defaultMemberPermissions = cmd.defaultMemberPermissions;
-	}
-	if (cmd.dmPermission !== undefined) {
-		payload.dmPermission = cmd.dmPermission;
-	}
-
-	return payload;
 }

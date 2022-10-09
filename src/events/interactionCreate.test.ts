@@ -1,6 +1,6 @@
 // Dependencies
 import type { Interaction, CommandInteraction, TextBasedChannel } from 'discord.js';
-import { ChannelType } from 'discord.js';
+import { ChannelType, SlashCommandBuilder } from 'discord.js';
 
 // Mock allCommands to isolate our test code
 const mockAllCommands = new Map<string, Command>();
@@ -11,20 +11,18 @@ jest.mock('../commands', () => ({
 // Create two mock commands to track handler behavior
 const mockGlobalExecute = jest.fn();
 const mockGlobalCommand: Command = {
-	name: 'global-test',
-	description: 'lolcat',
+	info: new SlashCommandBuilder().setName('global-test').setDescription('lolcat'),
 	requiresGuild: false,
 	execute: mockGlobalExecute,
 };
-mockAllCommands.set(mockGlobalCommand.name, mockGlobalCommand);
+mockAllCommands.set(mockGlobalCommand.info.name, mockGlobalCommand);
 const mockGuildedExecute = jest.fn();
 const mockGuildedCommand: Command = {
-	name: 'guilded-test',
-	description: 'lolcat',
+	info: new SlashCommandBuilder().setName('guilded-test').setDescription('lolcat'),
 	requiresGuild: true,
 	execute: mockGuildedExecute,
 };
-mockAllCommands.set(mockGuildedCommand.name, mockGuildedCommand);
+mockAllCommands.set(mockGuildedCommand.info.name, mockGuildedCommand);
 
 // Mock the logger to track output
 jest.mock('../logger');
@@ -43,7 +41,7 @@ const channelId = 'the-channel-1234';
 // Reduces code duplication
 function defaultInteraction(): Interaction {
 	return {
-		commandName: mockGlobalCommand.name,
+		commandName: mockGlobalCommand.info.name,
 		options: { data: [] },
 		client: { user: { id: selfUid } },
 		user: {
@@ -141,7 +139,7 @@ describe('on(interactionCreate)', () => {
 
 	test('calls the `execute` method of a guilded command from a guild', async () => {
 		const interaction = defaultInteraction();
-		(interaction as CommandInteraction).commandName = mockGuildedCommand.name;
+		(interaction as CommandInteraction).commandName = mockGuildedCommand.info.name;
 
 		await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 		expect(mockGuildedExecute).toHaveBeenCalledOnce();
@@ -149,7 +147,7 @@ describe('on(interactionCreate)', () => {
 
 	test('tells the user off when they try to execute a guilded command from DMs', async () => {
 		let interaction = defaultInteraction();
-		(interaction as CommandInteraction).commandName = mockGuildedCommand.name;
+		(interaction as CommandInteraction).commandName = mockGuildedCommand.info.name;
 		interaction.inCachedGuild = (): boolean => false;
 		interaction.inGuild = (): boolean => false;
 		interaction.member = null;
