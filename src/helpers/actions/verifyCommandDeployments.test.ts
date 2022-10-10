@@ -1,6 +1,5 @@
 import type { Client } from 'discord.js';
 import { Collection, SlashCommandBuilder } from 'discord.js';
-import { deployableCommand } from './deployCommands';
 
 const mockAllCommands = new Map<string, Command>();
 jest.mock('../../commands', () => ({ allCommands: mockAllCommands }));
@@ -9,6 +8,7 @@ jest.mock('../../commands', () => ({ allCommands: mockAllCommands }));
 jest.mock('../../logger');
 import { warn as mockLoggerWarn } from '../../logger';
 
+import { deployableCommand } from './deployCommands';
 import { verifyCommandDeployments } from './verifyCommandDeployments';
 
 describe('Verify command deployments', () => {
