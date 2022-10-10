@@ -3,9 +3,7 @@ import { positionsOfUriInText } from '../../helpers/positionsOfUriInText';
 import { URL } from 'node:url';
 
 export const vxtwitter: MessageContextMenuCommand = {
-	info: new ContextMenuCommandBuilder()
-		.setName('Fix Twitter Links')
-		.setType(ApplicationCommandType.Message),
+	info: new ContextMenuCommandBuilder().setName('Fix Twitter Links'),
 	type: ApplicationCommandType.Message,
 	requiresGuild: false,
 	async execute({ targetMessage, replyPrivately }) {

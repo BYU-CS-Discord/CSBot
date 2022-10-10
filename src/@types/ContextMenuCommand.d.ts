@@ -9,7 +9,7 @@ declare global {
 		type: ApplicationCommandType.User | ApplicationCommandType.Message;
 
 		/** Whether the subcommand requires a guild present to execute. */
-		requiresGuild: false; // included here to better fit with `ChatInputCommand` objects
+		requiresGuild: false; // included here to better fit with `ChatInputCommand` objects. We'll make a guild-bound version later if we need it
 	}
 
 	interface UserContextMenuCommand extends BaseContextMenuCommand {

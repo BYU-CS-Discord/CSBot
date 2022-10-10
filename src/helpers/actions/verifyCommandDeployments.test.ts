@@ -1,5 +1,6 @@
 import type { Client } from 'discord.js';
 import { Collection, SlashCommandBuilder } from 'discord.js';
+import { deployableCommand } from './deployCommands';
 
 const mockAllCommands = new Map<string, Command>();
 jest.mock('../../commands', () => ({ allCommands: mockAllCommands }));
@@ -72,10 +73,10 @@ describe('Verify command deployments', () => {
 		const deployedGlobal = new Collection<string, Command>();
 		const deployedGuild = new Collection<string, Command>();
 		mockFetchApplicationCommands.mockImplementation(() =>
-			Promise.resolve(deployedGlobal.map(c => c.info.toJSON()))
+			Promise.resolve(deployedGlobal.map(deployableCommand))
 		);
 		mockFetchGuildCommands.mockImplementation(() =>
-			Promise.resolve(deployedGuild.map(c => c.info.toJSON()))
+			Promise.resolve(deployedGuild.map(deployableCommand))
 		);
 
 		for (const cmd of commands) {

@@ -1,6 +1,7 @@
 import type {
 	ApplicationCommandOptionType,
 	ApplicationCommandSubCommandData,
+	ApplicationCommandType,
 	SlashCommandBuilder,
 	SlashCommandOptionsOnlyBuilder,
 	SlashCommandSubcommandsOnlyBuilder,
@@ -14,6 +15,9 @@ declare global {
 			| SlashCommandSubcommandsOnlyBuilder
 			| SlashCommandOptionsOnlyBuilder
 			| Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'>;
+
+		/** The type of the command. */
+		type?: ApplicationCommandType.ChatInput;
 	}
 
 	interface GlobalCommand extends BaseCommand {
