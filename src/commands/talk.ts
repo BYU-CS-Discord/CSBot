@@ -1,5 +1,9 @@
+// TODO testing
+// TODO context menu command to speak
+// TODO more careful interactionCreate error reporting
+
 // External dependencies
-import { existsSync, mkdirSync, writeFileSync, unlinkSync } from 'node:fs';
+import { existsSync, mkdirSync, writeFileSync, unlinkSync, createReadStream } from 'node:fs';
 import { join } from 'node:path';
 import {
 	SlashCommandBuilder,
@@ -11,10 +15,10 @@ import {
 	createAudioResource,
 	createAudioPlayer,
 	joinVoiceChannel,
+	getVoiceConnection,
 	AudioPlayerStatus,
 	VoiceConnectionStatus,
 	NoSubscriberBehavior,
-	PlayerSubscription,
 	entersState,
 } from '@discordjs/voice';
 
@@ -25,15 +29,9 @@ import * as logger from '../logger';
 const builder = new SlashCommandBuilder()
 	.setName('talk')
 	.setDescription('Uses Dectalk to speak the given message')
-	.addStringOption(option => option.setName('message').setDescription('The message to speak'));
-
-// Plays audio in voice channels
-const player = createAudioPlayer({
-	behaviors: {
-		// play even when there's no one in the channel
-		noSubscriber: NoSubscriberBehavior.Play,
-	},
-});
+	.addStringOption(option =>
+		option.setRequired(true).setName('message').setDescription('The message to speak')
+	);
 
 // A temporary directory to hold .wav files
 const tempDirectory = join(__dirname, 'talk-temp');
@@ -92,15 +90,28 @@ export const talk: GlobalCommand = {
 				throw new Error('Missing required permissions to speak in voice channel');
 			}
 
-			// make sure the temporary file directory exists - could be deleted anytime
-			if (!existsSync(tempDirectory)) {
-				mkdirSync(tempDirectory);
+			// check to see if we're already connected to this channel
+			// a channel can only have one connection & one player at a time!
+			if (getVoiceConnection(channel.guild.id)) {
+				throw new Error('Already talking in channel - please try again later');
 			}
+
+			// make sure the temporary file directory exists - could be deleted anytime
+			if (!existsSync(tempDirectory)) mkdirSync(tempDirectory);
 
 			// store the audio buffer in a temporary .wav file to pass to discordjs/voice
 			const tempFilePath = join(tempDirectory, tempFileName);
 			writeFileSync(tempFilePath, wavData);
-			const resource = createAudioResource(tempFilePath);
+			const stream = createReadStream(tempFilePath);
+			const resource = createAudioResource(stream);
+
+			// Plays audio in voice channels
+			const player = createAudioPlayer({
+				behaviors: {
+					// play even when there's no one in the channel
+					noSubscriber: NoSubscriberBehavior.Play,
+				},
+			});
 
 			// create a new audio connection to the voice channel the command was given in
 			log('joining channel');
@@ -110,33 +121,47 @@ export const talk: GlobalCommand = {
 				adapterCreator: channel.guild.voiceAdapterCreator,
 				selfMute: false,
 			});
-			let subscription: PlayerSubscription | undefined;
 
 			// when the connection is ready, attach the player and give the player the audio
 			connection.once(VoiceConnectionStatus.Ready, () => {
 				log('connection ready');
-				subscription = connection.subscribe(player);
+				connection.subscribe(player);
 				player.play(resource);
 			});
 
-			// when the player finishes playing the audio, auto-disconnect
+			// when the player finishes playing the audio, disconnect if connected, and delete the audio file
 			player.on(AudioPlayerStatus.Idle, () => {
 				log('player done');
-				player.stop();
-				subscription?.unsubscribe();
-				connection.disconnect();
+
+				if (
+					connection.state.status !== VoiceConnectionStatus.Disconnected &&
+					connection.state.status !== VoiceConnectionStatus.Destroyed
+				) {
+					connection.disconnect();
+				}
+
+				log('deleting temporary .wav file');
+				stream.close();
+				unlinkSync(tempFilePath);
 			});
 
-			// when the connection ends, clean up memory and end the interaction
+			// when the connection closes, stop the player if playing and end the interaction
 			connection.on(VoiceConnectionStatus.Disconnected, () => {
 				log('disconnected');
 				connection.destroy();
 
-				unlinkSync(tempFilePath);
+				log('replying to interaction');
+				if (player.state.status === AudioPlayerStatus.Idle) {
+					void reply({
+						content: `:loud_sound: "${message}"`,
+					});
+				} else {
+					void reply({
+						content: `\`\`Unfinished\`\`\n:mute: "${message}"`,
+					});
+				}
 
-				void reply({
-					content: `:loud_sound: "${message}"`,
-				});
+				player.stop();
 			});
 
 			// if the connection doesn't succeed within 10 seconds, clean up and throw an error to end the interaction
@@ -144,9 +169,8 @@ export const talk: GlobalCommand = {
 				await entersState(connection, VoiceConnectionStatus.Ready, 10e3);
 			} catch {
 				player.stop();
-				subscription?.unsubscribe();
-				connection.disconnect();
 				connection.destroy();
+				stream.close();
 				unlinkSync(tempFilePath);
 				throw new Error('Could not connected to voice channel');
 			}
