@@ -78,13 +78,6 @@ export const xkcd: GlobalCommand = {
 
 	// entry point for command execution
 	async execute({ options, reply, sendTyping }) {
-		/**
-		 * Sends an ephemeral message to the user.]
-		 * @param content: the string that should be sent to the client to let them know the error.
-		 */
-		async function _sendErr(content: string): Promise<void> {
-			await reply({ content: content, ephemeral: true });
-		}
 		let comic: string = '';
 		// not making this nullable, instead filling with dummy data to be later filled.
 		let results: GetComicResponse = {
@@ -106,8 +99,7 @@ export const xkcd: GlobalCommand = {
 		const latestComic = await _latestCheck(); // a sanity check, getting the most recent comic to know the valid range of comics.
 
 		if (latestComic.num === -1) {
-			await _sendErr('XKCD call failed. Please try again later.');
-			return;
+			throw new Error('XKCD call failed. Please try again later.');
 		}
 
 		// determining if a number was passed as an argument.
@@ -117,8 +109,7 @@ export const xkcd: GlobalCommand = {
 			comic = `${param.value as number}`;
 			if (param.value < 1 || param.value > latestComic.num) {
 				// error checking, no negative comics or comic 0. Instead send an error message
-				await _sendErr(`Please insert a valid comic number. The range is 1-${latestComic.num}.`);
-				return;
+				throw new Error(`Please insert a valid comic number. The range is 1-${latestComic.num}.`);
 			}
 		} else {
 			// no number given, just get the latest comic.
@@ -128,8 +119,7 @@ export const xkcd: GlobalCommand = {
 			// get the comic from the API.
 			const requestedComic = await _getComic(comic);
 			if (requestedComic.num === -1) {
-				await _sendErr('XKCD call failed. Please try again later.');
-				return;
+				throw new Error('XKCD call failed. Please try again later.');
 			}
 			results = requestedComic;
 		} else {

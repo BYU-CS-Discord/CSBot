@@ -16,17 +16,19 @@ export const profile: GlobalCommand = {
 		// if the user is not null, then we will use that user, otherwise we will use the user that invoked the command.
 		if (target) {
 			const content = target.avatarURL({ extension: 'png', size: 2048 });
+
+			if (content === null || content === '') {
+				throw new Error("That user doesn't have an avatar!");
+			}
+
 			await reply({
-				content: content ?? "Something went wrong, This user doesn't have an avatar!",
+				content: content,
 				ephemeral: content === null,
 			});
 		} else {
 			// This should never happen but we can guard against it,
 			// in theory this may trigger if discord has an issue retrieving the user who invoked the command.
-			await reply({
-				content: "Something went wrong, There was an issue getting the user's avatar!",
-				ephemeral: true,
-			});
+			throw new Error('There was an issue fetching the user!');
 		}
 	},
 };

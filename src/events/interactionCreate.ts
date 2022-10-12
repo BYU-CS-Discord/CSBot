@@ -1,6 +1,7 @@
 // External dependencies
+import { toString } from 'lodash';
 import type { CommandInteraction, DMChannel, GuildMember, GuildTextBasedChannel } from 'discord.js';
-import { ChannelType } from 'discord.js';
+import { EmbedBuilder, Colors, ChannelType } from 'discord.js';
 
 // Internal dependencies
 import * as logger from '../logger';
@@ -111,7 +112,12 @@ async function handleInteraction(interaction: CommandInteraction): Promise<void>
 		// No guild required
 		logger.debug(`Command '${command.info.name}' does not require guild information.`);
 		logger.debug('Proceeding...');
-		return await command.execute(context);
+		try {
+			return await command.execute(context);
+		} catch (error) {
+			await sendErrorMessage(command, context, error);
+			return;
+		}
 	}
 
 	if (context.source === 'dm') {
@@ -123,5 +129,41 @@ async function handleInteraction(interaction: CommandInteraction): Promise<void>
 		});
 	}
 
-	return await command.execute(context);
+	try {
+		return await command.execute(context);
+	} catch (error) {
+		await sendErrorMessage(command, context, error);
+		// return;
+	}
+}
+
+/**
+ * Universal command error handling.
+ * Sends an ephemeral error message with pretty formatting to the user who used the command.
+ * The purpose of this method is to simplify error reporting, so that each command
+ * doesn't have to implement error messages individually.
+ * Only exported for testing purposes. Do not use outside of this file.
+ * @param command The command that was called
+ * @param context The context of the command
+ * @param error The error that the command threw
+ * @private
+ */
+export async function sendErrorMessage(
+	command: Command,
+	context: CommandContext,
+	error: unknown
+): Promise<void> {
+	const errorMessage = toString(error);
+
+	const embed = new EmbedBuilder()
+		.setTitle('Error')
+		.setColor(Colors.Red)
+		.setDescription(
+			`The command '${command.info.name}' encountered an error during execution.\n\n\`\`${errorMessage}\`\``
+		);
+
+	await context.reply({
+		embeds: [embed],
+		ephemeral: true,
+	});
 }

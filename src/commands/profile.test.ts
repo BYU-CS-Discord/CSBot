@@ -26,19 +26,14 @@ describe('profile', () => {
 			.mockReturnValue('https://cdn.discordapp.com/avatars/1234567890/abcdef1234567890.png');
 	});
 
-	test('Returns an ephemeral error message when an invalid input is recieved', async () => {
+	test('Throws an error when an invalid input is recieved', async () => {
 		// they just need the number from the initial call
 
 		context = { ...context, options: [{ value: 1 }] } as unknown as CommandContext;
-		await expect(profile.execute(context)).resolves.toBeUndefined();
-		expect(mockReply).toHaveBeenCalledOnce();
-		expect(mockReply).toHaveBeenCalledWith({
-			content: "Something went wrong, There was an issue getting the user's avatar!",
-			ephemeral: true,
-		});
+		await expect(profile.execute(context)).rejects.toThrow();
 	});
 
-	test('Returns the url of the supplied users pp', async () => {
+	test("Returns the url of the supplied user's profile picture", async () => {
 		context = { ...context, options: [{ user }] } as unknown as CommandContext;
 		await expect(profile.execute(context)).toResolve();
 		expect(mockReply).toHaveBeenCalledOnce();
