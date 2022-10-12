@@ -1,0 +1,38 @@
+{
+	"name": "dectalk",
+	"version": "1.2.1",
+	"description": "Aieou!",
+	"author": "Babakinha",
+	"keywords": [
+		"typescript",
+		"text-to-speech",
+		"dectalk",
+		"wav",
+		"wave"
+	],
+	"main": "build/index.js",
+	"types": "build/index.d.ts",
+	"files": [
+		"/build",
+		"/dtalk"
+	],
+	"scripts": {
+		"build": "tsc"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/babakinha/dectalk.git"
+	},
+	"bugs": {
+		"url": "https://github.com/babakinha/dectalk/issues"
+	},
+	"homepage": "https://github.com/babakinha/dectalk",
+	"dependencies": {
+		"tmp": "^0.2.1"
+	},
+	"devDependencies": {
+		"@types/node": "^16.10.4",
+		"@types/tmp": "^0.2.1",
+		"typescript": "^4.4.4"
+	}
+}
