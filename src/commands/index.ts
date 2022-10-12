@@ -32,6 +32,8 @@ export function _add(cmd: Command): void {
 import { help } from './help';
 import { xkcd } from './xkcd';
 import { profile } from './profile';
+import { talk } from './talk';
 _add(help);
 _add(xkcd);
 _add(profile);
+_add(talk);
