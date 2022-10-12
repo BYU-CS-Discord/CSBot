@@ -166,4 +166,7 @@ export async function sendErrorMessage(
 		embeds: [embed],
 		ephemeral: true,
 	});
+
+	logger.error('Sent error message to user:');
+	logger.error(error);
 }
