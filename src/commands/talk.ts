@@ -1,6 +1,7 @@
 // TODO testing
 // TODO context menu command to speak
 // TODO more careful interactionCreate error reporting
+// TODO BUG wav file doesn't get deleted after ffmpeg error
 
 // External dependencies
 import { existsSync, mkdirSync, writeFileSync, unlinkSync, createReadStream } from 'node:fs';
@@ -20,6 +21,7 @@ import {
 	VoiceConnectionStatus,
 	NoSubscriberBehavior,
 	entersState,
+	AudioResource,
 } from '@discordjs/voice';
 
 // Internal depedencies
@@ -45,21 +47,21 @@ export const talk: GlobalCommand = {
 
 		// this shouldn't happen, but it's good to have error checking anyway
 		if (options.length === 0) {
-			throw new Error('No options provided');
+			throw new Error('no options provided');
 		}
 
 		const param = options[0];
 
 		// if no message was provided
 		if (!param || param?.value === undefined) {
-			throw new Error('No message provided');
+			throw new Error('no message provided');
 		}
 
 		const message = param.value as string;
 
 		// this also shouldn't happen, but better safe than sorry
 		if (!channel) {
-			throw new Error('No channel');
+			throw new Error('no channel');
 		}
 
 		// generating the audio can take a while, so make sure Discord doesn't think we died
@@ -74,19 +76,19 @@ export const talk: GlobalCommand = {
 			// make sure we have the right permissions to talk
 			const permissions = channel.permissionsFor(client.user);
 			if (!permissions) {
-				throw new Error('Could not fetch permissions for channel');
+				throw new Error('could not fetch permissions for channel');
 			}
 			if (!permissions.has(PermissionFlagsBits.Connect)) {
-				throw new Error('Missing required permissions to connect to voice channel');
+				throw new Error('missing required permissions to connect to voice channel');
 			}
 			if (!permissions.has(PermissionFlagsBits.Speak)) {
-				throw new Error('Missing required permissions to speak in voice channel');
+				throw new Error('missing required permissions to speak in voice channel');
 			}
 
 			// check to see if we're already connected to this channel
 			// a channel can only have one connection & one player at a time!
 			if (getVoiceConnection(channel.guild.id)) {
-				throw new Error('Already talking in channel - please try again later');
+				throw new Error('already talking in channel\n\nPlease try again later');
 			}
 
 			// make sure the temporary file directory exists - could be deleted anytime
@@ -96,9 +98,25 @@ export const talk: GlobalCommand = {
 			const tempFilePath = join(tempDirectory, tempFileName);
 			writeFileSync(tempFilePath, wavData);
 			const stream = createReadStream(tempFilePath);
-			const resource = createAudioResource(stream);
 
-			// Plays audio in voice channels
+			// create an audio resource from the temporary file
+			let resource: AudioResource;
+			try {
+				resource = createAudioResource(stream);
+			} catch (error) {
+				const error_ = error as Error;
+				// For this error, provide a more useful message
+				if (error_.message === 'FFmpeg/avconv not found!') {
+					throw new Error(
+						'ffmpeg-static missing proper encoder for current OS\n\n' +
+							'Please run a clean install of all dependencies'
+					);
+				}
+				// Don't tamper with any other errors
+				throw error;
+			}
+
+			// create a player to stream the resource
 			const player = createAudioPlayer({
 				behaviors: {
 					// play even when there's no one in the channel

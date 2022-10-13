@@ -1,7 +1,12 @@
+// External dependencies
 import { spawn } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import * as tmp from 'tmp';
 import * as os from 'os';
+import { toString } from 'lodash';
+
+// Internal dependencies
+import * as logger from '../logger';
 
 // eslint-disable-next-line no-shadow
 export enum WaveEncoding {
@@ -79,8 +84,8 @@ export async function say(content: string, options?: DecOptions): Promise<Buffer
 			// args.push('-d', __dirname + "/../../dectalk/dtalk_us.dic");
 			args.push(content);
 
-			dec = spawn(`${__dirname}/../../dectalk/windows/say.exe`, args, {
-				cwd: `${__dirname}/../../dectalk`,
+			dec = spawn(`${__dirname}\\..\\..\\dectalk\\windows\\say.exe`, args, {
+				cwd: `${__dirname}\\..\\..\\dectalk`,
 			});
 		} else {
 			// Linux / Others
@@ -104,12 +109,26 @@ export async function say(content: string, options?: DecOptions): Promise<Buffer
 		}
 
 		dec.on('error', error => {
-			reject(error);
+			reject(new Error(`failed to run dectalk exectuable:\n\n${toString(error)}`));
 		});
 
+		dec.stdout.on('data', data => logger.info(spawnOutput('Dectalk', 'stdout', data)));
+		dec.stderr.on('data', data => logger.error(spawnOutput('Dectalk', 'stderr', data)));
+
 		dec.on('close', code => {
-			if (code !== 0) reject(new Error(`dectalk exited with code ${code ?? '{none}'}`));
+			if (code !== 0) {
+				reject(new Error(`dectalk exited with code ${code ?? '{none}'}\n\nPlease check stderr`));
+			}
 			resolve(readFileSync(file.name));
 		});
 	});
+}
+
+function spawnOutput(childName: string, outputStream: string, data: unknown): string {
+	const str = '';
+	const messages: Array<string> = toString(data).split('\n');
+	messages.forEach(message => {
+		str.concat(`[${childName} ${outputStream.toUpperCase()}] ${message}\n`);
+	});
+	return str;
 }
