@@ -23,7 +23,7 @@ import {
 } from '@discordjs/voice';
 
 // Internal depedencies
-import { say } from '../../dectalk'; // temporary until dectalk is updated with windows support
+import { say } from '../dectalk'; // temporary until dectalk is updated with windows support
 import * as logger from '../logger';
 
 const builder = new SlashCommandBuilder()
@@ -39,14 +39,7 @@ const tempDirectory = join(__dirname, 'talk-temp');
 export const talk: GlobalCommand = {
 	info: builder,
 	requiresGuild: false,
-	async execute({
-		options,
-		channel,
-		interaction,
-		createdTimestamp,
-		prepareForLongRunningTasks,
-		reply,
-	}) {
+	async execute({ options, channel, client, createdTimestamp, prepareForLongRunningTasks, reply }) {
 		// uses the createdTimestamp as a unique file name to avoid conflict
 		const tempFileName = `${createdTimestamp}.wav`;
 
@@ -79,7 +72,7 @@ export const talk: GlobalCommand = {
 		// if the command was given in a voice chat, speak it
 		if (channel.type === ChannelType.GuildVoice) {
 			// make sure we have the right permissions to talk
-			const permissions = channel.permissionsFor(interaction.client.user);
+			const permissions = channel.permissionsFor(client.user);
 			if (!permissions) {
 				throw new Error('Could not fetch permissions for channel');
 			}
@@ -151,15 +144,9 @@ export const talk: GlobalCommand = {
 				connection.destroy();
 
 				log('replying to interaction');
-				if (player.state.status === AudioPlayerStatus.Idle) {
-					void reply({
-						content: `:loud_sound: "${message}"`,
-					});
-				} else {
-					void reply({
-						content: `\`\`Unfinished\`\`\n:mute: "${message}"`,
-					});
-				}
+				void reply({
+					content: message,
+				});
 
 				player.stop();
 			});
@@ -172,7 +159,7 @@ export const talk: GlobalCommand = {
 				connection.destroy();
 				stream.close();
 				unlinkSync(tempFilePath);
-				throw new Error('Could not connected to voice channel');
+				throw new Error('Could not connect to voice channel');
 			}
 		} else {
 			// if the command was given in a text channel, send it as an attachment
@@ -184,6 +171,7 @@ export const talk: GlobalCommand = {
 			};
 
 			await reply({
+				content: message,
 				files: [attachment],
 			});
 		}
