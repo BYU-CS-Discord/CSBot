@@ -80,7 +80,7 @@ export async function say(content: string, options?: DecOptions): Promise<Buffer
 			args.push(content);
 
 			dec = spawn(`${__dirname}/../../dectalk/windows/say.exe`, args, {
-				cwd: `${__dirname}/../../dectalk/windows`,
+				cwd: `${__dirname}/../../dectalk`,
 			});
 		} else {
 			// Linux / Others
@@ -102,6 +102,10 @@ export async function say(content: string, options?: DecOptions): Promise<Buffer
 				cwd: `${__dirname}/../../dectalk`,
 			});
 		}
+
+		dec.on('error', error => {
+			reject(error);
+		});
 
 		dec.on('close', code => {
 			if (code !== 0) reject(new Error(`dectalk exited with code ${code ?? '{none}'}`));
