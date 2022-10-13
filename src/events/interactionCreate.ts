@@ -154,12 +154,15 @@ export async function sendErrorMessage(
 	error: unknown
 ): Promise<void> {
 	const errorMessage = toString(error);
+	// for privacy, strip out any mention of the internal directory
+	const privateDir = __dirname.slice(0, __dirname.lastIndexOf('dist'));
+	const safeErrorMessage = errorMessage.replace(privateDir, '...');
 
 	const embed = new EmbedBuilder()
 		.setTitle('Error')
 		.setColor(Colors.Red)
 		.setDescription(
-			`The command '${command.info.name}' encountered an error during execution.\n\n\`\`${errorMessage}\`\``
+			`The command '${command.info.name}' encountered an error during execution.\n\n\`\`${safeErrorMessage}\`\``
 		);
 
 	await context.reply({
