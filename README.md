@@ -4,6 +4,13 @@
 
 > This project is undergoing rapid development and should be considered experimental. Use it at your own risk. 🤙
 
+This project is meant as a successor to [Ze-Kaiser](https://github.com/ArkenStorm/Ze-Kaiser), whose original contributors are as follows:
+
+- [**ArkenStorm**](https://github.com/ArkenStorm)
+- [**Carterworks**](https://github.com/Carterworks)
+- [**EmmaChase**](https://github.com/EmmaChase)
+- [**TheZealotAlmighty**](https://github.com/TheZealotAlmighty)
+
 ## Authors & Contributors
 
 This list is updated as contributors contribute.
