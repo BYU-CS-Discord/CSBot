@@ -1,5 +1,6 @@
 // External dependencies
-import type { Client, Guild } from 'discord.js';
+import type { Client, Guild, RESTPostAPIApplicationCommandsJSONBody } from 'discord.js';
+import { ApplicationCommandType } from 'discord.js';
 
 // Internal dependencies
 import * as logger from '../../logger';
@@ -16,12 +17,12 @@ export async function deployCommands(client: Client<true>): Promise<void> {
 	logger.info(`Syncing ${commands.length} command(s)...`);
 
 	const guildCommands: Array<GuildedCommand> = [];
-	const globalCommands: Array<GlobalCommand> = [];
+	const globalCommands: Array<GlobalCommand | ContextMenuCommand> = [];
 	for (const cmd of commands) {
-		if (cmd.requiresGuild) {
-			guildCommands.push(cmd);
-		} else {
+		if (isContextMenuCommand(cmd) || !cmd.requiresGuild) {
 			globalCommands.push(cmd);
+		} else if (cmd.requiresGuild) {
+			guildCommands.push(cmd);
 		}
 	}
 
@@ -38,10 +39,10 @@ export async function deployCommands(client: Client<true>): Promise<void> {
 }
 
 async function prepareGlobalCommands(
-	globalCommands: NonEmptyArray<GlobalCommand>,
+	globalCommands: NonEmptyArray<GlobalCommand | ContextMenuCommand>,
 	client: Client<true>
 ): Promise<void> {
-	const commandBuilders = globalCommands.map(command => command.info.toJSON());
+	const commandBuilders = globalCommands.map(deployableCommand);
 	logger.info(
 		`${globalCommands.length} command(s) will be set globally: ${JSON.stringify(
 			commandBuilders.map(cmd => `${cmd.name}`)
@@ -60,7 +61,7 @@ async function prepareGuildedCommands(
 	guildCommands: NonEmptyArray<GuildedCommand>,
 	client: Client<true>
 ): Promise<void> {
-	const commandBuilders = guildCommands.map(command => command.info.toJSON());
+	const commandBuilders = guildCommands.map(deployableCommand);
 	logger.info(
 		`${guildCommands.length} command(s) require a guild: ${JSON.stringify(
 			commandBuilders.map(cmd => `${cmd.name}`)
@@ -75,7 +76,7 @@ async function prepareCommandsForGuild(
 	guild: Guild,
 	guildCommands: Array<GuildedCommand>
 ): Promise<void> {
-	const commandBuilders = guildCommands.map(command => command.info.toJSON());
+	const commandBuilders = guildCommands.map(deployableCommand);
 	logger.info(
 		`Deploying ${guildCommands.length} guild-bound command(s): ${JSON.stringify(
 			commandBuilders.map(cmd => `${cmd.name}`)
@@ -87,4 +88,20 @@ async function prepareCommandsForGuild(
 	} catch (error) {
 		logger.error(`Failed to set commands on guild ${guild.id}:`, error);
 	}
+}
+
+/**
+ * Creates a deployable JSON payload from the given command.
+ */
+export function deployableCommand(cmd: Command): RESTPostAPIApplicationCommandsJSONBody {
+	if (isContextMenuCommand(cmd)) {
+		return cmd.info.setType(cmd.type).toJSON();
+	}
+
+	// Slash commands are simpler:
+	return cmd.info.toJSON();
+}
+
+function isContextMenuCommand(cmd: Command): cmd is ContextMenuCommand {
+	return cmd.type === ApplicationCommandType.Message || cmd.type === ApplicationCommandType.User;
 }

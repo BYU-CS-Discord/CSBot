@@ -1,7 +1,7 @@
 // External dependencies
 import { toString } from 'lodash';
 import type { CommandInteraction, DMChannel, GuildMember, GuildTextBasedChannel } from 'discord.js';
-import { EmbedBuilder, Colors, ChannelType } from 'discord.js';
+import { EmbedBuilder, Colors, ApplicationCommandType, ChannelType } from 'discord.js';
 
 // Internal dependencies
 import * as logger from '../logger';
@@ -56,10 +56,8 @@ async function handleInteraction(interaction: CommandInteraction): Promise<void>
 		logger.warn(`Received request to execute unknown command named '${interaction.commandName}'`);
 		return;
 	}
-	logger.debug(
-		`Calling command handler '${command.info.name}'`
-		// with options ${command.commandBuilder.toJSON()}`
-	);
+
+	logger.debug(`Calling command handler '${command.info.name}'`);
 
 	const guild = interaction.guild;
 
@@ -79,6 +77,10 @@ async function handleInteraction(interaction: CommandInteraction): Promise<void>
 
 	const vagueContext: Omit<CommandContext, 'source'> = {
 		createdTimestamp: interaction.createdTimestamp,
+		targetId: null,
+		targetUser: null,
+		targetMember: null,
+		targetMessage: null,
 		user: interaction.user,
 		member,
 		guild,
@@ -112,6 +114,56 @@ async function handleInteraction(interaction: CommandInteraction): Promise<void>
 		// No guild required
 		logger.debug(`Command '${command.info.name}' does not require guild information.`);
 		logger.debug('Proceeding...');
+
+		if ('type' in command && command.type === ApplicationCommandType.Message) {
+			if (!interaction.isMessageContextMenuCommand()) {
+				throw new TypeError('Expected a Message Context Menu Command interaction');
+			}
+			const messageContextMenuCommandContext: MessageContextMenuCommandContext = {
+				...context,
+				interaction,
+				targetId: interaction.targetId,
+				targetMessage: interaction.targetMessage,
+				targetUser: null,
+				targetMember: null,
+				options: null,
+			};
+			
+			try {
+				return await command.execute(messageContextMenuCommandContext);
+			} catch (error) {
+				await sendErrorMessage(command, messageContextMenuCommandContext, error);
+				return;
+			}
+		} else if ('type' in command && command.type === ApplicationCommandType.User) {
+			if (!interaction.isUserContextMenuCommand()) {
+				throw new TypeError('Expected a User Context Menu Command interaction');
+			}
+			let targetMember: GuildMember | null = null;
+			if (interaction.inCachedGuild()) {
+				targetMember = interaction.targetMember;
+			} else {
+				// Fetch the guild member if it's partial
+				targetMember = (await guild?.members.fetch(interaction.targetId)) ?? null;
+			}
+			const userContextMenuCommandContext: UserContextMenuCommandContext = {
+				...context,
+				interaction,
+				targetId: interaction.targetId,
+				targetMember,
+				targetUser: interaction.targetUser,
+				targetMessage: null,
+				options: null,
+			};
+			
+			try {
+				return await command.execute(userContextMenuCommandContext);
+			} catch (error) {
+				await sendErrorMessage(command, userContextMenuCommandContext, error);
+				return;
+			}
+		}
+
 		try {
 			return await command.execute(context);
 		} catch (error) {

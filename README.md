@@ -4,6 +4,15 @@
 
 > This project is undergoing rapid development and should be considered experimental. Use it at your own risk. 🤙
 
+A bot to help manage the activities and community of BYU's Computer Science Discord server.
+
+This project is meant as a successor to [Ze-Kaiser](https://github.com/ArkenStorm/Ze-Kaiser), whose original contributors are as follows:
+
+- [**ArkenStorm**](https://github.com/ArkenStorm)
+- [**Carterworks**](https://github.com/Carterworks)
+- [**EmmaChase**](https://github.com/EmmaChase)
+- [**TheZealotAlmighty**](https://github.com/TheZealotAlmighty)
+
 ## Authors & Contributors
 
 This list is updated as contributors contribute.
@@ -26,7 +35,7 @@ This list is updated as contributors contribute.
     - [Configure the bot](#configure-the-bot)
     - [Invite your bot to your server](#invite-your-bot-to-your-server)
     - [Important Note for Windows Users](#important-note-for-windows-users)
-    - [Build the bot server](#build-the-bot-server)
+    - [Build the bot](#build-the-bot)
     - [Register Slash Commands](#register-slash-commands)
     - [Run the bot](#run-the-bot)
   - [Commands](#commands)
@@ -87,19 +96,12 @@ $ npm config set script-shell "C:\\Program Files\\Git\\bin\\bash.exe"
 
 You must have [Git for Windows](https://git-scm.com/download/win) installed. See this [StackOverflow answer](https://stackoverflow.com/a/46006249) for more details.
 
-### Build the bot server
+### Build the bot
 
-Be sure to install dependencies, and run a quick lint to generate needed files:
-
-```sh
-$ npm ci
-$ npm run lint
-```
-
-The first time you download the source, and each time the source code changes, you'll need to run this command before you run the bot:
+Be sure to install dependencies, run a quick lint to generate needed files, compile the source, and deploy commands. Here's a handy command to do all of that:
 
 ```sh
-$ npm run build
+$ npm run setup
 ```
 
 ### Register Slash Commands
@@ -124,11 +126,25 @@ $ npm start
 $ pm2 start .
 ```
 
-## Commands
+## Chat Input Commands
 
 ### /help
 
-Prints the list of commands.
+Prints some info about the bot, including the current running version and a link to the code repository.
+
+### /profile
+
+Retrieves the profile picture of the given user.
+
+### /xkcd
+
+Retrieves the most recent [XKCD](https://xkcd.com/) comic, or the given one.
+
+## Context Menu Commands
+
+### Fix Twitter Links
+
+Transforms [twitter.com](https://twitter.com/) links in the given message to [vxtwitter.com](https://vxtwitter.com/) links in an ephemeral reply. Please use vxtwitter in your own messages, especially when the tweet is a video. Twitter's default embed stinks on some platforms.
 
 ## Contributing
 

@@ -8,6 +8,7 @@ jest.mock('../../commands', () => ({ allCommands: mockAllCommands }));
 jest.mock('../../logger');
 import { warn as mockLoggerWarn } from '../../logger';
 
+import { deployableCommand } from './deployCommands';
 import { verifyCommandDeployments } from './verifyCommandDeployments';
 
 describe('Verify command deployments', () => {
@@ -71,8 +72,12 @@ describe('Verify command deployments', () => {
 		mockAllCommands.clear();
 		const deployedGlobal = new Collection<string, Command>();
 		const deployedGuild = new Collection<string, Command>();
-		mockFetchApplicationCommands.mockImplementation(() => deployedGlobal.map(c => c.info.toJSON()));
-		mockFetchGuildCommands.mockImplementation(() => deployedGuild.map(c => c.info.toJSON()));
+		mockFetchApplicationCommands.mockImplementation(() =>
+			Promise.resolve(deployedGlobal.map(deployableCommand))
+		);
+		mockFetchGuildCommands.mockImplementation(() =>
+			Promise.resolve(deployedGuild.map(deployableCommand))
+		);
 
 		for (const cmd of commands) {
 			mockAllCommands.set(cmd.info.name, cmd);
