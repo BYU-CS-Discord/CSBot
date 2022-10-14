@@ -14,10 +14,9 @@ export const messageReactionAdd = onEvent('messageReactionAdd', {
 		if (!emojiName) return;
 
 		if (
-			user.bot ||
-			user.id === reaction.client.user.id ||
-			reaction.me || // never self-react
-			reaction.message.author === reaction.client.user ||
+			user.bot || // ignore bots
+			reaction.me || // ignore own reacts
+			reaction.message.author?.id === reaction.client.user.id || // never self-react
 			(reaction.count ?? 0) > 1 // never join the bandwagon
 		) {
 			return;
@@ -31,7 +30,7 @@ export const messageReactionAdd = onEvent('messageReactionAdd', {
 			no_u: 5,
 			nou: 5,
 			same: 5,
-			'⭐': 0,
+			'⭐': 0, // certain default emoji are represented in the API as emoji characters, not names
 		};
 		const random = Math.round(Math.random() * 100);
 		const chance = odds[emojiName] ?? DEFAULT_CHANCE;
