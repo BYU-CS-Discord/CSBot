@@ -1,4 +1,5 @@
 import * as logger from '../logger';
+import { chances, DEFAULT_CHANCE } from '../constants/reactionDuplication';
 import { onEvent } from '../helpers/onEvent';
 
 /**
@@ -22,18 +23,8 @@ export const messageReactionAdd = onEvent('messageReactionAdd', {
 			return;
 		}
 
-		// The chances, where 1 is always, 100 is once every 100 times, and 0 is never.
-		// We're using integers here because floating-point math is silly
-		const DEFAULT_CHANCE = 100;
-		const odds: Record<string, number> = {
-			// TODO: Make these configurable
-			no_u: 5,
-			nou: 5,
-			same: 5,
-			'⭐': 0, // certain default emoji are represented in the API as emoji characters, not names
-		};
-		const random = Math.round(Math.random() * 100);
-		const chance = odds[emojiName] ?? DEFAULT_CHANCE;
+		// The chances, where 1 is always, 100 is once every 100 times, and 0 is never
+		const chance = chances[emojiName] ?? DEFAULT_CHANCE;
 
 		if (chance === 0) {
 			logger.debug(`There is no chance I'd react to :${ogEmojiName}:`);
@@ -41,6 +32,7 @@ export const messageReactionAdd = onEvent('messageReactionAdd', {
 		}
 
 		logger.debug(`There is a 1-in-${chance} chance that I'd react to :${ogEmojiName}:`);
+		const random = Math.round(Math.random() * 100);
 		if (random % chance === 0) {
 			logger.debug('I did.');
 			await reaction.react();
