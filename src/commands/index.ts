@@ -28,6 +28,10 @@ export function _add(cmd: Command): void {
 	_allCommands.set(name, cmd);
 }
 
+/** Set up stores **/
+import { GameStore as EvilHangmanStore } from '../evilHangman/gameStore';
+const evilHangmanStore = new EvilHangmanStore();
+
 /**  Install commands here:  **/
 import { help } from './help';
 import { xkcd } from './xkcd';
@@ -38,4 +42,4 @@ _add(help);
 _add(xkcd);
 _add(profile);
 _add(vxtwitter);
-_add(toTheGallows);
+_add(toTheGallows(evilHangmanStore));
