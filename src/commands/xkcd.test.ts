@@ -65,8 +65,8 @@ describe('xkcd', () => {
 
 	test('Throws an error when the number is out of bounds', async () => {
 		mockedAxios.get.mockResolvedValue(latestGood);
-		// they just need the number from the initial call
 
+		// they just need the number from the initial call
 		context = { ...context, options: [{ value: -1 }] } as unknown as TextInputCommandContext;
 		await expect(xkcd.execute(context)).rejects.toThrow();
 		expect(mockSendTyping).toHaveBeenCalledOnce();
@@ -108,14 +108,20 @@ describe('xkcd', () => {
 	test('Checking when a second call to the API fails', async () => {
 		mockedAxios.get.mockResolvedValue(badResponse);
 		mockedAxios.get.mockResolvedValueOnce(latestGood);
-		context = { ...context, options: [{ value: chosen.num }] } as unknown as TextInputCommandContext;
+		context = {
+			...context,
+			options: [{ value: chosen.num }],
+		} as unknown as TextInputCommandContext;
 		await expect(xkcd.execute(context)).rejects.toThrow();
 		expect(mockSendTyping).toHaveBeenCalledOnce();
 	});
 
 	test('Checking when a first call to the API fails', async () => {
 		mockedAxios.get.mockResolvedValue(badResponse);
-		context = { ...context, options: [{ value: chosen.num }] } as unknown as TextInputCommandContext;
+		context = {
+			...context,
+			options: [{ value: chosen.num }],
+		} as unknown as TextInputCommandContext;
 		await expect(xkcd.execute(context)).rejects.toThrow();
 		expect(mockSendTyping).toHaveBeenCalledOnce();
 	});

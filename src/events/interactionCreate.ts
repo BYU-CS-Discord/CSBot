@@ -128,7 +128,7 @@ async function handleInteraction(interaction: CommandInteraction): Promise<void>
 				targetMember: null,
 				options: null,
 			};
-			
+
 			try {
 				return await command.execute(messageContextMenuCommandContext);
 			} catch (error) {
@@ -155,7 +155,7 @@ async function handleInteraction(interaction: CommandInteraction): Promise<void>
 				targetMessage: null,
 				options: null,
 			};
-			
+
 			try {
 				return await command.execute(userContextMenuCommandContext);
 			} catch (error) {

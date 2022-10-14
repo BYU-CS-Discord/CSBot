@@ -28,8 +28,6 @@ describe('profile', () => {
 
 	test('Throws an error when an invalid input is recieved', async () => {
 		// they just need the number from the initial call
-
-
 		context = { ...context, options: [{ value: 1 }] } as unknown as TextInputCommandContext;
 		await expect(profile.execute(context)).rejects.toThrow();
 	});
