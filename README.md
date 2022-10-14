@@ -138,7 +138,7 @@ Retrieves the profile picture of the given user.
 
 ### /xkcd
 
-Retrieves the most recent [XKCD](https://xkcd.com/) comic, or the given one.
+Retrieves the most recent [xkcd](https://xkcd.com/) comic, or the given one.
 
 ## Context Menu Commands
 
