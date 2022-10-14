@@ -1,20 +1,23 @@
 import type {
 	ApplicationCommandOptionType,
 	ApplicationCommandSubCommandData,
+	ApplicationCommandType,
 	SlashCommandBuilder,
 	SlashCommandOptionsOnlyBuilder,
 	SlashCommandSubcommandsOnlyBuilder,
-	ContextMenuCommandBuilder,
 } from 'discord.js';
 
 declare global {
 	interface BaseCommand {
+		/** Metadata about the command. */
 		info:
-			| ContextMenuCommandBuilder
 			| SlashCommandBuilder
 			| SlashCommandSubcommandsOnlyBuilder
 			| SlashCommandOptionsOnlyBuilder
 			| Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'>;
+
+		/** The type of the command. */
+		type?: ApplicationCommandType.ChatInput;
 	}
 
 	interface GlobalCommand extends BaseCommand {
@@ -27,7 +30,7 @@ declare global {
 		 *
 		 * @param context Contextual information about the command invocation.
 		 */
-		execute: (context: CommandContext) => void | Promise<void>;
+		execute: (context: TextInputCommandContext) => void | Promise<void>;
 	}
 
 	interface GuildedCommand extends BaseCommand {
@@ -43,7 +46,8 @@ declare global {
 		execute: (context: GuildedCommandContext) => void | Promise<void>;
 	}
 
-	type Command = GlobalCommand | GuildedCommand;
+	type Command = ChatInputCommand | ContextMenuCommand;
+	type ChatInputCommand = GlobalCommand | GuildedCommand;
 
 	interface BaseSubcommand extends ApplicationCommandSubCommandData {
 		type: ApplicationCommandOptionType.Subcommand;
