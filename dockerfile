@@ -1,9 +1,9 @@
 # Set up the basic operating system
-FROM node:16.18.0 AS os
-RUN apt-get update
-RUN apt-get upgrade --yes
-ENTRYPOINT [ "bash" ]
-# Bash is just a temporary entrypoint, in case you wanted to build the project at this stage for some reason.
+FROM node:16-alpine AS os
+RUN apk update
+RUN apk upgrade
+ENTRYPOINT [ "/bin/sh" ]
+# The shell just a temporary entrypoint, in case you wanted to build the project at this stage for some reason.
 
 # Copy the project into the docker container
 FROM os AS project
@@ -14,8 +14,8 @@ COPY package*.json .
 RUN npm ci
 COPY . .
 RUN npm run export-version
-ENTRYPOINT [ "bash" ]
-# Bash is just a temporary entrypoint, in case you wanted to build the project at this stage for some reason.
+ENTRYPOINT [ "/bin/sh" ]
+# The shell just a temporary entrypoint, in case you wanted to build the project at this stage for some reason.
 
 # Test the project
 FROM project AS test
@@ -25,7 +25,8 @@ ENTRYPOINT npm run test
 # Build the project
 FROM project AS build
 RUN npm run build
-ENTRYPOINT [ "bash" ]
+ENTRYPOINT [ "/bin/sh" ]
+# The shell is just a temporary entrypoint, in case you wanted to build the project at this stage for some reason.
 
 # Deploy commands
 FROM build AS commands-deploy
