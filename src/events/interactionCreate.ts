@@ -20,8 +20,13 @@ export const interactionCreate = onEvent('interactionCreate', {
 	once: false,
 	async execute(interaction) {
 		try {
+			// Don't respond to bots or ourselves
+			if (interaction.user.bot) return;
+			if (interaction.user.id === interaction.client.user.id) return;
+
 			if (interaction.isCommand()) {
-				await handleInteraction(interaction);
+				const context = await handleInteraction(interaction);
+				await handleCommandInteraction(context, interaction);
 			}
 		} catch (error) {
 			logger.error('Failed to handle interaction:', error);
@@ -43,11 +48,10 @@ export const interactionCreate = onEvent('interactionCreate', {
  * things get done when we're writing command handlers, only
  * that what we say goes.
  */
-async function handleInteraction(interaction: CommandInteraction): Promise<void> {
-	// Don't respond to bots or ourselves
-	if (interaction.user.bot) return;
-	if (interaction.user.id === interaction.client.user.id) return;
-
+async function handleCommandInteraction(
+	vagueContext: InteractionContext,
+	interaction: CommandInteraction
+): Promise<void> {
 	logger.debug(`User ${logUser(interaction.user)} sent command: '${interaction.commandName}'`);
 
 	const command = allCommands.get(interaction.commandName);
@@ -57,43 +61,6 @@ async function handleInteraction(interaction: CommandInteraction): Promise<void>
 	}
 
 	logger.debug(`Calling command handler '${command.info.name}'`);
-
-	const guild = interaction.guild;
-
-	let member: GuildMember | null;
-	if (interaction.inCachedGuild()) {
-		member = interaction.member;
-	} else {
-		member = (await guild?.members.fetch(interaction.user)) ?? null;
-	}
-
-	let channel: GuildTextBasedChannel | DMChannel | null;
-	if (interaction.channel?.type === ChannelType.DM && interaction.channel.partial) {
-		channel = await interaction.channel.fetch();
-	} else {
-		channel = interaction.channel;
-	}
-
-	const vagueContext: Omit<CommandContext, 'source'> = {
-		createdTimestamp: interaction.createdTimestamp,
-		targetId: null,
-		targetUser: null,
-		targetMember: null,
-		targetMessage: null,
-		user: interaction.user,
-		member,
-		guild,
-		channelId: interaction.channelId,
-		channel,
-		client: interaction.client,
-		interaction,
-		options: interaction.options.data,
-		prepareForLongRunningTasks: prepareForLongRunningTasksFactory(interaction),
-		replyPrivately: replyPrivatelyFactory(interaction),
-		reply: replyFactory(interaction),
-		followUp: followUpFactory(interaction),
-		sendTyping: sendTypingFactory(interaction),
-	};
 
 	let context: CommandContext;
 
@@ -137,7 +104,7 @@ async function handleInteraction(interaction: CommandInteraction): Promise<void>
 				targetMember = interaction.targetMember;
 			} else {
 				// Fetch the guild member if it's partial
-				targetMember = (await guild?.members.fetch(interaction.targetId)) ?? null;
+				targetMember = (await context.guild?.members.fetch(interaction.targetId)) ?? null;
 			}
 			const userContextMenuCommandContext: UserContextMenuCommandContext = {
 				...context,
@@ -164,4 +131,41 @@ async function handleInteraction(interaction: CommandInteraction): Promise<void>
 	}
 
 	return await command.execute(context);
+}
+
+async function handleInteraction(interaction: RepliableInteraction): Promise<InteractionContext> {
+	const guild = interaction.guild;
+
+	let member: GuildMember | null;
+	if (interaction.inCachedGuild()) {
+		member = interaction.member;
+	} else {
+		member = (await guild?.members.fetch(interaction.user)) ?? null;
+	}
+
+	let channel: GuildTextBasedChannel | DMChannel | null;
+	if (interaction.channel?.type === ChannelType.DM && interaction.channel.partial) {
+		channel = await interaction.channel.fetch();
+	} else {
+		channel = interaction.channel;
+	}
+
+	const context: InteractionContext = {
+		source: interaction.inGuild() ? 'guild' : 'dm',
+		createdTimestamp: interaction.createdTimestamp,
+		user: interaction.user,
+		member,
+		guild,
+		channelId: interaction.channelId,
+		channel,
+		client: interaction.client,
+		interaction,
+		prepareForLongRunningTasks: prepareForLongRunningTasksFactory(interaction),
+		replyPrivately: replyPrivatelyFactory(interaction),
+		reply: replyFactory(interaction),
+		followUp: followUpFactory(interaction),
+		sendTyping: sendTypingFactory(interaction),
+	};
+
+	return context;
 }

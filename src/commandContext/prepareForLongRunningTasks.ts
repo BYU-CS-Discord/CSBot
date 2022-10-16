@@ -1,11 +1,8 @@
-// External dependencies
-import type { CommandInteraction } from 'discord.js';
-
 // Internal dependencies
 import * as logger from '../logger';
 
 export function prepareForLongRunningTasksFactory(
-	interaction: CommandInteraction
+	interaction: RepliableInteraction
 ): CommandContext['prepareForLongRunningTasks'] {
 	return async function prepareForLongRunningTasks(ephemeral) {
 		try {
