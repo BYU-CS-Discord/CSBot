@@ -10,7 +10,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: node:latest
+      image: node:16
       env:
         DOCKER: true
 
@@ -21,6 +21,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+
+      - name: Own all files
+        run: USER=$(/usr/bin/id -run) && chown -R $USER ./
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
