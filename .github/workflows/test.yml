@@ -20,6 +20,9 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
+      - name: Become root user
+        run: su
+
       - uses: actions/checkout@v2
 
       - name: Use Node.js ${{ matrix.node-version }}
@@ -31,7 +34,7 @@ jobs:
         run: npm ci
 
       - name: Check that build succeeds
-        run: sudo npm run build
+        run: npm run build
 
       - name: Run unit tests
         run: npm test
