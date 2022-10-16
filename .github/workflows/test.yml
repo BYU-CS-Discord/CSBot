@@ -9,10 +9,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container:
-      image: node:16-slim
-      env:
-        DOCKER: true
+    env:
+      DOCKER: true
 
     strategy:
       matrix:
@@ -20,9 +18,6 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-      - name: Become root user
-        run: su
-
       - uses: actions/checkout@v2
 
       - name: Use Node.js ${{ matrix.node-version }}
