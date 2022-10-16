@@ -10,7 +10,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: node:slim
+      image: node
       env:
         DOCKER: true
 
