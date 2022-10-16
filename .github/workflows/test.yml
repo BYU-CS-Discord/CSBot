@@ -9,6 +9,12 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    container:
+      image: node:16-slim
+      env:
+        DOCKER: true
+      volumes:
+        - $PWD:/cs-bot
 
     strategy:
       matrix:
