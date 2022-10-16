@@ -44,6 +44,18 @@ This list is updated as contributors contribute.
 
 ## Usage or Development
 
+### Docker
+
+You can skip many of the setup steps by running the project in Docker. This is HIGHLY recommended.
+Docker runs the project in a lightweight virtual Linux environment, so functionality will be identical
+on any operating system. The project will probably still work on your chosen operating system,
+but certain features may break, and we cannot guarantee compatibility.
+
+All of the Docker management (like building, running, and cleaning up images and containers) has been automated,
+so you only have to follow a few simple steps.
+
+Install [Docker](https://www.docker.com/) on your computer before continuing.
+
 ### Prerequisites
 
 This project requires [NodeJS](https://nodejs.org/) (version 16.10 or later), [NPM](https://npmjs.org/). To make sure you have them available on your machine,
@@ -86,6 +98,8 @@ Go to https://discordapi.com/permissions.html#378091424832 and paste in your bot
 
 ### Important Note for Windows Users
 
+(You may skip this step if you are using Docker)
+
 If you're on Windows, `npm` scripts will not work unless you tell `npm` to use Git Bash as its default shell when running commands.
 
 Before continuing, run this command:
@@ -95,6 +109,28 @@ $ npm config set script-shell "C:\\Program Files\\Git\\bin\\bash.exe"
 ```
 
 You must have [Git for Windows](https://git-scm.com/download/win) installed. See this [StackOverflow answer](https://stackoverflow.com/a/46006249) for more details.
+
+### Setting up Docker
+
+If you have chosen to use Docker, run this command before continuing:
+
+```sh
+$ npm run docker
+```
+
+This will build a simple Linux image, start a container of that image, and then mount
+the project folder into the container.
+
+Once the container is started, you will see your command prompt change. You are now
+in a virtual Linux environment. If you run `ls`, you will see all the project files.
+Any changes you make to these files are synced between your local computer and the container.
+
+Now that your command line is in the Docker container, you can run any part of the project
+without worrying about compatibility. From this point on, all setup steps are identical for
+inside or outside the container.
+
+To exit the container, simply run `exit`. To re-enter the container, use `npm run docker` again.
+Every start you open the project, you should start the container again before developing.
 
 ### Build the bot
 
