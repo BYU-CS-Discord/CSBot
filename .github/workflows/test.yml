@@ -9,8 +9,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      DOCKER: true
+    container:
+      image: node:16
+      env:
+        DOCKER: true
 
     strategy:
       matrix:
