@@ -4,6 +4,7 @@ import type {
 	Message,
 	MessageCreateOptions,
 	MessageReplyOptions,
+	RepliableInteraction,
 	TextBasedChannel,
 	User,
 } from 'discord.js';

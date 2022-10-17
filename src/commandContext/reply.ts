@@ -1,5 +1,5 @@
 // External dependencies
-import type { InteractionReplyOptions } from 'discord.js';
+import type { InteractionReplyOptions, RepliableInteraction } from 'discord.js';
 
 // Internal dependencies
 import * as logger from '../logger';
