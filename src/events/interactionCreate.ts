@@ -1,5 +1,12 @@
 // External dependencies
-import type { CommandInteraction, DMChannel, GuildMember, GuildTextBasedChannel } from 'discord.js';
+import type {
+	ButtonInteraction,
+	CommandInteraction,
+	DMChannel,
+	GuildMember,
+	GuildTextBasedChannel,
+	RepliableInteraction,
+} from 'discord.js';
 import { ApplicationCommandType, ChannelType } from 'discord.js';
 
 // Internal dependencies
@@ -12,6 +19,7 @@ import { replyFactory } from '../commandContext/reply';
 import { replyPrivatelyFactory } from '../commandContext/replyPrivately';
 import { sendTypingFactory } from '../commandContext/sendTyping';
 import { onEvent } from '../helpers/onEvent';
+import { allButtons } from '../buttons';
 
 /**
  * The event handler for Discord Interactions (usually chat commands)
@@ -27,6 +35,11 @@ export const interactionCreate = onEvent('interactionCreate', {
 			if (interaction.isCommand()) {
 				const context = await handleInteraction(interaction);
 				await handleCommandInteraction(context, interaction);
+			}
+
+			if (interaction.isButton()) {
+				const context = await handleInteraction(interaction);
+				await handleButtonInteraction(context, interaction);
 			}
 		} catch (error) {
 			logger.error('Failed to handle interaction:', error);
@@ -131,6 +144,23 @@ async function handleCommandInteraction(
 	}
 
 	return await command.execute(context);
+}
+
+async function handleButtonInteraction(
+	context: InteractionContext,
+	interaction: ButtonInteraction
+): Promise<void> {
+	logger.debug(`User ${logUser(interaction.user)} pressed button: '${interaction.customId}'`);
+
+	const button = allButtons.get(interaction.customId);
+	if (!button) {
+		logger.warn(`Received request to execute unknown button with id '${interaction.customId}'`);
+		return;
+	}
+
+	logger.debug(`Calling button handler '${button.customId}'`);
+
+	return await button.execute(context);
 }
 
 async function handleInteraction(interaction: RepliableInteraction): Promise<InteractionContext> {

@@ -1,5 +1,4 @@
 import type {
-	ButtonInteraction,
 	Client,
 	CommandInteraction,
 	CommandInteractionOption,
@@ -18,9 +17,6 @@ import type {
 } from 'discord.js';
 
 declare global {
-	// We need to use a type intersection because BaseInteraction doesn't have reply methods
-	type RepliableInteraction = ButtonInteraction | CommandInteraction;
-
 	interface InteractionContext {
 		/** Where the command was invoked. */
 		readonly source: 'guild' | 'dm';
@@ -216,6 +212,9 @@ declare global {
 		/**  The message that the interaction targets. Only available for context menu commands. */
 		readonly targetMessage: Message;
 	}
+
+	/** Information relevant to button presses */
+	interface ButtonContext extends InteractionContext {}
 
 	/** Information relevant to a command invocation. */
 	type CommandContext = TextInputCommandContext | ContextMenuCommandContext;
