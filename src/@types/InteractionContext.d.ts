@@ -224,7 +224,10 @@ declare global {
 	}
 
 	/** Information relevant to button presses */
-	interface ButtonContext extends InteractionContext {}
+	interface ButtonContext extends InteractionContext {
+		component: APIButtonComponent;
+		message: Message;
+	}
 
 	/** Information relevant to a command invocation. */
 	type CommandContext = TextInputCommandContext | ContextMenuCommandContext;

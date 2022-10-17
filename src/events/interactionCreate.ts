@@ -224,7 +224,13 @@ async function handleButtonInteraction(
 
 	logger.debug(`Calling button handler '${button.customId}'`);
 
-	return await button.execute(context);
+	const buttonContext: ButtonContext = {
+		...context,
+		component: interaction.component,
+		message: interaction.message,
+	};
+
+	return await button.execute(buttonContext);
 }
 
 async function handleInteraction(interaction: RepliableInteraction): Promise<InteractionContext> {
