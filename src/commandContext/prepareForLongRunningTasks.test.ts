@@ -1,4 +1,4 @@
-import type { CommandInteraction } from 'discord.js';
+import type { RepliableInteraction } from 'discord.js';
 
 // Mock the logger to track output
 jest.mock('../logger');
@@ -11,7 +11,7 @@ describe('prepareForLongRunningTasks', () => {
 
 	const interaction = {
 		deferReply: mockInteractionDeferReply,
-	} as unknown as CommandInteraction;
+	} as unknown as RepliableInteraction;
 
 	const prepareForLongRunningTasks = factory(interaction);
 

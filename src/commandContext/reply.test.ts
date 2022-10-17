@@ -1,4 +1,4 @@
-import type { CommandInteraction } from 'discord.js';
+import type { RepliableInteraction } from 'discord.js';
 
 // Mock the logger to track output
 jest.mock('../logger');
@@ -12,7 +12,7 @@ describe('public reply', () => {
 	const interaction = {
 		user: { id: 'user-id-1234' },
 		reply: mockInteractionReply,
-	} as unknown as CommandInteraction;
+	} as unknown as RepliableInteraction;
 
 	const reply = factory(interaction);
 
