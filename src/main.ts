@@ -1,5 +1,5 @@
-import 'source-map-support/register';
 // External dependencies
+import 'source-map-support/register';
 import 'dotenv/config';
 import { Client, GatewayIntentBits, Partials } from 'discord.js';
 
@@ -39,6 +39,11 @@ export async function _main(): Promise<void> {
 	} catch (error) {
 		logger.error('Failed to log in:', error);
 	}
+}
+
+// Throw error if outside docker container
+if (process.env['DOCKER'] !== 'true') {
+	throw new Error('Docker environment not detected. Please see the README for setup instructions.');
 }
 
 /* istanbul ignore next */

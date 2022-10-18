@@ -46,13 +46,23 @@ This list is updated as contributors contribute.
 
 ### Prerequisites
 
-This project requires [NodeJS](https://nodejs.org/) (version 16.10 or later), [NPM](https://npmjs.org/). To make sure you have them available on your machine,
-try running the following command:
+This project requires [NodeJS](https://nodejs.org/) (version 16.10 or later), [NPM](https://npmjs.org/). To make sure you have them available on your machine, try running the following command:
 
 ```sh
 $ npm -v && node -v
 7.20.3
 v16.15.1
+```
+
+This project also requires [Docker](https://www.docker.com/). Docker runs the project in a lightweight virtual Linux environment, so functionality will be identical on any operating system.
+
+All Docker management (like building, running, and cleaning up images and containers) has been automated, so you only have to follow a few simple steps.
+
+You must install Docker before continuing. To make sure Docker is available on your machine, run the following command:
+
+```sh
+$ docker -v
+Docker version 20.10.17, build 100c701
 ```
 
 ### Clone the Repo
@@ -84,17 +94,23 @@ DISCORD_TOKEN=YOUR_TOKEN_GOES_HERE
 
 Go to https://discordapi.com/permissions.html#378091424832 and paste in your bot's client ID to get an invite link.
 
-### Important Note for Windows Users
+### Setting up Docker
 
-If you're on Windows, `npm` scripts will not work unless you tell `npm` to use Git Bash as its default shell when running commands.
-
-Before continuing, run this command:
+Now you are ready to set up your development environment. Set up Docker by running the following command:
 
 ```sh
-$ npm config set script-shell "C:\\Program Files\\Git\\bin\\bash.exe"
+$ npm run docker
 ```
 
-You must have [Git for Windows](https://git-scm.com/download/win) installed. See this [StackOverflow answer](https://stackoverflow.com/a/46006249) for more details.
+This will build a simple Linux image, start a container of that image, and then mount the project folder into the container.
+
+Once the container is started, you will see your command prompt change. You are now in a virtual Linux environment. If you run `ls`, you will see all the project files. Any changes you make to these files are synced between your local computer and the container.
+
+Now that your command line is in the Docker container, you can run any part of the project and develop without worrying about compatibility.
+
+To close the container, simply run `exit`. To start a new container, use `npm run docker` again. Every time you open the project, you should start a container before developing.
+
+The docker script will take care of every part of the docker development process, including building, running, and cleaning up, so you only need to worry about a single command.
 
 ### Build the bot
 
@@ -116,14 +132,10 @@ $ npm run commands:deploy
 
 ### Run the bot
 
-Since this bot is just a Node script, any Node process manager will do.
-
 ```sh
 $ node .
 # or
 $ npm start
-# or
-$ pm2 start .
 ```
 
 ## Chat Input Commands
@@ -138,7 +150,7 @@ Retrieves the profile picture of the given user.
 
 ### /xkcd
 
-Retrieves the most recent [XKCD](https://xkcd.com/) comic, or the given one.
+Retrieves the most recent [xkcd](https://xkcd.com/) comic, or the given one.
 
 ## Context Menu Commands
 
