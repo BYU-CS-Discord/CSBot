@@ -2,7 +2,6 @@
 import { spawn } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import * as tmp from 'tmp';
-import * as os from 'os';
 import { toString } from 'lodash';
 
 // Internal dependencies
@@ -69,44 +68,24 @@ export async function say(content: string, options?: DecOptions): Promise<Buffer
 	return await new Promise((resolve, reject) => {
 		const file = tmp.fileSync({ prefix: 'dectalk', postfix: '.wav' });
 
-		let dec;
-		// Windows
-		if (os.platform() === 'win32') {
-			const args: Array<string> = [];
-			if (options) {
-				if (options.EnableCommands === true) content = `[:PHONE ON]${content}`;
-			} else {
-				// Defaults
-				// EnableCommands
-				content = `[:PHONE ON]${content}`;
-			}
-			args.push('-w', file.name);
-			// args.push('-d', __dirname + "/../../dectalk/dtalk_us.dic");
-			args.push(content);
-
-			dec = spawn(`${__dirname}\\..\\..\\dectalk\\windows\\say.exe`, args, {
-				cwd: `${__dirname}\\..\\..\\dectalk`,
-			});
+		// Linux Only!
+		const args: Array<string> = [];
+		if (options) {
+			if (options.WaveEncoding) args.push('-e', options.WaveEncoding.toString());
+			if (options.SpeakRate ?? 0) args.push('-r', options.SpeakRate?.toString() ?? '');
+			if (options.SpeakerNumber ?? 0) args.push('-s', options.SpeakerNumber?.toString() ?? '');
+			if (options.EnableCommands === true) content = `[:PHONE ON]${content}`;
 		} else {
-			// Linux / Others
-			const args: Array<string> = [];
-			if (options) {
-				if (options.WaveEncoding) args.push('-e', options.WaveEncoding.toString());
-				if (options.SpeakRate ?? 0) args.push('-r', options.SpeakRate?.toString() ?? '');
-				if (options.SpeakerNumber ?? 0) args.push('-s', options.SpeakerNumber?.toString() ?? '');
-				if (options.EnableCommands === true) content = `[:PHONE ON]${content}`;
-			} else {
-				// Defaults
-				// EnableCommands
-				content = `[:PHONE ON]${content}`;
-			}
-			args.push('-a', content);
-			args.push('-fo', file.name);
-
-			dec = spawn(`${__dirname}/../../dectalk/linux/say_demo_us`, args, {
-				cwd: `${__dirname}/../../dectalk`,
-			});
+			// Defaults
+			// EnableCommands
+			content = `[:PHONE ON]${content}`;
 		}
+		args.push('-a', content);
+		args.push('-fo', file.name);
+
+		const dec = spawn(`${__dirname}/../../dectalk/say_demo_us`, args, {
+			cwd: `${__dirname}/../../dectalk`,
+		});
 
 		dec.on('error', error => {
 			reject(new Error(`failed to run dectalk exectuable:\n\n${toString(error)}`));
