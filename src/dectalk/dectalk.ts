@@ -104,10 +104,14 @@ export async function say(content: string, options?: DecOptions): Promise<Buffer
 }
 
 function spawnOutput(childName: string, outputStream: string, data: unknown): string {
-	const str = '';
+	let str = '';
 	const messages: Array<string> = toString(data).split('\n');
-	messages.forEach(message => {
-		str.concat(`[${childName} ${outputStream.toUpperCase()}] ${message}\n`);
+	messages.forEach((value, index) => {
+		// Splitting the data often creates an empty 'message' at the end, so ignore it
+		if (index === messages.length - 1 && value === '') return;
+
+		if (index !== 0) str = str.concat('\n');
+		str = str.concat(`[${childName} ${outputStream.toUpperCase()}] ${value}`);
 	});
 	return str;
 }
