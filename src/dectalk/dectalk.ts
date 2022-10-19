@@ -88,7 +88,7 @@ export async function say(content: string, options?: DecOptions): Promise<Buffer
 		});
 
 		dec.on('error', error => {
-			reject(new Error(`failed to run dectalk exectuable:\n\n${toString(error)}`));
+			reject(new Error(`Failed to run dectalk exectuable:\n\n${toString(error)}`));
 		});
 
 		dec.stdout.on('data', data => logger.info(spawnOutput('Dectalk', 'stdout', data)));
@@ -96,7 +96,7 @@ export async function say(content: string, options?: DecOptions): Promise<Buffer
 
 		dec.on('close', code => {
 			if (code !== 0) {
-				reject(new Error(`dectalk exited with code ${code ?? '{none}'}\n\nPlease check stderr`));
+				reject(new Error(`Dectalk exited with code ${code ?? '{none}'}\n\nPlease check stderr`));
 			}
 			resolve(readFileSync(file.name));
 		});
