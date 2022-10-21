@@ -5,4 +5,4 @@
  * and modified to fit this project. Credit for original code goes to Babakinha.
  */
 
-export { say } from './dectalk';
+export { say, Speaker } from './dectalk';

@@ -1,16 +1,20 @@
 // TODO testing
 // TODO context menu command to speak
 // TODO more careful interactionCreate error reporting
+// TODO additional slash command options to take full advantage of dectalk features
 // TODO BUG wav file doesn't get deleted after ffmpeg error
+// TODO save the wav file using temp files (import 'tmp') instead of doing it yourself
 
 // External dependencies
 import { existsSync, mkdirSync, writeFileSync, unlinkSync, createReadStream } from 'node:fs';
 import { join } from 'node:path';
+import { isNumber } from 'lodash';
 import {
 	SlashCommandBuilder,
 	AttachmentPayload,
 	ChannelType,
 	PermissionFlagsBits,
+	CommandInteractionOptionResolver,
 } from 'discord.js';
 import {
 	createAudioResource,
@@ -25,7 +29,7 @@ import {
 } from '@discordjs/voice';
 
 // Internal depedencies
-import { say } from '../dectalk'; // temporary until dectalk is updated with windows support
+import { say, Speaker } from '../dectalk'; // temporary until dectalk is updated with linux 64-bit support
 import * as logger from '../logger';
 
 const builder = new SlashCommandBuilder()
@@ -33,7 +37,18 @@ const builder = new SlashCommandBuilder()
 	.setDescription('Uses Dectalk to speak the given message')
 	.addStringOption(option =>
 		option.setRequired(true).setName('message').setDescription('The message to speak')
-	);
+	)
+	.addIntegerOption(option => {
+		option.setRequired(false).setName('speaker').setDescription('Whose voice to use');
+
+		Object.values(Speaker)
+			.filter(isNumber)
+			.forEach(value => {
+				option = option.addChoices({ name: Speaker[value] as string, value: value });
+			});
+
+		return option;
+	});
 
 // A temporary directory to hold .wav files
 const tempDirectory = join(__dirname, 'talk-temp');
@@ -41,23 +56,26 @@ const tempDirectory = join(__dirname, 'talk-temp');
 export const talk: GlobalCommand = {
 	info: builder,
 	requiresGuild: false,
-	async execute({ options, channel, client, createdTimestamp, prepareForLongRunningTasks, reply }) {
+	async execute({
+		interaction,
+		channel,
+		client,
+		createdTimestamp,
+		prepareForLongRunningTasks,
+		reply,
+	}) {
 		// uses the createdTimestamp as a unique file name to avoid conflict
 		const tempFileName = `${createdTimestamp}.wav`;
 
+		const options = interaction.options as CommandInteractionOptionResolver;
+
 		// this shouldn't happen, but it's good to have error checking anyway
-		if (options.length === 0) {
+		if (options.data.length === 0) {
 			throw new Error('No options provided');
 		}
 
-		const param = options[0];
-
-		// if no message was provided
-		if (!param || param?.value === undefined) {
-			throw new Error('No message provided');
-		}
-
-		const message = param.value as string;
+		const message = options.getString('message', true);
+		const speakerNum = options.getInteger('speaker') ?? Speaker.PAUL;
 
 		// this also shouldn't happen, but better safe than sorry
 		if (!channel) {
@@ -69,7 +87,9 @@ export const talk: GlobalCommand = {
 
 		// generate the audio and store it in a generic buffer
 		log('generating audio');
-		const wavData: Buffer = await say(message);
+		const wavData: Buffer = await say(message, {
+			Speaker: speakerNum,
+		});
 
 		// if the command was given in a voice chat, speak it
 		if (channel.type === ChannelType.GuildVoice) {

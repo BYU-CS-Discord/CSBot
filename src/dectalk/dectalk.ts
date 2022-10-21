@@ -14,9 +14,33 @@ export enum WaveEncoding {
 	MULAW_8bits_MONO_8KHz = 3,
 }
 
-interface DecOptions {
+/**
+ * Different settings for voices.
+ */
+// eslint-disable-next-line no-shadow
+export enum Speaker {
+	/** Default male voice */
+	PAUL = 0,
+	/** Default female voice */
+	BETTY = 1,
+	/** Low-pitched male voice */
+	HARRY = 2,
+	/** High-pitched hoarse male voice */
+	FRANK = 3,
+	/** Nasally male voice */
+	DENNIS = 4,
+	/** High-pitched child voice */
+	KID = 5,
+	/** High-pitched female voice */
+	URSULA = 6,
+	/** Nasally female voice */
+	RITA = 7,
+	/** Low-pitched hoarse female voice */
+	WENDY = 8,
+}
+
+export interface DecOptions {
 	/**
-	 * (_Linux only_)
 	 * The encoding the wav file is
 	 *
 	 * PCM_16bits_MONO_11KHz = 1,
@@ -28,30 +52,15 @@ interface DecOptions {
 	WaveEncoding?: WaveEncoding;
 
 	/**
-	 * (_Linux only_)
-	 * The speed that he talks
+	 * The speed that he talks in words-per-minute
+	 * Limit is 75 to 600
 	 */
 	SpeakRate?: number;
 
 	/**
-	 * (_Linux only_)
-	 * The voice of who talks
-	 *
-	 * Here is what i think they are
-	 *
-	 * -> 0. Default voice
-	 * 1. Female voice
-	 * 2. Low pitch guy
-	 * 3. Another Female voice?
-	 * 4. Almost Default voice (a little lower pitch)
-	 * 5. Female very high pitch
-	 * 6. Female high pitch (like the previouse but lower)
-	 * 7. Another male voice
-	 * 8. Another female voice
-	 *
-	 * Any other numbers defaults to the 0 voice
+	 * The voice of who talks. Default is PAUL (0)
 	 */
-	SpeakerNumber?: number;
+	Speaker?: Speaker;
 
 	/**
 	 * Enable phoname commands
@@ -73,7 +82,7 @@ export async function say(content: string, options?: DecOptions): Promise<Buffer
 		if (options) {
 			if (options.WaveEncoding) args.push('-e', options.WaveEncoding.toString());
 			if (options.SpeakRate ?? 0) args.push('-r', options.SpeakRate?.toString() ?? '');
-			if (options.SpeakerNumber ?? 0) args.push('-s', options.SpeakerNumber?.toString() ?? '');
+			if (options.Speaker ?? 0) args.push('-s', options.Speaker?.toString() ?? '');
 			if (options.EnableCommands === true) content = `[:PHONE ON]${content}`;
 		} else {
 			// Defaults
