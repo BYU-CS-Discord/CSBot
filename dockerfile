@@ -1,4 +1,4 @@
-FROM node:slim
+FROM node:16.10.0-slim
 RUN apt update
 RUN apt upgrade --yes
 RUN apt install libpulse0 --yes # Necessary for Dectalk (Linux x86_64)
