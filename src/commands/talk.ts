@@ -27,9 +27,9 @@ import {
 	entersState,
 	AudioResource,
 } from '@discordjs/voice';
+import { say, Speaker } from 'dectalk';
 
 // Internal depedencies
-import { say, Speaker } from '../dectalk'; // temporary until dectalk is updated with linux 64-bit support
 import * as logger from '../logger';
 
 const builder = new SlashCommandBuilder()
