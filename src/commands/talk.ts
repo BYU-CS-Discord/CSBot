@@ -1,13 +1,9 @@
 // TODO testing
 // TODO context menu command to speak
 // TODO more careful interactionCreate error reporting
-// TODO additional slash command options to take full advantage of dectalk features
-// TODO BUG wav file doesn't get deleted after ffmpeg error
-// TODO save the wav file using temp files (import 'tmp') instead of doing it yourself
 
 // External dependencies
-import { existsSync, mkdirSync, writeFileSync, unlinkSync, createReadStream } from 'node:fs';
-import { join } from 'node:path';
+import { writeFileSync, createReadStream } from 'node:fs';
 import { isNumber } from 'lodash';
 import {
 	SlashCommandBuilder,
@@ -28,6 +24,7 @@ import {
 	AudioResource,
 } from '@discordjs/voice';
 import { say, Speaker } from 'dectalk';
+import { fileSync } from 'tmp';
 
 // Internal depedencies
 import * as logger from '../logger';
@@ -50,9 +47,6 @@ const builder = new SlashCommandBuilder()
 		return option;
 	});
 
-// A temporary directory to hold .wav files
-const tempDirectory = join(__dirname, 'talk-temp');
-
 export const talk: GlobalCommand = {
 	info: builder,
 	requiresGuild: false,
@@ -60,13 +54,10 @@ export const talk: GlobalCommand = {
 		interaction,
 		channel,
 		client,
-		createdTimestamp,
+		// createdTimestamp,
 		prepareForLongRunningTasks,
 		reply,
 	}) {
-		// uses the createdTimestamp as a unique file name to avoid conflict
-		const tempFileName = `${createdTimestamp}.wav`;
-
 		const options = interaction.options as CommandInteractionOptionResolver;
 
 		// this shouldn't happen, but it's good to have error checking anyway
@@ -111,13 +102,10 @@ export const talk: GlobalCommand = {
 				throw new Error('Already talking in channel\n\nPlease try again later');
 			}
 
-			// make sure the temporary file directory exists - could be deleted anytime
-			if (!existsSync(tempDirectory)) mkdirSync(tempDirectory);
-
 			// store the audio buffer in a temporary .wav file to pass to discordjs/voice
-			const tempFilePath = join(tempDirectory, tempFileName);
-			writeFileSync(tempFilePath, wavData);
-			const stream = createReadStream(tempFilePath);
+			const tempFile = fileSync({ prefix: 'dectalk', postfix: '.wav' });
+			writeFileSync(tempFile.name, wavData);
+			const stream = createReadStream(tempFile.name);
 
 			// create an audio resource from the temporary file
 			let resource: AudioResource;
@@ -132,6 +120,10 @@ export const talk: GlobalCommand = {
 							'Please run a clean install of all dependencies'
 					);
 				}
+
+				// remember to close file stream
+				stream.close();
+
 				// Don't tamper with any other errors
 				throw error;
 			}
@@ -171,9 +163,8 @@ export const talk: GlobalCommand = {
 					connection.disconnect();
 				}
 
-				log('deleting temporary .wav file');
+				// remember to close file stream
 				stream.close();
-				unlinkSync(tempFilePath);
 			});
 
 			// when the connection closes, stop the player if playing and end the interaction
@@ -196,7 +187,6 @@ export const talk: GlobalCommand = {
 				player.stop();
 				connection.destroy();
 				stream.close();
-				unlinkSync(tempFilePath);
 				throw new Error('Could not connect to voice channel');
 			}
 		} else {
@@ -204,7 +194,7 @@ export const talk: GlobalCommand = {
 			log('sending attachment audio');
 
 			const attachment: AttachmentPayload = {
-				name: tempFileName,
+				name: `${message}.wav`,
 				attachment: wavData,
 			};
 
