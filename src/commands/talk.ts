@@ -1,5 +1,3 @@
-// TODO testing
-
 // External dependencies
 import { writeFileSync, createReadStream } from 'node:fs';
 import { isNumber } from 'lodash';
@@ -78,6 +76,11 @@ export async function speak(
 	// this also shouldn't happen, but better safe than sorry
 	if (!channel) {
 		throw new Error('No channel');
+	}
+
+	// this could happen if the user uses the context menu command on an empty message
+	if (!message || message === '') {
+		throw new Error('Message cannot be empty');
 	}
 
 	// generating the audio can take a while, so make sure Discord doesn't think we died
