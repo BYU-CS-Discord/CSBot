@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.6.0 - 2022-11-11
+### Added
+- A new `/talk` command has been added - uses the [dectalk](https://github.com/babakinha/dectalk) TTS engine to speak a given message.
+- A new `Talk` context menu command has been added - also uses dectalk to speak any message users right-click on.
+
+### Changed
+- Our development environment is now standardized with Docker.
+- The error reporting system for commands has also been standardized.
+
 ## 0.5.0 - 2022-10-13
 ### Added
 - We now join in on the server community by sharing reactions (mostly randomly). The default :star: emoji is ignored, in the interest of future features. :same: and :no_u: emoji are reciprocated 1 in 5 times, and every other emote is reciprocated 1 in 100 times.
