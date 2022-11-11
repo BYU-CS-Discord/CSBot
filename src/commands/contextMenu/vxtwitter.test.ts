@@ -26,9 +26,7 @@ describe('Fix Twitter Links', () => {
 		async ({ content }: { content: string }) => {
 			context.targetMessage.content = content;
 
-			await expect(vxtwitter.execute(context)).resolves.toBeUndefined();
-			expect(mockReplyPrivately).toHaveBeenCalledOnce();
-			expect(mockReplyPrivately).toHaveBeenCalledWith(expect.stringContaining('no URLs found'));
+			await expect(vxtwitter.execute(context)).rejects.toThrow();
 		}
 	);
 
@@ -41,11 +39,7 @@ describe('Fix Twitter Links', () => {
 		async ({ content }: { content: string }) => {
 			context.targetMessage.content = content;
 
-			await expect(vxtwitter.execute(context)).resolves.toBeUndefined();
-			expect(mockReplyPrivately).toHaveBeenCalledOnce();
-			expect(mockReplyPrivately).toHaveBeenCalledWith(
-				expect.stringContaining('no Twitter URLs found')
-			);
+			await expect(vxtwitter.execute(context)).rejects.toThrow();
 		}
 	);
 
