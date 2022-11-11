@@ -49,9 +49,7 @@ export const talk: GlobalCommand = {
 	info: builder,
 	requiresGuild: false,
 	async execute(context) {
-		const interaction = context.interaction;
-
-		const options = interaction.options as CommandInteractionOptionResolver;
+		const options = context.interaction.options as CommandInteractionOptionResolver;
 
 		// this shouldn't happen, but it's good to have error checking anyway
 		if (options.data.length === 0) {
