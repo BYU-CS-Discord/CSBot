@@ -10,25 +10,15 @@ jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: node
+      image: node:16.10.0
       env:
         DOCKER: true
-
-    strategy:
-      matrix:
-        node-version: [16.10.x, 18.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
       - uses: actions/checkout@v2
 
       - name: Own all files
         run: USER=$(/usr/bin/id -run) && chown -R $USER ./
-
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node-version }}
 
       - name: Install dependencies
         run: npm ci

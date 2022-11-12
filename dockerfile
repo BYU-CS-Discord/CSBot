@@ -1,4 +1,4 @@
-FROM node:slim
+FROM node:16.10.0-slim
 RUN apt update
 RUN apt upgrade --yes
 
