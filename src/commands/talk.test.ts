@@ -29,15 +29,8 @@ describe('Talk Slash Command', () => {
 					data: {
 						length: 1,
 					},
-					getString(name: string, required: boolean) {
-						name;
-						required;
-						return message;
-					},
-					getInteger(name: number) {
-						name;
-						return undefined;
-					},
+					getString: () => message,
+					getInteger: () => undefined,
 				},
 			},
 			channel: {
