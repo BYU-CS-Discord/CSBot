@@ -1,5 +1,5 @@
 // External dependencies
-import { toString } from 'lodash';
+import toString from 'lodash/toString';
 import type { CommandInteraction, DMChannel, GuildMember, GuildTextBasedChannel } from 'discord.js';
 import { EmbedBuilder, Colors, ApplicationCommandType, ChannelType } from 'discord.js';
 
