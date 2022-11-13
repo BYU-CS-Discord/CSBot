@@ -37,7 +37,9 @@ const builder = new SlashCommandBuilder()
 		Object.values(Speaker)
 			.filter(isNumber)
 			.forEach(value => {
-				option = option.addChoices({ name: Speaker[value] as string, value: value });
+				const name = Speaker[value];
+				if (name === undefined) return;
+				option = option.addChoices({ name, value });
 			});
 
 		return option;
@@ -122,9 +124,11 @@ export async function speak(
 		try {
 			resource = createAudioResource(stream);
 		} catch (error) {
-			const error_ = error as Error;
-			// For this error, provide a more useful message
-			if (error_.message === 'FFmpeg/avconv not found!') {
+			// if it's not an error, leave it alone
+			if (!(error instanceof Error)) throw error;
+
+			// for this error, provide a more useful message
+			if (error.message === 'FFmpeg/avconv not found!') {
 				throw new Error(
 					"'ffmpeg-static' missing proper encoder for current OS\n\n" +
 						'Please run a clean install of all dependencies'
@@ -134,7 +138,7 @@ export async function speak(
 			// remember to close file stream
 			stream.close();
 
-			// Don't tamper with any other errors
+			// don't tamper with any other errors
 			throw error;
 		}
 
