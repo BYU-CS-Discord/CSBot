@@ -1,4 +1,5 @@
 import type {
+	ChatInputCommandInteraction,
 	Client,
 	CommandInteraction,
 	CommandInteractionOption,
@@ -115,6 +116,9 @@ declare global {
 		/** Where the command was invoked. */
 		readonly source: 'dm';
 
+		/** The command invocation interaction. */
+		readonly interaction: ChatInputCommandInteraction;
+
 		/** The guild in which the command was invoked. */
 		readonly guild: null;
 
@@ -144,6 +148,9 @@ declare global {
 	interface GuildedCommandContext extends BaseCommandContext {
 		/** Where the command was invoked. */
 		readonly source: 'guild';
+
+		/** The command invocation interaction. */
+		readonly interaction: ChatInputCommandInteraction;
 
 		/** The guild in which the command was invoked. */
 		readonly guild: Guild;
