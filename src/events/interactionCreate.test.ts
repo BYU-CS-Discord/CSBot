@@ -124,6 +124,7 @@ function defaultInteraction(): Interaction {
 			partial: false,
 		},
 		isCommand: () => true,
+		isChatInputCommand: () => true,
 	} as unknown as Interaction;
 }
 
@@ -321,6 +322,7 @@ describe('on(interactionCreate)', () => {
 
 	test('fetches the member target from a partial guild member', async () => {
 		const interaction = defaultInteraction() as UserContextMenuCommandInteraction;
+		interaction.isChatInputCommand = (): boolean => false;
 		interaction.isUserContextMenuCommand = (): boolean => true;
 		interaction.inCachedGuild = (): boolean => false;
 		interaction.targetId = 'target-user-1234';
@@ -334,6 +336,7 @@ describe('on(interactionCreate)', () => {
 
 	test('executes the user context menu command', async () => {
 		const interaction = defaultInteraction() as UserContextMenuCommandInteraction;
+		interaction.isChatInputCommand = (): boolean => false;
 		interaction.isUserContextMenuCommand = (): boolean => true;
 		interaction.isMessageContextMenuCommand = (): boolean => false;
 		interaction.targetId = 'target-user-1234';
@@ -350,6 +353,7 @@ describe('on(interactionCreate)', () => {
 
 	test('executes the message context menu command', async () => {
 		const interaction = defaultInteraction() as MessageContextMenuCommandInteraction;
+		interaction.isChatInputCommand = (): boolean => false;
 		interaction.isUserContextMenuCommand = (): boolean => false;
 		interaction.isMessageContextMenuCommand = (): boolean => true;
 		interaction.targetId = 'target-msg-1234';

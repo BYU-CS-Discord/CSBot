@@ -75,7 +75,7 @@ async function handleInteraction(interaction: CommandInteraction): Promise<void>
 		channel = interaction.channel;
 	}
 
-	const vagueContext: Omit<CommandContext, 'source'> = {
+	const vagueContext: Omit<CommandContext, 'source' | 'interaction'> = {
 		createdTimestamp: interaction.createdTimestamp,
 		targetId: null,
 		targetUser: null,
@@ -87,7 +87,6 @@ async function handleInteraction(interaction: CommandInteraction): Promise<void>
 		channelId: interaction.channelId,
 		channel,
 		client: interaction.client,
-		interaction,
 		options: interaction.options.data,
 		prepareForLongRunningTasks: prepareForLongRunningTasksFactory(interaction),
 		replyPrivately: replyPrivatelyFactory(interaction),
@@ -109,6 +108,10 @@ async function handleInteraction(interaction: CommandInteraction): Promise<void>
 		context = { ...vagueContext, source: 'dm' } as DMCommandContext;
 	}
 	/* eslint-enable @typescript-eslint/consistent-type-assertions */
+
+	if (interaction.isChatInputCommand()) {
+		context = { ...context, interaction };
+	}
 
 	if (!command.requiresGuild) {
 		// No guild required
