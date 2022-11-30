@@ -32,12 +32,12 @@ export function _add(cmd: Command): void {
 import { help } from './help';
 import { xkcd } from './xkcd';
 import { profile } from './profile';
-import { vxtwitter } from './contextMenu/vxtwitter';
+import { fxtwitter } from './contextMenu/fxtwitter';
 import { talk } from './talk';
 import { talk as talk_context } from './contextMenu/talk';
 _add(help);
 _add(xkcd);
 _add(profile);
-_add(vxtwitter);
+_add(fxtwitter);
 _add(talk);
 _add(talk_context);

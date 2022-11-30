@@ -161,7 +161,7 @@ either sending a .wav file in a text channel or talking out loud in a voice chan
 
 ### Fix Twitter Links
 
-Transforms [twitter.com](https://twitter.com/) links in the given message to [vxtwitter.com](https://vxtwitter.com/) links in an ephemeral reply. Please use vxtwitter in your own messages, especially when the tweet is a video. Twitter's default embed stinks on some platforms.
+Transforms [twitter.com](https://twitter.com/) links in the given message to [FixTweet](https://github.com/FixTweet/FixTweet) links in an ephemeral reply. Please use fxtwitter in your own messages, especially when the tweet is a video. Twitter's default embed stinks on some platforms.
 
 ### Talk
 
