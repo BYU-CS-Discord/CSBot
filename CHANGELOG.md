@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.5.1 - 2022-11-29
+### Changed
+- Use the new-and-improved [FixTweet](https://github.com/FixTweet/FixTweet) instead of ye olde [BetterTwitFix](https://github.com/dylanpdx/BetterTwitFix).
+
 ## 0.5.0 - 2022-10-13
 ### Added
 - We now join in on the server community by sharing reactions (mostly randomly). The default :star: emoji is ignored, in the interest of future features. :same: and :no_u: emoji are reciprocated 1 in 5 times, and every other emote is reciprocated 1 in 100 times.
