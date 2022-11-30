@@ -32,8 +32,8 @@ export function _add(cmd: Command): void {
 import { help } from './help';
 import { xkcd } from './xkcd';
 import { profile } from './profile';
-import { vxtwitter } from './contextMenu/vxtwitter';
+import { fxtwitter } from './contextMenu/fxtwitter';
 _add(help);
 _add(xkcd);
 _add(profile);
-_add(vxtwitter);
+_add(fxtwitter);

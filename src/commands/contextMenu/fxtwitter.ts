@@ -2,7 +2,7 @@ import { ApplicationCommandType, ContextMenuCommandBuilder } from 'discord.js';
 import { positionsOfUriInText } from '../../helpers/positionsOfUriInText';
 import { URL } from 'node:url';
 
-export const vxtwitter: MessageContextMenuCommand = {
+export const fxtwitter: MessageContextMenuCommand = {
 	info: new ContextMenuCommandBuilder().setName('Fix Twitter Links'),
 	type: ApplicationCommandType.Message,
 	requiresGuild: false,
@@ -45,5 +45,5 @@ export const vxtwitter: MessageContextMenuCommand = {
 };
 
 function vxTwitter(og: URL): URL {
-	return new URL(og.pathname, 'https://vxtwitter.com');
+	return new URL(og.pathname, 'https://fxtwitter.com');
 }
