@@ -25,6 +25,7 @@ This list is updated as contributors contribute.
     - [Configure the bot](#configure-the-bot)
     - [Invite your bot to your server](#invite-your-bot-to-your-server)
     - [Important Note for Windows Users](#important-note-for-windows-users)
+    - [Build the bot database](#build-the-bot-database)
     - [Build the bot server](#build-the-bot-server)
     - [Register Slash Commands](#register-slash-commands)
     - [Run the bot](#run-the-bot)
@@ -66,6 +67,7 @@ Create a file called `.env` in the root of this project folder. Paste your token
 
 DISCORD_TOKEN=YOUR_TOKEN_GOES_HERE
 # required, token for your Discord bot
+
 DATABASE_URL=YOUR_DATABASE_URL_GOES_HERE
 # required for any DB functionality, we will get this URL in a later section
 ```
@@ -90,32 +92,34 @@ You must have [Git for Windows](https://git-scm.com/download/win) installed. See
 
 ### Build the bot database
 
+_As we use prisma for managing our DB it is up to you what relational database framework you use._
 
-*As we use prisma for managing our DB it is up to you what relational database framework you use.*
+[The following is a guide to setting up Postgres inside a docker container.](https://github.com/docker-library/docs/blob/master/postgres/README.md) While the choice of database is up to you, the instructions for getting started in this guide assume you are using a postgres docker image.
 
-[The following is a guide to setting up Postgres inside a docker container.](https://github.com/docker-library/docs/blob/master/postgres/README.md) While the choice of database is up to you, the instructions for getting started in this guide assume you are using a postgres docker image. 
-After you have Postgres (or your DB of choice) up and running edit the line in your .env file to be 
+After you have Postgres (or your DB of choice) up and running, edit this line in your `.env` file:
+
 ```
-DATABASE_URL=postgres://pg_user:pg_pass@pg_host:pg_port/pg_table
+DATABASE_URL=postgres://{pg_user}:{pg_pass}@{pg_hostname}:{pg_port}/{pg_db}
 # required for any DB functionality, we will get this URL in a later section
 ```
-- pg_user  = The Username you set in your POSTGRES_USER environment variable (default postgres)
-- pg_pass  = The Password you set in your POSTGRES_PASS environment variable (default postgres)
-- ph_host  = The IP of the server running your Postgres instance (default localhost)
-- pg_port  = The Port assigned to your Postgres instance (default 5432)
-- pg_table = The Name of the table you wish to use for the bot
 
+- pg_user = The Username you set in your POSTGRES_USER environment variable (default postgres)
+- pg_pass = The Password you set in your POSTGRES_PASS environment variable (default postgres)
+- ph_host = The IP of the server running your Postgres instance (default localhost)
+- pg_port = The Port assigned to your Postgres instance (default 5432)
+- pg_db = The Name of the database you wish to use for the bot
 
-The first time you run this project you can run the following command to initialize the database
+The first time you run this project, you should run the following command to initialize the database:
+
 ```
-$ npm run prisma:generate
+$ npm run baseline
 ```
 
-Migrations can be run on the Database with the following command
+Migrations can be run on the Database with the following command:
+
 ```
 $ npm run prisma:migrate
 ```
-
 
 ### Build the bot server
 
@@ -157,10 +161,15 @@ $ pm2 start .
 ## Commands
 
 ### /help
+
 Prints the list of commands.
+
 ### /profile
+
 Prints the profile picture of the given user.
+
 ### /xkcd
+
 Prints the a specified XKCD comic or if no input is provided the most recent comic is provided.
 
 ## Contributing
