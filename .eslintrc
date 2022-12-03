@@ -65,7 +65,7 @@
 		"no-lonely-if": "error",
 		"no-multi-spaces": "error",
 		"no-multiple-empty-lines": ["error", { "max": 2, "maxEOF": 1, "maxBOF": 0 }],
-		"no-shadow": ["error", { "allow": ["err", "resolve", "reject", "client"] }],
+		"@typescript-eslint/no-shadow": ["error", { "allow": ["err", "resolve", "reject", "client"] }], // See https://stackoverflow.com/a/63961972
 		"no-trailing-spaces": ["error"],
 		"no-var": "error",
 		"object-curly-spacing": ["error", "always"],

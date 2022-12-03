@@ -68,7 +68,8 @@ declare global {
 		sendTyping: () => void;
 
 		/**
-		 * Sends a DM or ephemeral reply to the command's sender.
+		 * Sends a DM or ephemeral reply to the command's sender. The default
+		 * behavior is an ephemeral reply.
 		 *
 		 * In the case of an interaction that was publicly deferred (e.g.
 		 * using `prepareForLongRunningTasks(false)`), this function will
