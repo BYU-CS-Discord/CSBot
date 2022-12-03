@@ -15,7 +15,7 @@ This project is meant as a successor to [Ze-Kaiser](https://github.com/ArkenStor
 
 ## Authors & Contributors
 
-These users contributed various things over time directly to this codebase. This list is ordered roughly by when users first contributed code. We update this list as contributors contribute.
+These users contributed various things over time directly to this codebase. This list is ordered roughly by when users first contributed code. We add to this list as people contribute.
 
 - [**ZYancey**](https://github.com/BYU-CS-Discord/CSBot/pulls?q=is%3Apr+is%3Amerged+author%3Azyancey) ([profile](https://github.com/zyancey))
 - [**gmacgre**](https://github.com/BYU-CS-Discord/CSBot/pulls?q=is%3Apr+is%3Amerged+author%3Agmacgre) ([profile](https://github.com/gmacgre))
