@@ -36,7 +36,7 @@ This list is updated as contributors contribute.
     - [Invite your bot to your server](#invite-your-bot-to-your-server)
     - [Important Note for Windows Users](#important-note-for-windows-users)
     - [Build the bot](#build-the-bot)
-	- [Build the bot database](#build-the-bot-database)
+    - [Build the bot database](#build-the-bot-database)
     - [Register Slash Commands](#register-slash-commands)
     - [Run the bot](#run-the-bot)
   - [Commands](#commands)
@@ -109,7 +109,6 @@ $ npm run docker
 This will build a simple Linux image, start a container of that image, and then mount the project folder into the container.
 
 Once the container is started, you will see your command prompt change. You are now in a virtual Linux environment. If you run `ls`, you will see all the project files. Any changes you make to these files are synced between your local computer and the container.
-
 
 Now that your command line is in the Docker container, you can run any part of the project and develop without worrying about compatibility.
 
@@ -193,14 +192,6 @@ Retrieves the most recent [xkcd](https://xkcd.com/) comic, or the given one.
 ### Fix Twitter Links
 
 Transforms [twitter.com](https://twitter.com/) links in the given message to [FixTweet](https://github.com/FixTweet/FixTweet) links in an ephemeral reply. Please use fxtwitter in your own messages, especially when the tweet is a video. Twitter's default embed stinks on some platforms.
-
-### /profile
-
-Prints the profile picture of the given user.
-
-### /xkcd
-
-Prints the a specified XKCD comic or if no input is provided the most recent comic is provided.
 
 ## Contributing
 
