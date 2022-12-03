@@ -25,7 +25,7 @@ These users contributed various things over time directly to this codebase. This
 
 ## Contributing
 
-This project is entirely open-source. Do with it what you will. If you're willing to help me improve this project, consider [filing an issue](https://github.com/BYU-CS-Discord/CSBot/issues/new/choose).
+This project is entirely open-source. Do with it what you will. If you're willing to help us improve this project, consider [filing an issue](https://github.com/BYU-CS-Discord/CSBot/issues/new/choose).
 
 See [CONTRIBUTING.md](/CONTRIBUTING.md) for ways to contribute.
 
