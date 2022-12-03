@@ -1,16 +1,20 @@
 import type {
+	ChatInputCommandInteraction,
 	Client,
 	CommandInteraction,
 	CommandInteractionOption,
+	ContextMenuCommandInteraction,
 	DMChannel,
 	Guild,
 	GuildMember,
 	GuildTextBasedChannel,
 	InteractionReplyOptions,
 	Message,
+	MessageContextMenuCommandInteraction,
 	MessageReplyOptions,
 	Snowflake,
 	User,
+	UserContextMenuCommandInteraction,
 } from 'discord.js';
 
 declare global {
@@ -39,11 +43,23 @@ declare global {
 		/** The guild member who invoked the command. */
 		readonly member: GuildMember | null;
 
+		/** The ID of the interaction target. Only available for context menu commands. */
+		readonly targetId: Snowflake | null;
+
+		/** The user that the interaction targets. Only available for context menu commands. */
+		readonly targetUser: User | null;
+
+		/** The guild member that the interaction targets. Only available for context menu commands. */
+		readonly targetMember: GuildMember | null;
+
+		/** The message that the interaction targets. Only available for context menu commands. */
+		readonly targetMessage: Message | null;
+
 		/** The UNIX time at which the command was invoked. */
 		readonly createdTimestamp: number;
 
-		/** The options that were given to the command. */
-		readonly options: ReadonlyArray<CommandInteractionOption<'cached'>>; // TODO: Make this a generic tuple
+		/** The options that were given to the command. Not available for context menu commands. */
+		readonly options: ReadonlyArray<CommandInteractionOption<'cached'>> | null;
 
 		/** Instructs Discord to keep interaction handles open long enough for long-running tasks to complete. */
 		prepareForLongRunningTasks: (ephemeral?: boolean) => void | Promise<void>;
@@ -100,6 +116,9 @@ declare global {
 		/** Where the command was invoked. */
 		readonly source: 'dm';
 
+		/** The command invocation interaction. */
+		readonly interaction: ChatInputCommandInteraction;
+
 		/** The guild in which the command was invoked. */
 		readonly guild: null;
 
@@ -108,12 +127,30 @@ declare global {
 
 		/** The channel in which the command was invoked. */
 		readonly channel: DMChannel | null;
+
+		/** The ID of the interaction target. Only available for context menu commands. */
+		readonly targetId: null;
+
+		/** The user that the interaction targets. Only available for context menu commands. */
+		readonly targetUser: null;
+
+		/** The guild member that the interaction targets. Only available for context menu commands. */
+		readonly targetMember: null;
+
+		/** The message that the interaction targets. Only available for context menu commands. */
+		readonly targetMessage: null;
+
+		/** The options that were given to the command. Not available for context menu commands. */
+		readonly options: ReadonlyArray<CommandInteractionOption<'cached'>>;
 	}
 
-	/**  Information relevant to a command invocation in a guild.*/
+	/** Information relevant to a command invocation in a guild.*/
 	interface GuildedCommandContext extends BaseCommandContext {
 		/** Where the command was invoked. */
 		readonly source: 'guild';
+
+		/** The command invocation interaction. */
+		readonly interaction: ChatInputCommandInteraction;
 
 		/** The guild in which the command was invoked. */
 		readonly guild: Guild;
@@ -123,8 +160,64 @@ declare global {
 
 		/** The channel in which the command was invoked. */
 		readonly channel: GuildTextBasedChannel | null;
+
+		/** The ID of the interaction target. Only available for context menu commands. */
+		readonly targetId: null;
+
+		/** The user that the interaction targets. Only available for context menu commands. */
+		readonly targetUser: null;
+
+		/** The guild member that the interaction targets. Only available for context menu commands. */
+		readonly targetMember: null;
+
+		/** The message that the interaction targets. Only available for context menu commands. */
+		readonly targetMessage: null;
+
+		/** The options that were given to the command. Not available for context menu commands. */
+		readonly options: ReadonlyArray<CommandInteractionOption<'cached'>>;
+	}
+
+	interface BaseContextMenuCommandContext extends BaseCommandContext {
+		/** Where the command was invoked. */
+		readonly source: 'guild' | 'dm';
+
+		/** The command invocation interaction. */
+		readonly interaction: ContextMenuCommandInteraction;
+
+		/** The ID of the interaction target. Only available for context menu commands. */
+		readonly targetId: Snowflake;
+
+		/** The options that were given to the command. Not available for context menu commands. */
+		readonly options: null;
+	}
+
+	/** Information relevant to a user context menu command invocation.*/
+	interface UserContextMenuCommandContext extends BaseContextMenuCommandContext {
+		/** The command invocation interaction. */
+		readonly interaction: UserContextMenuCommandInteraction;
+
+		/** The user that the interaction targets. Only available for context menu commands. */
+		readonly targetUser: User;
+
+		/** The guild member that the interaction targets. Only available for context menu commands. */
+		readonly targetMember: GuildMember | null;
+	}
+
+	/** Information relevant to a user context menu command invocation.*/
+	interface MessageContextMenuCommandContext extends BaseContextMenuCommandContext {
+		/** The command invocation interaction. */
+		readonly interaction: MessageContextMenuCommandInteraction;
+
+		/**  The message that the interaction targets. Only available for context menu commands. */
+		readonly targetMessage: Message;
 	}
 
 	/** Information relevant to a command invocation. */
-	type CommandContext = DMCommandContext | GuildedCommandContext;
+	type CommandContext = TextInputCommandContext | ContextMenuCommandContext;
+
+	/** Information relevant to a slash-command invocation. */
+	type TextInputCommandContext = DMCommandContext | GuildedCommandContext;
+
+	/** Information relevant to a context menu command invocation. */
+	type ContextMenuCommandContext = UserContextMenuCommandContext | MessageContextMenuCommandContext;
 }

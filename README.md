@@ -4,6 +4,15 @@
 
 > This project is undergoing rapid development and should be considered experimental. Use it at your own risk. 🤙
 
+A bot to help manage the activities and community of BYU's Computer Science Discord server.
+
+This project is meant as a successor to [Ze-Kaiser](https://github.com/ArkenStorm/Ze-Kaiser), whose original contributors are as follows:
+
+- [**ArkenStorm**](https://github.com/ArkenStorm)
+- [**Carterworks**](https://github.com/Carterworks)
+- [**EmmaChase**](https://github.com/EmmaChase)
+- [**TheZealotAlmighty**](https://github.com/TheZealotAlmighty)
+
 ## Authors & Contributors
 
 This list is updated as contributors contribute.
@@ -12,6 +21,7 @@ This list is updated as contributors contribute.
 - [**gmacgre**](https://github.com/gmacgre)
 - [**JstnMcBrd**](https://github.com/JstnMcBrd)
 - [**AverageHelper**](https://github.com/AverageHelper)
+- [**SpencerHastings**](https://github.com/SpencerHastings/)
 
 ## Table of contents
 
@@ -25,8 +35,8 @@ This list is updated as contributors contribute.
     - [Configure the bot](#configure-the-bot)
     - [Invite your bot to your server](#invite-your-bot-to-your-server)
     - [Important Note for Windows Users](#important-note-for-windows-users)
-    - [Build the bot database](#build-the-bot-database)
-    - [Build the bot server](#build-the-bot-server)
+    - [Build the bot](#build-the-bot)
+	- [Build the bot database](#build-the-bot-database)
     - [Register Slash Commands](#register-slash-commands)
     - [Run the bot](#run-the-bot)
   - [Commands](#commands)
@@ -37,13 +47,23 @@ This list is updated as contributors contribute.
 
 ### Prerequisites
 
-This project requires [NodeJS](https://nodejs.org/) (version 16.10 or later), [NPM](https://npmjs.org/). To make sure you have them available on your machine,
-try running the following command:
+This project requires [NodeJS](https://nodejs.org/) (version 16.10 or later), [NPM](https://npmjs.org/). To make sure you have them available on your machine, try running the following command:
 
 ```sh
 $ npm -v && node -v
 7.20.3
 v16.15.1
+```
+
+This project also requires [Docker](https://www.docker.com/). Docker runs the project in a lightweight virtual Linux environment, so functionality will be identical on any operating system.
+
+All Docker management (like building, running, and cleaning up images and containers) has been automated, so you only have to follow a few simple steps.
+
+You must install Docker before continuing. To make sure Docker is available on your machine, run the following command:
+
+```sh
+$ docker -v
+Docker version 20.10.17, build 100c701
 ```
 
 ### Clone the Repo
@@ -78,17 +98,32 @@ DATABASE_URL=YOUR_DATABASE_URL_GOES_HERE
 
 Go to https://discordapi.com/permissions.html#378091424832 and paste in your bot's client ID to get an invite link.
 
-### Important Note for Windows Users
+### Setting up Docker
 
-If you're on Windows, `npm` scripts will not work unless you tell `npm` to use Git Bash as its default shell when running commands.
-
-Before continuing, run this command:
+Now you are ready to set up your development environment. Set up Docker by running the following command:
 
 ```sh
-$ npm config set script-shell "C:\\Program Files\\Git\\bin\\bash.exe"
+$ npm run docker
 ```
 
-You must have [Git for Windows](https://git-scm.com/download/win) installed. See this [StackOverflow answer](https://stackoverflow.com/a/46006249) for more details.
+This will build a simple Linux image, start a container of that image, and then mount the project folder into the container.
+
+Once the container is started, you will see your command prompt change. You are now in a virtual Linux environment. If you run `ls`, you will see all the project files. Any changes you make to these files are synced between your local computer and the container.
+
+
+Now that your command line is in the Docker container, you can run any part of the project and develop without worrying about compatibility.
+
+To close the container, simply run `exit`. To start a new container, use `npm run docker` again. Every time you open the project, you should start a container before developing.
+
+The docker script will take care of every part of the docker development process, including building, running, and cleaning up, so you only need to worry about a single command.
+
+### Build the bot
+
+Be sure to install dependencies, run a quick lint to generate needed files, compile the source, and deploy commands. Here's a handy command to do all of that:
+
+```sh
+$ npm run setup
+```
 
 ### Build the bot database
 
@@ -121,21 +156,6 @@ Migrations can be run on the Database with the following command:
 $ npm run prisma:migrate
 ```
 
-### Build the bot server
-
-Be sure to install dependencies, and run a quick lint to generate needed files:
-
-```sh
-$ npm ci
-$ npm run lint
-```
-
-The first time you download the source, and each time the source code changes, you'll need to run this command before you run the bot:
-
-```sh
-$ npm run build
-```
-
 ### Register Slash Commands
 
 If you want support for Discord [Slash Commands](https://support.discord.com/hc/en-us/articles/1500000368501-Slash-Commands-FAQ), you'll need to deploy the commands directly. To avoid rate limits, use a command-line tool, rather than deploying on startup.
@@ -148,21 +168,31 @@ $ npm run commands:deploy
 
 ### Run the bot
 
-Since this bot is just a Node script, any Node process manager will do.
-
 ```sh
 $ node .
 # or
 $ npm start
-# or
-$ pm2 start .
 ```
 
-## Commands
+## Chat Input Commands
 
 ### /help
 
-Prints the list of commands.
+Prints some info about the bot, including the current running version and a link to the code repository.
+
+### /profile
+
+Retrieves the profile picture of the given user.
+
+### /xkcd
+
+Retrieves the most recent [xkcd](https://xkcd.com/) comic, or the given one.
+
+## Context Menu Commands
+
+### Fix Twitter Links
+
+Transforms [twitter.com](https://twitter.com/) links in the given message to [FixTweet](https://github.com/FixTweet/FixTweet) links in an ephemeral reply. Please use fxtwitter in your own messages, especially when the tweet is a video. Twitter's default embed stinks on some platforms.
 
 ### /profile
 

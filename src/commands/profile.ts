@@ -1,15 +1,14 @@
-import { ApplicationCommandOptionType } from 'discord.js';
+import { SlashCommandBuilder } from 'discord.js';
+
+const builder = new SlashCommandBuilder()
+	.setName('profile')
+	.setDescription('Responds with the Profile Picture of the mentioned user')
+	.addUserOption(option =>
+		option.setName('user').setDescription('The user to get the profile picture of')
+	);
 
 export const profile: GlobalCommand = {
-	name: 'profile',
-	description: 'Responds with the Profile Picture of the mentioned user',
-	options: [
-		{
-			name: 'user',
-			description: 'The user to get the profile picture of',
-			type: ApplicationCommandOptionType.User,
-		},
-	],
+	info: builder,
 	requiresGuild: false,
 	async execute({ user, options, reply }) {
 		const param = options[0];

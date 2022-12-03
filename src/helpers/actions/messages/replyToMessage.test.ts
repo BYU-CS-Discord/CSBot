@@ -7,16 +7,22 @@ import { error as mockLoggerError } from '../../../logger';
 import { replyWithPrivateMessage, sendMessageInChannel } from './replyToMessage';
 
 describe('Replies', () => {
-	const mockUserSend = jest.fn().mockResolvedValue({});
+	const mockUserSend = jest.fn();
 
 	describe('to interactions', () => {
 		const mockReply = jest.fn();
 		let interaction: CommandInteraction;
 
 		beforeEach(() => {
+			mockReply.mockResolvedValue({});
+			mockUserSend.mockResolvedValue({});
 			interaction = {
 				user: {
 					id: 'user-1234',
+					send: mockUserSend,
+				},
+				channel: {
+					id: 'channel-1234',
 				},
 				reply: mockReply,
 			} as unknown as CommandInteraction;
@@ -50,6 +56,58 @@ describe('Replies', () => {
 			await expect(replyWithPrivateMessage(interaction, { content }, false)).resolves.toBeFalse();
 			expect(mockReply).toHaveBeenCalledOnce();
 			expect(mockReply).toHaveBeenCalledWith({ content, ephemeral: true });
+		});
+
+		describe('in DMs', () => {
+			test('sends text DM to user with return prompt', async () => {
+				const content = 'yo';
+				await expect(replyWithPrivateMessage(interaction, content, true)).resolves.toBeObject();
+				expect(mockReply).not.toHaveBeenCalled();
+				expect(mockUserSend).toHaveBeenCalledOnce();
+				expect(mockUserSend).toHaveBeenCalledWith(`(Reply from <#channel-1234>)\n${content}`);
+			});
+
+			test('sends object DM to user with return prompt', async () => {
+				const options = { content: 'yo' };
+				await expect(replyWithPrivateMessage(interaction, options, true)).resolves.toBeObject();
+				expect(mockReply).not.toHaveBeenCalled();
+				expect(mockUserSend).toHaveBeenCalledOnce();
+				expect(mockUserSend).toHaveBeenCalledWith({
+					content: `(Reply from <#channel-1234>)\n${options.content}`,
+				});
+			});
+
+			test('informs the user if the text DM failed', async () => {
+				const error = new Error('This is a test');
+				mockUserSend.mockRejectedValueOnce(error);
+
+				const content = 'yo';
+				await expect(replyWithPrivateMessage(interaction, content, true)).resolves.toBeTrue();
+				expect(mockUserSend).toHaveBeenCalledOnce();
+				expect(mockUserSend).toHaveBeenCalledWith(`(Reply from <#channel-1234>)\n${content}`);
+				expect(mockReply).toHaveBeenCalledOnce();
+				expect(mockReply).toHaveBeenCalledWith({
+					content: expect.stringContaining('tried to DM you') as string,
+					ephemeral: true,
+				});
+			});
+
+			test('informs the user if the object DM failed', async () => {
+				const error = new Error('This is a test');
+				mockUserSend.mockRejectedValueOnce(error);
+
+				const options = { content: 'yo' };
+				await expect(replyWithPrivateMessage(interaction, options, true)).resolves.toBeTrue();
+				expect(mockUserSend).toHaveBeenCalledOnce();
+				expect(mockUserSend).toHaveBeenCalledWith({
+					content: `(Reply from <#channel-1234>)\n${options.content}`,
+				});
+				expect(mockReply).toHaveBeenCalledOnce();
+				expect(mockReply).toHaveBeenCalledWith({
+					content: expect.stringContaining('tried to DM you') as string,
+					ephemeral: true,
+				});
+			});
 		});
 	});
 

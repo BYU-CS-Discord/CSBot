@@ -1,10 +1,5 @@
 // External dependencies
-import type {
-	ApplicationCommandData,
-	ApplicationCommandDataResolvable,
-	Client,
-	Guild,
-} from 'discord.js';
+import type { Client, Guild, RESTPostAPIApplicationCommandsJSONBody } from 'discord.js';
 import { ApplicationCommandType } from 'discord.js';
 
 // Internal dependencies
@@ -22,12 +17,12 @@ export async function deployCommands(client: Client<true>): Promise<void> {
 	logger.info(`Syncing ${commands.length} command(s)...`);
 
 	const guildCommands: Array<GuildedCommand> = [];
-	const globalCommands: Array<GlobalCommand> = [];
+	const globalCommands: Array<GlobalCommand | ContextMenuCommand> = [];
 	for (const cmd of commands) {
-		if (cmd.requiresGuild) {
-			guildCommands.push(cmd);
-		} else {
+		if (isContextMenuCommand(cmd) || !cmd.requiresGuild) {
 			globalCommands.push(cmd);
+		} else if (cmd.requiresGuild) {
+			guildCommands.push(cmd);
 		}
 	}
 
@@ -44,17 +39,18 @@ export async function deployCommands(client: Client<true>): Promise<void> {
 }
 
 async function prepareGlobalCommands(
-	globalCommands: NonEmptyArray<GlobalCommand>,
+	globalCommands: NonEmptyArray<GlobalCommand | ContextMenuCommand>,
 	client: Client<true>
 ): Promise<void> {
+	const commandBuilders = globalCommands.map(deployableCommand);
 	logger.info(
 		`${globalCommands.length} command(s) will be set globally: ${JSON.stringify(
-			globalCommands.map(cmd => `/${cmd.name}`)
+			commandBuilders.map(cmd => `${cmd.name}`)
 		)}`
 	);
 	logger.debug(`Deploying all ${globalCommands.length} global command(s)...`);
 	try {
-		await client.application.commands.set(globalCommands);
+		await client.application.commands.set(commandBuilders);
 		logger.info(`Set ${globalCommands.length} global command(s).`);
 	} catch (error) {
 		logger.error('Failed to set global commands:', error);
@@ -65,9 +61,10 @@ async function prepareGuildedCommands(
 	guildCommands: NonEmptyArray<GuildedCommand>,
 	client: Client<true>
 ): Promise<void> {
+	const commandBuilders = guildCommands.map(deployableCommand);
 	logger.info(
 		`${guildCommands.length} command(s) require a guild: ${JSON.stringify(
-			guildCommands.map(cmd => `/${cmd.name}`)
+			commandBuilders.map(cmd => `${cmd.name}`)
 		)}`
 	);
 	const oAuthGuilds = await client.guilds.fetch();
@@ -79,43 +76,32 @@ async function prepareCommandsForGuild(
 	guild: Guild,
 	guildCommands: Array<GuildedCommand>
 ): Promise<void> {
-	logger.info(`Deploying ${guildCommands.length} guild-bound command(s):`);
-
-	const payloads = guildCommands.map(cmd => {
-		logger.info(`\t'/${cmd.name}'  (requires guild)`);
-		return discordCommandPayloadFromCommand(cmd);
-	});
-
+	const commandBuilders = guildCommands.map(deployableCommand);
+	logger.info(
+		`Deploying ${guildCommands.length} guild-bound command(s): ${JSON.stringify(
+			commandBuilders.map(cmd => `${cmd.name}`)
+		)}`
+	);
 	try {
-		const result = await guild.commands.set(payloads);
+		const result = await guild.commands.set(commandBuilders);
 		logger.info(`Set ${result.size} command(s) on guild ${guild.id}`);
 	} catch (error) {
 		logger.error(`Failed to set commands on guild ${guild.id}:`, error);
 	}
 }
 
-function discordCommandPayloadFromCommand(cmd: Command): ApplicationCommandDataResolvable {
-	const payload: ApplicationCommandData = {
-		description: cmd.description,
-		type: cmd.type ?? ApplicationCommandType.ChatInput,
-		name: cmd.name,
-	};
-
-	if (cmd.nameLocalizations) {
-		payload.nameLocalizations = cmd.nameLocalizations;
-	}
-	if (cmd.descriptionLocalizations) {
-		payload.descriptionLocalizations = cmd.descriptionLocalizations;
-	}
-	if (cmd.options) {
-		payload.options = cmd.options;
-	}
-	if (cmd.defaultMemberPermissions !== undefined) {
-		payload.defaultMemberPermissions = cmd.defaultMemberPermissions;
-	}
-	if (cmd.dmPermission !== undefined) {
-		payload.dmPermission = cmd.dmPermission;
+/**
+ * Creates a deployable JSON payload from the given command.
+ */
+export function deployableCommand(cmd: Command): RESTPostAPIApplicationCommandsJSONBody {
+	if (isContextMenuCommand(cmd)) {
+		return cmd.info.setType(cmd.type).toJSON();
 	}
 
-	return payload;
+	// Slash commands are simpler:
+	return cmd.info.toJSON();
+}
+
+function isContextMenuCommand(cmd: Command): cmd is ContextMenuCommand {
+	return cmd.type === ApplicationCommandType.Message || cmd.type === ApplicationCommandType.User;
 }

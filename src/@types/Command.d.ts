@@ -1,15 +1,22 @@
 import type {
-	ApplicationCommandOption,
 	ApplicationCommandOptionType,
 	ApplicationCommandSubCommandData,
 	ApplicationCommandType,
-	ChatInputApplicationCommandData,
-	PermissionResolvable,
+	SlashCommandBuilder,
+	SlashCommandOptionsOnlyBuilder,
+	SlashCommandSubcommandsOnlyBuilder,
 } from 'discord.js';
 
 declare global {
-	interface BaseCommand extends ChatInputApplicationCommandData {
-		options?: NonEmptyArray<ApplicationCommandOption | Subcommand>;
+	interface BaseCommand {
+		/** Metadata about the command. */
+		info:
+			| SlashCommandBuilder
+			| SlashCommandSubcommandsOnlyBuilder
+			| SlashCommandOptionsOnlyBuilder
+			| Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'>;
+
+		/** The type of the command. */
 		type?: ApplicationCommandType.ChatInput;
 	}
 
@@ -17,30 +24,18 @@ declare global {
 		/** Whether the command requires a guild present to execute. */
 		requiresGuild: false;
 
-		/** The default permissions a user must have in a guild to invoke the command. */
-		defaultMemberPermissions?: undefined;
-
-		/** Whether users may invoke this command in DMs. */
-		dmPermission?: true;
-
 		/**
 		 * The command implementation. Receives contextual information about the
 		 * command invocation. May return a `Promise`.
 		 *
 		 * @param context Contextual information about the command invocation.
 		 */
-		execute: (context: CommandContext) => void | Promise<void>;
+		execute: (context: TextInputCommandContext) => void | Promise<void>;
 	}
 
 	interface GuildedCommand extends BaseCommand {
 		/** Whether the command requires a guild present to execute. */
 		requiresGuild: true;
-
-		/** The default permissions a user must have in order to invoke the command. */
-		defaultMemberPermissions?: PermissionResolvable;
-
-		/** Whether users may invoke this command in DMs. */
-		dmPermission?: false;
 
 		/**
 		 * The command implementation. Receives contextual information about the
@@ -51,7 +46,8 @@ declare global {
 		execute: (context: GuildedCommandContext) => void | Promise<void>;
 	}
 
-	type Command = GlobalCommand | GuildedCommand;
+	type Command = ChatInputCommand | ContextMenuCommand;
+	type ChatInputCommand = GlobalCommand | GuildedCommand;
 
 	interface BaseSubcommand extends ApplicationCommandSubCommandData {
 		type: ApplicationCommandOptionType.Subcommand;
@@ -60,12 +56,6 @@ declare global {
 	interface GlobalSubcommand extends BaseSubcommand {
 		/** Whether the subcommand requires a guild present to execute. */
 		requiresGuild: false;
-
-		/** The default permissions a user must have in order to invoke the command. */
-		defaultMemberPermissions?: undefined;
-
-		/** Whether users may invoke this command in DMs. */
-		dmPermission?: true;
 
 		/**
 		 * The command implementation. Receives contextual information about the
@@ -79,12 +69,6 @@ declare global {
 	interface GuildedSubcommand extends BaseSubcommand {
 		/** Whether the subcommand requires a guild present to execute. */
 		requiresGuild: true;
-
-		/** The default permissions a user must have in order to invoke the command. */
-		defaultMemberPermissions?: PermissionResolvable;
-
-		/** Whether users may invoke this command in DMs. */
-		dmPermission?: false;
 
 		/**
 		 * The command implementation. Receives contextual information about the

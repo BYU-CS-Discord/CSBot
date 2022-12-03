@@ -11,14 +11,14 @@ import { profile } from './profile';
 describe('profile', () => {
 	const mockReply = jest.fn();
 	const mockSendTyping = jest.fn();
-	let context: CommandContext;
+	let context: TextInputCommandContext;
 	const user = {} as unknown as User;
 
 	beforeEach(() => {
 		context = {
 			reply: mockReply,
 			sendTyping: mockSendTyping,
-		} as unknown as CommandContext;
+		} as unknown as TextInputCommandContext;
 		user.username = 'BobJoe';
 		user.id = '1234567890';
 		user.avatarURL = jest
@@ -29,7 +29,7 @@ describe('profile', () => {
 	test('Returns an ephemeral error message when an invalid input is recieved', async () => {
 		// they just need the number from the initial call
 
-		context = { ...context, options: [{ value: 1 }] } as unknown as CommandContext;
+		context = { ...context, options: [{ value: 1 }] } as unknown as TextInputCommandContext;
 		await expect(profile.execute(context)).resolves.toBeUndefined();
 		expect(mockReply).toHaveBeenCalledOnce();
 		expect(mockReply).toHaveBeenCalledWith({
@@ -39,7 +39,7 @@ describe('profile', () => {
 	});
 
 	test('Returns the url of the supplied users pp', async () => {
-		context = { ...context, options: [{ user }] } as unknown as CommandContext;
+		context = { ...context, options: [{ user }] } as unknown as TextInputCommandContext;
 		await expect(profile.execute(context)).toResolve();
 		expect(mockReply).toHaveBeenCalledOnce();
 		expect(mockReply).toHaveBeenCalledWith({

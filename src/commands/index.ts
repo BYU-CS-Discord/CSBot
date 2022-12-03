@@ -17,7 +17,7 @@ export const allCommands: ReadonlyMap<string, Command> = _allCommands;
  * @private
  */
 export function _add(cmd: Command): void {
-	const name = cmd.name;
+	const name = cmd.info.name;
 
 	if (_allCommands.has(name)) {
 		throw new TypeError(
@@ -32,6 +32,8 @@ export function _add(cmd: Command): void {
 import { help } from './help';
 import { xkcd } from './xkcd';
 import { profile } from './profile';
+import { fxtwitter } from './contextMenu/fxtwitter';
 _add(help);
 _add(xkcd);
 _add(profile);
+_add(fxtwitter);

@@ -10,16 +10,16 @@ import { help } from './help';
 
 describe('help', () => {
 	const mockReply = jest.fn();
-	let context: CommandContext;
+	let context: TextInputCommandContext;
 
 	beforeEach(() => {
 		context = {
 			reply: mockReply,
-		} as unknown as CommandContext;
+		} as unknown as TextInputCommandContext;
 	});
 
 	test('presents an ephemeral embed with general info', async () => {
-		context = { ...context, source: 'dm' } as unknown as CommandContext;
+		context = { ...context, source: 'dm' } as unknown as TextInputCommandContext;
 
 		await expect(help.execute(context)).resolves.toBeUndefined();
 		expect(mockReply).toHaveBeenCalledOnce();

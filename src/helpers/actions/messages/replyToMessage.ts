@@ -8,7 +8,7 @@ import type {
 	TextBasedChannel,
 	User,
 } from 'discord.js';
-import { ChannelType } from 'discord.js';
+import { ChannelType, channelMention, userMention } from 'discord.js';
 
 // Internal dependencies
 import * as logger from '../../../logger';
@@ -35,7 +35,7 @@ async function sendDM(user: User, content: string | MessageCreateOptions): Promi
 function replyMessage(source: TextBasedChannel | null, content: string | null | undefined): string {
 	let msg = '';
 	if (source && source.type !== ChannelType.DM) {
-		msg += `(Reply from <#${source.id}>)\n`;
+		msg += `(Reply from ${channelMention(source.id)})\n`;
 	}
 	msg += content ?? '';
 	return msg;
@@ -123,8 +123,9 @@ export async function replyWithPrivateMessage(
 	if (message === null) {
 		// Inform the user that we tried to DM them, but they have their DMs off
 		if ('author' in source) {
+			const authorMention = userMention(source.author.id);
 			await source.channel?.send(
-				`<@!${source.author.id}> I tried to DM you just now, but it looks like your DMs are off. :slight_frown:`
+				`${authorMention} I tried to DM you just now, but it looks like your DMs are off. :slight_frown:`
 			);
 		} else if (typeof options === 'string') {
 			return await sendEphemeralReply(source, {
