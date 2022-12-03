@@ -21,6 +21,7 @@ export async function _main(): Promise<void> {
 			GatewayIntentBits.GuildMessageReactions,
 			GatewayIntentBits.DirectMessages,
 			GatewayIntentBits.GuildMessageTyping,
+			GatewayIntentBits.GuildVoiceStates,
 		],
 		partials: [Partials.Reaction, Partials.Channel, Partials.Message],
 		allowedMentions: {

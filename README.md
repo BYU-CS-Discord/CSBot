@@ -152,11 +152,21 @@ Retrieves the profile picture of the given user.
 
 Retrieves the most recent [xkcd](https://xkcd.com/) comic, or the given one.
 
+### /talk
+
+Uses the [dectalk](https://github.com/babakinha/dectalk) text-to-speech engine to speak the message you give it,
+either sending a .wav file in a text channel or talking out loud in a voice channel. Comes with 9 different voices.
+
 ## Context Menu Commands
 
 ### Fix Twitter Links
 
 Transforms [twitter.com](https://twitter.com/) links in the given message to [FixTweet](https://github.com/FixTweet/FixTweet) links in an ephemeral reply. Please use fxtwitter in your own messages, especially when the tweet is a video. Twitter's default embed stinks on some platforms.
+
+### Talk
+
+Performs the same function as the `/talk` chat input command, but uses the selected message as input.
+Can be used to repeat the same 'talk' command without typing it out again.
 
 ## Contributing
 

@@ -63,28 +63,18 @@ describe('xkcd', () => {
 		} as unknown as TextInputCommandContext;
 	});
 
-	test('Returns an ephemeral error message when the number is out of bounds', async () => {
+	test('Throws an error when the number is out of bounds', async () => {
 		mockedAxios.get.mockResolvedValue(latestGood);
-		// they just need the number from the initial call
 
+		// they just need the number from the initial call
 		context = { ...context, options: [{ value: -1 }] } as unknown as TextInputCommandContext;
-		await expect(xkcd.execute(context)).resolves.toBeUndefined();
-		expect(mockReply).toHaveBeenCalledOnce();
+		await expect(xkcd.execute(context)).rejects.toThrow();
 		expect(mockSendTyping).toHaveBeenCalledOnce();
-		expect(mockReply).toHaveBeenCalledWith({
-			content: `Please insert a valid comic number. The range is 1-${latestGood.data.num}.`,
-			ephemeral: true,
-		});
 
 		context = { ...context, options: [{ value: 0 }] } as unknown as TextInputCommandContext;
 
-		await expect(xkcd.execute(context)).resolves.toBeUndefined();
-		expect(mockReply).toHaveBeenCalledTimes(2);
+		await expect(xkcd.execute(context)).rejects.toThrow();
 		expect(mockSendTyping).toHaveBeenCalledTimes(2);
-		expect(mockReply).toHaveBeenCalledWith({
-			content: `Please insert a valid comic number. The range is 1-${latestGood.data.num}.`,
-			ephemeral: true,
-		});
 	});
 
 	test('Returning an embed with the latest comic when no number is given', async () => {
@@ -122,13 +112,8 @@ describe('xkcd', () => {
 			...context,
 			options: [{ value: chosen.num }],
 		} as unknown as TextInputCommandContext;
-		await expect(xkcd.execute(context)).resolves.toBeUndefined();
-		expect(mockReply).toHaveBeenCalledOnce();
+		await expect(xkcd.execute(context)).rejects.toThrow();
 		expect(mockSendTyping).toHaveBeenCalledOnce();
-		expect(mockReply).toHaveBeenCalledWith({
-			content: 'XKCD call failed. Please try again later.',
-			ephemeral: true,
-		});
 	});
 
 	test('Checking when a first call to the API fails', async () => {
@@ -137,12 +122,7 @@ describe('xkcd', () => {
 			...context,
 			options: [{ value: chosen.num }],
 		} as unknown as TextInputCommandContext;
-		await expect(xkcd.execute(context)).resolves.toBeUndefined();
-		expect(mockReply).toHaveBeenCalledOnce();
+		await expect(xkcd.execute(context)).rejects.toThrow();
 		expect(mockSendTyping).toHaveBeenCalledOnce();
-		expect(mockReply).toHaveBeenCalledWith({
-			content: 'XKCD call failed. Please try again later.',
-			ephemeral: true,
-		});
 	});
 });

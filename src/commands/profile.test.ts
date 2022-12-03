@@ -62,7 +62,7 @@ describe('profile', () => {
 		mockGuildMembersFetch.mockResolvedValue(otherUser as unknown as GuildMember);
 	});
 
-	test('Returns an ephemeral error message when we fail to fetch the target member for an API reason', async () => {
+	test('Throws an error when we fail to fetch the target member for an API reason', async () => {
 		mockGuildMembersFetch.mockRejectedValue(
 			new DiscordAPIError(
 				{
@@ -78,33 +78,25 @@ describe('profile', () => {
 			)
 		);
 
-		await expect(profile.execute(context)).resolves.toBeUndefined();
-		expect(mockReply).not.toHaveBeenCalled();
-		expect(mockReplyPrivately).toHaveBeenCalledOnce();
-		expect(mockReplyPrivately).toHaveBeenCalledWith('An unhandled API error happened.');
+		await expect(profile.execute(context)).rejects.toThrow();
+		// 'An unhandled API error happened.'
 	});
 
-	test('Returns an ephemeral error message when we fail to fetch the target member for a stupid reason', async () => {
+	test('Throws an error when we fail to fetch the target member for a stupid reason', async () => {
 		mockGuildMembersFetch.mockRejectedValue(new Error('Not a DiscordAPIError instance.'));
 
-		await expect(profile.execute(context)).resolves.toBeUndefined();
-		expect(mockReply).not.toHaveBeenCalled();
-		expect(mockReplyPrivately).toHaveBeenCalledOnce();
-		expect(mockReplyPrivately).toHaveBeenCalledWith('Something went wrong.');
+		await expect(profile.execute(context)).rejects.toThrow();
+		// 'Something went wrong.'
 	});
 
-	test('Returns an ephemeral error message when the target user has no pfp', async () => {
+	test('Throws an error when the target user has no profile picture', async () => {
 		mockAvatarURL.mockReturnValue(null);
 
-		await expect(profile.execute(context)).resolves.toBeUndefined();
-		expect(mockReply).not.toHaveBeenCalled();
-		expect(mockReplyPrivately).toHaveBeenCalledOnce();
-		expect(mockReplyPrivately).toHaveBeenCalledWith(
-			expect.stringContaining("doesn't seem to have an avatar") as string
-		);
+		await expect(profile.execute(context)).rejects.toThrow();
+		// expect.stringContaining("doesn't seem to have an avatar") as string
 	});
 
-	test('Returns an ephemeral error message when the target user is not in the current guild', async () => {
+	test('Throws an error when the target user is not in the current guild', async () => {
 		mockGuildMembersFetch.mockRejectedValue(
 			new DiscordAPIError(
 				{
@@ -120,22 +112,18 @@ describe('profile', () => {
 			)
 		);
 
-		await expect(profile.execute(context)).resolves.toBeUndefined();
-		expect(mockReply).not.toHaveBeenCalled();
-		expect(mockReplyPrivately).toHaveBeenCalledOnce();
-		expect(mockReplyPrivately).toHaveBeenCalledWith("That user isn't here!");
+		await expect(profile.execute(context)).rejects.toThrow();
+		// "That user isn't here!"
 	});
 
-	test("Returns an ephemeral error message when trying to get another user's pfp in DMs", async () => {
+	test("Throws an error when trying to get another user's profile picture in DMs", async () => {
 		context = { ...context, guild: null, source: 'dm' } as unknown as TextInputCommandContext;
 
-		await expect(profile.execute(context)).resolves.toBeUndefined();
-		expect(mockReply).not.toHaveBeenCalled();
-		expect(mockReplyPrivately).toHaveBeenCalledOnce();
-		expect(mockReplyPrivately).toHaveBeenCalledWith("That user isn't here!");
+		await expect(profile.execute(context)).rejects.toThrow();
+		// "That user isn't here!"
 	});
 
-	test("Returns the url of the supplied user's pfp", async () => {
+	test("Returns the url of the supplied user's profile picture", async () => {
 		await expect(profile.execute(context)).resolves.toBeUndefined();
 		expect(mockReplyPrivately).not.toHaveBeenCalled();
 		expect(mockReply).toHaveBeenCalledOnce();
@@ -157,7 +145,7 @@ describe('profile', () => {
 		[false, false],
 		[false, true],
 	])(
-		"Returns the url of the caller's pfp (in DMs: %p, explicitly: %p)",
+		"Returns the url of the caller's profile picture (in DMs: %p, explicitly: %p)",
 		async (inDMs, explicitly) => {
 			if (inDMs) {
 				context = { ...context, guild: null, source: 'dm' } as unknown as TextInputCommandContext;
@@ -187,7 +175,7 @@ describe('profile', () => {
 	test.each([
 		true, //
 		false,
-	])("Returns the url of the bot's pfp (in DMs: %p)", async inDMs => {
+	])("Returns the url of the bot's profile picture (in DMs: %p)", async inDMs => {
 		if (inDMs) {
 			context = { ...context, guild: null, source: 'dm' } as unknown as TextInputCommandContext;
 		}
