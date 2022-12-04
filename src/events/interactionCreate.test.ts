@@ -1,13 +1,15 @@
 // Dependencies
 import type {
-	Interaction,
+	ApplicationCommandOptionChoiceData,
+	AutocompleteInteraction,
 	CommandInteraction,
-	TextBasedChannel,
-	UserContextMenuCommandInteraction,
-	User,
 	GuildMember,
-	MessageContextMenuCommandInteraction,
+	Interaction,
 	Message,
+	MessageContextMenuCommandInteraction,
+	TextBasedChannel,
+	User,
+	UserContextMenuCommandInteraction,
 } from 'discord.js';
 import {
 	ApplicationCommandType,
@@ -32,6 +34,17 @@ const mockGlobalCommand: ChatInputCommand = {
 	execute: mockGlobalExecute,
 };
 mockAllCommands.set(mockGlobalCommand.info.name, mockGlobalCommand);
+
+const mockGlobalAutocomplete = jest.fn().mockReturnValue([{ name: 'Sample', value: 'sample' }]);
+const mockGlobalAutocompleteCommand: ChatInputCommand = {
+	info: new SlashCommandBuilder() //
+		.setName('global-autocomplete-test')
+		.setDescription('lolcat'),
+	requiresGuild: false,
+	execute: mockGlobalExecute,
+	autocomplete: mockGlobalAutocomplete,
+};
+mockAllCommands.set(mockGlobalAutocompleteCommand.info.name, mockGlobalAutocompleteCommand);
 
 const mockMessageContextMenuCommand: MessageContextMenuCommand = {
 	info: new ContextMenuCommandBuilder()
@@ -125,244 +138,332 @@ function defaultInteraction(): Interaction {
 		},
 		isCommand: () => true,
 		isChatInputCommand: () => true,
+		isAutocomplete: () => false,
 	} as unknown as Interaction;
 }
 
 describe('on(interactionCreate)', () => {
-	test('logs interaction errors', async () => {
-		const interaction = defaultInteraction();
-		interaction.isCommand = (): boolean => {
-			throw interactionError;
-		};
+	describe('commands', () => {
+		test('logs interaction errors', async () => {
+			const interaction = defaultInteraction();
+			interaction.isCommand = (): boolean => {
+				throw interactionError;
+			};
 
-		await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
-		expect(mockLoggerError).toHaveBeenCalledWith(
-			expect.stringContaining('handle interaction'),
-			interactionError
-		);
-	});
+			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+			expect(mockLoggerError).toHaveBeenCalledWith(
+				expect.stringContaining('handle interaction'),
+				interactionError
+			);
+		});
 
-	test("does nothing if the interaction isn't a command", async () => {
-		const interaction = defaultInteraction();
-		interaction.isCommand = (): boolean => false;
+		test("does nothing if the interaction isn't a command", async () => {
+			const interaction = defaultInteraction();
+			interaction.isCommand = (): boolean => false;
 
-		await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
-		expect(mockGlobalExecute).not.toHaveBeenCalled();
-	});
+			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+			expect(mockGlobalExecute).not.toHaveBeenCalled();
+		});
 
-	test('does nothing if the sender is a bot', async () => {
-		const interaction = defaultInteraction();
-		interaction.user.bot = true;
+		test('does nothing if the sender is a bot', async () => {
+			const interaction = defaultInteraction();
+			interaction.user.bot = true;
 
-		await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
-		expect(mockGlobalExecute).not.toHaveBeenCalled();
-	});
+			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+			expect(mockGlobalExecute).not.toHaveBeenCalled();
+		});
 
-	test('does nothing if the sender is us', async () => {
-		const interaction = defaultInteraction();
-		interaction.user.id = selfUid;
+		test('does nothing if the sender is us', async () => {
+			const interaction = defaultInteraction();
+			interaction.user.id = selfUid;
 
-		await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
-		expect(mockGlobalExecute).not.toHaveBeenCalled();
-	});
+			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+			expect(mockGlobalExecute).not.toHaveBeenCalled();
+		});
 
-	test('does nothing if the command is not found', async () => {
-		const interaction = defaultInteraction();
-		(interaction as CommandInteraction).commandName = 'nop';
+		test('does nothing if the command is not found', async () => {
+			const interaction = defaultInteraction();
+			(interaction as CommandInteraction).commandName = 'nop';
 
-		await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
-		expect(mockGlobalExecute).not.toHaveBeenCalled();
-	});
+			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+			expect(mockGlobalExecute).not.toHaveBeenCalled();
+		});
 
-	test('calls the `execute` method of a global command from a guild', async () => {
-		const interaction = defaultInteraction();
+		test('calls the `execute` method of a global command from a guild', async () => {
+			const interaction = defaultInteraction();
 
-		await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
-		expect(mockGlobalExecute).toHaveBeenCalledOnce();
-	});
+			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+			expect(mockGlobalExecute).toHaveBeenCalledOnce();
+		});
 
-	test('calls the `execute` method of a global command from DMs', async () => {
-		let interaction = defaultInteraction();
-		interaction.inCachedGuild = (): boolean => false;
-		interaction.inGuild = (): boolean => false;
-		interaction.member = null;
+		test('calls the `execute` method of a global command from DMs', async () => {
+			let interaction = defaultInteraction();
+			interaction.inCachedGuild = (): boolean => false;
+			interaction.inGuild = (): boolean => false;
+			interaction.member = null;
 
-		const channel = {
-			type: ChannelType.DM,
-		} as unknown as TextBasedChannel;
+			const channel = {
+				type: ChannelType.DM,
+			} as unknown as TextBasedChannel;
 
-		const guild = null;
+			const guild = null;
 
-		// Overwrite 'read-only' parameters of Interaction
-		interaction = {
-			...interaction,
-			guild: guild,
-			channel: channel,
-		} as unknown as Interaction;
+			// Overwrite 'read-only' parameters of Interaction
+			interaction = {
+				...interaction,
+				guild: guild,
+				channel: channel,
+			} as unknown as Interaction;
 
-		await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
-		expect(mockGlobalExecute).toHaveBeenCalledOnce();
-	});
+			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+			expect(mockGlobalExecute).toHaveBeenCalledOnce();
+		});
 
-	test('calls the `execute` method of a guilded command from a guild', async () => {
-		const interaction = defaultInteraction();
-		(interaction as CommandInteraction).commandName = mockGuildedCommand.info.name;
+		test('calls the `execute` method of a guilded command from a guild', async () => {
+			const interaction = defaultInteraction();
+			(interaction as CommandInteraction).commandName = mockGuildedCommand.info.name;
 
-		await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
-		expect(mockGuildedExecute).toHaveBeenCalledOnce();
-	});
+			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+			expect(mockGuildedExecute).toHaveBeenCalledOnce();
+		});
 
-	test('tells the user off when they try to execute a guilded command from DMs', async () => {
-		let interaction = defaultInteraction();
-		(interaction as CommandInteraction).commandName = mockGuildedCommand.info.name;
-		interaction.inCachedGuild = (): boolean => false;
-		interaction.inGuild = (): boolean => false;
-		interaction.member = null;
+		test('tells the user off when they try to execute a guilded command from DMs', async () => {
+			let interaction = defaultInteraction();
+			(interaction as CommandInteraction).commandName = mockGuildedCommand.info.name;
+			interaction.inCachedGuild = (): boolean => false;
+			interaction.inGuild = (): boolean => false;
+			interaction.member = null;
 
-		const channel = {
-			type: ChannelType.DM,
-		} as unknown as TextBasedChannel;
+			const channel = {
+				type: ChannelType.DM,
+			} as unknown as TextBasedChannel;
 
-		const guild = null;
+			const guild = null;
 
-		// Overwrite 'read-only' parameters of Interaction
-		interaction = {
-			...interaction,
-			guild: guild,
-			channel: channel,
-		} as unknown as Interaction;
+			// Overwrite 'read-only' parameters of Interaction
+			interaction = {
+				...interaction,
+				guild: guild,
+				channel: channel,
+			} as unknown as Interaction;
 
-		const mockInteractionReply = jest.fn();
-		(interaction as CommandInteraction).reply = mockInteractionReply;
+			const mockInteractionReply = jest.fn();
+			(interaction as CommandInteraction).reply = mockInteractionReply;
 
-		await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
-		expect(mockGuildedExecute).not.toHaveBeenCalled();
-		expect(mockInteractionReply).toHaveBeenCalledWith({
-			content: "Can't do that here",
-			ephemeral: true,
+			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+			expect(mockGuildedExecute).not.toHaveBeenCalled();
+			expect(mockInteractionReply).toHaveBeenCalledWith({
+				content: "Can't do that here",
+				ephemeral: true,
+			});
+		});
+
+		test('sends an error embed message when global command throws an error', async () => {
+			const interaction = defaultInteraction();
+			(interaction as CommandInteraction).commandName = mockErrorGlobalCommand.info.name;
+
+			const mockInteractionReply = jest.fn();
+			(interaction as CommandInteraction).reply = mockInteractionReply;
+
+			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+			expect(mockInteractionReply).toHaveBeenCalledOnce();
+		});
+
+		test('sends an error embed message when guilded command throws an error', async () => {
+			const interaction = defaultInteraction();
+			(interaction as CommandInteraction).commandName = mockErrorGuildedCommand.info.name;
+
+			const mockInteractionReply = jest.fn();
+			(interaction as CommandInteraction).reply = mockInteractionReply;
+
+			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+			expect(mockInteractionReply).toHaveBeenCalledOnce();
+		});
+
+		// This is for 100% code coverage
+		test('fetches the channel when a command comes from a partial DM channel', async () => {
+			let interaction = defaultInteraction();
+			interaction.inCachedGuild = (): boolean => false;
+			interaction.inGuild = (): boolean => false;
+			interaction.member = null;
+
+			const mockChannelFetch = jest.fn();
+			const channel = {
+				type: ChannelType.DM,
+				partial: true,
+				fetch: mockChannelFetch,
+			} as unknown as TextBasedChannel;
+
+			const guild = null;
+
+			// Overwrite 'read-only' parameters of Interaction
+			interaction = {
+				...interaction,
+				guild: guild,
+				channel: channel,
+			} as unknown as Interaction;
+
+			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+			expect(mockChannelFetch).toHaveBeenCalledOnce();
+		});
+
+		test('throws an error if the command is a context menu user command and the interaction is not', async () => {
+			const interaction = defaultInteraction() as UserContextMenuCommandInteraction;
+			interaction.isUserContextMenuCommand = (): boolean => false;
+			interaction.isMessageContextMenuCommand = (): boolean => false;
+			interaction.commandName = mockUserContextMenuCommand.info.name;
+
+			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+			expect(mockGlobalExecute).not.toHaveBeenCalled();
+			expect(mockLoggerError).toHaveBeenCalledWith(
+				expect.stringContaining('handle interaction'),
+				new TypeError('Expected a User Context Menu Command interaction')
+			);
+		});
+
+		test('throws an error if the command is a context menu message command and the interaction is not', async () => {
+			const interaction = defaultInteraction() as UserContextMenuCommandInteraction;
+			interaction.isUserContextMenuCommand = (): boolean => false;
+			interaction.isMessageContextMenuCommand = (): boolean => false;
+			interaction.commandName = mockMessageContextMenuCommand.info.name;
+
+			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+			expect(mockGlobalExecute).not.toHaveBeenCalled();
+			expect(mockLoggerError).toHaveBeenCalledWith(
+				expect.stringContaining('handle interaction'),
+				new TypeError('Expected a Message Context Menu Command interaction')
+			);
+		});
+
+		test('fetches the member target from a partial guild member', async () => {
+			const interaction = defaultInteraction() as UserContextMenuCommandInteraction;
+			interaction.isChatInputCommand = (): boolean => false;
+			interaction.isUserContextMenuCommand = (): boolean => true;
+			interaction.inCachedGuild = (): boolean => false;
+			interaction.targetId = 'target-user-1234';
+			(interaction as { targetUser: Pick<User, 'id'> }).targetUser = { id: 'target-user-1234' };
+			interaction.commandName = mockUserContextMenuCommand.info.name;
+
+			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+			expect(mockGuildMembersFetch).toHaveBeenCalledWith(interaction.targetId);
+			expect(mockGlobalExecute).toHaveBeenCalledOnce();
+		});
+
+		test('executes the user context menu command', async () => {
+			const interaction = defaultInteraction() as UserContextMenuCommandInteraction;
+			interaction.isChatInputCommand = (): boolean => false;
+			interaction.isUserContextMenuCommand = (): boolean => true;
+			interaction.isMessageContextMenuCommand = (): boolean => false;
+			interaction.targetId = 'target-user-1234';
+			(interaction as { targetUser: Pick<User, 'id'> }).targetUser = { id: 'target-user-1234' };
+			(interaction as { targetMember: Pick<GuildMember, 'id'> }).targetMember = {
+				id: 'target-member-1234',
+			};
+			interaction.commandName = mockUserContextMenuCommand.info.name;
+
+			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+			expect(mockGuildMembersFetch).not.toHaveBeenCalled();
+			expect(mockGlobalExecute).toHaveBeenCalledOnce();
+		});
+
+		test('executes the message context menu command', async () => {
+			const interaction = defaultInteraction() as MessageContextMenuCommandInteraction;
+			interaction.isChatInputCommand = (): boolean => false;
+			interaction.isUserContextMenuCommand = (): boolean => false;
+			interaction.isMessageContextMenuCommand = (): boolean => true;
+			interaction.targetId = 'target-msg-1234';
+			(interaction as { targetMessage: Pick<Message, 'id'> }).targetMessage = {
+				id: interaction.targetId,
+			};
+			interaction.commandName = mockMessageContextMenuCommand.info.name;
+
+			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+			expect(mockGlobalExecute).toHaveBeenCalledOnce();
 		});
 	});
 
-	test('sends an error embed message when global command throws an error', async () => {
-		const interaction = defaultInteraction();
-		(interaction as CommandInteraction).commandName = mockErrorGlobalCommand.info.name;
+	describe('autocomplete', () => {
+		const mockRespond = jest.fn<
+			Promise<void>,
+			[options: Array<ApplicationCommandOptionChoiceData>]
+		>();
 
-		const mockInteractionReply = jest.fn();
-		(interaction as CommandInteraction).reply = mockInteractionReply;
+		let interaction: AutocompleteInteraction;
 
-		await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
-		expect(mockInteractionReply).toHaveBeenCalledOnce();
-	});
+		beforeEach(() => {
+			interaction = defaultInteraction() as AutocompleteInteraction;
+			interaction.isAutocomplete = (): boolean => true;
+			interaction.isCommand = (): boolean => false;
+			interaction.isChatInputCommand = (): boolean => false;
+			interaction.respond = mockRespond;
+			interaction.commandName = mockGlobalAutocompleteCommand.info.name;
+		});
 
-	test('sends an error embed message when guilded command throws an error', async () => {
-		const interaction = defaultInteraction();
-		(interaction as CommandInteraction).commandName = mockErrorGuildedCommand.info.name;
+		test('returns zero results if the command is not found', async () => {
+			interaction.commandName = 'nop';
 
-		const mockInteractionReply = jest.fn();
-		(interaction as CommandInteraction).reply = mockInteractionReply;
+			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+			expect(mockGlobalExecute).not.toHaveBeenCalled();
+			expect(mockGuildedExecute).not.toHaveBeenCalled();
+			expect(mockRespond).toHaveBeenCalledOnce();
+			expect(mockRespond).toHaveBeenCalledWith([]);
+			expect(mockGlobalAutocomplete).not.toHaveBeenCalled();
+		});
 
-		await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
-		expect(mockInteractionReply).toHaveBeenCalledOnce();
-	});
+		test('returns zero results if the command is a message context menu command', async () => {
+			interaction.commandName = mockMessageContextMenuCommand.info.name;
 
-	// This is for 100% code coverage
-	test('fetches the channel when a command comes from a partial DM channel', async () => {
-		let interaction = defaultInteraction();
-		interaction.inCachedGuild = (): boolean => false;
-		interaction.inGuild = (): boolean => false;
-		interaction.member = null;
+			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+			expect(mockGlobalExecute).not.toHaveBeenCalled();
+			expect(mockGuildedExecute).not.toHaveBeenCalled();
+			expect(mockRespond).toHaveBeenCalledOnce();
+			expect(mockRespond).toHaveBeenCalledWith([]);
+			expect(mockGlobalAutocomplete).not.toHaveBeenCalled();
+		});
 
-		const mockChannelFetch = jest.fn();
-		const channel = {
-			type: ChannelType.DM,
-			partial: true,
-			fetch: mockChannelFetch,
-		} as unknown as TextBasedChannel;
+		test('returns zero results if the command is a user context menu command', async () => {
+			interaction.commandName = mockUserContextMenuCommand.info.name;
 
-		const guild = null;
+			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+			expect(mockGlobalExecute).not.toHaveBeenCalled();
+			expect(mockGuildedExecute).not.toHaveBeenCalled();
+			expect(mockRespond).toHaveBeenCalledOnce();
+			expect(mockRespond).toHaveBeenCalledWith([]);
+			expect(mockGlobalAutocomplete).not.toHaveBeenCalled();
+		});
 
-		// Overwrite 'read-only' parameters of Interaction
-		interaction = {
-			...interaction,
-			guild: guild,
-			channel: channel,
-		} as unknown as Interaction;
+		test('returns zero results if the command has no autocomplete handler', async () => {
+			interaction.commandName = mockGlobalCommand.info.name;
 
-		await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
-		expect(mockChannelFetch).toHaveBeenCalledOnce();
-	});
+			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+			expect(mockGlobalExecute).not.toHaveBeenCalled();
+			expect(mockGuildedExecute).not.toHaveBeenCalled();
+			expect(mockRespond).toHaveBeenCalledOnce();
+			expect(mockRespond).toHaveBeenCalledWith([]);
+			expect(mockGlobalAutocomplete).not.toHaveBeenCalled();
+		});
 
-	test('throws an error if the command is a context menu user command and the interaction is not', async () => {
-		const interaction = defaultInteraction() as UserContextMenuCommandInteraction;
-		interaction.isUserContextMenuCommand = (): boolean => false;
-		interaction.isMessageContextMenuCommand = (): boolean => false;
-		interaction.commandName = mockUserContextMenuCommand.info.name;
+		test("responds with the command's autocomplete values", async () => {
+			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+			expect(mockGlobalExecute).not.toHaveBeenCalled();
+			expect(mockGuildedExecute).not.toHaveBeenCalled();
+			expect(mockRespond).toHaveBeenCalledOnce();
+			expect(mockGlobalAutocomplete).toHaveBeenCalledOnce();
+			expect(mockGlobalAutocomplete).toHaveBeenCalledWith(interaction);
+		});
 
-		await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
-		expect(mockGlobalExecute).not.toHaveBeenCalled();
-		expect(mockLoggerError).toHaveBeenCalledWith(
-			expect.stringContaining('handle interaction'),
-			new TypeError('Expected a User Context Menu Command interaction')
-		);
-	});
+		test('returns zero results if theres an error fetching the autocomplete values', async () => {
+			mockGlobalAutocomplete.mockImplementationOnce(() => {
+				throw new Error('test error');
+			});
 
-	test('throws an error if the command is a context menu message command and the interaction is not', async () => {
-		const interaction = defaultInteraction() as UserContextMenuCommandInteraction;
-		interaction.isUserContextMenuCommand = (): boolean => false;
-		interaction.isMessageContextMenuCommand = (): boolean => false;
-		interaction.commandName = mockMessageContextMenuCommand.info.name;
-
-		await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
-		expect(mockGlobalExecute).not.toHaveBeenCalled();
-		expect(mockLoggerError).toHaveBeenCalledWith(
-			expect.stringContaining('handle interaction'),
-			new TypeError('Expected a Message Context Menu Command interaction')
-		);
-	});
-
-	test('fetches the member target from a partial guild member', async () => {
-		const interaction = defaultInteraction() as UserContextMenuCommandInteraction;
-		interaction.isChatInputCommand = (): boolean => false;
-		interaction.isUserContextMenuCommand = (): boolean => true;
-		interaction.inCachedGuild = (): boolean => false;
-		interaction.targetId = 'target-user-1234';
-		(interaction as { targetUser: Pick<User, 'id'> }).targetUser = { id: 'target-user-1234' };
-		interaction.commandName = mockUserContextMenuCommand.info.name;
-
-		await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
-		expect(mockGuildMembersFetch).toHaveBeenCalledWith(interaction.targetId);
-		expect(mockGlobalExecute).toHaveBeenCalledOnce();
-	});
-
-	test('executes the user context menu command', async () => {
-		const interaction = defaultInteraction() as UserContextMenuCommandInteraction;
-		interaction.isChatInputCommand = (): boolean => false;
-		interaction.isUserContextMenuCommand = (): boolean => true;
-		interaction.isMessageContextMenuCommand = (): boolean => false;
-		interaction.targetId = 'target-user-1234';
-		(interaction as { targetUser: Pick<User, 'id'> }).targetUser = { id: 'target-user-1234' };
-		(interaction as { targetMember: Pick<GuildMember, 'id'> }).targetMember = {
-			id: 'target-member-1234',
-		};
-		interaction.commandName = mockUserContextMenuCommand.info.name;
-
-		await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
-		expect(mockGuildMembersFetch).not.toHaveBeenCalled();
-		expect(mockGlobalExecute).toHaveBeenCalledOnce();
-	});
-
-	test('executes the message context menu command', async () => {
-		const interaction = defaultInteraction() as MessageContextMenuCommandInteraction;
-		interaction.isChatInputCommand = (): boolean => false;
-		interaction.isUserContextMenuCommand = (): boolean => false;
-		interaction.isMessageContextMenuCommand = (): boolean => true;
-		interaction.targetId = 'target-msg-1234';
-		(interaction as { targetMessage: Pick<Message, 'id'> }).targetMessage = {
-			id: interaction.targetId,
-		};
-		interaction.commandName = mockMessageContextMenuCommand.info.name;
-
-		await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
-		expect(mockGlobalExecute).toHaveBeenCalledOnce();
+			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+			expect(mockGlobalExecute).not.toHaveBeenCalled();
+			expect(mockGuildedExecute).not.toHaveBeenCalled();
+			expect(mockRespond).toHaveBeenCalledOnce();
+			expect(mockRespond).toHaveBeenCalledWith([]);
+			expect(mockGlobalAutocomplete).toHaveBeenCalledOnce();
+			expect(mockGlobalAutocomplete).toHaveBeenCalledWith(interaction);
+		});
 	});
 });
