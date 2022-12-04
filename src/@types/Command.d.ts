@@ -1,7 +1,9 @@
 import type {
+	ApplicationCommandOptionChoiceData,
 	ApplicationCommandOptionType,
 	ApplicationCommandSubCommandData,
 	ApplicationCommandType,
+	AutocompleteInteraction,
 	SlashCommandBuilder,
 	SlashCommandOptionsOnlyBuilder,
 	SlashCommandSubcommandsOnlyBuilder,
@@ -18,6 +20,17 @@ declare global {
 
 		/** The type of the command. */
 		type?: ApplicationCommandType.ChatInput;
+
+		/**
+		 * A handler for autocomplete requests.
+		 *
+		 * @param interaction The autocomplete request.
+		 * @returns the available choices. Due to API limitations, only the
+		 * first 25 of these are used.
+		 */
+		autocomplete?: (
+			interaction: Omit<AutocompleteInteraction, 'respond'>
+		) => Array<ApplicationCommandOptionChoiceData>;
 	}
 
 	interface GlobalCommand extends BaseCommand {
