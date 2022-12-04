@@ -56,6 +56,21 @@ const mockMessageContextMenuCommand: MessageContextMenuCommand = {
 };
 mockAllCommands.set(mockMessageContextMenuCommand.info.name, mockMessageContextMenuCommand);
 
+const mockErrorMessageContextMenuCommand: MessageContextMenuCommand = {
+	info: new ContextMenuCommandBuilder()
+		.setName("Don't Do The Thing To This Msg")
+		.setType(ApplicationCommandType.Message),
+	type: ApplicationCommandType.Message,
+	requiresGuild: false,
+	execute: () => {
+		throw new Error('Command error, this is a test');
+	},
+};
+mockAllCommands.set(
+	mockErrorMessageContextMenuCommand.info.name,
+	mockErrorMessageContextMenuCommand
+);
+
 const mockUserContextMenuCommand: UserContextMenuCommand = {
 	info: new ContextMenuCommandBuilder()
 		.setName('Do The Thing To This User')
@@ -66,6 +81,18 @@ const mockUserContextMenuCommand: UserContextMenuCommand = {
 };
 mockAllCommands.set(mockUserContextMenuCommand.info.name, mockUserContextMenuCommand);
 
+const mockErrorUserContextMenuCommand: UserContextMenuCommand = {
+	info: new ContextMenuCommandBuilder()
+		.setName("Don't Do The Thing To This User")
+		.setType(ApplicationCommandType.User),
+	type: ApplicationCommandType.User,
+	requiresGuild: false,
+	execute: () => {
+		throw new Error('Command error, this is a test');
+	},
+};
+mockAllCommands.set(mockErrorUserContextMenuCommand.info.name, mockErrorUserContextMenuCommand);
+
 const mockGuildedExecute = jest.fn();
 const mockGuildedCommand: ChatInputCommand = {
 	info: new SlashCommandBuilder() //
@@ -75,16 +102,22 @@ const mockGuildedCommand: ChatInputCommand = {
 	execute: mockGuildedExecute,
 };
 mockAllCommands.set(mockGuildedCommand.info.name, mockGuildedCommand);
+
 const mockErrorGlobalCommand: Command = {
-	info: new SlashCommandBuilder().setName('global-error-test').setDescription('whoops'),
+	info: new SlashCommandBuilder() //
+		.setName('global-error-test')
+		.setDescription('whoops'),
 	requiresGuild: false,
 	execute: () => {
 		throw new Error('Command error, this is a test');
 	},
 };
 mockAllCommands.set(mockErrorGlobalCommand.info.name, mockErrorGlobalCommand);
+
 const mockErrorGuildedCommand: Command = {
-	info: new SlashCommandBuilder().setName('guilded-error-test').setDescription('whoops'),
+	info: new SlashCommandBuilder() //
+		.setName('guilded-error-test')
+		.setDescription('whoops'),
 	requiresGuild: true,
 	execute: () => {
 		throw new Error('Command error, this is a test');
@@ -280,6 +313,31 @@ describe('on(interactionCreate)', () => {
 			expect(mockInteractionReply).toHaveBeenCalledOnce();
 		});
 
+		test('sends an error embed message when message context menu command throws an error', async () => {
+			const interaction = defaultInteraction();
+			(interaction as CommandInteraction).commandName =
+				mockErrorMessageContextMenuCommand.info.name;
+
+			const mockInteractionReply = jest.fn();
+			(interaction as CommandInteraction).reply = mockInteractionReply;
+			(interaction as CommandInteraction).isMessageContextMenuCommand = (): boolean => true;
+
+			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+			expect(mockInteractionReply).toHaveBeenCalledOnce();
+		});
+
+		test('sends an error embed message when user context menu command throws an error', async () => {
+			const interaction = defaultInteraction();
+			(interaction as CommandInteraction).commandName = mockErrorUserContextMenuCommand.info.name;
+
+			const mockInteractionReply = jest.fn();
+			(interaction as CommandInteraction).reply = mockInteractionReply;
+			(interaction as CommandInteraction).isUserContextMenuCommand = (): boolean => true;
+
+			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+			expect(mockInteractionReply).toHaveBeenCalledOnce();
+		});
+
 		// This is for 100% code coverage
 		test('fetches the channel when a command comes from a partial DM channel', async () => {
 			let interaction = defaultInteraction();
@@ -456,6 +514,21 @@ describe('on(interactionCreate)', () => {
 			mockGlobalAutocomplete.mockImplementationOnce(() => {
 				throw new Error('test error');
 			});
+
+			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+			expect(mockGlobalExecute).not.toHaveBeenCalled();
+			expect(mockGuildedExecute).not.toHaveBeenCalled();
+			expect(mockRespond).toHaveBeenCalledOnce();
+			expect(mockRespond).toHaveBeenCalledWith([]);
+			expect(mockGlobalAutocomplete).toHaveBeenCalledOnce();
+			expect(mockGlobalAutocomplete).toHaveBeenCalledWith(interaction);
+		});
+
+		test('doesn\t die if the error handler fails to respond with zero results', async () => {
+			mockGlobalAutocomplete.mockImplementationOnce(() => {
+				throw new Error('test error');
+			});
+			mockRespond.mockRejectedValueOnce(new Error('test error about the error'));
 
 			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 			expect(mockGlobalExecute).not.toHaveBeenCalled();
