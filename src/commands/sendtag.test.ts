@@ -1,3 +1,4 @@
+import type { AutocompleteInteraction } from 'discord.js';
 import { sendtag } from './sendtag';
 
 describe('sendtag', () => {
@@ -12,6 +13,7 @@ describe('sendtag', () => {
 			interaction: {
 				options: {
 					getString: mockGetString,
+					getFocused: () => '',
 				},
 			},
 		} as unknown as GuildedCommandContext;
@@ -26,5 +28,11 @@ describe('sendtag', () => {
 		await expect(sendtag.execute(context)).resolves.toBeUndefined();
 		expect(mockReply).toHaveBeenCalledOnce();
 		expect(mockReply).toHaveBeenCalledWith(`You requested the '${value}' tag!`);
+	});
+
+	test('returns an array for autocomplete', () => {
+		expect(
+			sendtag.autocomplete?.(context.interaction as unknown as AutocompleteInteraction)
+		).toBeArray();
 	});
 });
