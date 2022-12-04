@@ -27,12 +27,13 @@ datasource db {
 //     userId    String
 // }
 
-// model Tag {
-// 	id        Int      @id @default(autoincrement())
-// 	createdAt DateTime @default(now())
-// 	name      String   @unique
-// 	content   String
-// }
+model Tag {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  name      String   @unique
+  content   String
+  //numUses   Int
+}
 
 // model User {
 // 	id             Int      @id @default(autoincrement())

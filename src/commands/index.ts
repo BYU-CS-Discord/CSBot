@@ -32,8 +32,13 @@ export function _add(cmd: Command): void {
 import { help } from './help';
 import { xkcd } from './xkcd';
 import { profile } from './profile';
+// Tag and Read can be combined into one command, but I'm doing it this way at this stage for ease of testing.
+import { tag } from './tag';
+import { read } from './read';
 import { fxtwitter } from './contextMenu/fxtwitter';
 _add(help);
 _add(xkcd);
 _add(profile);
+_add(tag);
+_add(read);
 _add(fxtwitter);
