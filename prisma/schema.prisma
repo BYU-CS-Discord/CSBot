@@ -9,3 +9,48 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+// All our Models will be defined here
+// Below is an example of what one would look like in our usecase
+// NOTE NOTHING HERE IS FINAL, THIS IS JUST AN EXAMPLE
+// Idk what I am doing
+
+// model Emoteboard {
+//     id        Int      @id @default(autoincrement())
+//     createdAt DateTime @default(now())
+//     author    String
+//     postId    String   @unique
+//     count     Int
+//     emote     Emote    @default(STAR)
+//     channel   String
+//     guild     String
+//     userId    String
+// }
+
+// model Tag {
+// 	id        Int      @id @default(autoincrement())
+// 	createdAt DateTime @default(now())
+// 	name      String   @unique
+// 	content   String
+// }
+
+// model User {
+// 	id             Int      @id @default(autoincrement())
+// 	createdAt      DateTime @default(now())
+// 	userId         String   @unique
+//  starredCount   Int
+//  leaderboards   Leaderboard[]
+// }
+
+// model Leaderboard {
+// 	id         Int      @id @default(autoincrement())
+// 	createdAt  DateTime @default(now())
+//  name       String
+//  users	   User[]
+//  userCounts Int[]
+// }
+
+// enum Emote {
+//     STAR
+//     BASED
+// }
