@@ -34,12 +34,12 @@ export const interactionCreate = onEvent('interactionCreate', {
 			if (interaction.user.id === interaction.client.user.id) return;
 
 			if (interaction.isCommand()) {
-				const context = await handleInteraction(interaction);
+				const context = await generateContext(interaction);
 				await handleCommandInteraction(context, interaction);
 			}
 
 			if (interaction.isButton()) {
-				const context = await handleInteraction(interaction);
+				const context = await generateContext(interaction);
 				await handleButtonInteraction(context, interaction);
 			}
 		} catch (error) {
@@ -71,6 +71,7 @@ async function handleCommandInteraction(
 	const command = allCommands.get(interaction.commandName);
 	if (!command) {
 		logger.warn(`Received request to execute unknown command named '${interaction.commandName}'`);
+		// TODO: include some kind of error message here, using the pattern in PR #63
 		return;
 	}
 
@@ -219,6 +220,7 @@ async function handleButtonInteraction(
 	const button = allButtons.get(interaction.customId);
 	if (!button) {
 		logger.warn(`Received request to execute unknown button with id '${interaction.customId}'`);
+		// TODO: include some kind of error message here, using the pattern in PR #63
 		return;
 	}
 
@@ -233,7 +235,7 @@ async function handleButtonInteraction(
 	return await button.execute(buttonContext);
 }
 
-async function handleInteraction(interaction: RepliableInteraction): Promise<InteractionContext> {
+async function generateContext(interaction: RepliableInteraction): Promise<InteractionContext> {
 	const guild = interaction.guild;
 
 	let member: GuildMember | null;
