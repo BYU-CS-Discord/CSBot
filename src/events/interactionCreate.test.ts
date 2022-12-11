@@ -62,6 +62,22 @@ const mockGuildedCommand: ChatInputCommand = {
 	execute: mockGuildedExecute,
 };
 mockAllCommands.set(mockGuildedCommand.info.name, mockGuildedCommand);
+const mockErrorGlobalCommand: Command = {
+	info: new SlashCommandBuilder().setName('global-error-test').setDescription('whoops'),
+	requiresGuild: false,
+	execute: () => {
+		throw new Error('Command error, this is a test');
+	},
+};
+mockAllCommands.set(mockErrorGlobalCommand.info.name, mockErrorGlobalCommand);
+const mockErrorGuildedCommand: Command = {
+	info: new SlashCommandBuilder().setName('guilded-error-test').setDescription('whoops'),
+	requiresGuild: true,
+	execute: () => {
+		throw new Error('Command error, this is a test');
+	},
+};
+mockAllCommands.set(mockErrorGuildedCommand.info.name, mockErrorGuildedCommand);
 
 // Mock the logger to track output
 jest.mock('../logger');
@@ -227,6 +243,29 @@ describe('on(interactionCreate)', () => {
 		});
 	});
 
+	test('sends an error embed message when global command throws an error', async () => {
+		const interaction = defaultInteraction();
+		(interaction as CommandInteraction).commandName = mockErrorGlobalCommand.info.name;
+
+		const mockInteractionReply = jest.fn();
+		(interaction as CommandInteraction).reply = mockInteractionReply;
+
+		await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+		expect(mockInteractionReply).toHaveBeenCalledOnce();
+	});
+
+	test('sends an error embed message when guilded command throws an error', async () => {
+		const interaction = defaultInteraction();
+		(interaction as CommandInteraction).commandName = mockErrorGuildedCommand.info.name;
+
+		const mockInteractionReply = jest.fn();
+		(interaction as CommandInteraction).reply = mockInteractionReply;
+
+		await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+		expect(mockInteractionReply).toHaveBeenCalledOnce();
+	});
+
+	// This is for 100% code coverage
 	test('fetches the channel when a command comes from a partial DM channel', async () => {
 		let interaction = defaultInteraction();
 		interaction.inCachedGuild = (): boolean => false;

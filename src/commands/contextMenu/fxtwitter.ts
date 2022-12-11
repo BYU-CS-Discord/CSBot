@@ -11,8 +11,7 @@ export const fxtwitter: MessageContextMenuCommand = {
 
 		const urlRanges = positionsOfUriInText(content);
 		if (urlRanges === null) {
-			await replyPrivately('There were no URLs found in the message.');
-			return;
+			throw new Error('There were no URLs found in the message.');
 		}
 
 		const urls: Array<URL> = [];
@@ -30,8 +29,7 @@ export const fxtwitter: MessageContextMenuCommand = {
 		}
 
 		if (urls.length === 0) {
-			await replyPrivately('There were no Twitter URLs found in the message.');
-			return;
+			throw new Error('There were no Twitter URLs found in the message.');
 		}
 
 		// Print each fixed link in an ephemeral message, separated by newlines

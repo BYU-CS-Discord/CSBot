@@ -1,6 +1,7 @@
 // External dependencies
+import toString from 'lodash/toString';
 import type { CommandInteraction, DMChannel, GuildMember, GuildTextBasedChannel } from 'discord.js';
-import { ApplicationCommandType, ChannelType } from 'discord.js';
+import { EmbedBuilder, Colors, ApplicationCommandType, ChannelType } from 'discord.js';
 
 // Internal dependencies
 import * as logger from '../logger';
@@ -130,7 +131,13 @@ async function handleInteraction(interaction: CommandInteraction): Promise<void>
 				targetMember: null,
 				options: null,
 			};
-			return await command.execute(messageContextMenuCommandContext);
+
+			try {
+				return await command.execute(messageContextMenuCommandContext);
+			} catch (error) {
+				await sendErrorMessage(command, messageContextMenuCommandContext, error);
+				return;
+			}
 		} else if ('type' in command && command.type === ApplicationCommandType.User) {
 			if (!interaction.isUserContextMenuCommand()) {
 				throw new TypeError('Expected a User Context Menu Command interaction');
@@ -151,10 +158,21 @@ async function handleInteraction(interaction: CommandInteraction): Promise<void>
 				targetMessage: null,
 				options: null,
 			};
-			return await command.execute(userContextMenuCommandContext);
+
+			try {
+				return await command.execute(userContextMenuCommandContext);
+			} catch (error) {
+				await sendErrorMessage(command, userContextMenuCommandContext, error);
+				return;
+			}
 		}
 
-		return await command.execute(context);
+		try {
+			return await command.execute(context);
+		} catch (error) {
+			await sendErrorMessage(command, context, error);
+			return;
+		}
 	}
 
 	if (context.source === 'dm') {
@@ -166,5 +184,47 @@ async function handleInteraction(interaction: CommandInteraction): Promise<void>
 		});
 	}
 
-	return await command.execute(context);
+	try {
+		return await command.execute(context);
+	} catch (error) {
+		await sendErrorMessage(command, context, error);
+		// return;
+	}
+}
+
+/**
+ * Universal command error handling.
+ * Sends an ephemeral error message with pretty formatting to the user who used the command.
+ * The purpose of this method is to simplify error reporting, so that each command
+ * doesn't have to implement error messages individually.
+ * Only exported for testing purposes. Do not use outside of this file.
+ * @param command The command that was called
+ * @param context The context of the command
+ * @param error The error that the command threw
+ * @private
+ */
+export async function sendErrorMessage(
+	command: Command,
+	context: CommandContext,
+	error: unknown
+): Promise<void> {
+	const errorMessage = toString(error);
+	// for privacy, strip out any mention of the internal directory
+	const privateDir = __dirname.slice(0, __dirname.lastIndexOf('dist'));
+	const safeErrorMessage = errorMessage.replace(privateDir, '...');
+
+	const embed = new EmbedBuilder()
+		.setTitle('Error')
+		.setColor(Colors.Red)
+		.setDescription(
+			`The command '${command.info.name}' encountered an error during execution.\n\n\`\`${safeErrorMessage}\`\``
+		);
+
+	await context.reply({
+		embeds: [embed],
+		ephemeral: true,
+	});
+
+	logger.error('Sent error message to user:');
+	logger.error(error);
 }

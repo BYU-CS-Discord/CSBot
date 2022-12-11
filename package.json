@@ -1,13 +1,13 @@
 {
 	"name": "csbot",
-	"version": "0.5.1",
+	"version": "0.6.0",
 	"description": "The One beneath the Supreme Overlord's rule. A bot to help manage the BYU CS Discord, successor to Ze Kaiser (https://github.com/arkenstorm/ze-kaiser)",
 	"private": true,
 	"scripts": {
 		"docker": "npm run docker:image && npm run docker:cleanup && npm run docker:container",
 		"docker:image": "docker build --tag cs-bot-image --label cs-bot .",
 		"docker:cleanup": "docker system prune --force --filter='label=cs-bot'",
-		"docker:container": "docker run --name cs-bot-container --tty --interactive --rm --mount type=bind,source=$PWD,destination=/cs-bot cs-bot-image ",
+		"docker:container": "docker run --tty --interactive --rm --mount type=bind,source=$PWD,destination=/cs-bot cs-bot-image",
 		"start": "NODE_ENV=development ./node_modules/.bin/nodemon --inspect ./dist/main.js",
 		"setup": "rm -rf dist && npm ci && npm run export-version && npm run build:only --production && npm run commands:deploy",
 		"commands:deploy": "node . --deploy",
@@ -48,12 +48,17 @@
 	"main": "./dist/main.js",
 	"type": "commonjs",
 	"dependencies": {
+		"@discordjs/voice": "0.13.0",
 		"@prisma/client": "4.3.1",
 		"axios": "0.27.2",
+		"dectalk": "1.3.1",
 		"discord.js": "14.5.0",
 		"dotenv": "16.0.2",
+		"ffmpeg-static": "5.1.0",
+		"libsodium-wrappers": "0.7.10",
 		"lodash": "4.17.21",
 		"source-map-support": "0.5.21",
+		"tmp": "0.2.1",
 		"yargs": "17.5.1"
 	},
 	"devDependencies": {
@@ -61,6 +66,7 @@
 		"@types/lodash": "4.14.185",
 		"@types/node": "16.9.6",
 		"@types/source-map-support": "0.5.6",
+		"@types/tmp": "0.2.3",
 		"@typescript-eslint/eslint-plugin": "5.38.1",
 		"@typescript-eslint/parser": "5.38.1",
 		"eslint": "8.24.0",
