@@ -36,6 +36,7 @@ This list is updated as contributors contribute.
     - [Invite your bot to your server](#invite-your-bot-to-your-server)
     - [Important Note for Windows Users](#important-note-for-windows-users)
     - [Build the bot](#build-the-bot)
+    - [Build the bot database](#build-the-bot-database)
     - [Register Slash Commands](#register-slash-commands)
     - [Run the bot](#run-the-bot)
   - [Commands](#commands)
@@ -86,6 +87,9 @@ Create a file called `.env` in the root of this project folder. Paste your token
 
 DISCORD_TOKEN=YOUR_TOKEN_GOES_HERE
 # required, token for your Discord bot
+
+DATABASE_URL=YOUR_DATABASE_URL_GOES_HERE
+# required for any DB functionality, we will get this URL in a later section
 ```
 
 **Do not commit this file to git** or your bot _will_ get "hacked".
@@ -118,6 +122,37 @@ Be sure to install dependencies, run a quick lint to generate needed files, comp
 
 ```sh
 $ npm run setup
+```
+
+### Build the bot database
+
+_As we use prisma for managing our DB it is up to you what relational database framework you use._
+
+[The following is a guide to setting up Postgres inside a docker container.](https://github.com/docker-library/docs/blob/master/postgres/README.md) While the choice of database is up to you, the instructions for getting started in this guide assume you are using a postgres docker image.
+
+After you have Postgres (or your DB of choice) up and running, edit this line in your `.env` file:
+
+```
+DATABASE_URL=postgres://{pg_user}:{pg_pass}@{pg_hostname}:{pg_port}/{pg_db}
+# required for any DB functionality, we will get this URL in a later section
+```
+
+- pg_user = The Username you set in your POSTGRES_USER environment variable (default postgres)
+- pg_pass = The Password you set in your POSTGRES_PASS environment variable (default postgres)
+- ph_host = The IP of the server running your Postgres instance (default localhost)
+- pg_port = The Port assigned to your Postgres instance (default 5432)
+- pg_db = The Name of the database you wish to use for the bot
+
+The first time you run this project, you should run the following command to initialize the database:
+
+```
+$ npm run baseline
+```
+
+Migrations can be run on the Database with the following command:
+
+```
+$ npm run prisma:migrate
 ```
 
 ### Register Slash Commands
