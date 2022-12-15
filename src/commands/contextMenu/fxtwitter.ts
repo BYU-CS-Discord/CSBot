@@ -2,7 +2,7 @@ import { ApplicationCommandType, ContextMenuCommandBuilder } from 'discord.js';
 import { positionsOfUriInText } from '../../helpers/positionsOfUriInText';
 import { URL } from 'node:url';
 
-export const vxtwitter: MessageContextMenuCommand = {
+export const fxtwitter: MessageContextMenuCommand = {
 	info: new ContextMenuCommandBuilder().setName('Fix Twitter Links'),
 	type: ApplicationCommandType.Message,
 	requiresGuild: false,
@@ -11,8 +11,7 @@ export const vxtwitter: MessageContextMenuCommand = {
 
 		const urlRanges = positionsOfUriInText(content);
 		if (urlRanges === null) {
-			await replyPrivately('There were no URLs found in the message.');
-			return;
+			throw new Error('There were no URLs found in the message.');
 		}
 
 		const urls: Array<URL> = [];
@@ -30,8 +29,7 @@ export const vxtwitter: MessageContextMenuCommand = {
 		}
 
 		if (urls.length === 0) {
-			await replyPrivately('There were no Twitter URLs found in the message.');
-			return;
+			throw new Error('There were no Twitter URLs found in the message.');
 		}
 
 		// Print each fixed link in an ephemeral message, separated by newlines
@@ -45,5 +43,5 @@ export const vxtwitter: MessageContextMenuCommand = {
 };
 
 function vxTwitter(og: URL): URL {
-	return new URL(og.pathname, 'https://vxtwitter.com');
+	return new URL(og.pathname, 'https://fxtwitter.com');
 }

@@ -1,4 +1,8 @@
 import type {
+	APIButtonComponent,
+	BaseInteraction,
+	ButtonComponent,
+	ChatInputCommandInteraction,
 	Client,
 	CommandInteraction,
 	CommandInteractionOption,
@@ -22,7 +26,7 @@ declare global {
 		readonly source: 'guild' | 'dm';
 
 		/** The triggering interaction. */
-		readonly interaction: RepliableInteraction;
+		readonly interaction: BaseInteraction;
 
 		/** Our own signed-in Discord client. */
 		readonly client: Client<true>;
@@ -52,7 +56,8 @@ declare global {
 		sendTyping: () => void;
 
 		/**
-		 * Sends a DM or ephemeral reply to the command's sender.
+		 * Sends a DM or ephemeral reply to the command's sender. The default
+		 * behavior is an ephemeral reply.
 		 *
 		 * In the case of an interaction that was publicly deferred (e.g.
 		 * using `prepareForLongRunningTasks(false)`), this function will
@@ -123,6 +128,9 @@ declare global {
 		/** Where the command was invoked. */
 		readonly source: 'dm';
 
+		/** The command invocation interaction. */
+		readonly interaction: ChatInputCommandInteraction;
+
 		/** The guild in which the command was invoked. */
 		readonly guild: null;
 
@@ -152,6 +160,9 @@ declare global {
 	interface GuildedCommandContext extends BaseCommandContext {
 		/** Where the command was invoked. */
 		readonly source: 'guild';
+
+		/** The command invocation interaction. */
+		readonly interaction: ChatInputCommandInteraction;
 
 		/** The guild in which the command was invoked. */
 		readonly guild: Guild;
@@ -215,7 +226,7 @@ declare global {
 
 	/** Information relevant to button presses */
 	interface ButtonContext extends InteractionContext {
-		component: APIButtonComponent;
+		component: APIButtonComponent | ButtonComponent;
 		message: Message;
 	}
 

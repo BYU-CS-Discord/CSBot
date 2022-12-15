@@ -4,6 +4,15 @@
 
 > This project is undergoing rapid development and should be considered experimental. Use it at your own risk. 🤙
 
+A bot to help manage the activities and community of BYU's Computer Science Discord server.
+
+This project is meant as a successor to [Ze-Kaiser](https://github.com/ArkenStorm/Ze-Kaiser), whose original contributors are as follows:
+
+- [**ArkenStorm**](https://github.com/ArkenStorm)
+- [**Carterworks**](https://github.com/Carterworks)
+- [**EmmaChase**](https://github.com/EmmaChase)
+- [**TheZealotAlmighty**](https://github.com/TheZealotAlmighty)
+
 ## Authors & Contributors
 
 This list is updated as contributors contribute.
@@ -13,6 +22,7 @@ This list is updated as contributors contribute.
 - [**JstnMcBrd**](https://github.com/JstnMcBrd)
 - [**AverageHelper**](https://github.com/AverageHelper)
 - [**SpencerHastings**](https://github.com/SpencerHastings/)
+- [**Plyb**](https://github.com/Plyb)
 
 ## Table of contents
 
@@ -26,7 +36,8 @@ This list is updated as contributors contribute.
     - [Configure the bot](#configure-the-bot)
     - [Invite your bot to your server](#invite-your-bot-to-your-server)
     - [Important Note for Windows Users](#important-note-for-windows-users)
-    - [Build the bot server](#build-the-bot-server)
+    - [Build the bot](#build-the-bot)
+    - [Build the bot database](#build-the-bot-database)
     - [Register Slash Commands](#register-slash-commands)
     - [Run the bot](#run-the-bot)
   - [Commands](#commands)
@@ -37,13 +48,23 @@ This list is updated as contributors contribute.
 
 ### Prerequisites
 
-This project requires [NodeJS](https://nodejs.org/) (version 16.10 or later), [NPM](https://npmjs.org/). To make sure you have them available on your machine,
-try running the following command:
+This project requires [NodeJS](https://nodejs.org/) (version 16.10 or later), [NPM](https://npmjs.org/). To make sure you have them available on your machine, try running the following command:
 
 ```sh
 $ npm -v && node -v
 7.20.3
 v16.15.1
+```
+
+This project also requires [Docker](https://www.docker.com/). Docker runs the project in a lightweight virtual Linux environment, so functionality will be identical on any operating system.
+
+All Docker management (like building, running, and cleaning up images and containers) has been automated, so you only have to follow a few simple steps.
+
+You must install Docker before continuing. To make sure Docker is available on your machine, run the following command:
+
+```sh
+$ docker -v
+Docker version 20.10.17, build 100c701
 ```
 
 ### Clone the Repo
@@ -67,6 +88,9 @@ Create a file called `.env` in the root of this project folder. Paste your token
 
 DISCORD_TOKEN=YOUR_TOKEN_GOES_HERE
 # required, token for your Discord bot
+
+DATABASE_URL=YOUR_DATABASE_URL_GOES_HERE
+# required for any DB functionality, we will get this URL in a later section
 ```
 
 **Do not commit this file to git** or your bot _will_ get "hacked".
@@ -75,31 +99,61 @@ DISCORD_TOKEN=YOUR_TOKEN_GOES_HERE
 
 Go to https://discordapi.com/permissions.html#378091424832 and paste in your bot's client ID to get an invite link.
 
-### Important Note for Windows Users
+### Setting up Docker
 
-If you're on Windows, `npm` scripts will not work unless you tell `npm` to use Git Bash as its default shell when running commands.
-
-Before continuing, run this command:
+Now you are ready to set up your development environment. Set up Docker by running the following command:
 
 ```sh
-$ npm config set script-shell "C:\\Program Files\\Git\\bin\\bash.exe"
+$ npm run docker
 ```
 
-You must have [Git for Windows](https://git-scm.com/download/win) installed. See this [StackOverflow answer](https://stackoverflow.com/a/46006249) for more details.
+This will build a simple Linux image, start a container of that image, and then mount the project folder into the container.
 
-### Build the bot server
+Once the container is started, you will see your command prompt change. You are now in a virtual Linux environment. If you run `ls`, you will see all the project files. Any changes you make to these files are synced between your local computer and the container.
 
-Be sure to install dependencies, and run a quick lint to generate needed files:
+Now that your command line is in the Docker container, you can run any part of the project and develop without worrying about compatibility.
+
+To close the container, simply run `exit`. To start a new container, use `npm run docker` again. Every time you open the project, you should start a container before developing.
+
+The docker script will take care of every part of the docker development process, including building, running, and cleaning up, so you only need to worry about a single command.
+
+### Build the bot
+
+Be sure to install dependencies, run a quick lint to generate needed files, compile the source, and deploy commands. Here's a handy command to do all of that:
 
 ```sh
-$ npm ci
-$ npm run lint
+$ npm run setup
 ```
 
-The first time you download the source, and each time the source code changes, you'll need to run this command before you run the bot:
+### Build the bot database
 
-```sh
-$ npm run build
+_As we use prisma for managing our DB it is up to you what relational database framework you use._
+
+[The following is a guide to setting up Postgres inside a docker container.](https://github.com/docker-library/docs/blob/master/postgres/README.md) While the choice of database is up to you, the instructions for getting started in this guide assume you are using a postgres docker image.
+
+After you have Postgres (or your DB of choice) up and running, edit this line in your `.env` file:
+
+```
+DATABASE_URL=postgres://{pg_user}:{pg_pass}@{pg_hostname}:{pg_port}/{pg_db}
+# required for any DB functionality, we will get this URL in a later section
+```
+
+- pg_user = The Username you set in your POSTGRES_USER environment variable (default postgres)
+- pg_pass = The Password you set in your POSTGRES_PASS environment variable (default postgres)
+- ph_host = The IP of the server running your Postgres instance (default localhost)
+- pg_port = The Port assigned to your Postgres instance (default 5432)
+- pg_db = The Name of the database you wish to use for the bot
+
+The first time you run this project, you should run the following command to initialize the database:
+
+```
+$ npm run baseline
+```
+
+Migrations can be run on the Database with the following command:
+
+```
+$ npm run prisma:migrate
 ```
 
 ### Register Slash Commands
@@ -114,21 +168,41 @@ $ npm run commands:deploy
 
 ### Run the bot
 
-Since this bot is just a Node script, any Node process manager will do.
-
 ```sh
 $ node .
 # or
 $ npm start
-# or
-$ pm2 start .
 ```
 
-## Commands
+## Chat Input Commands
 
 ### /help
 
-Prints the list of commands.
+Prints some info about the bot, including the current running version and a link to the code repository.
+
+### /profile
+
+Retrieves the profile picture of the given user.
+
+### /xkcd
+
+Retrieves the most recent [xkcd](https://xkcd.com/) comic, or the given one.
+
+### /talk
+
+Uses the [dectalk](https://github.com/babakinha/dectalk) text-to-speech engine to speak the message you give it,
+either sending a .wav file in a text channel or talking out loud in a voice channel. Comes with 9 different voices.
+
+## Context Menu Commands
+
+### Fix Twitter Links
+
+Transforms [twitter.com](https://twitter.com/) links in the given message to [FixTweet](https://github.com/FixTweet/FixTweet) links in an ephemeral reply. Please use fxtwitter in your own messages, especially when the tweet is a video. Twitter's default embed stinks on some platforms.
+
+### Talk
+
+Performs the same function as the `/talk` chat input command, but uses the selected message as input.
+Can be used to repeat the same 'talk' command without typing it out again.
 
 ## Contributing
 

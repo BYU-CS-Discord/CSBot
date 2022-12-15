@@ -1,4 +1,4 @@
-import type { CommandInteraction } from 'discord.js';
+import type { RepliableInteraction } from 'discord.js';
 
 // Mock the logger so nothing is printed
 jest.mock('../logger');
@@ -12,7 +12,7 @@ describe('typing indicator', () => {
 		channel: {
 			sendTyping: mockSendTyping,
 		},
-	} as unknown as CommandInteraction;
+	} as unknown as RepliableInteraction;
 
 	const sendTyping = factory(interaction);
 
