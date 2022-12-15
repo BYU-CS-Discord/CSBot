@@ -468,6 +468,7 @@ describe('on(interactionCreate)', () => {
 			interaction = defaultInteraction() as AutocompleteInteraction;
 			interaction.isAutocomplete = (): boolean => true;
 			interaction.isCommand = (): boolean => false;
+			interaction.isButton = (): boolean => false;
 			interaction.isChatInputCommand = (): boolean => false;
 			interaction.respond = mockRespond;
 			interaction.commandName = mockGlobalAutocompleteCommand.info.name;

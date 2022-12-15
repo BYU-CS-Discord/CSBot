@@ -1,5 +1,7 @@
 import type {
-	ButtonInteraction,
+	APIButtonComponent,
+	BaseInteraction,
+	ButtonComponent,
 	ChatInputCommandInteraction,
 	Client,
 	CommandInteraction,
@@ -13,7 +15,6 @@ import type {
 	Message,
 	MessageContextMenuCommandInteraction,
 	MessageReplyOptions,
-	RepliableInteraction,
 	Snowflake,
 	User,
 	UserContextMenuCommandInteraction,
@@ -25,7 +26,7 @@ declare global {
 		readonly source: 'guild' | 'dm';
 
 		/** The triggering interaction. */
-		readonly interaction: RepliableInteraction;
+		readonly interaction: BaseInteraction;
 
 		/** Our own signed-in Discord client. */
 		readonly client: Client<true>;
@@ -225,7 +226,7 @@ declare global {
 
 	/** Information relevant to button presses */
 	interface ButtonContext extends InteractionContext {
-		component: APIButtonComponent;
+		component: APIButtonComponent | ButtonComponent;
 		message: Message;
 	}
 
