@@ -251,7 +251,7 @@ async function handleAutocompleteInteraction(interaction: AutocompleteInteractio
  * @private
  */
 export async function sendErrorMessage(
-	interaction: CommandInteraction,
+	interaction: CommandInteraction | ButtonInteraction,
 	error: unknown
 ): Promise<void> {
 	const errorMessage = toString(error);
@@ -259,11 +259,14 @@ export async function sendErrorMessage(
 	const privateDir = __dirname.slice(0, __dirname.lastIndexOf('dist'));
 	const safeErrorMessage = errorMessage.replace(privateDir, '...');
 
+	const interactionDescription = interaction.isButton()
+		? `button '${interaction.customId}'`
+		: `command '${interaction.commandName}`;
 	const embed = new EmbedBuilder()
 		.setTitle('Error')
 		.setColor(Colors.Red)
 		.setDescription(
-			`The command '${interaction.commandName}' encountered an error during execution.\n\n\`\`${safeErrorMessage}\`\``
+			`The ${interactionDescription} encountered an error during execution.\n\n\`\`${safeErrorMessage}\`\``
 		);
 
 	try {
@@ -289,7 +292,10 @@ async function handleButtonInteraction(
 	const button = allButtons.get(interaction.customId);
 	if (!button) {
 		logger.warn(`Received request to execute unknown button with id '${interaction.customId}'`);
-		// TODO: include some kind of error message here, using the pattern in PR #63
+		await sendErrorMessage(
+			interaction,
+			`Unknown button '${interaction.customId}'. Contact the bot operator and make sure they deployed the latest set of commands.`
+		);
 		return;
 	}
 
