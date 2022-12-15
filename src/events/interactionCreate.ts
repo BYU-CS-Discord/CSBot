@@ -1,6 +1,7 @@
 // External dependencies
 import toString from 'lodash/toString';
 import type {
+	AutocompleteInteraction,
 	ButtonInteraction,
 	CommandInteraction,
 	DMChannel,
@@ -12,14 +13,15 @@ import { EmbedBuilder, Colors, ApplicationCommandType, ChannelType } from 'disco
 
 // Internal dependencies
 import * as logger from '../logger';
-import { logUser } from '../helpers/logUser';
 import { allCommands } from '../commands';
+import { DISCORD_API_MAX_CHOICES } from '../constants/apiLimitations';
 import { followUpFactory } from '../commandContext/followUp';
+import { logUser } from '../helpers/logUser';
+import { onEvent } from '../helpers/onEvent';
 import { prepareForLongRunningTasksFactory } from '../commandContext/prepareForLongRunningTasks';
 import { replyFactory } from '../commandContext/reply';
 import { replyPrivatelyFactory } from '../commandContext/replyPrivately';
 import { sendTypingFactory } from '../commandContext/sendTyping';
-import { onEvent } from '../helpers/onEvent';
 import { allButtons } from '../buttons';
 
 /**
@@ -36,11 +38,11 @@ export const interactionCreate = onEvent('interactionCreate', {
 			if (interaction.isCommand()) {
 				const context = await generateContext(interaction);
 				await handleCommandInteraction(context, interaction);
-			}
-
-			if (interaction.isButton()) {
+			} else if (interaction.isButton()) {
 				const context = await generateContext(interaction);
 				await handleButtonInteraction(context, interaction);
+			} else if (interaction.isAutocomplete()) {
+				await handleAutocompleteInteraction(interaction);
 			}
 		} catch (error) {
 			logger.error('Failed to handle interaction:', error);
@@ -50,13 +52,12 @@ export const interactionCreate = onEvent('interactionCreate', {
 
 /**
  * Performs actions from a Discord command interaction.
- * The command is ignored if the interaction is from a bot.
  *
  * Constructs a context object to send to command executors.
- * This context handles many edge cases and gotchas with interactions,
- * including follow-up responses, long-running commands,
- * typing indicators, ephemeral replies, partial fields,
- * and error handling.
+ * This context handles many edge cases and gotchas with
+ * interactions, including follow-up responses, long-running
+ * commands, typing indicators, ephemeral replies, partial
+ * fields, and error handling.
  *
  * The goal is for us devs to not have to worry about how exactly
  * things get done when we're writing command handlers, only
@@ -71,7 +72,11 @@ async function handleCommandInteraction(
 	const command = allCommands.get(interaction.commandName);
 	if (!command) {
 		logger.warn(`Received request to execute unknown command named '${interaction.commandName}'`);
-		// TODO: include some kind of error message here, using the pattern in PR #63
+		// Fixes weird hangs when the command list is out of date:
+		await sendErrorMessage(
+			interaction,
+			`Unknown command name '${interaction.commandName}'. Contact the bot operator and make sure they deployed the latest set of commands.`
+		);
 		return;
 	}
 
@@ -117,7 +122,7 @@ async function handleCommandInteraction(
 			try {
 				return await command.execute(messageContextMenuCommandContext);
 			} catch (error) {
-				await sendErrorMessage(command, messageContextMenuCommandContext, error);
+				await sendErrorMessage(interaction, error);
 				return;
 			}
 		} else if ('type' in command && command.type === ApplicationCommandType.User) {
@@ -144,7 +149,7 @@ async function handleCommandInteraction(
 			try {
 				return await command.execute(userContextMenuCommandContext);
 			} catch (error) {
-				await sendErrorMessage(command, userContextMenuCommandContext, error);
+				await sendErrorMessage(interaction, error);
 				return;
 			}
 		}
@@ -152,7 +157,7 @@ async function handleCommandInteraction(
 		try {
 			return await command.execute(context);
 		} catch (error) {
-			await sendErrorMessage(command, context, error);
+			await sendErrorMessage(interaction, error);
 			return;
 		}
 	}
@@ -169,8 +174,68 @@ async function handleCommandInteraction(
 	try {
 		return await command.execute(context);
 	} catch (error) {
-		await sendErrorMessage(command, context, error);
+		await sendErrorMessage(interaction, error);
 		// return;
+	}
+}
+
+/**
+ * Finds results for a Discord autocomplete request.
+ */
+async function handleAutocompleteInteraction(interaction: AutocompleteInteraction): Promise<void> {
+	logger.debug(
+		`User ${logUser(interaction.user)} requested autocomplete for command: '${
+			interaction.commandName
+		}'`
+	);
+
+	try {
+		const command = allCommands.get(interaction.commandName);
+		if (!command) {
+			logger.warn(
+				`Received request to execute autocomplete handler for unknown command named '${interaction.commandName}'`
+			);
+			// Return no results
+			return await interaction.respond([]);
+		}
+
+		// Command must be a chat-input command
+		if (command.type !== ApplicationCommandType.ChatInput && command.type !== undefined) {
+			logger.warn(
+				`Received an autocomplete request for command '${command.info.name}'. This command must be of type 'ChatInput', but was found instead to be of a different type (${command.type}).`
+			);
+			// Return no results
+			return await interaction.respond([]);
+		}
+
+		// Command must have an autocomplete handler
+		if (!command.autocomplete) {
+			logger.warn(
+				`Received an autocomplete request for command '${command.info.name}'. This command must have an autocomplete handler method, but none was found.`
+			);
+			// Return no results
+			return await interaction.respond([]);
+		}
+
+		logger.debug(`Calling autocomplete handler for command '${command.info.name}'`);
+		const options = command.autocomplete(interaction);
+
+		// Return results (limited because of API reasons)
+		// Seriously, Discord WILL throw errors and refuse to deliver ANY
+		// options if the list we give them exceeds 25
+		await interaction.respond(options.slice(0, DISCORD_API_MAX_CHOICES));
+	} catch (error) {
+		// We cannot directly reply, since this interaction is only for autocomplete.
+		logger.error(error);
+
+		// Return no results if we've not yet responded
+		if (!interaction.responded) {
+			try {
+				await interaction.respond([]);
+			} catch (secondError) {
+				logger.error('Failed to return empty result set due to error:', secondError);
+			}
+		}
 	}
 }
 
@@ -180,14 +245,13 @@ async function handleCommandInteraction(
  * The purpose of this method is to simplify error reporting, so that each command
  * doesn't have to implement error messages individually.
  * Only exported for testing purposes. Do not use outside of this file.
- * @param command The command that was called
- * @param context The context of the command
+ *
+ * @param interaction The interaction that invoked the command
  * @param error The error that the command threw
  * @private
  */
 export async function sendErrorMessage(
-	command: Command,
-	context: CommandContext,
+	interaction: CommandInteraction,
 	error: unknown
 ): Promise<void> {
 	const errorMessage = toString(error);
@@ -199,13 +263,18 @@ export async function sendErrorMessage(
 		.setTitle('Error')
 		.setColor(Colors.Red)
 		.setDescription(
-			`The command '${command.info.name}' encountered an error during execution.\n\n\`\`${safeErrorMessage}\`\``
+			`The command '${interaction.commandName}' encountered an error during execution.\n\n\`\`${safeErrorMessage}\`\``
 		);
 
-	await context.reply({
-		embeds: [embed],
-		ephemeral: true,
-	});
+	try {
+		// Using the raw interaction here, since any errors that happen while trying to send the error are moot
+		await interaction.reply({
+			embeds: [embed],
+			ephemeral: true,
+		});
+	} catch (secondError) {
+		logger.error('Error while sending error response:', secondError);
+	}
 
 	logger.error('Sent error message to user:');
 	logger.error(error);
