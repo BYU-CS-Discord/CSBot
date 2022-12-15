@@ -185,6 +185,7 @@ function defaultInteraction(): Interaction {
 			partial: false,
 		},
 		isCommand: () => true,
+		isButton: () => false,
 		isChatInputCommand: () => true,
 		isAutocomplete: () => false,
 	} as unknown as Interaction;
@@ -208,7 +209,6 @@ describe('on(interactionCreate)', () => {
 		test("does nothing if the interaction isn't a supported interaction type", async () => {
 			const interaction = defaultInteraction();
 			interaction.isCommand = (): boolean => false;
-			interaction.isButton = (): boolean => false;
 
 			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 			expect(mockGlobalExecute).not.toHaveBeenCalled();
