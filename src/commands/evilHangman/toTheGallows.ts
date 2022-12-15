@@ -1,5 +1,7 @@
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { appVersion } from '../../constants/meta';
+import { getEvilHangmanEmbedBuilder } from '../../evilHangman/evilHangmanEmbedBuilder';
+import { EvilHangmanGame } from '../../evilHangman/evilHangmanGame';
 import type { GameStore } from '../../evilHangman/gameStore';
 
 const builder = new SlashCommandBuilder()
@@ -11,12 +13,10 @@ export function toTheGallows(gameStore: GameStore): GlobalCommand {
 		info: builder,
 		requiresGuild: false,
 		async execute({ reply, channelId }): Promise<void> {
-			const generalEmbed = new EmbedBuilder()
-				.setTitle('Evil Hangman')
-				.setFooter({ text: `v${appVersion}` });
-
 			if (gameStore.games.has(channelId)) {
-				const embed = generalEmbed
+				const embed = new EmbedBuilder()
+					.setTitle('Evil Hangman')
+					.setFooter({ text: `v${appVersion}` })
 					.setDescription('There is already a game running in this channel')
 					.setColor('DarkRed');
 
@@ -25,8 +25,9 @@ export function toTheGallows(gameStore: GameStore): GlobalCommand {
 					ephemeral: true,
 				});
 			} else {
-				const embed = generalEmbed.setDescription('Placeholder');
-				gameStore.games.set(channelId, 0); // TODO: 0 is a placeholder
+				const game = new EvilHangmanGame(5, 5); // TODO: placeholder numbers
+				gameStore.games.set(channelId, game);
+				const embed = getEvilHangmanEmbedBuilder(game.getDisplayInfo());
 
 				await reply({
 					embeds: [embed],
