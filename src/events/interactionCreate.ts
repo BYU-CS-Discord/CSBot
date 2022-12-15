@@ -261,7 +261,7 @@ export async function sendErrorMessage(
 
 	const interactionDescription = interaction.isButton()
 		? `button '${interaction.customId}'`
-		: `command '${interaction.commandName}`;
+		: `command '${interaction.commandName}'`;
 	const embed = new EmbedBuilder()
 		.setTitle('Error')
 		.setColor(Colors.Red)
