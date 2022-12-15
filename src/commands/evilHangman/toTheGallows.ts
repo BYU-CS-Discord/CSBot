@@ -1,6 +1,6 @@
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { appVersion } from '../../constants/meta';
-import { getEvilHangmanEmbedBuilder } from '../../evilHangman/evilHangmanEmbedBuilder';
+import { getEvilHangmanEmbedBuilder as getEvilHangmanResponse } from '../../evilHangman/evilHangmanEmbedBuilder';
 import { EvilHangmanGame } from '../../evilHangman/evilHangmanGame';
 import type { GameStore } from '../../evilHangman/gameStore';
 
@@ -27,11 +27,9 @@ export function toTheGallows(gameStore: GameStore): GlobalCommand {
 			} else {
 				const game = new EvilHangmanGame(5, 5); // TODO: placeholder numbers
 				gameStore.games.set(channelId, game);
-				const embed = getEvilHangmanEmbedBuilder(game.getDisplayInfo());
+				const response = getEvilHangmanResponse(game.getDisplayInfo());
 
-				await reply({
-					embeds: [embed],
-				});
+				await reply(response);
 			}
 		},
 	};
