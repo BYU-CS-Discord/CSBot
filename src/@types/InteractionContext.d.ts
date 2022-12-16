@@ -228,6 +228,9 @@ declare global {
 	interface ButtonContext extends InteractionContext {
 		component: APIButtonComponent | ButtonComponent;
 		message: Message;
+
+		/** The ID of the channel in which the command was invoked. */
+		readonly channelId: Snowflake;
 	}
 
 	/** Information relevant to a command invocation. */

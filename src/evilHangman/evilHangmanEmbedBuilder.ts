@@ -4,7 +4,7 @@ import { appVersion } from '../constants/meta';
 import type { EvilHangmanDisplayInfo } from './evilHangmanGame';
 import { getLetterOptions } from './hangmanLetterButtons';
 
-export function getEvilHangmanEmbedBuilder(
+export function getEvilHangmanResponse(
 	gameInfo: EvilHangmanDisplayInfo
 ): Omit<MessageReplyOptions, 'flags'> {
 	const embed = new EmbedBuilder()

@@ -1,4 +1,6 @@
 import { ButtonBuilder, ButtonStyle } from 'discord.js';
+import { getEvilHangmanResponse } from '../evilHangman/evilHangmanEmbedBuilder';
+import { gameStore } from '../evilHangman/gameStore';
 
 export type Letter =
 	| 'a'
@@ -32,8 +34,21 @@ export function hangmanLetterButton(letter: Letter): Button {
 	const customId = customIdStem + letter;
 	return {
 		customId,
-		execute(): void {
-			// placeholder
+		async execute({ channelId, reply }): Promise<void> {
+			const game = gameStore.get(channelId);
+
+			if (game === undefined) {
+				throw new Error('There is no Evil Hangman game running in this channel');
+			}
+
+			const guessErrorMessage = game.checkGuess(letter);
+			if (guessErrorMessage !== null) {
+				throw new Error(guessErrorMessage);
+			}
+
+			const displayInfo = game.makeGuess(letter);
+			const response = getEvilHangmanResponse(displayInfo);
+			await reply(response);
 		},
 		makeBuilder(): ButtonBuilder {
 			return new ButtonBuilder()

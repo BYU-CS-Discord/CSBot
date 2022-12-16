@@ -301,11 +301,13 @@ async function handleButtonInteraction(
 
 	logger.debug(`Calling button handler '${button.customId}'`);
 
-	const buttonContext: ButtonContext = {
+	/* eslint-disable @typescript-eslint/consistent-type-assertions */
+	const buttonContext = {
 		...context,
 		component: interaction.component,
 		message: interaction.message,
-	};
+	} as ButtonContext;
+	/* eslint-enable @typescript-eslint/consistent-type-assertions */
 
 	return await button.execute(buttonContext);
 }
