@@ -15,7 +15,7 @@ export const hangmanMoreButton: Button = {
 		}
 
 		const displayInfo = game.getDisplayInfo();
-		const response = getEvilHangmanResponse(displayInfo, 1);
+		const response = await getEvilHangmanResponse(displayInfo, 1);
 		await interaction.update(response);
 	},
 	makeBuilder(): ButtonBuilder {

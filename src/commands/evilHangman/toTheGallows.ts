@@ -26,7 +26,7 @@ export const toTheGallows: GlobalCommand = {
 		} else {
 			const game = new EvilHangmanGame(10, 10); // TODO: placeholder numbers
 			gameStore.set(channelId, game);
-			const response = getEvilHangmanResponse(game.getDisplayInfo());
+			const response = await getEvilHangmanResponse(game.getDisplayInfo());
 
 			await reply(response);
 		}

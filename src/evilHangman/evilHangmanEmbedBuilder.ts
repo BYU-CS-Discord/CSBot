@@ -2,28 +2,40 @@ import { ActionRowBuilder, ButtonBuilder, EmbedBuilder, MessageReplyOptions } fr
 import { hangmanLessButton } from '../buttons/hangmanLessButton';
 import { hangmanMoreButton } from '../buttons/hangmanMoreButton';
 import { appVersion } from '../constants/meta';
+import { getHangmanArt } from './evilHangmanAsciiArt';
 import { EvilHangmanDisplayInfo, EvilHangmanWinState } from './evilHangmanGame';
 import { getLetterOptions } from './hangmanLetterButtons';
 
 type Page = 0 | 1;
-export function getEvilHangmanResponse(
+export async function getEvilHangmanResponse(
 	gameInfo: EvilHangmanDisplayInfo,
 	page: Page = 0
-): Omit<MessageReplyOptions, 'flags'> {
-	const embed = new EmbedBuilder().setTitle('Evil Hangman').setFooter({ text: `v${appVersion}` });
-
+): Promise<Omit<MessageReplyOptions, 'flags'>> {
 	const mainDescription = `guesses: ${gameInfo.guessesRemaining}\nword: ${gameInfo.word}\n${[
 		...gameInfo.guessesSoFar,
 	].join()}`;
+	const hangmanArt = `\`\`\`${await getHangmanArt(
+		gameInfo.guessesRemaining,
+		gameInfo.guessesRemaining + gameInfo.guessesSoFar.size
+	)}\`\`\``;
+	const embed = new EmbedBuilder()
+		.setTitle('Evil Hangman')
+		.setFooter({ text: `v${appVersion}` })
+		.addFields(
+			{
+				name: '_ _', // italicized space. We don't want a title, this prevents anything from rendering
+				value: hangmanArt,
+				inline: true,
+			},
+			{ name: '_ _', value: mainDescription, inline: true }
+		);
 	switch (gameInfo.winState) {
 		case EvilHangmanWinState.WON:
-			embed.setDescription(`${mainDescription}\nYou Won!`);
+			embed.setDescription('You win!');
 			break;
 		case EvilHangmanWinState.LOST:
-			embed.setDescription(`${mainDescription}\nYou Lost!`);
+			embed.setDescription('You Lose!');
 			break;
-		case EvilHangmanWinState.IN_PROGRESS:
-			embed.setDescription(mainDescription);
 	}
 
 	const components =

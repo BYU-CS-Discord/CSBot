@@ -53,7 +53,7 @@ export function hangmanLetterButton(letter: Letter): Button {
 				gameStore.delete(channelId);
 			}
 
-			const response = getEvilHangmanResponse(displayInfo);
+			const response = await getEvilHangmanResponse(displayInfo);
 			await interaction.update(response);
 		},
 		makeBuilder(): ButtonBuilder {
