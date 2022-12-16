@@ -34,7 +34,7 @@ export function hangmanLetterButton(letter: Letter): Button {
 	const customId = customIdStem + letter;
 	return {
 		customId,
-		async execute({ channelId, reply }): Promise<void> {
+		async execute({ channelId, interaction }): Promise<void> {
 			const game = gameStore.get(channelId);
 
 			if (game === undefined) {
@@ -48,7 +48,7 @@ export function hangmanLetterButton(letter: Letter): Button {
 
 			const displayInfo = game.makeGuess(letter);
 			const response = getEvilHangmanResponse(displayInfo);
-			await reply(response);
+			await interaction.update(response);
 		},
 		makeBuilder(): ButtonBuilder {
 			return new ButtonBuilder()

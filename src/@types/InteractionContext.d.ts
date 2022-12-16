@@ -2,6 +2,7 @@ import type {
 	APIButtonComponent,
 	BaseInteraction,
 	ButtonComponent,
+	ButtonInteraction,
 	ChatInputCommandInteraction,
 	Client,
 	CommandInteraction,
@@ -228,6 +229,7 @@ declare global {
 	interface ButtonContext extends InteractionContext {
 		component: APIButtonComponent | ButtonComponent;
 		message: Message;
+		readonly interaction: ButtonInteraction;
 
 		/** The ID of the channel in which the command was invoked. */
 		readonly channelId: Snowflake;
