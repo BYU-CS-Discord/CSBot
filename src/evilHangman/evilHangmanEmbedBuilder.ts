@@ -1,8 +1,8 @@
 import { ActionRowBuilder, ButtonBuilder, EmbedBuilder, MessageReplyOptions } from 'discord.js';
-import { hangmanLetterButton, Letter } from '../buttons/hangmanLetterButton';
 import { hangmanMoreButton } from '../buttons/hangmanMoreButton';
 import { appVersion } from '../constants/meta';
 import type { EvilHangmanDisplayInfo } from './evilHangmanGame';
+import { getLetterOptions } from './hangmanLetterButtons';
 
 export function getEvilHangmanEmbedBuilder(
 	gameInfo: EvilHangmanDisplayInfo
@@ -18,22 +18,12 @@ export function getEvilHangmanEmbedBuilder(
 	};
 }
 
-const alphabet: Array<Letter> = new Array(26)
-	.fill(null)
-	.map((x, i) => String.fromCharCode(i + 97) as Letter);
-
-function getLetterOptions(word: string): Array<Letter> {
-	const characters = new Set(word.split(''));
-	return alphabet.filter(letter => !characters.has(letter));
-}
-
 // Discord enforces these maxs, you can't have more per message
 const MAX_BUTTONS_PER_ROW = 5;
 const MAX_BUTTON_ROWS = 5;
 const MAX_BUTTONS_TOTAL = MAX_BUTTONS_PER_ROW * MAX_BUTTON_ROWS;
 function getButtons(word: string): Array<ActionRowBuilder<ButtonBuilder>> {
-	const letterOptions = getLetterOptions(word);
-	const letterButtons = letterOptions.map(letter => hangmanLetterButton(letter));
+	const letterButtons = getLetterOptions(word);
 	if (letterButtons.length > MAX_BUTTONS_TOTAL) {
 		letterButtons.splice(MAX_BUTTONS_TOTAL - 1, Number.POSITIVE_INFINITY, hangmanMoreButton);
 	}

@@ -1,3 +1,6 @@
+import { letterButtons } from '../evilHangman/hangmanLetterButtons';
+import { hangmanMoreButton } from './hangmanMoreButton';
+
 /**
  * The private list of all buttons. You can use this to edit the list within this file.
  * @private
@@ -29,3 +32,5 @@ export function _add(button: Button): void {
 }
 
 /**  Install buttons here:  **/
+letterButtons.forEach(letterButton => _add(letterButton));
+_add(hangmanMoreButton);
