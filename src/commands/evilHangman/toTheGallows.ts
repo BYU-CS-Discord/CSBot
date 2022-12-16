@@ -24,7 +24,7 @@ export const toTheGallows: GlobalCommand = {
 				ephemeral: true,
 			});
 		} else {
-			const game = new EvilHangmanGame(5, 5); // TODO: placeholder numbers
+			const game = new EvilHangmanGame(10, 10); // TODO: placeholder numbers
 			gameStore.set(channelId, game);
 			const response = getEvilHangmanResponse(game.getDisplayInfo());
 

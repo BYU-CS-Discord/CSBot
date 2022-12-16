@@ -9,7 +9,7 @@ export class EvilHangmanGame {
 	private readonly guessesSoFar: Set<string> = new Set();
 
 	constructor(length: number, guesses: number) {
-		this.word = new Array(length).fill('_').join('');
+		this.word = new Array(length).fill('-').join('');
 		this.guessesRemaining = guesses;
 
 		const possibleWords = fs
@@ -52,7 +52,7 @@ export class EvilHangmanGame {
 	}
 
 	private updateWord(form: RegExp): void {
-		const newWord = form.source.replaceAll('\\w', '_');
+		const newWord = form.source.replaceAll('\\w', '-');
 		if (newWord === this.word) {
 			this.guessesRemaining -= 1;
 		}
@@ -61,7 +61,7 @@ export class EvilHangmanGame {
 
 	private removePossibleWords(guess: string): void {
 		const allExceptGuessed = `(?![${guess}])\\w`;
-		const filterRegex = new RegExp(this.word.replaceAll('_', allExceptGuessed), 'u');
+		const filterRegex = new RegExp(this.word.replaceAll('-', allExceptGuessed), 'u');
 		this.possibleWords = this.possibleWords.filter(word => filterRegex.test(word));
 	}
 

@@ -9,7 +9,11 @@ export function getEvilHangmanResponse(
 ): Omit<MessageReplyOptions, 'flags'> {
 	const embed = new EmbedBuilder()
 		.setTitle('Evil Hangman')
-		.setDescription(`guesses: ${gameInfo.guessesRemaining}\nword: ${gameInfo.word}`)
+		.setDescription(
+			`guesses: ${gameInfo.guessesRemaining}\nword: ${gameInfo.word}\n${[
+				...gameInfo.guessesSoFar,
+			].join()}`
+		)
 		.setFooter({ text: `v${appVersion}` });
 
 	return {
