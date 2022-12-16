@@ -36,7 +36,6 @@ export class EvilHangmanGame {
 	}
 
 	makeGuess(guess: string): EvilHangmanDisplayInfo {
-		this.guessesRemaining -= 1;
 		this.guessesSoFar.add(guess);
 		const bestForm = this.getBestForm(guess);
 		this.updateWord(bestForm);
@@ -53,7 +52,11 @@ export class EvilHangmanGame {
 	}
 
 	private updateWord(form: RegExp): void {
-		this.word = form.source.replaceAll('\\w', '_');
+		const newWord = form.source.replaceAll('\\w', '_');
+		if (newWord === this.word) {
+			this.guessesRemaining -= 1;
+		}
+		this.word = newWord;
 	}
 
 	private removePossibleWords(guess: string): void {
