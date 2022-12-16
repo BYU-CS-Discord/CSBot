@@ -8,15 +8,19 @@ export class EvilHangmanGame {
 	private guessesRemaining: number;
 	private readonly guessesSoFar: Set<string> = new Set();
 
-	constructor(length: number, guesses: number) {
+	constructor(length: number | null, guesses: number | null) {
+		const allWords = fs.readFileSync(DICTIONARY_PATH).toString().split('\n');
+		if (length === null) {
+			length = allWords[Math.floor(Math.random() * allWords.length)]?.length ?? 1;
+		}
+		if (guesses === null) {
+			guesses = 13 - Math.round(length / 3); // Numbers arbitrary, for game balance
+		}
+
 		this.word = new Array(length).fill('-').join('');
 		this.guessesRemaining = guesses;
 
-		const possibleWords = fs
-			.readFileSync(DICTIONARY_PATH)
-			.toString()
-			.split('\n')
-			.filter(word => word.length === length);
+		const possibleWords = allWords.filter(word => word.length === length);
 		if (!isNonEmptyArray(possibleWords)) {
 			throw new Error(`No words in dictionary with length ${length}`);
 		}

@@ -1,34 +1,36 @@
-import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
-import { appVersion } from '../../constants/meta';
+import { SlashCommandBuilder } from 'discord.js';
 import { getEvilHangmanResponse } from '../../evilHangman/evilHangmanEmbedBuilder';
 import { EvilHangmanGame } from '../../evilHangman/evilHangmanGame';
 import { gameStore } from '../../evilHangman/gameStore';
+import { UserMessageError } from '../../helpers/UserMessageException';
+
+const LengthOption = 'wordlength';
+const GuessesOption = 'numguesses';
 
 const builder = new SlashCommandBuilder()
 	.setName('tothegallows')
-	.setDescription('Begins a new game of Evil Hangman');
+	.setDescription('Begins a new game of Evil Hangman')
+	.addIntegerOption(option =>
+		option.setName(LengthOption).setDescription('The number of letters in the word to guess')
+	)
+	.addIntegerOption(option =>
+		option.setName(GuessesOption).setDescription('The number of allowed incorrect guesses')
+	);
 
 export const toTheGallows: GlobalCommand = {
 	info: builder,
 	requiresGuild: false,
-	async execute({ reply, channelId }): Promise<void> {
+	async execute({ reply, channelId, interaction }): Promise<void> {
 		if (gameStore.has(channelId)) {
-			const embed = new EmbedBuilder()
-				.setTitle('Evil Hangman')
-				.setFooter({ text: `v${appVersion}` })
-				.setDescription('There is already a game running in this channel')
-				.setColor('DarkRed');
-
-			await reply({
-				embeds: [embed],
-				ephemeral: true,
-			});
-		} else {
-			const game = new EvilHangmanGame(10, 10); // TODO: placeholder numbers
-			gameStore.set(channelId, game);
-			const response = await getEvilHangmanResponse(game.getDisplayInfo());
-
-			await reply(response);
+			throw new UserMessageError('There is already a game running in this channel');
 		}
+		const wordLength = interaction.options.getInteger(LengthOption);
+		const numGuesses = interaction.options.getInteger(GuessesOption);
+
+		const game = new EvilHangmanGame(wordLength, numGuesses);
+		gameStore.set(channelId, game);
+		const response = await getEvilHangmanResponse(game.getDisplayInfo());
+
+		await reply(response);
 	},
 };
