@@ -39,8 +39,8 @@ export class EvilHangmanGame {
 		this.guessesRemaining -= 1;
 		this.guessesSoFar.add(guess);
 		const bestForm = this.getBestForm(guess);
-		this.removePossibleWords(bestForm);
 		this.updateWord(bestForm);
+		this.removePossibleWords(guess);
 		return this.getDisplayInfo();
 	}
 
@@ -56,8 +56,10 @@ export class EvilHangmanGame {
 		this.word = form.source.replaceAll('\\w', '_');
 	}
 
-	private removePossibleWords(form: RegExp): void {
-		this.possibleWords = this.possibleWords.filter(word => form.test(word));
+	private removePossibleWords(guess: string): void {
+		const allExceptGuessed = `(?![${guess}])\\w`;
+		const filterRegex = new RegExp(this.word.replaceAll('_', allExceptGuessed), 'u');
+		this.possibleWords = this.possibleWords.filter(word => filterRegex.test(word));
 	}
 
 	private getBestForm(guess: string): RegExp {
