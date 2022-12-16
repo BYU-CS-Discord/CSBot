@@ -10,7 +10,8 @@ const buttonMap: Map<Letter, Button> = new Map(
 
 export const letterButtons: Array<Button> = [...buttonMap.values()];
 
-export function getLetterOptions(word: string): Array<Button> {
-	const characters = new Set(word.split(''));
-	return [...buttonMap.entries()].filter(entry => !characters.has(entry[0])).map(entry => entry[1]);
+export function getLetterOptions(guessesSoFar: Set<string>): Array<Button> {
+	return [...buttonMap.entries()]
+		.filter(entry => !guessesSoFar.has(entry[0]))
+		.map(entry => entry[1]);
 }

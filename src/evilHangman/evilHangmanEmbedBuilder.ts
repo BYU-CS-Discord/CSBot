@@ -14,7 +14,7 @@ export function getEvilHangmanResponse(
 
 	return {
 		embeds: [embed],
-		components: getButtons(gameInfo.word),
+		components: getButtons(gameInfo.guessesSoFar),
 	};
 }
 
@@ -22,8 +22,8 @@ export function getEvilHangmanResponse(
 const MAX_BUTTONS_PER_ROW = 5;
 const MAX_BUTTON_ROWS = 5;
 const MAX_BUTTONS_TOTAL = MAX_BUTTONS_PER_ROW * MAX_BUTTON_ROWS;
-function getButtons(word: string): Array<ActionRowBuilder<ButtonBuilder>> {
-	const letterButtons = getLetterOptions(word);
+function getButtons(guessesSoFar: Set<string>): Array<ActionRowBuilder<ButtonBuilder>> {
+	const letterButtons = getLetterOptions(guessesSoFar);
 	if (letterButtons.length > MAX_BUTTONS_TOTAL) {
 		letterButtons.splice(MAX_BUTTONS_TOTAL - 1, Number.POSITIVE_INFINITY, hangmanMoreButton);
 	}

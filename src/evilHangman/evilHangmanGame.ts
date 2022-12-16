@@ -6,9 +6,10 @@ export class EvilHangmanGame {
 	private possibleWords: Array<string>;
 	private word: string;
 	private guessesRemaining: number;
+	private readonly guessesSoFar: Set<string> = new Set();
 
 	constructor(length: number, guesses: number) {
-		this.word = new Array(length).fill('_').join();
+		this.word = new Array(length).fill('_').join('');
 		this.guessesRemaining = guesses;
 
 		const possibleWords = fs
@@ -27,8 +28,7 @@ export class EvilHangmanGame {
 			return 'That guess is not a letter';
 		}
 
-		const guessesSoFar = this.guessesSoFar();
-		if (guessesSoFar.has(guess)) {
+		if (this.guessesSoFar.has(guess)) {
 			return "You've already guessed that letter";
 		}
 
@@ -37,6 +37,7 @@ export class EvilHangmanGame {
 
 	makeGuess(guess: string): EvilHangmanDisplayInfo {
 		this.guessesRemaining -= 1;
+		this.guessesSoFar.add(guess);
 		const bestForm = this.getBestForm(guess);
 		this.removePossibleWords(bestForm);
 		this.updateWord(bestForm);
@@ -47,15 +48,12 @@ export class EvilHangmanGame {
 		return {
 			word: this.word,
 			guessesRemaining: this.guessesRemaining,
+			guessesSoFar: this.guessesSoFar,
 		};
 	}
 
-	private guessesSoFar(): Set<string> {
-		return new Set(this.word.split('').filter(isAlpha));
-	}
-
 	private updateWord(form: RegExp): void {
-		this.word = form.toString().replace('\\w', '_');
+		this.word = form.source.replaceAll('\\w', '_');
 	}
 
 	private removePossibleWords(form: RegExp): void {
@@ -63,7 +61,7 @@ export class EvilHangmanGame {
 	}
 
 	private getBestForm(guess: string): RegExp {
-		const possibilities = this.getFormScores(guess).sort((a, b) => a.score - b.score);
+		const possibilities = this.getFormScores(guess).sort((a, b) => b.score - a.score);
 		if (isNonEmptyArray(possibilities)) {
 			return possibilities[0].form;
 		}
@@ -83,9 +81,8 @@ export class EvilHangmanGame {
 	}
 
 	private getForms(guess: string): Array<string> {
-		const guessesSoFar = this.guessesSoFar();
 		const forms = this.possibleWords.map(possibleWord =>
-			this.getForm(guess, possibleWord, guessesSoFar)
+			this.getForm(guess, possibleWord, this.guessesSoFar)
 		);
 		return [...new Set(forms)];
 	}
@@ -98,7 +95,7 @@ export class EvilHangmanGame {
 			}
 			return '\\w';
 		});
-		return formArray.join();
+		return formArray.join('');
 	}
 }
 
@@ -109,6 +106,7 @@ function isAlpha(letter: string): boolean {
 export interface EvilHangmanDisplayInfo {
 	word: string;
 	guessesRemaining: number;
+	guessesSoFar: Set<string>;
 }
 
 interface FormScore {
