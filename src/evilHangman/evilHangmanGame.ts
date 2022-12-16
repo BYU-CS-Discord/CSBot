@@ -48,22 +48,26 @@ export class EvilHangmanGame {
 	}
 
 	getDisplayInfo(): EvilHangmanDisplayInfo {
+		const winState = this.getWinState();
 		return {
 			word: this.word,
 			guessesRemaining: this.guessesRemaining,
 			guessesSoFar: this.guessesSoFar,
-			winState: this.getWinState(),
+			...winState,
 		};
 	}
 
-	private getWinState(): EvilHangmanWinState {
+	private getWinState(): DisplayInfoWinStateExtension {
 		if (this.guessesRemaining < 1) {
-			return EvilHangmanWinState.LOST;
+			return {
+				winState: EvilHangmanWinState.LOST,
+				correctWord: this.possibleWords[0] ?? '',
+			};
 		}
 		if (!this.word.includes('-')) {
-			return EvilHangmanWinState.WON;
+			return { winState: EvilHangmanWinState.WON };
 		}
-		return EvilHangmanWinState.IN_PROGRESS;
+		return { winState: EvilHangmanWinState.IN_PROGRESS };
 	}
 
 	private updateWord(form: RegExp): void {
@@ -123,12 +127,20 @@ function isAlpha(letter: string): boolean {
 	return /^[a-z]$/iu.test(letter);
 }
 
-export interface EvilHangmanDisplayInfo {
+export type EvilHangmanDisplayInfo = {
 	word: string;
 	guessesRemaining: number;
 	guessesSoFar: Set<string>;
-	winState: EvilHangmanWinState;
-}
+} & DisplayInfoWinStateExtension;
+
+type DisplayInfoWinStateExtension =
+	| {
+			winState: EvilHangmanWinState.LOST;
+			correctWord: string;
+	  }
+	| {
+			winState: EvilHangmanWinState.WON | EvilHangmanWinState.IN_PROGRESS;
+	  };
 
 export enum EvilHangmanWinState {
 	WON = 'won',

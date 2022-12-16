@@ -34,7 +34,7 @@ export async function getEvilHangmanResponse(
 			embed.setDescription('You win!');
 			break;
 		case EvilHangmanWinState.LOST:
-			embed.setDescription('You Lose!');
+			embed.setDescription(`You Lose! The correct word was ${gameInfo.correctWord}.`);
 			break;
 	}
 
