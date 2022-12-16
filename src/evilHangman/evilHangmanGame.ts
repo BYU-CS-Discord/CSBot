@@ -48,7 +48,18 @@ export class EvilHangmanGame {
 			word: this.word,
 			guessesRemaining: this.guessesRemaining,
 			guessesSoFar: this.guessesSoFar,
+			winState: this.getWinState(),
 		};
+	}
+
+	private getWinState(): EvilHangmanWinState {
+		if (this.guessesRemaining < 1) {
+			return EvilHangmanWinState.LOST;
+		}
+		if (!this.word.includes('-')) {
+			return EvilHangmanWinState.WON;
+		}
+		return EvilHangmanWinState.IN_PROGRESS;
 	}
 
 	private updateWord(form: RegExp): void {
@@ -112,6 +123,13 @@ export interface EvilHangmanDisplayInfo {
 	word: string;
 	guessesRemaining: number;
 	guessesSoFar: Set<string>;
+	winState: EvilHangmanWinState;
+}
+
+export enum EvilHangmanWinState {
+	WON = 'won',
+	IN_PROGRESS = 'in progress',
+	LOST = 'lost',
 }
 
 interface FormScore {

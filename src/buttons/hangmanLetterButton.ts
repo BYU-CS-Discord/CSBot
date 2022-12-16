@@ -1,5 +1,6 @@
 import { ButtonBuilder, ButtonStyle } from 'discord.js';
 import { getEvilHangmanResponse } from '../evilHangman/evilHangmanEmbedBuilder';
+import { EvilHangmanWinState } from '../evilHangman/evilHangmanGame';
 import { gameStore } from '../evilHangman/gameStore';
 import { UserMessageError } from '../helpers/UserMessageException';
 
@@ -48,6 +49,10 @@ export function hangmanLetterButton(letter: Letter): Button {
 			}
 
 			const displayInfo = game.makeGuess(letter);
+			if (displayInfo.winState !== EvilHangmanWinState.IN_PROGRESS) {
+				gameStore.delete(channelId);
+			}
+
 			const response = getEvilHangmanResponse(displayInfo);
 			await interaction.update(response);
 		},

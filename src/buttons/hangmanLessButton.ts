@@ -4,8 +4,8 @@ import { getEvilHangmanResponse } from '../evilHangman/evilHangmanEmbedBuilder';
 import { gameStore } from '../evilHangman/gameStore';
 import { UserMessageError } from '../helpers/UserMessageException';
 
-const customId = 'hangmanMoreButton';
-export const hangmanMoreButton: Button = {
+const customId = 'hangmanLessButton';
+export const hangmanLessButton: Button = {
 	customId,
 	async execute({ channelId, interaction }): Promise<void> {
 		const game = gameStore.get(channelId);
@@ -15,10 +15,10 @@ export const hangmanMoreButton: Button = {
 		}
 
 		const displayInfo = game.getDisplayInfo();
-		const response = getEvilHangmanResponse(displayInfo, 1);
+		const response = getEvilHangmanResponse(displayInfo);
 		await interaction.update(response);
 	},
 	makeBuilder(): ButtonBuilder {
-		return new ButtonBuilder().setCustomId(customId).setLabel('->').setStyle(ButtonStyle.Primary);
+		return new ButtonBuilder().setCustomId(customId).setLabel('<-').setStyle(ButtonStyle.Primary);
 	},
 };

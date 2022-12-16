@@ -1,4 +1,5 @@
 import { letterButtons } from '../evilHangman/hangmanLetterButtons';
+import { hangmanLessButton } from './hangmanLessButton';
 import { hangmanMoreButton } from './hangmanMoreButton';
 
 /**
@@ -34,3 +35,4 @@ export function _add(button: Button): void {
 /**  Install buttons here:  **/
 letterButtons.forEach(letterButton => _add(letterButton));
 _add(hangmanMoreButton);
+_add(hangmanLessButton);
