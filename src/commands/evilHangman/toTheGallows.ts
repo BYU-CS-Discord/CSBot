@@ -1,8 +1,6 @@
 import { SlashCommandBuilder } from 'discord.js';
-import { getEvilHangmanResponse } from '../../evilHangman/evilHangmanEmbedBuilder';
+import { buildEvilHangmanMessage } from '../../evilHangman/evilHangmanMessage';
 import { EvilHangmanGame } from '../../evilHangman/evilHangmanGame';
-import { gameStore } from '../../evilHangman/gameStore';
-import { UserMessageError } from '../../helpers/UserMessageException';
 
 const LengthOption = 'wordlength';
 const GuessesOption = 'numguesses';
@@ -20,16 +18,12 @@ const builder = new SlashCommandBuilder()
 export const toTheGallows: GlobalCommand = {
 	info: builder,
 	requiresGuild: false,
-	async execute({ reply, channelId, interaction }): Promise<void> {
-		if (gameStore.has(channelId)) {
-			throw new UserMessageError('There is already a game running in this channel');
-		}
+	async execute({ reply, interaction }): Promise<void> {
 		const wordLength = interaction.options.getInteger(LengthOption);
 		const numGuesses = interaction.options.getInteger(GuessesOption);
 
-		const game = new EvilHangmanGame(wordLength, numGuesses);
-		gameStore.set(channelId, game);
-		const response = await getEvilHangmanResponse(game.getDisplayInfo());
+		const game = EvilHangmanGame.newGame(wordLength, numGuesses);
+		const response = await buildEvilHangmanMessage(game.getDisplayInfo());
 
 		await reply(response);
 	},

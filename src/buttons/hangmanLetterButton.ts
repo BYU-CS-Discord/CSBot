@@ -1,7 +1,8 @@
 import { ButtonBuilder, ButtonStyle } from 'discord.js';
-import { getEvilHangmanResponse } from '../evilHangman/evilHangmanEmbedBuilder';
-import { EvilHangmanWinState } from '../evilHangman/evilHangmanGame';
-import { gameStore } from '../evilHangman/gameStore';
+import {
+	buildEvilHangmanMessage,
+	parseEvilHangmanMessage,
+} from '../evilHangman/evilHangmanMessage';
 import { UserMessageError } from '../helpers/UserMessageException';
 
 export type Letter =
@@ -36,12 +37,8 @@ export function hangmanLetterButton(letter: Letter): Button {
 	const customId = customIdStem + letter;
 	return {
 		customId,
-		async execute({ channelId, interaction }): Promise<void> {
-			const game = gameStore.get(channelId);
-
-			if (game === undefined) {
-				throw new UserMessageError('There is no Evil Hangman game running in this channel');
-			}
+		async execute({ interaction, message }): Promise<void> {
+			const game = parseEvilHangmanMessage(message);
 
 			const guessErrorMessage = game.checkGuess(letter);
 			if (guessErrorMessage !== null) {
@@ -49,11 +46,8 @@ export function hangmanLetterButton(letter: Letter): Button {
 			}
 
 			const displayInfo = game.makeGuess(letter);
-			if (displayInfo.winState !== EvilHangmanWinState.IN_PROGRESS) {
-				gameStore.delete(channelId);
-			}
 
-			const response = await getEvilHangmanResponse(displayInfo);
+			const response = await buildEvilHangmanMessage(displayInfo);
 			await interaction.update(response);
 		},
 		makeBuilder(): ButtonBuilder {

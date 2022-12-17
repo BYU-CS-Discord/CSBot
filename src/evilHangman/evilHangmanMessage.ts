@@ -1,23 +1,32 @@
-import { ActionRowBuilder, ButtonBuilder, EmbedBuilder, MessageReplyOptions } from 'discord.js';
+import {
+	ActionRowBuilder,
+	ButtonBuilder,
+	EmbedBuilder,
+	Message,
+	MessageReplyOptions,
+} from 'discord.js';
 import { hangmanLessButton } from '../buttons/hangmanLessButton';
 import { hangmanMoreButton } from '../buttons/hangmanMoreButton';
 import { appVersion } from '../constants/meta';
 import { getHangmanArt } from './evilHangmanAsciiArt';
-import { EvilHangmanDisplayInfo, EvilHangmanWinState } from './evilHangmanGame';
+import { EvilHangmanDisplayInfo, EvilHangmanGame, EvilHangmanWinState } from './evilHangmanGame';
 import { getLetterOptions } from './hangmanLetterButtons';
 
 type Page = 0 | 1;
-export async function getEvilHangmanResponse(
+const GAME_INFO_FORMAT = 'Remaining Guesses: {0}\nWord: {1}\nLetters Guessed: {2}';
+export async function buildEvilHangmanMessage(
 	gameInfo: EvilHangmanDisplayInfo,
 	page: Page = 0
 ): Promise<Omit<MessageReplyOptions, 'flags'>> {
-	const mainDescription = `guesses: ${gameInfo.guessesRemaining}\nword: ${gameInfo.word}\n${[
-		...gameInfo.guessesSoFar,
-	].join()}`;
-	const hangmanArt = `\`\`\`${await getHangmanArt(
-		gameInfo.guessesRemaining,
-		gameInfo.guessesRemaining + gameInfo.guessesSoFar.size
-	)}\`\`\``;
+	const mainDescription = `${format(
+		GAME_INFO_FORMAT,
+		gameInfo.guessesRemaining.toString(),
+		gameInfo.word,
+		[...gameInfo.guessesSoFar].join()
+	)}_ _`; // The italic space here is a bit of a hack, but it prevents discord from trimming the message which messes up the regex match
+	const totalGuesses = gameInfo.guessesRemaining + gameInfo.guessesSoFar.size;
+	const hangmanArt = `\`\`\`${await getHangmanArt(gameInfo.guessesRemaining, totalGuesses)}\`\`\``;
+
 	const embed = new EmbedBuilder()
 		.setTitle('Evil Hangman')
 		.setFooter({ text: `v${appVersion}` })
@@ -89,4 +98,38 @@ function getButtons(guessesSoFar: Set<string>, page: Page): Array<ActionRowBuild
 	}
 
 	return rows;
+}
+
+const FORMAT_ERROR_MESSAGE = 'Incorrect message format for Evil Hangman';
+export function parseEvilHangmanMessage(message: Message): EvilHangmanGame {
+	const gameStateString = message.embeds[0]?.data?.fields?.[1]?.value;
+	if (gameStateString === undefined) {
+		throw new Error(FORMAT_ERROR_MESSAGE);
+	}
+	const parser = new RegExp(format(GAME_INFO_FORMAT, '(\\d*)', '([\\w-]*)', '([a-z,]*)'), 'u');
+	const parseResult = parser.exec(gameStateString);
+	if (parseResult === null) {
+		throw new Error(FORMAT_ERROR_MESSAGE);
+	}
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	const [_, guessesRemainingString, word, guessedLettersString] = parseResult;
+	if (
+		guessesRemainingString === undefined ||
+		word === undefined ||
+		guessedLettersString === undefined
+	) {
+		throw new Error(FORMAT_ERROR_MESSAGE);
+	}
+
+	const guessesRemaining = Number.parseInt(guessesRemainingString, 10);
+	const guessedLetters = new Set(
+		guessedLettersString?.split(',').filter(letter => letter.length === 1)
+	);
+	return new EvilHangmanGame(word, guessesRemaining, guessedLetters);
+}
+
+function format(source: string, ...args: Array<string>): string {
+	return source.replace(/\{(\d+)\}/gu, (match, number: number) => {
+		return (args[number] !== 'undefined' ? args[number] : match) ?? '';
+	});
 }

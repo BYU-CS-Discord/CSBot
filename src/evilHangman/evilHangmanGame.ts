@@ -2,14 +2,23 @@ import fs from 'fs';
 import { isNonEmptyArray } from '../helpers/guards/isNonEmptyArray';
 
 const DICTIONARY_PATH = './res/dictionary.txt';
+const allWords = fs.readFileSync(DICTIONARY_PATH).toString().split('\n');
 export class EvilHangmanGame {
 	private possibleWords: Array<string>;
 	private word: string;
 	private guessesRemaining: number;
-	private readonly guessesSoFar: Set<string> = new Set();
+	private readonly guessesSoFar: Set<string>;
 
-	constructor(length: number | null, guesses: number | null) {
-		const allWords = fs.readFileSync(DICTIONARY_PATH).toString().split('\n');
+	constructor(word: string, guessesRemaining: number, guessesSoFar: Set<string>) {
+		this.word = word;
+		this.guessesRemaining = guessesRemaining;
+		this.guessesSoFar = guessesSoFar;
+
+		this.possibleWords = allWords;
+		this.removePossibleWords([...guessesSoFar]);
+	}
+
+	static newGame(length: number | null, guesses: number | null): EvilHangmanGame {
 		if (length === null) {
 			length = allWords[Math.floor(Math.random() * allWords.length)]?.length ?? 1;
 		}
@@ -17,14 +26,10 @@ export class EvilHangmanGame {
 			guesses = 13 - Math.round(length / 3); // Numbers arbitrary, for game balance
 		}
 
-		this.word = new Array(length).fill('-').join('');
-		this.guessesRemaining = guesses;
+		const word = new Array(length).fill('-').join('');
+		const guessesRemaining = guesses;
 
-		const possibleWords = allWords.filter(word => word.length === length);
-		if (!isNonEmptyArray(possibleWords)) {
-			throw new Error(`No words in dictionary with length ${length}`);
-		}
-		this.possibleWords = possibleWords;
+		return new this(word, guessesRemaining, new Set());
 	}
 
 	checkGuess(guess: string): string | null {
@@ -43,7 +48,7 @@ export class EvilHangmanGame {
 		this.guessesSoFar.add(guess);
 		const bestForm = this.getBestForm(guess);
 		this.updateWord(bestForm);
-		this.removePossibleWords(guess);
+		this.removePossibleWords([guess]);
 		return this.getDisplayInfo();
 	}
 
@@ -78,8 +83,8 @@ export class EvilHangmanGame {
 		this.word = newWord;
 	}
 
-	private removePossibleWords(guess: string): void {
-		const allExceptGuessed = `(?![${guess}])\\w`;
+	private removePossibleWords(guesses: Array<string>): void {
+		const allExceptGuessed = `(?![${[...guesses].join('')}])\\w`;
 		const filterRegex = new RegExp(this.word.replaceAll('-', allExceptGuessed), 'u');
 		this.possibleWords = this.possibleWords.filter(word => filterRegex.test(word));
 	}
