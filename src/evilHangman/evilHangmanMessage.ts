@@ -101,12 +101,12 @@ function getButtons(guessesSoFar: Set<string>, page: Page): Array<ActionRowBuild
 }
 
 const FORMAT_ERROR_MESSAGE = 'Incorrect message format for Evil Hangman';
+const parser = new RegExp(format(GAME_INFO_FORMAT, '(\\d*)', '([\\w-]*)', '([a-z,]*)'), 'u');
 export function parseEvilHangmanMessage(message: Message): EvilHangmanGame {
 	const gameStateString = message.embeds[0]?.data?.fields?.[1]?.value;
 	if (gameStateString === undefined) {
 		throw new Error(FORMAT_ERROR_MESSAGE);
 	}
-	const parser = new RegExp(format(GAME_INFO_FORMAT, '(\\d*)', '([\\w-]*)', '([a-z,]*)'), 'u');
 	const parseResult = parser.exec(gameStateString);
 	if (parseResult === null) {
 		throw new Error(FORMAT_ERROR_MESSAGE);
