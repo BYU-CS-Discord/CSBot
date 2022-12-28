@@ -2,7 +2,11 @@ import fs from 'fs';
 import { isNonEmptyArray } from '../helpers/guards/isNonEmptyArray';
 
 const DICTIONARY_PATH = './res/dictionary.txt';
-const allWords = fs.readFileSync(DICTIONARY_PATH).toString().split('\n');
+const allWords = fs
+	.readFileSync(DICTIONARY_PATH)
+	.toString()
+	.split('\n')
+	.map(word => word.trim());
 export class EvilHangmanGame {
 	private possibleWords: Array<string>;
 	private word: string;
@@ -14,7 +18,7 @@ export class EvilHangmanGame {
 		this.guessesRemaining = guessesRemaining;
 		this.guessesSoFar = guessesSoFar;
 
-		this.possibleWords = allWords;
+		this.possibleWords = allWords.filter(possibleWord => this.word.length === possibleWord.length);
 		this.removePossibleWords([...guessesSoFar]);
 	}
 
