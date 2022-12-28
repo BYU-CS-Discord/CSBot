@@ -153,6 +153,15 @@ const mockButton: Button = {
 };
 mockAllButtons.set(mockButton.customId, mockButton);
 
+const mockErrorButton: Button = {
+	customId: 'test-error-button',
+	execute: () => {
+		throw new Error('Button error, this is a test');
+	},
+	makeBuilder: () => new ButtonBuilder(),
+};
+mockAllButtons.set(mockErrorButton.customId, mockErrorButton);
+
 // Mock the logger to track output
 jest.mock('../logger');
 import { error as mockLoggerError } from '../logger';
@@ -605,5 +614,18 @@ describe('on(interactionCreate)', () => {
 
 		await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 		expect(mockGlobalExecute).toHaveBeenCalledOnce();
+	});
+
+	test('sends an error embed message when button throws an error', async () => {
+		const interaction = defaultInteraction() as ButtonInteraction;
+		interaction.isCommand = (): boolean => false;
+		interaction.isButton = (): boolean => true;
+		interaction.customId = mockErrorButton.customId;
+
+		const mockInteractionReply = jest.fn();
+		interaction.reply = mockInteractionReply;
+
+		await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+		expect(mockInteractionReply).toHaveBeenCalledOnce();
 	});
 });
