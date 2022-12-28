@@ -1,0 +1,66 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`evilHangmanAsciiArt.ts frame 0 of 1 has not changed 1`] = `
+"
+ /---\\\\
+ o   |
+\\\\|/  |
+ |   |
+/ \\\\  |
+    -|-
+"
+`;
+
+exports[`evilHangmanAsciiArt.ts frame 0 of 7 has not changed 1`] = `
+"
+ /---\\\\
+ o   |
+\\\\|/  |
+ |   |
+/ \\\\  |
+    -|-
+"
+`;
+
+exports[`evilHangmanAsciiArt.ts frame 3 of 7 has not changed 1`] = `
+"
+ /---\\\\
+ o   |
+\\\\|/  |
+     |
+     |
+    -|-
+"
+`;
+
+exports[`evilHangmanAsciiArt.ts frame 4 of 7 has not changed 1`] = `
+"
+ /---\\\\
+ o   |
+\\\\|   |
+     |
+     |
+    -|-
+"
+`;
+
+exports[`evilHangmanAsciiArt.ts frame 7 of 7 has not changed 1`] = `
+" /---\\\\
+     |
+     |
+     |
+     |
+    -|-
+"
+`;
+
+exports[`evilHangmanAsciiArt.ts frame 50 of 1000 has not changed 1`] = `
+"
+ /---\\\\
+ o   |
+\\\\|/  |
+ |   |
+/    |
+    -|-
+"
+`;
