@@ -34,3 +34,5 @@ jobs:
 
       - name: Report test coverage
         uses: ArtiomTr/jest-coverage-report-action@v2.1.1
+        with:
+          skip-step: all # we already ran the tests, no need to run again
