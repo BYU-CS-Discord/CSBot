@@ -167,10 +167,18 @@ $ npm run commands:deploy
 
 ### Run the bot
 
+For development purposes (the update command will not work properly, but logs are output to the console):
+
 ```sh
 $ node .
 # or
-$ npm start
+$ npm run dev
+```
+
+For production purposes:
+
+```sh
+npm start
 ```
 
 ## Chat Input Commands
