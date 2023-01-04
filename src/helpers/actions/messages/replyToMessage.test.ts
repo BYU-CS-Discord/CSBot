@@ -1,4 +1,4 @@
-import type { CommandInteraction, Message, TextChannel, User } from 'discord.js';
+import type { Message, RepliableInteraction, TextChannel, User } from 'discord.js';
 
 // Mock the logger to track output
 jest.mock('../../../logger');
@@ -11,7 +11,7 @@ describe('Replies', () => {
 
 	describe('to interactions', () => {
 		const mockReply = jest.fn();
-		let interaction: CommandInteraction;
+		let interaction: RepliableInteraction;
 
 		beforeEach(() => {
 			mockReply.mockResolvedValue({});
@@ -25,7 +25,7 @@ describe('Replies', () => {
 					id: 'channel-1234',
 				},
 				reply: mockReply,
-			} as unknown as CommandInteraction;
+			} as unknown as RepliableInteraction;
 		});
 
 		test('sends an ephemeral reply with text', async () => {

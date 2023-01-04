@@ -6,6 +6,7 @@ import type {
 	GuildMember,
 	Interaction,
 	Message,
+	ButtonInteraction,
 	MessageContextMenuCommandInteraction,
 	TextBasedChannel,
 	User,
@@ -13,6 +14,7 @@ import type {
 } from 'discord.js';
 import {
 	ApplicationCommandType,
+	ButtonBuilder,
 	ChannelType,
 	ContextMenuCommandBuilder,
 	SlashCommandBuilder,
@@ -125,6 +127,19 @@ const mockErrorGuildedCommand: Command = {
 };
 mockAllCommands.set(mockErrorGuildedCommand.info.name, mockErrorGuildedCommand);
 
+// Mock allButtons to isolate our test code
+const mockAllButtons = new Map<string, Button>();
+jest.mock('../buttons', () => ({
+	allButtons: mockAllButtons,
+}));
+
+const mockButton: Button = {
+	customId: 'test-button',
+	execute: mockGlobalExecute,
+	makeBuilder: () => new ButtonBuilder(),
+};
+mockAllButtons.set(mockButton.customId, mockButton);
+
 // Mock the logger to track output
 jest.mock('../logger');
 import { error as mockLoggerError } from '../logger';
@@ -170,6 +185,7 @@ function defaultInteraction(): Interaction {
 			partial: false,
 		},
 		isCommand: () => true,
+		isButton: () => false,
 		isChatInputCommand: () => true,
 		isAutocomplete: () => false,
 	} as unknown as Interaction;
@@ -190,7 +206,7 @@ describe('on(interactionCreate)', () => {
 			);
 		});
 
-		test("does nothing if the interaction isn't a command", async () => {
+		test("does nothing if the interaction isn't a supported interaction type", async () => {
 			const interaction = defaultInteraction();
 			interaction.isCommand = (): boolean => false;
 
@@ -452,6 +468,7 @@ describe('on(interactionCreate)', () => {
 			interaction = defaultInteraction() as AutocompleteInteraction;
 			interaction.isAutocomplete = (): boolean => true;
 			interaction.isCommand = (): boolean => false;
+			interaction.isButton = (): boolean => false;
 			interaction.isChatInputCommand = (): boolean => false;
 			interaction.respond = mockRespond;
 			interaction.commandName = mockGlobalAutocompleteCommand.info.name;
@@ -538,5 +555,25 @@ describe('on(interactionCreate)', () => {
 			expect(mockGlobalAutocomplete).toHaveBeenCalledOnce();
 			expect(mockGlobalAutocomplete).toHaveBeenCalledWith(interaction);
 		});
+	});
+
+	test('does nothing if the button is not found', async () => {
+		const interaction = defaultInteraction() as ButtonInteraction;
+		interaction.customId = 'nop';
+		interaction.isCommand = (): boolean => false;
+		interaction.isButton = (): boolean => true;
+
+		await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+		expect(mockGlobalExecute).not.toHaveBeenCalled();
+	});
+
+	test('executes the button', async () => {
+		const interaction = defaultInteraction() as ButtonInteraction;
+		interaction.isCommand = (): boolean => false;
+		interaction.isButton = (): boolean => true;
+		interaction.customId = mockButton.customId;
+
+		await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+		expect(mockGlobalExecute).toHaveBeenCalledOnce();
 	});
 });

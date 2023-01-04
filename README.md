@@ -22,6 +22,7 @@ This list is updated as contributors contribute.
 - [**JstnMcBrd**](https://github.com/JstnMcBrd)
 - [**AverageHelper**](https://github.com/AverageHelper)
 - [**SpencerHastings**](https://github.com/SpencerHastings/)
+- [**Plyb**](https://github.com/Plyb)
 
 ## Table of contents
 
