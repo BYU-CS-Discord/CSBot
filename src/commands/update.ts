@@ -9,14 +9,14 @@ const info = new SlashCommandBuilder()
 export const update: GlobalCommand = {
 	info,
 	requiresGuild: false,
-	async execute({ replyPrivately, interaction }) {
+	async execute({ replyPrivately, user, interaction }) {
 		const admin_ids = process.env['ADMINISTRATORS']?.split(',');
 		if (!admin_ids) {
 			// TODO: make this a UserMessageException
 			throw new Error('There is no ADMINISTRATORS variable. You must set ADMINISTRATORS in .env');
 		}
 
-		if (!admin_ids.includes(interaction.user.id)) {
+		if (!admin_ids.includes(user.id)) {
 			// TODO: make this a UserMessageException
 			throw new Error(
 				'You do not have permission to perform this command. Contact the bot administrator.'
