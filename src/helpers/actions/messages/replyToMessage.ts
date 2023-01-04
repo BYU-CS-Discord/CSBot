@@ -1,10 +1,10 @@
 // External dependencies
 import type {
-	CommandInteraction,
 	InteractionReplyOptions,
 	Message,
 	MessageCreateOptions,
 	MessageReplyOptions,
+	RepliableInteraction,
 	TextBasedChannel,
 	User,
 } from 'discord.js';
@@ -60,7 +60,7 @@ async function sendDMReply(
 }
 
 async function sendEphemeralReply(
-	source: CommandInteraction,
+	source: RepliableInteraction,
 	options: string | InteractionReplyOptions
 ): Promise<boolean> {
 	// Returns boolean and not message, because we cannot fetch ephemeral messages
@@ -93,7 +93,7 @@ async function sendEphemeralReply(
  * or a boolean value indicating whether an ephemeral reply succeeded or failed.
  */
 export async function replyWithPrivateMessage(
-	source: Message | CommandInteraction,
+	source: Message | RepliableInteraction,
 	options: string | Omit<MessageCreateOptions, 'reply' | 'flags'>,
 	preferDMs: boolean
 ): Promise<Message | boolean> {

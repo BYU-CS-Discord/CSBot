@@ -1,4 +1,4 @@
-import type { CommandInteraction } from 'discord.js';
+import type { RepliableInteraction } from 'discord.js';
 
 jest.mock('../helpers/actions/messages/replyToMessage');
 import { sendMessageInChannel } from '../helpers/actions/messages/replyToMessage';
@@ -21,7 +21,7 @@ describe('follow-up message', () => {
 			isTextBased: () => true,
 		},
 		followUp: mockInteractionFollowUp,
-	} as unknown as CommandInteraction;
+	} as unknown as RepliableInteraction;
 
 	const followUp = factory(interaction);
 
