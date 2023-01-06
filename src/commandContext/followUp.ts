@@ -1,11 +1,11 @@
 // External dependencies
-import type { CommandInteraction, InteractionReplyOptions } from 'discord.js';
+import type { InteractionReplyOptions, RepliableInteraction } from 'discord.js';
 
 // Internal dependencies
 import * as logger from '../logger';
 import { sendMessageInChannel } from '../helpers/actions/messages/replyToMessage';
 
-export function followUpFactory(interaction: CommandInteraction): CommandContext['followUp'] {
+export function followUpFactory(interaction: RepliableInteraction): CommandContext['followUp'] {
 	return async function followUp(options) {
 		if (
 			typeof options !== 'string' &&

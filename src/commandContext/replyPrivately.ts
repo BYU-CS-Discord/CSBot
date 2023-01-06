@@ -1,5 +1,5 @@
 // External dependencies
-import type { CommandInteraction } from 'discord.js';
+import type { RepliableInteraction } from 'discord.js';
 
 // Internal dependencies
 import * as logger from '../logger';
@@ -7,7 +7,7 @@ import { logUser } from '../helpers/logUser';
 import { replyWithPrivateMessage } from '../helpers/actions/messages/replyToMessage';
 
 export function replyPrivatelyFactory(
-	interaction: CommandInteraction
+	interaction: RepliableInteraction
 ): CommandContext['replyPrivately'] {
 	return async function replyPrivately(options, viaDM: boolean = false) {
 		if (viaDM) {

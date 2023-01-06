@@ -1,13 +1,15 @@
 // External dependencies
+import toString from 'lodash/toString';
 import type {
 	AutocompleteInteraction,
+	ButtonInteraction,
 	CommandInteraction,
 	DMChannel,
 	GuildMember,
 	GuildTextBasedChannel,
+	RepliableInteraction,
 } from 'discord.js';
 import { EmbedBuilder, Colors, ApplicationCommandType, ChannelType } from 'discord.js';
-import toString from 'lodash/toString';
 
 // Internal dependencies
 import * as logger from '../logger';
@@ -20,6 +22,7 @@ import { prepareForLongRunningTasksFactory } from '../commandContext/prepareForL
 import { replyFactory } from '../commandContext/reply';
 import { replyPrivatelyFactory } from '../commandContext/replyPrivately';
 import { sendTypingFactory } from '../commandContext/sendTyping';
+import { allButtons } from '../buttons';
 
 /**
  * The event handler for Discord Interactions (usually chat commands)
@@ -33,7 +36,11 @@ export const interactionCreate = onEvent('interactionCreate', {
 			if (interaction.user.id === interaction.client.user.id) return;
 
 			if (interaction.isCommand()) {
-				await handleCommandInteraction(interaction);
+				const context = await generateContext(interaction);
+				await handleCommandInteraction(context, interaction);
+			} else if (interaction.isButton()) {
+				const context = await generateContext(interaction);
+				await handleButtonInteraction(context, interaction);
 			} else if (interaction.isAutocomplete()) {
 				await handleAutocompleteInteraction(interaction);
 			}
@@ -56,7 +63,10 @@ export const interactionCreate = onEvent('interactionCreate', {
  * things get done when we're writing command handlers, only
  * that what we say goes.
  */
-async function handleCommandInteraction(interaction: CommandInteraction): Promise<void> {
+async function handleCommandInteraction(
+	vagueContext: InteractionContext,
+	interaction: CommandInteraction
+): Promise<void> {
 	logger.debug(`User ${logUser(interaction.user)} sent command: '${interaction.commandName}'`);
 
 	const command = allCommands.get(interaction.commandName);
@@ -71,42 +81,6 @@ async function handleCommandInteraction(interaction: CommandInteraction): Promis
 	}
 
 	logger.debug(`Calling command handler '${command.info.name}'`);
-
-	const guild = interaction.guild;
-
-	let member: GuildMember | null;
-	if (interaction.inCachedGuild()) {
-		member = interaction.member;
-	} else {
-		member = (await guild?.members.fetch(interaction.user)) ?? null;
-	}
-
-	let channel: GuildTextBasedChannel | DMChannel | null;
-	if (interaction.channel?.type === ChannelType.DM && interaction.channel.partial) {
-		channel = await interaction.channel.fetch();
-	} else {
-		channel = interaction.channel;
-	}
-
-	const vagueContext: Omit<CommandContext, 'source' | 'interaction'> = {
-		createdTimestamp: interaction.createdTimestamp,
-		targetId: null,
-		targetUser: null,
-		targetMember: null,
-		targetMessage: null,
-		user: interaction.user,
-		member,
-		guild,
-		channelId: interaction.channelId,
-		channel,
-		client: interaction.client,
-		options: interaction.options.data,
-		prepareForLongRunningTasks: prepareForLongRunningTasksFactory(interaction),
-		replyPrivately: replyPrivatelyFactory(interaction),
-		reply: replyFactory(interaction),
-		followUp: followUpFactory(interaction),
-		sendTyping: sendTypingFactory(interaction),
-	};
 
 	let context: CommandContext;
 
@@ -160,7 +134,7 @@ async function handleCommandInteraction(interaction: CommandInteraction): Promis
 				targetMember = interaction.targetMember;
 			} else {
 				// Fetch the guild member if it's partial
-				targetMember = (await guild?.members.fetch(interaction.targetId)) ?? null;
+				targetMember = (await context.guild?.members.fetch(interaction.targetId)) ?? null;
 			}
 			const userContextMenuCommandContext: UserContextMenuCommandContext = {
 				...context,
@@ -277,7 +251,7 @@ async function handleAutocompleteInteraction(interaction: AutocompleteInteractio
  * @private
  */
 export async function sendErrorMessage(
-	interaction: CommandInteraction,
+	interaction: CommandInteraction | ButtonInteraction,
 	error: unknown
 ): Promise<void> {
 	const errorMessage = toString(error);
@@ -285,11 +259,14 @@ export async function sendErrorMessage(
 	const privateDir = __dirname.slice(0, __dirname.lastIndexOf('dist'));
 	const safeErrorMessage = errorMessage.replace(privateDir, '...');
 
+	const interactionDescription = interaction.isButton()
+		? `button '${interaction.customId}'`
+		: `command '${interaction.commandName}'`;
 	const embed = new EmbedBuilder()
 		.setTitle('Error')
 		.setColor(Colors.Red)
 		.setDescription(
-			`The command '${interaction.commandName}' encountered an error during execution.\n\n\`\`${safeErrorMessage}\`\``
+			`The ${interactionDescription} encountered an error during execution.\n\n\`\`${safeErrorMessage}\`\``
 		);
 
 	try {
@@ -304,4 +281,68 @@ export async function sendErrorMessage(
 
 	logger.error('Sent error message to user:');
 	logger.error(error);
+}
+
+async function handleButtonInteraction(
+	context: InteractionContext,
+	interaction: ButtonInteraction
+): Promise<void> {
+	logger.debug(`User ${logUser(interaction.user)} pressed button: '${interaction.customId}'`);
+
+	const button = allButtons.get(interaction.customId);
+	if (!button) {
+		logger.warn(`Received request to execute unknown button with id '${interaction.customId}'`);
+		await sendErrorMessage(
+			interaction,
+			`Unknown button '${interaction.customId}'. Contact the bot operator and make sure they deployed the latest set of commands.`
+		);
+		return;
+	}
+
+	logger.debug(`Calling button handler '${button.customId}'`);
+
+	const buttonContext: ButtonContext = {
+		...context,
+		component: interaction.component,
+		message: interaction.message,
+	};
+
+	return await button.execute(buttonContext);
+}
+
+async function generateContext(interaction: RepliableInteraction): Promise<InteractionContext> {
+	const guild = interaction.guild;
+
+	let member: GuildMember | null;
+	if (interaction.inCachedGuild()) {
+		member = interaction.member;
+	} else {
+		member = (await guild?.members.fetch(interaction.user)) ?? null;
+	}
+
+	let channel: GuildTextBasedChannel | DMChannel | null;
+	if (interaction.channel?.type === ChannelType.DM && interaction.channel.partial) {
+		channel = await interaction.channel.fetch();
+	} else {
+		channel = interaction.channel;
+	}
+
+	const context: InteractionContext = {
+		source: interaction.inGuild() ? 'guild' : 'dm',
+		createdTimestamp: interaction.createdTimestamp,
+		user: interaction.user,
+		member,
+		guild,
+		channelId: interaction.channelId,
+		channel,
+		client: interaction.client,
+		interaction,
+		prepareForLongRunningTasks: prepareForLongRunningTasksFactory(interaction),
+		replyPrivately: replyPrivatelyFactory(interaction),
+		reply: replyFactory(interaction),
+		followUp: followUpFactory(interaction),
+		sendTyping: sendTypingFactory(interaction),
+	};
+
+	return context;
 }

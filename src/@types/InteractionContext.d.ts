@@ -1,4 +1,7 @@
 import type {
+	APIButtonComponent,
+	BaseInteraction,
+	ButtonComponent,
 	ChatInputCommandInteraction,
 	Client,
 	CommandInteraction,
@@ -18,48 +21,33 @@ import type {
 } from 'discord.js';
 
 declare global {
-	interface BaseCommandContext {
+	interface InteractionContext {
 		/** Where the command was invoked. */
 		readonly source: 'guild' | 'dm';
 
-		/** The command invocation interaction. */
-		readonly interaction: CommandInteraction;
+		/** The triggering interaction. */
+		readonly interaction: BaseInteraction;
 
 		/** Our own signed-in Discord client. */
 		readonly client: Client<true>;
 
-		/** The guild in which the command was invoked. */
+		/** The guild in which the interaction was invoked. */
 		readonly guild: Guild | null;
 
-		/** The ID of the channel in which the command was invoked. */
-		readonly channelId: Snowflake;
+		/** The ID of the channel in which the interaction was invoked. */
+		readonly channelId: Snowflake | null;
 
-		/** The channel in which the command was invoked. */
+		/** The channel in which the interaction was invoked. */
 		readonly channel: GuildTextBasedChannel | DMChannel | null;
 
-		/** The user who invoked the command. */
+		/** The user who invoked the interaction. */
 		readonly user: User;
 
-		/** The guild member who invoked the command. */
+		/** The guild member who invoked the interaction. */
 		readonly member: GuildMember | null;
 
-		/** The ID of the interaction target. Only available for context menu commands. */
-		readonly targetId: Snowflake | null;
-
-		/** The user that the interaction targets. Only available for context menu commands. */
-		readonly targetUser: User | null;
-
-		/** The guild member that the interaction targets. Only available for context menu commands. */
-		readonly targetMember: GuildMember | null;
-
-		/** The message that the interaction targets. Only available for context menu commands. */
-		readonly targetMessage: Message | null;
-
-		/** The UNIX time at which the command was invoked. */
+		/** The UNIX time at which the interaction was invoked. */
 		readonly createdTimestamp: number;
-
-		/** The options that were given to the command. Not available for context menu commands. */
-		readonly options: ReadonlyArray<CommandInteractionOption<'cached'>> | null;
 
 		/** Instructs Discord to keep interaction handles open long enough for long-running tasks to complete. */
 		prepareForLongRunningTasks: (ephemeral?: boolean) => void | Promise<void>;
@@ -110,6 +98,29 @@ declare global {
 						reply?: boolean;
 				  })
 		) => Promise<Message | boolean>;
+	}
+
+	interface BaseCommandContext extends InteractionContext {
+		/** The command invocation interaction. */
+		readonly interaction: CommandInteraction;
+
+		/** The ID of the channel in which the command was invoked. */
+		readonly channelId: Snowflake;
+
+		/** The ID of the interaction target. Only available for context menu commands. */
+		readonly targetId: Snowflake | null;
+
+		/** The user that the interaction targets. Only available for context menu commands. */
+		readonly targetUser: User | null;
+
+		/** The guild member that the interaction targets. Only available for context menu commands. */
+		readonly targetMember: GuildMember | null;
+
+		/** The message that the interaction targets. Only available for context menu commands. */
+		readonly targetMessage: Message | null;
+
+		/** The options that were given to the command. Not available for context menu commands. */
+		readonly options: ReadonlyArray<CommandInteractionOption<'cached'>> | null;
 	}
 
 	/** Information relevant to a command invocation in a DM. */
@@ -211,6 +222,12 @@ declare global {
 
 		/**  The message that the interaction targets. Only available for context menu commands. */
 		readonly targetMessage: Message;
+	}
+
+	/** Information relevant to button presses */
+	interface ButtonContext extends InteractionContext {
+		component: APIButtonComponent | ButtonComponent;
+		message: Message;
 	}
 
 	/** Information relevant to a command invocation. */
