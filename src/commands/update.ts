@@ -35,7 +35,7 @@ export const update: GlobalCommand = {
 			await replyPrivately('Updating...');
 			await execAsync('npm run update');
 			await interaction.editReply('Finished updating. Restarting now.');
-			await execAsync('npm run restart');
+			await restart();
 		} finally {
 			numInvocations -= 1;
 		}
@@ -52,4 +52,12 @@ async function execAsync(command: string): Promise<void> {
 			}
 		});
 	});
+}
+
+/**
+ * Restarts the bot.
+ */
+async function restart(): Promise<never> {
+	await execAsync('npm run restart');
+	process.exit(); // so that TypeScript is *absolutely sure* we're dead after this
 }
