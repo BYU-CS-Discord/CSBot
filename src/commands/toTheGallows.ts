@@ -9,10 +9,17 @@ const builder = new SlashCommandBuilder()
 	.setName('tothegallows')
 	.setDescription('Begins a new game of Evil Hangman')
 	.addIntegerOption(option =>
-		option.setName(LengthOption).setDescription('The number of letters in the word to guess')
+		option
+			.setName(LengthOption)
+			.setDescription('The number of letters in the word to guess')
+			.setMinValue(1)
 	)
 	.addIntegerOption(option =>
-		option.setName(GuessesOption).setDescription('The number of allowed incorrect guesses')
+		option
+			.setName(GuessesOption)
+			.setDescription('The number of allowed incorrect guesses')
+			.setMinValue(1)
+			.setMaxValue(25)
 	);
 
 export const toTheGallows: GlobalCommand = {
