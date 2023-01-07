@@ -23,7 +23,7 @@ import { replyFactory } from '../commandContext/reply';
 import { replyPrivatelyFactory } from '../commandContext/replyPrivately';
 import { sendTypingFactory } from '../commandContext/sendTyping';
 import { allButtons } from '../buttons';
-import { UserMessageError } from '../helpers/UserMessageException';
+import { UserMessageError } from '../helpers/UserMessageError';
 
 /**
  * The event handler for Discord Interactions (usually chat commands)
@@ -303,13 +303,13 @@ async function handleButtonInteraction(
 
 	logger.debug(`Calling button handler '${button.customId}'`);
 
-	/* eslint-disable @typescript-eslint/consistent-type-assertions */
 	const buttonContext = {
 		...context,
+		interaction,
 		component: interaction.component,
 		message: interaction.message,
-	} as ButtonContext;
-	/* eslint-enable @typescript-eslint/consistent-type-assertions */
+		channelId: interaction.channelId,
+	};
 	try {
 		return await button.execute(buttonContext);
 	} catch (error) {

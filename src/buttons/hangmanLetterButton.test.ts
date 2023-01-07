@@ -1,5 +1,5 @@
 import { letterButtons } from '../evilHangman/hangmanLetterButtons';
-import { UserMessageError } from '../helpers/UserMessageException';
+import { UserMessageError } from '../helpers/UserMessageError';
 
 describe('hangmanMoreButton', () => {
 	const mockUpdate = jest.fn();

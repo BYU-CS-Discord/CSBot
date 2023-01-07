@@ -227,8 +227,8 @@ declare global {
 
 	/** Information relevant to button presses */
 	interface ButtonContext extends InteractionContext {
-		component: APIButtonComponent | ButtonComponent;
-		message: Message;
+		readonly component: APIButtonComponent | ButtonComponent;
+		readonly message: Message;
 		readonly interaction: ButtonInteraction;
 
 		/** The ID of the channel in which the command was invoked. */

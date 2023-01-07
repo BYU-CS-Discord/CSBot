@@ -19,7 +19,7 @@ import {
 	ContextMenuCommandBuilder,
 	SlashCommandBuilder,
 } from 'discord.js';
-import { UserMessageError } from '../helpers/UserMessageException';
+import { UserMessageError } from '../helpers/UserMessageError';
 
 // Mock allCommands to isolate our test code
 const mockAllCommands = new Map<string, Command>();

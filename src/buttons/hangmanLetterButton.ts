@@ -3,7 +3,7 @@ import {
 	buildEvilHangmanMessage,
 	parseEvilHangmanMessage,
 } from '../evilHangman/evilHangmanMessage';
-import { UserMessageError } from '../helpers/UserMessageException';
+import { UserMessageError } from '../helpers/UserMessageError';
 
 export type Letter =
 	| 'a'
