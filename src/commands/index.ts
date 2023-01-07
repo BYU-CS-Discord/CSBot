@@ -36,6 +36,7 @@ import { fxtwitter } from './contextMenu/fxtwitter';
 import { sendtag } from './sendtag';
 import { talk } from './talk';
 import { talk as talk_context } from './contextMenu/talk';
+import { toTheGallows } from './toTheGallows';
 import { update } from './update';
 
 _add(help);
@@ -45,4 +46,5 @@ _add(fxtwitter);
 _add(sendtag);
 _add(talk);
 _add(talk_context);
+_add(toTheGallows);
 _add(update);

@@ -23,6 +23,7 @@ import { replyFactory } from '../commandContext/reply';
 import { replyPrivatelyFactory } from '../commandContext/replyPrivately';
 import { sendTypingFactory } from '../commandContext/sendTyping';
 import { allButtons } from '../buttons';
+import { UserMessageError } from '../helpers/UserMessageError';
 
 /**
  * The event handler for Discord Interactions (usually chat commands)
@@ -175,7 +176,6 @@ async function handleCommandInteraction(
 		return await command.execute(context);
 	} catch (error) {
 		await sendErrorMessage(interaction, error);
-		// return;
 	}
 }
 
@@ -259,15 +259,22 @@ export async function sendErrorMessage(
 	const privateDir = __dirname.slice(0, __dirname.lastIndexOf('dist'));
 	const safeErrorMessage = errorMessage.replace(privateDir, '...');
 
-	const interactionDescription = interaction.isButton()
-		? `button '${interaction.customId}'`
-		: `command '${interaction.commandName}'`;
-	const embed = new EmbedBuilder()
-		.setTitle('Error')
-		.setColor(Colors.Red)
-		.setDescription(
-			`The ${interactionDescription} encountered an error during execution.\n\n\`\`${safeErrorMessage}\`\``
-		);
+	const embed = new EmbedBuilder().setTitle('Error');
+	if (error instanceof UserMessageError) {
+		embed.setDescription(error.message).setColor(Colors.Yellow);
+	} else {
+		const interactionDescription = interaction.isButton()
+			? `button '${interaction.customId}'`
+			: `command '${interaction.commandName}`;
+		embed
+			.setDescription(
+				`The ${interactionDescription} encountered an error during execution.\n\n\`\`${safeErrorMessage}\`\``
+			)
+			.setColor(Colors.Red);
+
+		logger.error('Sent error message to user:');
+		logger.error(error);
+	}
 
 	try {
 		// Using the raw interaction here, since any errors that happen while trying to send the error are moot
@@ -278,9 +285,6 @@ export async function sendErrorMessage(
 	} catch (secondError) {
 		logger.error('Error while sending error response:', secondError);
 	}
-
-	logger.error('Sent error message to user:');
-	logger.error(error);
 }
 
 async function handleButtonInteraction(
@@ -301,13 +305,18 @@ async function handleButtonInteraction(
 
 	logger.debug(`Calling button handler '${button.customId}'`);
 
-	const buttonContext: ButtonContext = {
+	const buttonContext = {
 		...context,
+		interaction,
 		component: interaction.component,
 		message: interaction.message,
+		channelId: interaction.channelId,
 	};
-
-	return await button.execute(buttonContext);
+	try {
+		return await button.execute(buttonContext);
+	} catch (error) {
+		await sendErrorMessage(interaction, error);
+	}
 }
 
 async function generateContext(interaction: RepliableInteraction): Promise<InteractionContext> {

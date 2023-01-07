@@ -19,6 +19,7 @@ import {
 	ContextMenuCommandBuilder,
 	SlashCommandBuilder,
 } from 'discord.js';
+import { UserMessageError } from '../helpers/UserMessageError';
 
 // Mock allCommands to isolate our test code
 const mockAllCommands = new Map<string, Command>();
@@ -127,6 +128,18 @@ const mockErrorGuildedCommand: Command = {
 };
 mockAllCommands.set(mockErrorGuildedCommand.info.name, mockErrorGuildedCommand);
 
+const userErrorMessage = 'This is a user message error message';
+const mockUserMessageErrorGlobalCommand: Command = {
+	info: new SlashCommandBuilder() //
+		.setName('global-error-test')
+		.setDescription('whoops'),
+	requiresGuild: false,
+	execute: () => {
+		throw new UserMessageError(userErrorMessage);
+	},
+};
+mockAllCommands.set(mockUserMessageErrorGlobalCommand.info.name, mockUserMessageErrorGlobalCommand);
+
 // Mock allButtons to isolate our test code
 const mockAllButtons = new Map<string, Button>();
 jest.mock('../buttons', () => ({
@@ -139,6 +152,15 @@ const mockButton: Button = {
 	makeBuilder: () => new ButtonBuilder(),
 };
 mockAllButtons.set(mockButton.customId, mockButton);
+
+const mockErrorButton: Button = {
+	customId: 'test-error-button',
+	execute: () => {
+		throw new Error('Button error, this is a test');
+	},
+	makeBuilder: () => new ButtonBuilder(),
+};
+mockAllButtons.set(mockErrorButton.customId, mockErrorButton);
 
 // Mock the logger to track output
 jest.mock('../logger');
@@ -327,6 +349,23 @@ describe('on(interactionCreate)', () => {
 
 			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 			expect(mockInteractionReply).toHaveBeenCalledOnce();
+		});
+
+		test('sends an error embed with a specified message when global command throws an error', async () => {
+			const interaction = defaultInteraction();
+			(interaction as CommandInteraction).commandName = mockUserMessageErrorGlobalCommand.info.name;
+
+			const mockInteractionReply = jest.fn();
+			(interaction as CommandInteraction).reply = mockInteractionReply;
+
+			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+			expect(mockInteractionReply).toHaveBeenCalledOnce();
+
+			const lastCall = mockInteractionReply.mock.lastCall as unknown as [
+				{ embeds: [{ data: { description: string } }] }
+			];
+			const description = lastCall[0].embeds[0].data.description;
+			expect(description).toBe(userErrorMessage);
 		});
 
 		test('sends an error embed message when message context menu command throws an error', async () => {
@@ -575,5 +614,18 @@ describe('on(interactionCreate)', () => {
 
 		await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 		expect(mockGlobalExecute).toHaveBeenCalledOnce();
+	});
+
+	test('sends an error embed message when button throws an error', async () => {
+		const interaction = defaultInteraction() as ButtonInteraction;
+		interaction.isCommand = (): boolean => false;
+		interaction.isButton = (): boolean => true;
+		interaction.customId = mockErrorButton.customId;
+
+		const mockInteractionReply = jest.fn();
+		interaction.reply = mockInteractionReply;
+
+		await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+		expect(mockInteractionReply).toHaveBeenCalledOnce();
 	});
 });
