@@ -91,6 +91,9 @@ DISCORD_TOKEN=YOUR_TOKEN_GOES_HERE
 
 DATABASE_URL=YOUR_DATABASE_URL_GOES_HERE
 # required for any DB functionality, we will get this URL in a later section
+
+ADMINISTRATORS=COMMA,SEPARATED,ID,LIST
+# Required for the update command. WARNING: The users whose ids are listed here will be able to pull, build, and run code from this repository on the machine the bot is running on. Do not include any users you do not trust.
 ```
 
 **Do not commit this file to git** or your bot _will_ get "hacked".
