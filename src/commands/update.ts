@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from 'discord.js';
-import { exec } from 'node:child_process';
+import { exec as __unsafeExecuteCommand } from 'node:child_process';
 
 const info = new SlashCommandBuilder()
 	.setName('update')
@@ -24,18 +24,20 @@ export const update: GlobalCommand = {
 		}
 
 		await replyPrivately('Updating...');
-		exec('npm run update', err => {
-			void (async (): Promise<void> => {
-				if (err) {
-					throw err;
-				}
-				await interaction.editReply('Finished updating. Restarting now.');
-				exec('npm run restart', err => {
-					if (err) {
-						throw err;
-					}
-				});
-			})();
-		});
+		await execAsync('npm run update');
+		await interaction.editReply('Finished updating. Restarting now.');
+		await execAsync('npm run restart');
 	},
 };
+
+async function execAsync(command: string): Promise<void> {
+	await new Promise<void>((resolve, reject) => {
+		__unsafeExecuteCommand(command, err => {
+			if (err) {
+				reject(err);
+			} else {
+				resolve();
+			}
+		});
+	});
+}
