@@ -27,6 +27,15 @@ describe('EvilHangmanGame', () => {
 		expect(displayInfo.guessesRemaining).toEqual(numGuesses);
 	});
 
+	test('newGame with invalid number of letters throws an error', () => {
+		expect(() => EvilHangmanGame.newGame(-1, null)).toThrow();
+	});
+
+	test('newGame with invalid number of guesses throws an error', () => {
+		expect(() => EvilHangmanGame.newGame(null, 0)).toThrow();
+		expect(() => EvilHangmanGame.newGame(null, 0)).toThrow();
+	});
+
 	test('checkGuess returns null for letters that havent been guessed', () => {
 		expect(game.checkGuess('b')).toBeNull();
 	});

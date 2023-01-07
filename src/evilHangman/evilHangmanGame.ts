@@ -1,4 +1,5 @@
 import { isNonEmptyArray } from '../helpers/guards/isNonEmptyArray';
+import { UserMessageError } from '../helpers/UserMessageError';
 import { allWords } from './evilHangmanDictionary';
 
 export class EvilHangmanGame {
@@ -12,7 +13,12 @@ export class EvilHangmanGame {
 		this.guessesRemaining = guessesRemaining;
 		this.guessesSoFar = guessesSoFar;
 
-		this.possibleWords = allWords.filter(possibleWord => this.word.length === possibleWord.length);
+		this.possibleWords = allWords.filter(
+			possibleWord => this.word.length === possibleWord.length && this.word.length > 0
+		);
+		if (!isNonEmptyArray(this.possibleWords)) {
+			throw new UserMessageError("Sorry, I don't have any words of that length!");
+		}
 		this.removePossibleWords([...guessesSoFar]);
 	}
 
@@ -21,11 +27,15 @@ export class EvilHangmanGame {
 			length = this.getRandomWordFromDictionary()?.length ?? 1;
 		}
 		if (guesses === null) {
-			guesses = 13 - Math.round(length / 3); // Numbers arbitrary, for game balance
+			guesses = Math.max(13 - Math.round(length / 3), 1); // Numbers arbitrary, for game balance
 		}
 
 		const word = new Array(length).fill('-').join('');
 		const guessesRemaining = guesses;
+
+		if (guessesRemaining < 1 || guessesRemaining > 25) {
+			throw new UserMessageError('Please use a guess count in the range [1-25]');
+		}
 
 		return new this(word, guessesRemaining, new Set());
 	}

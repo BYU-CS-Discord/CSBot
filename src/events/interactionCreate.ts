@@ -259,16 +259,21 @@ export async function sendErrorMessage(
 	const privateDir = __dirname.slice(0, __dirname.lastIndexOf('dist'));
 	const safeErrorMessage = errorMessage.replace(privateDir, '...');
 
-	const embed = new EmbedBuilder().setTitle('Error').setColor(Colors.Red);
+	const embed = new EmbedBuilder().setTitle('Error');
 	if (error instanceof UserMessageError) {
-		embed.setDescription(error.message);
+		embed.setDescription(error.message).setColor(Colors.Yellow);
 	} else {
 		const interactionDescription = interaction.isButton()
 			? `button '${interaction.customId}'`
 			: `command '${interaction.commandName}`;
-		embed.setDescription(
-			`The ${interactionDescription} encountered an error during execution.\n\n\`\`${safeErrorMessage}\`\``
-		);
+		embed
+			.setDescription(
+				`The ${interactionDescription} encountered an error during execution.\n\n\`\`${safeErrorMessage}\`\``
+			)
+			.setColor(Colors.Red);
+
+		logger.error('Sent error message to user:');
+		logger.error(error);
 	}
 
 	try {
@@ -280,9 +285,6 @@ export async function sendErrorMessage(
 	} catch (secondError) {
 		logger.error('Error while sending error response:', secondError);
 	}
-
-	logger.error('Sent error message to user:');
-	logger.error(error);
 }
 
 async function handleButtonInteraction(
