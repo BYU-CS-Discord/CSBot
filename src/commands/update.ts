@@ -27,9 +27,7 @@ export const update: GlobalCommand = {
 		numInvocations += 1;
 		if (numInvocations > 1) {
 			throw new Error(
-				`Cannot run update, there are already ${(
-					numInvocations - 1
-				).toString()} update invocations running`
+				`Cannot run update, there are already ${numInvocations - 1} update invocations running`
 			);
 		}
 
