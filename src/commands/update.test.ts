@@ -26,10 +26,12 @@ describe('update', () => {
 	const mockEditReply = jest.fn<Promise<void>, [content: string]>();
 
 	let context: TextInputCommandContext;
+	let originalAdministrators: string | undefined;
 
 	beforeEach(() => {
 		// Overwrite the environment variable for token
 		const mockAdmins = '1,2';
+		originalAdministrators = process.env[ADMINISTRATORS_VARIABLE];
 		process.env[ADMINISTRATORS_VARIABLE] = mockAdmins;
 
 		context = {
@@ -39,6 +41,10 @@ describe('update', () => {
 				editReply: mockEditReply,
 			},
 		} as unknown as TextInputCommandContext;
+	});
+
+	afterEach(() => {
+		process.env[ADMINISTRATORS_VARIABLE] = originalAdministrators;
 	});
 
 	test('can be used by Bot admins', async () => {

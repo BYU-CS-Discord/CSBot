@@ -11,15 +11,6 @@ export const update: GlobalCommand = {
 	info,
 	requiresGuild: false,
 	async execute({ replyPrivately, user, interaction }) {
-		numInvocations += 1;
-		if (numInvocations > 1) {
-			throw new Error(
-				`Cannot run update, there are already ${(
-					numInvocations - 1
-				).toString()} update invocations running`
-			);
-		}
-
 		const admin_ids = process.env['ADMINISTRATORS']?.split(',');
 		if (!admin_ids) {
 			// TODO: make this a UserMessageException
@@ -33,10 +24,20 @@ export const update: GlobalCommand = {
 			);
 		}
 
+		numInvocations += 1;
+		if (numInvocations > 1) {
+			throw new Error(
+				`Cannot run update, there are already ${(
+					numInvocations - 1
+				).toString()} update invocations running`
+			);
+		}
+
 		await replyPrivately('Updating...');
 		await execAsync('npm run update');
 		await interaction.editReply('Finished updating. Restarting now.');
 		await execAsync('npm run restart');
+		numInvocations -= 1; // In theory, we should never arrive here. Including for testing purposes.
 	},
 };
 
