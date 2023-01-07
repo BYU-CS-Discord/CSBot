@@ -111,8 +111,8 @@ export function parseEvilHangmanMessage(message: Message): EvilHangmanGame {
 	if (parseResult === null) {
 		throw new Error(FORMAT_ERROR_MESSAGE);
 	}
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	const [_, guessesRemainingString, word, guessedLettersString] = parseResult;
+
+	const [, guessesRemainingString, word, guessedLettersString] = parseResult;
 	if (
 		guessesRemainingString === undefined ||
 		word === undefined ||
