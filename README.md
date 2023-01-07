@@ -6,7 +6,7 @@
 
 A bot to help manage the activities and community of BYU's Computer Science Discord server.
 
-This project is meant as a successor to [Ze-Kaiser](https://github.com/ArkenStorm/Ze-Kaiser), whose original contributors are as follows:
+This project is meant as a successor to [Ze-Kaiser](https://github.com/ArkenStorm/Ze-Kaiser), whose original contributors are as follows, in alphabetical order:
 
 - [**ArkenStorm**](https://github.com/ArkenStorm)
 - [**Carterworks**](https://github.com/Carterworks)
@@ -15,20 +15,33 @@ This project is meant as a successor to [Ze-Kaiser](https://github.com/ArkenStor
 
 ## Authors & Contributors
 
-This list is updated as contributors contribute.
+These users contributed various things over time directly to this codebase. This list is ordered roughly by when users first contributed code. We add to this list as people contribute.
 
-- [**ZYancey**](https://github.com/zyancey)
-- [**gmacgre**](https://github.com/gmacgre)
-- [**JstnMcBrd**](https://github.com/JstnMcBrd)
-- [**AverageHelper**](https://github.com/AverageHelper)
-- [**SpencerHastings**](https://github.com/SpencerHastings/)
-- [**Plyb**](https://github.com/Plyb)
+- [**ZYancey**](https://github.com/BYU-CS-Discord/CSBot/pulls?q=is%3Apr+is%3Amerged+author%3Azyancey) ([profile](https://github.com/zyancey))
+- [**gmacgre**](https://github.com/BYU-CS-Discord/CSBot/pulls?q=is%3Apr+is%3Amerged+author%3Agmacgre) ([profile](https://github.com/gmacgre))
+- [**JstnMcBrd**](https://github.com/BYU-CS-Discord/CSBot/pulls?q=is%3Apr+is%3Amerged+author%3AJstnMcBrd) ([profile](https://github.com/JstnMcBrd))
+- [**AverageHelper**](https://github.com/BYU-CS-Discord/CSBot/pulls?q=is%3Apr+is%3Amerged+author%3AAverageHelper) ([profile](https://github.com/AverageHelper))
+- [**SpencerHastings**](https://github.com/BYU-CS-Discord/CSBot/pulls?q=is%3Apr+is%3Amerged+author%3ASpencerHastings) ([profile](https://github.com/SpencerHastings))
+- [**Plyb**](https://github.com/BYU-CS-Discord/CSBot/pulls?q=is%3Apr+is%3Amerged+author%3APlyb) ([profile](https://github.com/Plyb))
+
+## Contributing
+
+This project is entirely open-source. Do with it what you will. If you're willing to help us improve this project, consider [filing an issue](https://github.com/BYU-CS-Discord/CSBot/issues/new/choose).
+
+See [CONTRIBUTING.md](/CONTRIBUTING.md) for ways to contribute.
+
+## License
+
+This project's source is licensed under the [Unlicense](LICENSE) license. All contributions to this project's source are understood to be given to the public domain.
 
 ## Table of contents
 
 - [CSBot](#csbot)
   - [Authors & Contributors](#authors--contributors)
+  - [Contributing](#contributing)
+  - [License](#license)
   - [Table of contents](#table-of-contents)
+  - [Commands](#commands)
   - [Usage or Development](#usage-or-development)
     - [Prerequisites](#prerequisites)
     - [Clone the Repo](#clone-the-repo)
@@ -40,11 +53,44 @@ This list is updated as contributors contribute.
     - [Build the bot database](#build-the-bot-database)
     - [Register Slash Commands](#register-slash-commands)
     - [Run the bot](#run-the-bot)
-  - [Commands](#commands)
-  - [Contributing](#contributing)
-  - [License](#license)
+
+## Chat Input Commands
+
+You can find these in Discord by typing `/` in the message input box in any channel where you're allowed to run commands.
+
+### /help
+
+Prints some info about the bot, including the current running version and a link to the code repository.
+
+### /profile
+
+Retrieves the profile picture of the given user.
+
+### /xkcd
+
+Retrieves the most recent [xkcd](https://xkcd.com/) comic, or the given one.
+
+### /talk
+
+Uses the [dectalk](https://github.com/babakinha/dectalk) text-to-speech engine to speak the message you give it,
+either sending a .wav file in a text channel or talking out loud in a voice channel. Comes with 9 different voices.
+
+## Context Menu Commands
+
+You can find these in Discord by invoking the context menu on any message in any channel where you're allowed to run commands.
+
+### Fix Twitter Links
+
+Transforms [twitter.com](https://twitter.com/) links in the given message to [FixTweet](https://github.com/FixTweet/FixTweet) links in an ephemeral reply. Please use fxtwitter in your own messages, especially when the tweet is a video. Twitter's default embed stinks on some platforms.
+
+### Talk
+
+Performs the same function as the `/talk` chat input command, but uses the selected message as input.
+Can be used to repeat the same 'talk' command without typing it out again.
 
 ## Usage or Development
+
+If you've read this far, and don't plan to run or develop on the bot yourself, or are not curious how to do so, you may leave now. This part is quite boring. But feel free to read on anyway!
 
 ### Prerequisites
 
@@ -173,43 +219,3 @@ $ node .
 # or
 $ npm start
 ```
-
-## Chat Input Commands
-
-### /help
-
-Prints some info about the bot, including the current running version and a link to the code repository.
-
-### /profile
-
-Retrieves the profile picture of the given user.
-
-### /xkcd
-
-Retrieves the most recent [xkcd](https://xkcd.com/) comic, or the given one.
-
-### /talk
-
-Uses the [dectalk](https://github.com/babakinha/dectalk) text-to-speech engine to speak the message you give it,
-either sending a .wav file in a text channel or talking out loud in a voice channel. Comes with 9 different voices.
-
-## Context Menu Commands
-
-### Fix Twitter Links
-
-Transforms [twitter.com](https://twitter.com/) links in the given message to [FixTweet](https://github.com/FixTweet/FixTweet) links in an ephemeral reply. Please use fxtwitter in your own messages, especially when the tweet is a video. Twitter's default embed stinks on some platforms.
-
-### Talk
-
-Performs the same function as the `/talk` chat input command, but uses the selected message as input.
-Can be used to repeat the same 'talk' command without typing it out again.
-
-## Contributing
-
-This project is entirely open-source. Do with it what you will. If you're willing to help me improve this project, consider [filing an issue](https://github.com/BYU-CS-Discord/CSBot/issues/new/choose).
-
-See [CONTRIBUTING.md](/CONTRIBUTING.md) for ways to contribute.
-
-## License
-
-This project's source is licensed under the [Unlicense](LICENSE) license. All contributions thereto are given to the public domain.
