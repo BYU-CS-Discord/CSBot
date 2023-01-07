@@ -10,7 +10,7 @@ import { hangmanMoreButton } from '../buttons/hangmanMoreButton';
 import { appVersion } from '../constants/meta';
 import { getHangmanArt } from './evilHangmanAsciiArt';
 import { EvilHangmanDisplayInfo, EvilHangmanGame, EvilHangmanWinState } from './evilHangmanGame';
-import { getLetterOptions } from './hangmanLetterButtons';
+import { getButtonsForAllLettersExcept } from './hangmanLetterButtons';
 
 type Page = 0 | 1;
 const GAME_INFO_FORMAT = 'Remaining Guesses: {0}\nWord: {1}\nLetters Guessed: {2}';
@@ -65,7 +65,7 @@ const MAX_BUTTONS_PER_ROW = 5;
 const MAX_BUTTON_ROWS = 5;
 const MAX_BUTTONS_TOTAL = MAX_BUTTONS_PER_ROW * MAX_BUTTON_ROWS;
 function getButtons(guessesSoFar: Set<string>, page: Page): Array<ActionRowBuilder<ButtonBuilder>> {
-	const letterButtons = getLetterOptions(guessesSoFar);
+	const letterButtons = getButtonsForAllLettersExcept(guessesSoFar);
 	if (letterButtons.length > MAX_BUTTONS_TOTAL) {
 		if (page === 0) {
 			letterButtons.splice(MAX_BUTTONS_TOTAL - 1, Number.POSITIVE_INFINITY, hangmanMoreButton);

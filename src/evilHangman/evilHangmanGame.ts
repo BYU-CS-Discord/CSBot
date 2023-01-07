@@ -1,12 +1,6 @@
-import fs from 'fs';
 import { isNonEmptyArray } from '../helpers/guards/isNonEmptyArray';
+import { allWords } from './evilHangmanDictionary';
 
-const DICTIONARY_PATH = './res/dictionary.txt';
-const allWords = fs
-	.readFileSync(DICTIONARY_PATH)
-	.toString()
-	.split('\n')
-	.map(word => word.trim());
 export class EvilHangmanGame {
 	private possibleWords: Array<string>;
 	private word: string;
@@ -24,7 +18,7 @@ export class EvilHangmanGame {
 
 	static newGame(length: number | null, guesses: number | null): EvilHangmanGame {
 		if (length === null) {
-			length = allWords[Math.floor(Math.random() * allWords.length)]?.length ?? 1;
+			length = this.getRandomWordFromDictionary()?.length ?? 1;
 		}
 		if (guesses === null) {
 			guesses = 13 - Math.round(length / 3); // Numbers arbitrary, for game balance
@@ -34,6 +28,10 @@ export class EvilHangmanGame {
 		const guessesRemaining = guesses;
 
 		return new this(word, guessesRemaining, new Set());
+	}
+
+	private static getRandomWordFromDictionary(): string | undefined {
+		return allWords[Math.floor(Math.random() * allWords.length)];
 	}
 
 	checkGuess(guess: string): string | null {

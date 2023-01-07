@@ -10,7 +10,13 @@ const buttonMap: Map<Letter, Button> = new Map(
 
 export const letterButtons: Array<Button> = [...buttonMap.values()];
 
-export function getLetterOptions(guessesSoFar: Set<string>): Array<Button> {
+/**
+ * Filters the given letters from the alphabet and returns all Letter buttons whose
+ * letters are not in the input set.
+ * @param guessesSoFar a set of letters which should not be included
+ * @returns the buttons for every letter not given
+ */
+export function getButtonsForAllLettersExcept(guessesSoFar: Set<string>): Array<Button> {
 	return [...buttonMap.entries()]
 		.filter(entry => !guessesSoFar.has(entry[0]))
 		.map(entry => entry[1]);
