@@ -1,5 +1,6 @@
 import { SlashCommandBuilder } from 'discord.js';
 import { exec as __unsafeExecuteCommand } from 'node:child_process';
+import { error } from '../logger';
 
 let numInvocations: number = 0;
 const info = new SlashCommandBuilder()
@@ -59,5 +60,6 @@ async function execAsync(command: string): Promise<void> {
  */
 async function restart(): Promise<never> {
 	await execAsync('npm run restart');
-	process.exit(); // so that TypeScript is *absolutely sure* we're dead after this
+	error('The above line should have killed the process. If you got here, something went wrong');
+	return undefined as never;
 }
