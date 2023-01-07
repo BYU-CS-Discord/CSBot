@@ -1,6 +1,7 @@
 import { SlashCommandBuilder } from 'discord.js';
 import { exec as __unsafeExecuteCommand } from 'node:child_process';
 
+let numInvocations: number = 0;
 const info = new SlashCommandBuilder()
 	.setName('update')
 	.setDescription('Pulls the latest changes and restarts the bot')
@@ -10,6 +11,15 @@ export const update: GlobalCommand = {
 	info,
 	requiresGuild: false,
 	async execute({ replyPrivately, user, interaction }) {
+		numInvocations += 1;
+		if (numInvocations > 1) {
+			throw new Error(
+				`Cannot run update, there are already ${(
+					numInvocations - 1
+				).toString()} update invocations running`
+			);
+		}
+
 		const admin_ids = process.env['ADMINISTRATORS']?.split(',');
 		if (!admin_ids) {
 			// TODO: make this a UserMessageException

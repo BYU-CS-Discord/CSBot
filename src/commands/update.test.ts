@@ -48,7 +48,7 @@ describe('update', () => {
 		expect(mockEditReply).toHaveBeenCalledOnce();
 	});
 
-	test('connot be used by Non-bot-admins', async () => {
+	test('cannot be used by Non-bot-admins', async () => {
 		context = { ...context, user: otherUser };
 
 		await expect(update.execute(context)).rejects.toThrow();
@@ -64,5 +64,10 @@ describe('update', () => {
 		expect(mockExec).not.toHaveBeenCalled();
 		expect(mockReplyPrivately).not.toHaveBeenCalled();
 		expect(mockEditReply).not.toHaveBeenCalled();
+	});
+
+	test('fails if there is already an instance running', async () => {
+		void update.execute(context);
+		await expect(update.execute(context)).rejects.toThrow();
 	});
 });
