@@ -96,18 +96,20 @@ Transforms [twitter.com](https://twitter.com/) links in the given message to [Fi
 Performs the same function as the `/talk` chat input command, but uses the selected message as input.
 Can be used to repeat the same 'talk' command without typing it out again.
 
+---
+
 ## Usage or Development
 
 If you've read this far, and don't plan to run or develop on the bot yourself, or are not curious how to do so, you may leave now. This part is quite boring. But feel free to read on anyway!
 
 ### Prerequisites
 
-This project requires [NodeJS](https://nodejs.org/) (version 16.10 or later), [NPM](https://npmjs.org/). To make sure you have them available on your machine, try running the following command:
+This project requires [NodeJS](https://nodejs.org/) (version 16.19 or later) and [NPM](https://npmjs.org/). To make sure you have them available on your machine, try running the following command:
 
 ```sh
-$ npm -v && node -v
-7.20.3
-v16.15.1
+$ node -v && npm -v
+v16.19.0
+8.19.3
 ```
 
 This project also requires [Docker](https://www.docker.com/). Docker runs the project in a lightweight virtual Linux environment, so functionality will be identical on any operating system.
