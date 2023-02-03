@@ -1,9 +1,12 @@
 FROM node:16.19.0-slim
 RUN apt update
 RUN apt upgrade --yes
-RUN apt install libpulse0 --yes # Necessary for Dectalk (Linux x86_64)
 
-ENV DOCKER=true
+# Necessary for /talk Dectalk (Linux x86_64)
+RUN apt install libpulse0 --yes
+
+# Necessary for /update
+RUN apt install git --yes
 
 WORKDIR /cs-bot
 ENTRYPOINT [ "bash" ]
