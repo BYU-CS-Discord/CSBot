@@ -184,15 +184,17 @@ $ npm run setup
 
 ### Build the bot database
 
-_As we use prisma for managing our DB it is up to you what relational database framework you use._
+_As we use Prisma for managing our database, it is up to you what relational database framework to use._
 
-[The following is a guide to setting up Postgres inside a docker container.](https://github.com/docker-library/docs/blob/master/postgres/README.md) While the choice of database is up to you, the instructions for getting started in this guide assume you are using a postgres docker image.
+[Here](https://github.com/docker-library/docs/blob/master/postgres/README.md) is a guide to setting up [Postgres](https://www.postgresql.org/) inside a Docker container _(note: this will be a separate Docker container from the one used for running the bot itself)_.
 
-After you have Postgres (or your DB of choice) up and running, edit this line in your `.env` file:
+While the choice of database is up to you, the instructions for getting started in this guide assume you are using the [Postgres Docker image](https://hub.docker.com/_/postgres).
+
+After you have Postgres (or your database of choice) up and running, edit this line in your `.env` file:
 
 ```
 DATABASE_URL=postgres://{pg_user}:{pg_pass}@{pg_hostname}:{pg_port}/{pg_db}
-# required for any DB functionality, we will get this URL in a later section
+# required for any database functionality, we will get this URL in a later section
 ```
 
 - pg_user = The Username you set in your POSTGRES_USER environment variable (default postgres)
@@ -204,13 +206,13 @@ DATABASE_URL=postgres://{pg_user}:{pg_pass}@{pg_hostname}:{pg_port}/{pg_db}
 The first time you run this project, you should run the following command to initialize the database:
 
 ```
-$ npm run baseline
+$ npm run db:init
 ```
 
-Migrations can be run on the Database with the following command:
+Migrations can be run on the database with the following command:
 
 ```
-$ npm run prisma:migrate
+$ npm run db:migrate
 ```
 
 ### Register Slash Commands
@@ -225,7 +227,7 @@ $ npm run commands:deploy
 
 ### Run the bot
 
-For development purposes (the update command will not work properly, but logs are output to the console):
+For development purposes (the update command will not work properly, but logs are outputed to the console):
 
 ```sh
 $ node .
