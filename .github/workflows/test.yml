@@ -10,7 +10,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: node:16.10.0
+      image: node:16.19.0
       env:
         DOCKER: true
 
