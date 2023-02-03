@@ -1,6 +1,12 @@
 import type { EmbedBuilder } from 'discord.js';
 import { toTheGallows } from './toTheGallows';
 
+jest.mock('../constants/meta', () => ({
+	// Version changes frequently, so use a consistent version number to test with:
+	appVersion: 'X.X.X',
+	repo: jest.requireActual<typeof import('../constants/meta')>('../constants/meta').repo,
+}));
+
 describe('toTheGallows', () => {
 	const mockReply = jest.fn();
 	const mockGetInteger = jest.fn<number | null, [name: string]>();
