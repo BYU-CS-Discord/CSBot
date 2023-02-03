@@ -19,7 +19,7 @@
 		"db:migrations:generate": "./node_modules/.bin/prisma migrate dev --create-only",
 		"lint": "./node_modules/.bin/eslint . --ext .ts",
 		"lint:fix": "npm run lint -- --fix",
-		"build": "rm -rf dist && ./node_modules/.bin/tsc -p tsconfig/tsconfig.prod.json",
+		"build": "rm -rf dist && ./node_modules/.bin/tsc -p tsconfig.prod.json",
 		"export-version": "./node_modules/.bin/genversion ./src/constants/version.ts -es",
 		"test": "./node_modules/.bin/jest",
 		"test:watch": "npm run test -- --watch --coverage=false",

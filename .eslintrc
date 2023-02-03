@@ -15,8 +15,8 @@
 	"plugins": ["deprecation", "import", "prettier", "promise", "@typescript-eslint", "unicorn"],
 	"parser": "@typescript-eslint/parser",
 	"parserOptions": {
-		"project": "./tsconfig/tsconfig.prod.json",
-		"tsconfigRootDir": "./tsconfig"
+		"project": "./tsconfig.prod.json",
+		"tsconfigRootDir": "./"
 	},
 	"env": {
 		"node": true
@@ -95,7 +95,7 @@
 			"extends": ["plugin:jest/recommended"],
 			"plugins": ["jest"],
 			"parserOptions": {
-				"project": "./tsconfig/tsconfig.test.json"
+				"project": "./tsconfig.test.json"
 			},
 			"env": {
 				"jest": true
