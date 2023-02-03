@@ -120,8 +120,12 @@ You must install Docker before continuing. To make sure Docker is available on y
 
 ```sh
 $ docker -v
-Docker version 20.10.17, build 100c701
+Docker version 20.10.21, build baeda1f
 ```
+
+#### **Highly Recommended!**
+
+> If you are using [Visual Studio Code](https://code.visualstudio.com/), you can use the [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension, which will run the whole project in the Docker container. If you choose to do so, you can ignore every Docker instruction after this. Very nifty!
 
 ### Clone the Repo
 
