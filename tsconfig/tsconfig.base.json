@@ -8,7 +8,7 @@
 		"declaration": false,
 		"removeComments": true,
 		"sourceMap": true,
-		"outDir": "./dist",
+		"outDir": "../dist",
 		"isolatedModules": true,
 		"strict": true,
 		"useUnknownInCatchVariables": true,
@@ -17,7 +17,7 @@
 		"importsNotUsedAsValues": "error",
 		"noPropertyAccessFromIndexSignature": true,
 		"noUncheckedIndexedAccess": true,
-		"typeRoots": ["./node_modules/@types", "./src"],
+		"typeRoots": ["../node_modules/@types", "../src"],
 		"types": ["node"],
 		"skipLibCheck": true, // disable this once our deps get their act together
 		"forceConsistentCasingInFileNames": true

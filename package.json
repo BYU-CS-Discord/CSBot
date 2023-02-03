@@ -26,7 +26,7 @@
 		"lintonly": "./node_modules/.bin/eslint . --ext .ts",
 		"prebuild": "npm run lint",
 		"build": "npm run build:only",
-		"build:only": "rm -rf dist && ./node_modules/.bin/tsc -p tsconfig.prod.json",
+		"build:only": "rm -rf dist && ./node_modules/.bin/tsc -p tsconfig/tsconfig.prod.json",
 		"export-version": "./node_modules/.bin/genversion ./src/constants/version.ts -es",
 		"test": "./node_modules/.bin/jest",
 		"test:watch": "npm run test -- --watch --coverage=false"
