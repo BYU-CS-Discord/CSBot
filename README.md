@@ -75,9 +75,17 @@ Retrieves the most recent [xkcd](https://xkcd.com/) comic, or the given one.
 Uses the [dectalk](https://github.com/babakinha/dectalk) text-to-speech engine to speak the message you give it,
 either sending a .wav file in a text channel or talking out loud in a voice channel. Comes with 9 different voices.
 
+### /update
+
+Pulls the latest changes from the repository and restarts the bot.
+
+### /tothegallows
+
+Begins a new game of Evil Hangman.
+
 ## Context Menu Commands
 
-You can find these in Discord by invoking the context menu on any message in any channel where you're allowed to run commands.
+You can find these in Discord by invoking the context menu (right-clicking) on any message in any channel where you're allowed to run commands.
 
 ### Fix Twitter Links
 
