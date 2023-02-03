@@ -113,11 +113,17 @@ v16.19.0
 8.19.3
 ```
 
-This project also requires [Docker](https://www.docker.com/). Docker runs the project in a lightweight virtual Linux environment, so functionality will be identical on any operating system.
+If you are using Linux, you will also need to install the following package to use the `/talk` command:
+
+```sh
+apt install libpulse0
+```
+
+If you don't want to install Node or any other dependencies on your machine, you may also use [Docker](https://www.docker.com/). Docker runs the project in a lightweight virtual Linux environment will all dependencies pre-installed, so functionality will be identical on any operating system.
 
 All Docker management (like building, running, and cleaning up images and containers) has been automated, so you only have to follow a few simple steps.
 
-You must install Docker before continuing. To make sure Docker is available on your machine, run the following command:
+You can install Docker from their website linked above. To make sure Docker is available on your machine, run the following command:
 
 ```sh
 $ docker -v
@@ -165,7 +171,7 @@ Go to https://discordapi.com/permissions.html#378091424832 and paste in your bot
 
 ### Setting up Docker
 
-Now you are ready to set up your development environment. Set up Docker by running the following command:
+If you wish to run the project in Docker, use the following command before continuing:
 
 ```sh
 $ npm run docker

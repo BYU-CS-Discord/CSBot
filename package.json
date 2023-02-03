@@ -4,10 +4,6 @@
 	"description": "The One beneath the Supreme Overlord's rule. A bot to help manage the BYU CS Discord, successor to Ze Kaiser (https://github.com/arkenstorm/ze-kaiser)",
 	"private": true,
 	"scripts": {
-		"docker": "npm run docker:image && npm run docker:cleanup && npm run docker:container",
-		"docker:image": "docker build --tag cs-bot-image --label cs-bot .",
-		"docker:cleanup": "docker system prune --force --filter='label=cs-bot'",
-		"docker:container": "docker run --tty --interactive --rm --mount type=bind,source=$PWD,destination=/cs-bot cs-bot-image",
 		"start": "./node_modules/.bin/pm2 start ./dist/main.js --name cs-bot",
 		"stop": "./node_modules/.bin/pm2 delete cs-bot",
 		"restart": "./node_modules/.bin/pm2 restart cs-bot",
@@ -26,7 +22,11 @@
 		"build": "rm -rf dist && ./node_modules/.bin/tsc -p tsconfig/tsconfig.prod.json",
 		"export-version": "./node_modules/.bin/genversion ./src/constants/version.ts -es",
 		"test": "./node_modules/.bin/jest",
-		"test:watch": "npm run test -- --watch --coverage=false"
+		"test:watch": "npm run test -- --watch --coverage=false",
+		"docker": "npm run docker:image && npm run docker:cleanup && npm run docker:container",
+		"docker:image": "docker build --tag cs-bot-image --label cs-bot .",
+		"docker:container": "docker run --tty --interactive --rm --mount type=bind,source=$PWD,destination=/cs-bot cs-bot-image",
+		"docker:cleanup": "docker system prune --force --filter='label=cs-bot'"
 	},
 	"repository": {
 		"type": "git",
