@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.7.0 - 2023-01-07
+### Added
+- New option autocomplete feature for commands.
+- A new `/sendtag` command for testing purposes.
+- New button functionality for interactions.
+- A new `/update` command to pull the latest changes and restart the bot.
+- A new `/tothegallows` command to start a game of evil hangman.
+
+### Changed
+- README organization.
+
+## 0.6.1 - 2022-12-10
+### Added
+
 
 ## 0.6.0 - 2022-12-03
 ### Added
