@@ -52,6 +52,7 @@ This project's source is licensed under the [Unlicense](LICENSE) license. All co
     - [Build the bot](#build-the-bot)
     - [Build the bot database](#build-the-bot-database)
     - [Register Slash Commands](#register-slash-commands)
+    - [Test the bot](#test-the-bot)
     - [Run the bot](#run-the-bot)
 
 ## Chat Input Commands
@@ -231,6 +232,16 @@ Once you have your bot's account token in the .env file, run the following comma
 $ npm run commands:deploy
 ```
 
+### Test the bot
+
+Whenever you make changes, you should make sure to run all unit tests before submitting.
+
+```sh
+$ npm run test
+```
+
+If you have added new code, you should write new unit tests to cover all the code you've written. Our goal is 100% code coverage.
+
 ### Run the bot
 
 For development purposes (the update command will not work properly, but logs are outputed to the console):
@@ -241,8 +252,10 @@ $ node .
 $ npm run dev
 ```
 
-For production purposes:
+For production purposes (this will spawn a separate thread using [PM2](https://pm2.io/) that will run in the background):
 
 ```sh
-npm start
+$ npm start
+$ npm run stop
+$ npm run restart
 ```
