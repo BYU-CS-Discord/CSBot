@@ -277,11 +277,18 @@ export async function sendErrorMessage(
 	}
 
 	try {
-		// Using the raw interaction here, since any errors that happen while trying to send the error are moot
-		await interaction.reply({
-			embeds: [embed],
-			ephemeral: true,
-		});
+		if (interaction.replied) {
+			await interaction.editReply({
+				content: '',
+				embeds: [embed],
+			});
+		} else {
+			// Using the raw interaction here, since any errors that happen while trying to send the error are moot
+			await interaction.reply({
+				embeds: [embed],
+				ephemeral: true,
+			});
+		}
 	} catch (secondError) {
 		logger.error('Error while sending error response:', secondError);
 	}
