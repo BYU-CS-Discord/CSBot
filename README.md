@@ -116,7 +116,7 @@ v16.19.0
 If you are using Linux, you will also need to install the following package to use the `/talk` command:
 
 ```sh
-apt install libpulse0
+$ apt install libpulse0
 ```
 
 If you don't want to install Node or any other dependencies on your machine, you may also use [Docker](https://www.docker.com/). Docker runs the project in a lightweight virtual Linux environment will all dependencies pre-installed, so functionality will be identical on any operating system.
