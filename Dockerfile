@@ -8,5 +8,8 @@ RUN apt install libpulse0 --yes
 # Necessary for /update
 RUN apt install git --yes
 
+# Necessary to install devDependencies
+ENV NODE_ENV=development
+
 WORKDIR /cs-bot
 ENTRYPOINT [ "bash" ]
