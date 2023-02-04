@@ -130,10 +130,6 @@ $ docker -v
 Docker version 20.10.21, build baeda1f
 ```
 
-#### **Highly Recommended!**
-
-> If you are using [Visual Studio Code](https://code.visualstudio.com/), you can use the [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension, which will run the whole project in the Docker container. If you choose to do so, you can ignore every Docker instruction after this. Very nifty!
-
 ### Clone the Repo
 
 ```sh
@@ -170,6 +166,10 @@ ADMINISTRATORS=COMMA,SEPARATED,ID,LIST
 Go to https://discordapi.com/permissions.html#378091424832 and paste in your bot's client ID to get an invite link.
 
 ### Setting up Docker
+
+> **Highly Recommended!**
+>
+> If you are using [Visual Studio Code](https://code.visualstudio.com/), you can use the [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension, which will run the whole project in the Docker container. If you choose to do so, you can ignore every Docker instruction after this. Very nifty!
 
 If you wish to run the project in Docker, use the following command before continuing:
 
