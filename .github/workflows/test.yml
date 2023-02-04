@@ -23,6 +23,12 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Generate version
+        run: npm run export-version
+
+      - name: Check that linting succeeds
+        run: npm run lint
+
       - name: Check that build succeeds
         run: npm run build
 
