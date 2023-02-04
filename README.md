@@ -127,7 +127,7 @@ You can install Docker from their website linked above. To make sure Docker is a
 
 ```sh
 $ docker -v
-Docker version 20.10.21, build baeda1f
+Docker version 20.10.22, build 3a2c30b
 ```
 
 ### Clone the Repo
