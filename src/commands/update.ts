@@ -63,5 +63,6 @@ async function execAsync(command: string): Promise<void> {
  */
 async function restart(): Promise<never> {
 	await execAsync('npm run restart');
-	throw new Error('Failed to restart application');
+	error('The above line should have killed the process. If you got here, something went wrong');
+	return undefined as never;
 }
