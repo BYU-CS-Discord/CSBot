@@ -8,7 +8,7 @@
 	"testRegex": ["src/.*\\.test\\.(t|j)s$"],
 	"globals": {
 		"ts-jest": {
-			"tsconfig": "./tsconfig.test.json"
+			"tsconfig": "tsconfig.test.json"
 		}
 	},
 	"extensionsToTreatAsEsm": [".ts"],
