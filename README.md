@@ -52,6 +52,7 @@ This project's source is licensed under the [Unlicense](LICENSE) license. All co
     - [Build the bot](#build-the-bot)
     - [Build the bot database](#build-the-bot-database)
     - [Register Slash Commands](#register-slash-commands)
+    - [Test the bot](#test-the-bot)
     - [Run the bot](#run-the-bot)
 
 ## Chat Input Commands
@@ -96,29 +97,37 @@ Transforms [twitter.com](https://twitter.com/) links in the given message to [Fi
 Performs the same function as the `/talk` chat input command, but uses the selected message as input.
 Can be used to repeat the same 'talk' command without typing it out again.
 
+---
+
 ## Usage or Development
 
 If you've read this far, and don't plan to run or develop on the bot yourself, or are not curious how to do so, you may leave now. This part is quite boring. But feel free to read on anyway!
 
 ### Prerequisites
 
-This project requires [NodeJS](https://nodejs.org/) (version 16.10 or later), [NPM](https://npmjs.org/). To make sure you have them available on your machine, try running the following command:
+This project requires [NodeJS](https://nodejs.org/) (version 16.19 or later) and [NPM](https://npmjs.org/). To make sure you have them available on your machine, try running the following command:
 
 ```sh
-$ npm -v && node -v
-7.20.3
-v16.15.1
+$ node -v && npm -v
+v16.19.0
+8.19.3
 ```
 
-This project also requires [Docker](https://www.docker.com/). Docker runs the project in a lightweight virtual Linux environment, so functionality will be identical on any operating system.
+If you are using Linux, you will also need to install the following package to use the `/talk` command:
+
+```sh
+$ apt install libpulse0
+```
+
+If you don't want to install Node or any other dependencies on your machine, you may also use [Docker](https://www.docker.com/). Docker runs the project in a lightweight virtual Linux environment will all dependencies pre-installed, so functionality will be identical on any operating system.
 
 All Docker management (like building, running, and cleaning up images and containers) has been automated, so you only have to follow a few simple steps.
 
-You must install Docker before continuing. To make sure Docker is available on your machine, run the following command:
+You can install Docker from their website linked above. To make sure Docker is available on your machine, run the following command:
 
 ```sh
 $ docker -v
-Docker version 20.10.17, build 100c701
+Docker version 20.10.22, build 3a2c30b
 ```
 
 ### Clone the Repo
@@ -158,7 +167,11 @@ Go to https://discordapi.com/permissions.html#378091424832 and paste in your bot
 
 ### Setting up Docker
 
-Now you are ready to set up your development environment. Set up Docker by running the following command:
+> **Highly Recommended!**
+>
+> If you are using [Visual Studio Code](https://code.visualstudio.com/), you can use the [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension, which will run the whole project in the Docker container. If you choose to do so, you can ignore every Docker instruction after this. Very nifty!
+
+If you wish to run the project in Docker, use the following command before continuing:
 
 ```sh
 $ npm run docker
@@ -184,15 +197,17 @@ $ npm run setup
 
 ### Build the bot database
 
-_As we use prisma for managing our DB it is up to you what relational database framework you use._
+_As we use Prisma for managing our database, it is up to you what relational database framework to use._
 
-[The following is a guide to setting up Postgres inside a docker container.](https://github.com/docker-library/docs/blob/master/postgres/README.md) While the choice of database is up to you, the instructions for getting started in this guide assume you are using a postgres docker image.
+[Here](https://github.com/docker-library/docs/blob/master/postgres/README.md) is a guide to setting up [Postgres](https://www.postgresql.org/) inside a Docker container _(note: this will be a separate Docker container from the one used for running the bot itself)_.
 
-After you have Postgres (or your DB of choice) up and running, edit this line in your `.env` file:
+While the choice of database is up to you, the instructions for getting started in this guide assume you are using the [Postgres Docker image](https://hub.docker.com/_/postgres).
+
+After you have Postgres (or your database of choice) up and running, edit this line in your `.env` file:
 
 ```
 DATABASE_URL=postgres://{pg_user}:{pg_pass}@{pg_hostname}:{pg_port}/{pg_db}
-# required for any DB functionality, we will get this URL in a later section
+# required for any database functionality, we will get this URL in a later section
 ```
 
 - pg_user = The Username you set in your POSTGRES_USER environment variable (default postgres)
@@ -204,13 +219,13 @@ DATABASE_URL=postgres://{pg_user}:{pg_pass}@{pg_hostname}:{pg_port}/{pg_db}
 The first time you run this project, you should run the following command to initialize the database:
 
 ```
-$ npm run baseline
+$ npm run db:init
 ```
 
-Migrations can be run on the Database with the following command:
+Migrations can be run on the database with the following command:
 
 ```
-$ npm run prisma:migrate
+$ npm run db:migrate
 ```
 
 ### Register Slash Commands
@@ -223,9 +238,19 @@ Once you have your bot's account token in the .env file, run the following comma
 $ npm run commands:deploy
 ```
 
+### Test the bot
+
+Whenever you make changes, you should make sure to run all unit tests before submitting.
+
+```sh
+$ npm run test
+```
+
+If you have added new code, you should write new unit tests to cover all the code you've written. Our goal is 100% code coverage.
+
 ### Run the bot
 
-For development purposes (the update command will not work properly, but logs are output to the console):
+For development purposes (the update command will not work properly, but logs are outputed to the console):
 
 ```sh
 $ node .
@@ -233,8 +258,10 @@ $ node .
 $ npm run dev
 ```
 
-For production purposes:
+For production purposes (this will spawn a separate thread using [PM2](https://pm2.io/) that will run in the background):
 
 ```sh
-npm start
+$ npm start
+$ npm run stop
+$ npm run restart
 ```
