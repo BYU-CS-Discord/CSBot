@@ -210,6 +210,7 @@ function defaultInteraction(): Interaction {
 		isButton: () => false,
 		isChatInputCommand: () => true,
 		isAutocomplete: () => false,
+		replied: false,
 	} as unknown as Interaction;
 }
 
@@ -391,6 +392,19 @@ describe('on(interactionCreate)', () => {
 
 			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 			expect(mockInteractionReply).toHaveBeenCalledOnce();
+		});
+
+		test('edits the reply with an error embed message when a command that has already been replied to throws an error', async () => {
+			const interaction = defaultInteraction();
+			(interaction as CommandInteraction).commandName = mockErrorGlobalCommand.info.name;
+
+			(interaction as CommandInteraction).replied = true;
+
+			const mockInteractionEditReply = jest.fn();
+			(interaction as CommandInteraction).editReply = mockInteractionEditReply;
+
+			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+			expect(mockInteractionEditReply).toHaveBeenCalledOnce();
 		});
 
 		// This is for 100% code coverage
