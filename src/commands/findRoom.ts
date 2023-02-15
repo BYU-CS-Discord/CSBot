@@ -431,8 +431,15 @@ export const findRoom: GlobalCommand = {
 		if (type === 'when') {
 			if (input_bldg !== null && input_room !== null) {
 				const requestedComic = await _getWhenRoom(type, input_bldg, input_room);
-				const busySince = requestedComic.busySince;
-				const busyUntil = requestedComic.busyUntil;
+				const busySince =
+					requestedComic.busySince !== ''
+						? requestedComic.busySince.slice(11, 19)
+						: requestedComic.busySince;
+				const busyUntil =
+					requestedComic.busyUntil !== ''
+						? requestedComic.busyUntil.slice(11, 19)
+						: requestedComic.busyUntil;
+				// FORMAT 2023-02-06T12:15:00-07:00
 				const isInUse = requestedComic.isInUse;
 
 				let roomString = '';
