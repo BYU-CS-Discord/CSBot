@@ -87,8 +87,7 @@ Begins a new game of Evil Hangman.
 
 ### /findroom ( now / at / between / when )
 
-Searches for open rooms on BYU Campus. *'Now'* *'At'* and *'Between'* allow you to filter your search by time. *'When'* allows you to see when a specified room is available.
-
+Searches for open rooms on BYU Campus. *'Now'*, *'At'*, and *'Between'* allow you to filter your search by time. *'When'* allows you to see when a specified room is available.
 ## Context Menu Commands
 
 You can find these in Discord by invoking the context menu (right-clicking) on any message in any channel where you're allowed to run commands.

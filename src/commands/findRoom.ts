@@ -13,7 +13,62 @@ interface GetRoomsResponse {
 	Rooms: Array<[string, string]> | [];
 }
 
-function convertTo12Hour(time: string): string {
+const timeChoices = [
+	{ name: '8:00 AM', value: '08:00:00' },
+	{ name: '8:30 AM', value: '08:30:00' },
+	{ name: '9:00 AM', value: '09:00:00' },
+	{ name: '9:30 AM', value: '09:30:00' },
+	{ name: '10:00 AM', value: '10:00:00' },
+	{ name: '10:30 AM', value: '10:30:00' },
+	{ name: '11:00 AM', value: '11:00:00' },
+	{ name: '11:30 AM', value: '11:30:00' },
+	{ name: '12:00 PM', value: '12:00:00' },
+	{ name: '12:30 PM', value: '12:30:00' },
+	{ name: '1:00 PM', value: '13:00:00' },
+	{ name: '1:30 PM', value: '13:30:00' },
+	{ name: '2:00 PM', value: '14:00:00' },
+	{ name: '2:30 PM', value: '14:30:00' },
+	{ name: '3:00 PM', value: '15:00:00' },
+	{ name: '3:30 PM', value: '15:30:00' },
+	{ name: '4:00 PM', value: '16:00:00' },
+	{ name: '4:30 PM', value: '16:30:00' },
+	{ name: '5:00 PM', value: '17:00:00' },
+	{ name: '5:30 PM', value: '17:30:00' },
+	{ name: '6:00 PM', value: '18:00:00' },
+	{ name: '6:30 PM', value: '18:30:00' },
+	{ name: '7:00 PM', value: '19:00:00' },
+	{ name: '7:30 PM', value: '19:30:00' },
+];
+
+const bldgChoices = [
+	{ name: 'ANY', value: 'ANY' },
+	{ name: 'BNSN', value: 'BNSN' },
+	{ name: 'BRMB', value: 'BRMB' },
+	{ name: 'CTB', value: 'CTB' },
+	{ name: 'EB', value: 'EB' },
+	{ name: 'ELLB', value: 'ELLB' },
+	{ name: 'ESC', value: 'ESC' },
+	{ name: 'HBLL', value: 'HBLL' },
+	{ name: 'JFSB', value: 'JFSB' },
+	{ name: 'JKB', value: 'JKB' },
+	{ name: 'JRCB', value: 'JRCB' },
+	{ name: 'JSB', value: 'JSB' },
+	{ name: 'KMBL', value: 'KMBL' },
+	{ name: 'LSB', value: 'LSB' },
+	{ name: 'MARB', value: 'MARB' },
+	{ name: 'MB', value: 'MB' },
+	{ name: 'MCDB', value: 'MCDB' },
+	{ name: 'MCKB', value: 'MCKB' },
+	{ name: 'MSRB', value: 'MSRB' },
+	{ name: 'SLC', value: 'SLC' },
+	{ name: 'TLRB', value: 'TLRB' },
+	{ name: 'TMCB', value: 'TMCB' },
+	{ name: 'TNRB', value: 'TNRB' },
+	{ name: 'WSC', value: 'WSC' },
+	{ name: 'WVB', value: 'WVB' },
+];
+
+export function convertTo12Hour(time: string): string {
 	const [hours, minutes, seconds] = time.split(':').map(Number);
 	if (hours !== undefined && minutes !== undefined && seconds !== undefined) {
 		const suffix = hours >= 12 ? 'PM' : 'AM';
@@ -60,6 +115,7 @@ async function _getRoomsAt(
 		return error;
 	}
 }
+
 async function _getRoomsBetween(
 	search_type: string,
 	building: string,
@@ -116,33 +172,7 @@ const builder = new SlashCommandBuilder()
 				option
 					.setName('building')
 					.setDescription('The building acronym to search in, type any to see all options')
-					.addChoices(
-						{ name: 'ANY', value: 'ANY' },
-						{ name: 'BNSN', value: 'BNSN' },
-						{ name: 'BRMB', value: 'BRMB' },
-						{ name: 'CTB', value: 'CTB' },
-						{ name: 'EB', value: 'EB' },
-						{ name: 'ELLB', value: 'ELLB' },
-						{ name: 'ESC', value: 'ESC' },
-						{ name: 'HBLL', value: 'HBLL' },
-						{ name: 'JFSB', value: 'JFSB' },
-						{ name: 'JKB', value: 'JKB' },
-						{ name: 'JRCB', value: 'JRCB' },
-						{ name: 'JSB', value: 'JSB' },
-						{ name: 'KMBL', value: 'KMBL' },
-						{ name: 'LSB', value: 'LSB' },
-						{ name: 'MARB', value: 'MARB' },
-						{ name: 'MB', value: 'MB' },
-						{ name: 'MCDB', value: 'MCDB' },
-						{ name: 'MCKB', value: 'MCKB' },
-						{ name: 'MSRB', value: 'MSRB' },
-						{ name: 'SLC', value: 'SLC' },
-						{ name: 'TLRB', value: 'TLRB' },
-						{ name: 'TMCB', value: 'TMCB' },
-						{ name: 'TNRB', value: 'TNRB' },
-						{ name: 'WSC', value: 'WSC' },
-						{ name: 'WVB', value: 'WVB' }
-					)
+					.addChoices(...bldgChoices)
 					.setRequired(true)
 			)
 	)
@@ -154,65 +184,14 @@ const builder = new SlashCommandBuilder()
 				option
 					.setName('start_time')
 					.setDescription('What time would you like to search for?')
-					.addChoices(
-						{ name: '8:00 AM', value: '08:00:00' },
-						{ name: '8:30 AM', value: '08:30:00' },
-						{ name: '9:00 AM', value: '09:00:00' },
-						{ name: '9:30 AM', value: '09:30:00' },
-						{ name: '10:00 AM', value: '10:00:00' },
-						{ name: '10:30 AM', value: '10:30:00' },
-						{ name: '11:00 AM', value: '11:00:00' },
-						{ name: '11:30 AM', value: '11:30:00' },
-						{ name: '12:00 PM', value: '12:00:00' },
-						{ name: '12:30 PM', value: '12:30:00' },
-						{ name: '1:00 PM', value: '13:00:00' },
-						{ name: '1:30 PM', value: '13:30:00' },
-						{ name: '2:00 PM', value: '14:00:00' },
-						{ name: '2:30 PM', value: '14:30:00' },
-						{ name: '3:00 PM', value: '15:00:00' },
-						{ name: '3:30 PM', value: '15:30:00' },
-						{ name: '4:00 PM', value: '16:00:00' },
-						{ name: '4:30 PM', value: '16:30:00' },
-						{ name: '5:00 PM', value: '17:00:00' },
-						{ name: '5:30 PM', value: '17:30:00' },
-						{ name: '6:00 PM', value: '18:00:00' },
-						{ name: '6:30 PM', value: '18:30:00' },
-						{ name: '7:00 PM', value: '19:00:00' },
-						{ name: '7:30 PM', value: '19:30:00' }
-					)
+					.addChoices(...timeChoices)
 					.setRequired(true)
 			)
 			.addStringOption(option =>
 				option
 					.setName('building')
 					.setDescription('The building acronym to search in, type any to see all options')
-					.addChoices(
-						{ name: 'ANY', value: 'ANY' },
-						{ name: 'BNSN', value: 'BNSN' },
-						{ name: 'BRMB', value: 'BRMB' },
-						{ name: 'CTB', value: 'CTB' },
-						{ name: 'EB', value: 'EB' },
-						{ name: 'ELLB', value: 'ELLB' },
-						{ name: 'ESC', value: 'ESC' },
-						{ name: 'HBLL', value: 'HBLL' },
-						{ name: 'JFSB', value: 'JFSB' },
-						{ name: 'JKB', value: 'JKB' },
-						{ name: 'JRCB', value: 'JRCB' },
-						{ name: 'JSB', value: 'JSB' },
-						{ name: 'KMBL', value: 'KMBL' },
-						{ name: 'LSB', value: 'LSB' },
-						{ name: 'MARB', value: 'MARB' },
-						{ name: 'MB', value: 'MB' },
-						{ name: 'MCDB', value: 'MCDB' },
-						{ name: 'MCKB', value: 'MCKB' },
-						{ name: 'MSRB', value: 'MSRB' },
-						{ name: 'SLC', value: 'SLC' },
-						{ name: 'TLRB', value: 'TLRB' },
-						{ name: 'TMCB', value: 'TMCB' },
-						{ name: 'TNRB', value: 'TNRB' },
-						{ name: 'WSC', value: 'WSC' },
-						{ name: 'WVB', value: 'WVB' }
-					)
+					.addChoices(...bldgChoices)
 					.setRequired(true)
 			)
 	)
@@ -224,97 +203,21 @@ const builder = new SlashCommandBuilder()
 				option
 					.setName('start_time')
 					.setDescription('What time would you like to search for?')
-					.addChoices(
-						{ name: '8:00 AM', value: '08:00:00' },
-						{ name: '8:30 AM', value: '08:30:00' },
-						{ name: '9:00 AM', value: '09:00:00' },
-						{ name: '9:30 AM', value: '09:30:00' },
-						{ name: '10:00 AM', value: '10:00:00' },
-						{ name: '10:30 AM', value: '10:30:00' },
-						{ name: '11:00 AM', value: '11:00:00' },
-						{ name: '11:30 AM', value: '11:30:00' },
-						{ name: '12:00 PM', value: '12:00:00' },
-						{ name: '12:30 PM', value: '12:30:00' },
-						{ name: '1:00 PM', value: '13:00:00' },
-						{ name: '1:30 PM', value: '13:30:00' },
-						{ name: '2:00 PM', value: '14:00:00' },
-						{ name: '2:30 PM', value: '14:30:00' },
-						{ name: '3:00 PM', value: '15:00:00' },
-						{ name: '3:30 PM', value: '15:30:00' },
-						{ name: '4:00 PM', value: '16:00:00' },
-						{ name: '4:30 PM', value: '16:30:00' },
-						{ name: '5:00 PM', value: '17:00:00' },
-						{ name: '5:30 PM', value: '17:30:00' },
-						{ name: '6:00 PM', value: '18:00:00' },
-						{ name: '6:30 PM', value: '18:30:00' },
-						{ name: '7:00 PM', value: '19:00:00' },
-						{ name: '7:30 PM', value: '19:30:00' }
-					)
+					.addChoices(...timeChoices)
 					.setRequired(true)
 			)
 			.addStringOption(option =>
 				option
 					.setName('end_time')
 					.setDescription('What time would you like to search for?')
-					.addChoices(
-						{ name: '8:00 AM', value: '08:00:00' },
-						{ name: '8:30 AM', value: '08:30:00' },
-						{ name: '9:00 AM', value: '09:00:00' },
-						{ name: '9:30 AM', value: '09:30:00' },
-						{ name: '10:00 AM', value: '10:00:00' },
-						{ name: '10:30 AM', value: '10:30:00' },
-						{ name: '11:00 AM', value: '11:00:00' },
-						{ name: '11:30 AM', value: '11:30:00' },
-						{ name: '12:00 PM', value: '12:00:00' },
-						{ name: '12:30 PM', value: '12:30:00' },
-						{ name: '1:00 PM', value: '13:00:00' },
-						{ name: '1:30 PM', value: '13:30:00' },
-						{ name: '2:00 PM', value: '14:00:00' },
-						{ name: '2:30 PM', value: '14:30:00' },
-						{ name: '3:00 PM', value: '15:00:00' },
-						{ name: '3:30 PM', value: '15:30:00' },
-						{ name: '4:00 PM', value: '16:00:00' },
-						{ name: '4:30 PM', value: '16:30:00' },
-						{ name: '5:00 PM', value: '17:00:00' },
-						{ name: '5:30 PM', value: '17:30:00' },
-						{ name: '6:00 PM', value: '18:00:00' },
-						{ name: '6:30 PM', value: '18:30:00' },
-						{ name: '7:00 PM', value: '19:00:00' },
-						{ name: '7:30 PM', value: '19:30:00' }
-					)
+					.addChoices(...bldgChoices)
 					.setRequired(true)
 			)
 			.addStringOption(option =>
 				option
 					.setName('building')
 					.setDescription('The building acronym to search in, type any to see all options')
-					.addChoices(
-						{ name: 'ANY', value: 'ANY' },
-						{ name: 'BNSN', value: 'BNSN' },
-						{ name: 'BRMB', value: 'BRMB' },
-						{ name: 'CTB', value: 'CTB' },
-						{ name: 'EB', value: 'EB' },
-						{ name: 'ELLB', value: 'ELLB' },
-						{ name: 'ESC', value: 'ESC' },
-						{ name: 'HBLL', value: 'HBLL' },
-						{ name: 'JFSB', value: 'JFSB' },
-						{ name: 'JKB', value: 'JKB' },
-						{ name: 'JRCB', value: 'JRCB' },
-						{ name: 'JSB', value: 'JSB' },
-						{ name: 'KMBL', value: 'KMBL' },
-						{ name: 'LSB', value: 'LSB' },
-						{ name: 'MARB', value: 'MARB' },
-						{ name: 'MB', value: 'MB' },
-						{ name: 'MCDB', value: 'MCDB' },
-						{ name: 'MCKB', value: 'MCKB' },
-						{ name: 'MSRB', value: 'MSRB' },
-						{ name: 'SLC', value: 'SLC' },
-						{ name: 'TLRB', value: 'TLRB' },
-						{ name: 'TMCB', value: 'TMCB' },
-						{ name: 'TNRB', value: 'TNRB' },
-						{ name: 'WSC', value: 'WSC' },
-						{ name: 'WVB', value: 'WVB' }
-					)
+					.addChoices(...bldgChoices)
 					.setRequired(true)
 			)
 	)
@@ -326,33 +229,7 @@ const builder = new SlashCommandBuilder()
 				option
 					.setName('building')
 					.setDescription('The building acronym to search in, type any to see all options')
-					.addChoices(
-						{ name: 'ANY', value: 'ANY' },
-						{ name: 'BNSN', value: 'BNSN' },
-						{ name: 'BRMB', value: 'BRMB' },
-						{ name: 'CTB', value: 'CTB' },
-						{ name: 'EB', value: 'EB' },
-						{ name: 'ELLB', value: 'ELLB' },
-						{ name: 'ESC', value: 'ESC' },
-						{ name: 'HBLL', value: 'HBLL' },
-						{ name: 'JFSB', value: 'JFSB' },
-						{ name: 'JKB', value: 'JKB' },
-						{ name: 'JRCB', value: 'JRCB' },
-						{ name: 'JSB', value: 'JSB' },
-						{ name: 'KMBL', value: 'KMBL' },
-						{ name: 'LSB', value: 'LSB' },
-						{ name: 'MARB', value: 'MARB' },
-						{ name: 'MB', value: 'MB' },
-						{ name: 'MCDB', value: 'MCDB' },
-						{ name: 'MCKB', value: 'MCKB' },
-						{ name: 'MSRB', value: 'MSRB' },
-						{ name: 'SLC', value: 'SLC' },
-						{ name: 'TLRB', value: 'TLRB' },
-						{ name: 'TMCB', value: 'TMCB' },
-						{ name: 'TNRB', value: 'TNRB' },
-						{ name: 'WSC', value: 'WSC' },
-						{ name: 'WVB', value: 'WVB' }
-					)
+					.addChoices(...bldgChoices)
 					.setRequired(true)
 			)
 			.addStringOption(option =>
