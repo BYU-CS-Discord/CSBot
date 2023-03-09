@@ -78,11 +78,9 @@ export function convertTo12Hour(time: string): string {
 	return 'ERR';
 }
 
-async function _getRoomsNow(search_type: string, building: string): Promise<GetRoomsResponse> {
+async function _getRoomsFromEndpoint(endpoint: string): Promise<GetRoomsResponse> {
 	try {
-		const { data, status } = await axios.get<GetRoomsResponse>(
-			`https://pi.zyancey.com/${search_type}/${building}`
-		);
+		const { data, status } = await axios.get<GetRoomsResponse>(endpoint);
 		if (status !== 200) throw new Error(`${status}`);
 		return data;
 	} catch (error_) {
@@ -95,57 +93,29 @@ async function _getRoomsNow(search_type: string, building: string): Promise<GetR
 	}
 }
 
-async function _getRoomsAt(
-	search_type: string,
-	building: string,
-	timeA: string
-): Promise<GetRoomsResponse> {
-	try {
-		const { data, status } = await axios.get<GetRoomsResponse>(
-			`https://pi.zyancey.com/${search_type}/${building}/${timeA}`
-		);
-		if (status !== 200) throw new Error(`${status}`);
-		return data;
-	} catch (error_) {
-		logger.error('Error in getting Room Info:');
-		logger.error(error_);
-		const error: GetRoomsResponse = {
-			Rooms: [],
-		};
-		return error;
-	}
+async function _getRoomsNow(building: string): Promise<GetRoomsResponse> {
+	const url = `https://pi.zyancey.com/now/${building}`;
+	return await _getRoomsFromEndpoint(url);
+}
+
+async function _getRoomsAt(building: string, timeA: string): Promise<GetRoomsResponse> {
+	const url = `https://pi.zyancey.com/at/${building}/${timeA}`;
+	return await _getRoomsFromEndpoint(url);
 }
 
 async function _getRoomsBetween(
-	search_type: string,
 	building: string,
 	timeA: string,
 	timeB: string
 ): Promise<GetRoomsResponse> {
-	try {
-		const { data, status } = await axios.get<GetRoomsResponse>(
-			`https://pi.zyancey.com/${search_type}/${building}/${timeA}/${timeB}`
-		);
-		if (status !== 200) throw new Error(`${status}`);
-		return data;
-	} catch (error_) {
-		logger.error('Error in getting Room Info:');
-		logger.error(error_);
-		const error: GetRoomsResponse = {
-			Rooms: [],
-		};
-		return error;
-	}
+	const url = `https://pi.zyancey.com/between/${building}/${timeA}/${timeB}`;
+	return await _getRoomsFromEndpoint(url);
 }
 
-async function _getWhenRoom(
-	search_type: string,
-	building: string,
-	room: string
-): Promise<GetRoomInfoResponse> {
+async function _getWhenRoom(building: string, room: string): Promise<GetRoomInfoResponse> {
 	try {
 		const { data, status } = await axios.get<GetRoomInfoResponse>(
-			`https://pi.zyancey.com/${search_type}/${building}/${room}`
+			`https://pi.zyancey.com/when/${building}/${room}`
 		);
 		if (status !== 200) throw new Error(`${status}`);
 		return data;
@@ -256,12 +226,12 @@ export const findRoom: GlobalCommand = {
 
 		if (type === 'now') {
 			if (input_bldg !== null) {
-				const requestedComic = await _getRoomsNow('now', input_bldg);
-				if (requestedComic.Rooms.length === 0) {
+				const requestedList = await _getRoomsNow(input_bldg);
+				if (requestedList.Rooms.length === 0) {
 					embedTitle = `No rooms available now in the ${input_bldg}`;
 					embedDescription = 'Try again later!';
 				} else {
-					const roomString = requestedComic.Rooms.map(room => room.reverse().join(', ')).join('\n');
+					const roomString = requestedList.Rooms.map(room => room.reverse().join(', ')).join('\n');
 					embedTitle = `Rooms available now in the ${input_bldg}`;
 					embedDescription = roomString;
 				}
@@ -270,12 +240,12 @@ export const findRoom: GlobalCommand = {
 
 		if (type === 'at') {
 			if (input_bldg !== null && input_timeA !== null) {
-				const requestedComic = await _getRoomsAt('at', input_bldg, input_timeA);
-				if (requestedComic.Rooms.length === 0) {
+				const requestedList = await _getRoomsAt(input_bldg, input_timeA);
+				if (requestedList.Rooms.length === 0) {
 					embedTitle = `No rooms available at ${convertTo12Hour(input_timeA)} in the ${input_bldg}`;
 					embedDescription = 'Try again later!';
 				} else {
-					const roomString = requestedComic.Rooms.map(room => room.reverse().join(', ')).join('\n');
+					const roomString = requestedList.Rooms.map(room => room.reverse().join(', ')).join('\n');
 					embedTitle = `Rooms available in the ${input_bldg} at ${convertTo12Hour(input_timeA)}`;
 					embedDescription = roomString;
 				}
@@ -284,19 +254,14 @@ export const findRoom: GlobalCommand = {
 
 		if (type === 'between') {
 			if (input_bldg !== null && input_timeA !== null && input_timeB !== null) {
-				const requestedComic = await _getRoomsBetween(
-					'between',
-					input_bldg,
-					input_timeA,
-					input_timeB
-				);
-				if (requestedComic.Rooms.length === 0) {
+				const requestedList = await _getRoomsBetween(input_bldg, input_timeA, input_timeB);
+				if (requestedList.Rooms.length === 0) {
 					embedTitle = `No rooms available between ${convertTo12Hour(
 						input_timeA
 					)} and ${convertTo12Hour(input_timeB)}`;
 					embedDescription = 'Try again later!';
 				} else {
-					const roomString = requestedComic.Rooms.map(room => room.reverse().join(', ')).join('\n');
+					const roomString = requestedList.Rooms.map(room => room.reverse().join(', ')).join('\n');
 					embedTitle = `Rooms available in the ${input_bldg} between ${convertTo12Hour(
 						input_timeA
 					)} and ${convertTo12Hour(input_timeB)}`;
@@ -307,17 +272,17 @@ export const findRoom: GlobalCommand = {
 
 		if (type === 'when') {
 			if (input_bldg !== null && input_room !== null) {
-				const requestedComic = await _getWhenRoom(type, input_bldg, input_room);
+				const requestedList = await _getWhenRoom(input_bldg, input_room);
 				const busySince =
-					requestedComic.busySince !== ''
-						? requestedComic.busySince.slice(11, 19)
-						: requestedComic.busySince;
+					requestedList.busySince !== ''
+						? requestedList.busySince.slice(11, 19)
+						: requestedList.busySince;
 				const busyUntil =
-					requestedComic.busyUntil !== ''
-						? requestedComic.busyUntil.slice(11, 19)
-						: requestedComic.busyUntil;
+					requestedList.busyUntil !== ''
+						? requestedList.busyUntil.slice(11, 19)
+						: requestedList.busyUntil;
 				// FORMAT 2023-02-06T12:15:00-07:00
-				const isInUse = requestedComic.isInUse;
+				const isInUse = requestedList.isInUse;
 
 				let roomString = '';
 
