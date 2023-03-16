@@ -1,7 +1,7 @@
 import { SlashCommandBuilder } from 'discord.js';
 import { exec as __unsafeExecuteCommand } from 'node:child_process';
 import { UserMessageError } from '../helpers/UserMessageError';
-import { error } from '../logger';
+import { debug, error } from '../logger';
 
 let numInvocations: number = 0;
 const info = new SlashCommandBuilder()
@@ -46,7 +46,10 @@ export const update: GlobalCommand = {
 
 async function execAsync(command: string): Promise<void> {
 	await new Promise<void>((resolve, reject) => {
-		__unsafeExecuteCommand(command, err => {
+		__unsafeExecuteCommand(command, (err, stdout, stderr) => {
+			debug(stdout);
+			error(stderr);
+
 			if (err) {
 				reject(err);
 			} else {

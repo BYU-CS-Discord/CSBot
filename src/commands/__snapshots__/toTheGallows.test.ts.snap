@@ -24,7 +24,7 @@ Letters Guessed: _ _",
   ],
   "footer": Object {
     "icon_url": undefined,
-    "text": "v0.6.0",
+    "text": "vX.X.X",
   },
   "title": "Evil Hangman",
 }

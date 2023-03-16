@@ -38,10 +38,12 @@ import { talk } from './talk';
 import { talk as talk_context } from './contextMenu/talk';
 import { toTheGallows } from './toTheGallows';
 import { update } from './update';
+import { findRoom } from './findRoom';
 
 _add(help);
 _add(xkcd);
 _add(profile);
+_add(findRoom);
 _add(fxtwitter);
 _add(sendtag);
 _add(talk);
