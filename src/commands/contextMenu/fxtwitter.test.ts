@@ -20,12 +20,7 @@ describe('Fix Twitter Links', () => {
 		mockFindTwitterURLs.mockReturnValue([]);
 	});
 
-	test('complains at the caller if there are no proper links', async () => {
-		mockFindTwitterURLs.mockReturnValue(null);
-		await expect(fxtwitter.execute(context)).rejects.toThrow();
-	});
-
-	test('complains at the caller if none of the links in the message are Twitter links', async () => {
+	test('complains at the caller if there are no proper Twitter links', async () => {
 		mockFindTwitterURLs.mockReturnValue([]);
 		await expect(fxtwitter.execute(context)).rejects.toThrow();
 	});

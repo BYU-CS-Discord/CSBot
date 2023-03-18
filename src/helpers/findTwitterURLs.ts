@@ -2,11 +2,11 @@ import { URL } from 'node:url';
 
 import { positionsOfUriInText } from "./positionsOfUriInText";
 
-export function findTwitterURLs(content: string): URL[]|null {
+export function findTwitterURLs(content: string): URL[] {
 	// Find URLs
 	const urlRanges = positionsOfUriInText(content);
 	if (urlRanges === null) {
-		return null;
+		return [];
 	}
 
 	// Find Twitter URLs

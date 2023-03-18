@@ -11,10 +11,10 @@ describe('Find Twitter URLs', () => {
 		${'foo/bar'}
 		${'file://foo/bar'}
 	`(
-		'returns null if there are no proper links',
+		'returns an empty array if there are no proper links',
 		async ({ content }: { content: string }) => {
 			const urls = findTwitterURLs(content);
-			expect(urls).toEqual(null);
+			expect(urls).toEqual([]);
 		}
 	);
 

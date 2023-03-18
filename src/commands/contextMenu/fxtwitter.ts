@@ -10,9 +10,6 @@ export const fxtwitter: MessageContextMenuCommand = {
 	async execute({ targetMessage, replyPrivately }) {
 		const urls = findTwitterURLs(targetMessage.content);
 
-		if (urls === null) {
-			throw new Error('There were no URLs found in the message.');
-		}
 		if (urls.length === 0) {
 			throw new Error('There were no Twitter URLs found in the message.');
 		}
