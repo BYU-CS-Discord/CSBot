@@ -213,7 +213,7 @@ const builder = new SlashCommandBuilder()
 export const findRoom: GlobalCommand = {
 	info: builder,
 	requiresGuild: false,
-	async execute({ reply, interaction }): Promise<void> {
+	async execute({ replyPrivately, interaction }): Promise<void> {
 		const input_bldg = interaction.options.getString('building');
 		const input_room = interaction.options.getString('room');
 		const input_timeA = interaction.options.getString('start_time');
@@ -318,9 +318,8 @@ export const findRoom: GlobalCommand = {
 			});
 
 		// send the embed back to the client.
-		await reply({
+		await replyPrivately({
 			embeds: [embed],
-			ephemeral: false,
 		});
 	},
 };
