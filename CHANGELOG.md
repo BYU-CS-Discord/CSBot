@@ -5,6 +5,36 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.8.2 - 2023-03-17
+### Changed
+- Replies from `/findroom` are now sent ephemerally.
+
+### Fixed
+- Command crash when processing options for certain commands.
+
+## 0.8.1 - 2023-03-16
+### Added
+- Custom errors types for `/update` command.
+
+## 0.8.0 - 2023-03-08
+### Added
+- A new `/findroom` command for searching available rooms on campus.
+
+## 0.7.1 - 2023-02-04
+### Added
+- GitHub workflow stages for export-version and linting.
+- VS Code devcontainer setup.
+- README sections on testing and devcontainers.
+
+### Changed
+- Updated node versioning across the project.
+- Simplified npm scripts to be more intuitive.
+- Docker is now optional.
+
+### Fixed
+- Bug where replied interactions couldn't report errors.
+- Missing "git" dependency for /update command in Docker container.
+
 ## 0.7.0 - 2023-01-07
 ### Added
 - New option autocomplete feature for commands.
@@ -18,7 +48,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 0.6.1 - 2022-12-10
 ### Added
-
+- Infrastructure to handle static autocomplete options.
 
 ## 0.6.0 - 2022-12-03
 ### Added

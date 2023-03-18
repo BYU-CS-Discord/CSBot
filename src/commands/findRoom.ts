@@ -10,7 +10,7 @@ interface GetRoomInfoResponse {
 }
 
 interface GetRoomsResponse {
-	Rooms: Array<[string, string]> | [];
+	Rooms: Array<[string, string]>;
 }
 
 const timeChoices = [
@@ -38,7 +38,7 @@ const timeChoices = [
 	{ name: '6:30 PM', value: '18:30:00' },
 	{ name: '7:00 PM', value: '19:00:00' },
 	{ name: '7:30 PM', value: '19:30:00' },
-];
+] as const;
 
 const bldgChoices = [
 	{ name: 'ANY', value: 'ANY' },
@@ -66,7 +66,7 @@ const bldgChoices = [
 	{ name: 'TNRB', value: 'TNRB' },
 	{ name: 'WSC', value: 'WSC' },
 	{ name: 'WVB', value: 'WVB' },
-];
+] as const;
 
 export function convertTo12Hour(time: string): string {
 	const [hours, minutes, seconds] = time.split(':').map(Number);
@@ -213,7 +213,7 @@ const builder = new SlashCommandBuilder()
 export const findRoom: GlobalCommand = {
 	info: builder,
 	requiresGuild: false,
-	async execute({ reply, interaction }): Promise<void> {
+	async execute({ replyPrivately, interaction }): Promise<void> {
 		const input_bldg = interaction.options.getString('building');
 		const input_room = interaction.options.getString('room');
 		const input_timeA = interaction.options.getString('start_time');
@@ -224,84 +224,94 @@ export const findRoom: GlobalCommand = {
 		let embedDescription = '';
 		let embedThumbnail = 'https://pi.zyancey.com/img/room-finder-logo.png'; // not currently used, placeholder so that it doesn't show
 
-		if (type === 'now') {
-			if (input_bldg !== null) {
-				const requestedList = await _getRoomsNow(input_bldg);
-				if (requestedList.Rooms.length === 0) {
-					embedTitle = `No rooms available now in the ${input_bldg}`;
-					embedDescription = 'Try again later!';
-				} else {
-					const roomString = requestedList.Rooms.map(room => room.reverse().join(', ')).join('\n');
-					embedTitle = `Rooms available now in the ${input_bldg}`;
+		switch (type) {
+			case 'now':
+				if (input_bldg !== null) {
+					const requestedList = await _getRoomsNow(input_bldg);
+					if (requestedList.Rooms.length === 0) {
+						embedTitle = `No rooms available now in the ${input_bldg}`;
+						embedDescription = 'Try again later!';
+					} else {
+						const roomString = requestedList.Rooms.map(room => room.reverse().join(', ')).join(
+							'\n'
+						);
+						embedTitle = `Rooms available now in the ${input_bldg}`;
+						embedDescription = roomString;
+					}
+				}
+				break;
+
+			case 'at':
+				if (input_bldg !== null && input_timeA !== null) {
+					const requestedList = await _getRoomsAt(input_bldg, input_timeA);
+					if (requestedList.Rooms.length === 0) {
+						embedTitle = `No rooms available at ${convertTo12Hour(
+							input_timeA
+						)} in the ${input_bldg}`;
+						embedDescription = 'Try again later!';
+					} else {
+						const roomString = requestedList.Rooms.map(room => room.reverse().join(', ')).join(
+							'\n'
+						);
+						embedTitle = `Rooms available in the ${input_bldg} at ${convertTo12Hour(input_timeA)}`;
+						embedDescription = roomString;
+					}
+				}
+				break;
+
+			case 'between':
+				if (input_bldg !== null && input_timeA !== null && input_timeB !== null) {
+					const requestedList = await _getRoomsBetween(input_bldg, input_timeA, input_timeB);
+					if (requestedList.Rooms.length === 0) {
+						embedTitle = `No rooms available between ${convertTo12Hour(
+							input_timeA
+						)} and ${convertTo12Hour(input_timeB)}`;
+						embedDescription = 'Try again later!';
+					} else {
+						const roomString = requestedList.Rooms.map(room => room.reverse().join(', ')).join(
+							'\n'
+						);
+						embedTitle = `Rooms available in the ${input_bldg} between ${convertTo12Hour(
+							input_timeA
+						)} and ${convertTo12Hour(input_timeB)}`;
+						embedDescription = roomString;
+					}
+				}
+				break;
+
+			case 'when':
+				if (input_bldg !== null && input_room !== null) {
+					const requestedList = await _getWhenRoom(input_bldg, input_room);
+					const busySince =
+						requestedList.busySince !== ''
+							? requestedList.busySince.slice(11, 19)
+							: requestedList.busySince;
+					const busyUntil =
+						requestedList.busyUntil !== ''
+							? requestedList.busyUntil.slice(11, 19)
+							: requestedList.busyUntil;
+					// FORMAT 2023-02-06T12:15:00-07:00
+					const isInUse = requestedList.isInUse;
+
+					let roomString = '';
+
+					if (busySince === '' || busyUntil === '') {
+						roomString = `I couldn't find any information today for room ${input_room} in the ${input_bldg}, either it doesn't exist or it has no scheduled events for the remainder of the day.`;
+					} else if (isInUse) {
+						roomString = `This room is currently busy from ${convertTo12Hour(
+							busySince
+						)} to ${convertTo12Hour(busyUntil)}`;
+					} else {
+						roomString = `Room ${input_room} is currently free, with its next event scheduled from ${convertTo12Hour(
+							busySince
+						)} to ${convertTo12Hour(busyUntil)}`;
+					}
+
+					embedTitle = `Room ${input_room} in the ${input_bldg}`;
+					embedThumbnail = `https://aim-classroom-img-prd.byu-oit-sis-prd.amazon.byu.edu/?id=${input_bldg}/${input_room}f.jpg`;
 					embedDescription = roomString;
 				}
-			}
-		}
-
-		if (type === 'at') {
-			if (input_bldg !== null && input_timeA !== null) {
-				const requestedList = await _getRoomsAt(input_bldg, input_timeA);
-				if (requestedList.Rooms.length === 0) {
-					embedTitle = `No rooms available at ${convertTo12Hour(input_timeA)} in the ${input_bldg}`;
-					embedDescription = 'Try again later!';
-				} else {
-					const roomString = requestedList.Rooms.map(room => room.reverse().join(', ')).join('\n');
-					embedTitle = `Rooms available in the ${input_bldg} at ${convertTo12Hour(input_timeA)}`;
-					embedDescription = roomString;
-				}
-			}
-		}
-
-		if (type === 'between') {
-			if (input_bldg !== null && input_timeA !== null && input_timeB !== null) {
-				const requestedList = await _getRoomsBetween(input_bldg, input_timeA, input_timeB);
-				if (requestedList.Rooms.length === 0) {
-					embedTitle = `No rooms available between ${convertTo12Hour(
-						input_timeA
-					)} and ${convertTo12Hour(input_timeB)}`;
-					embedDescription = 'Try again later!';
-				} else {
-					const roomString = requestedList.Rooms.map(room => room.reverse().join(', ')).join('\n');
-					embedTitle = `Rooms available in the ${input_bldg} between ${convertTo12Hour(
-						input_timeA
-					)} and ${convertTo12Hour(input_timeB)}`;
-					embedDescription = roomString;
-				}
-			}
-		}
-
-		if (type === 'when') {
-			if (input_bldg !== null && input_room !== null) {
-				const requestedList = await _getWhenRoom(input_bldg, input_room);
-				const busySince =
-					requestedList.busySince !== ''
-						? requestedList.busySince.slice(11, 19)
-						: requestedList.busySince;
-				const busyUntil =
-					requestedList.busyUntil !== ''
-						? requestedList.busyUntil.slice(11, 19)
-						: requestedList.busyUntil;
-				// FORMAT 2023-02-06T12:15:00-07:00
-				const isInUse = requestedList.isInUse;
-
-				let roomString = '';
-
-				if (busySince === '' || busyUntil === '') {
-					roomString = `I couldn't find any information today for room ${input_room} in the ${input_bldg}, either it doesn't exist or it has no scheduled events for the remainder of the day.`;
-				} else if (isInUse) {
-					roomString = `This room is currently busy from ${convertTo12Hour(
-						busySince
-					)} to ${convertTo12Hour(busyUntil)}`;
-				} else {
-					roomString = `Room ${input_room} is currently free, with its next event scheduled from ${convertTo12Hour(
-						busySince
-					)} to ${convertTo12Hour(busyUntil)}`;
-				}
-
-				embedTitle = `Room ${input_room} in the ${input_bldg}`;
-				embedThumbnail = `https://aim-classroom-img-prd.byu-oit-sis-prd.amazon.byu.edu/?id=${input_bldg}/${input_room}f.jpg`;
-				embedDescription = roomString;
-			}
+				break;
 		}
 
 		// we should have the data in response, build the embed.
@@ -318,9 +328,8 @@ export const findRoom: GlobalCommand = {
 			});
 
 		// send the embed back to the client.
-		await reply({
+		await replyPrivately({
 			embeds: [embed],
-			ephemeral: false,
 		});
 	},
 };

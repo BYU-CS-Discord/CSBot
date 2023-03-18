@@ -1,7 +1,5 @@
 # CSBot
 
-(Proper name TBD)
-
 > This project is undergoing rapid development and should be considered experimental. Use it at your own risk. 🤙
 
 A bot to help manage the activities and community of BYU's Computer Science Discord server.
