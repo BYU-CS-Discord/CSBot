@@ -266,8 +266,8 @@ export async function sendErrorMessage(
 		embed.setDescription(error.message).setColor(Colors.Yellow);
 	} else {
 		const interactionDescription = interaction.isButton()
-			? `button '${interaction.customId}'`
-			: `command '${interaction.commandName}`;
+			? `\`${interaction.customId}\` button`
+			: `\`/${interaction.commandName}\` command`;
 		embed
 			.setDescription(
 				`The ${interactionDescription} encountered an error during execution.\n\n\`\`${safeErrorMessage}\`\``
