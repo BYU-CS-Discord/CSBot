@@ -31,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Bug where replied interactions couldn't report errors.
 - Missing "git" dependency for /update command in Docker container.
+
 ## 0.7.0 - 2023-01-07
 ### Added
 - New option autocomplete feature for commands.
