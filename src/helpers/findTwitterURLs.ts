@@ -1,8 +1,8 @@
 import { URL } from 'node:url';
 
-import { positionsOfUriInText } from "./positionsOfUriInText";
+import { positionsOfUriInText } from './positionsOfUriInText';
 
-export function findTwitterURLs(content: string): URL[] {
+export function findTwitterUrls(content: string): Array<URL> {
 	// Find URLs
 	const urlRanges = positionsOfUriInText(content);
 	if (urlRanges === null) {
@@ -12,12 +12,12 @@ export function findTwitterURLs(content: string): URL[] {
 	// Find Twitter URLs
 	const twitterURLs: Array<URL> = [];
 	const twitter = 'twitter.com';
-	const permutations = [twitter, `www.${twitter}`];
+	const permutations = new Set([twitter, `www.${twitter}`]);
 
 	for (const { start, end } of urlRanges) {
 		try {
 			const url = new URL(content.slice(start, end));
-			if (permutations.includes(url.hostname)) {
+			if (permutations.has(url.hostname)) {
 				twitterURLs.push(url);
 			}
 		} catch {

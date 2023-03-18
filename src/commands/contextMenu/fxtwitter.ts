@@ -1,14 +1,14 @@
 import { ApplicationCommandType, ContextMenuCommandBuilder } from 'discord.js';
 import { URL } from 'node:url';
 
-import { findTwitterURLs } from '../../helpers/findTwitterURLs';
+import { findTwitterUrls } from '../../helpers/findTwitterUrls';
 
 export const fxtwitter: MessageContextMenuCommand = {
 	info: new ContextMenuCommandBuilder().setName('Fix Twitter Links'),
 	type: ApplicationCommandType.Message,
 	requiresGuild: false,
 	async execute({ targetMessage, replyPrivately }) {
-		const urls = findTwitterURLs(targetMessage.content);
+		const urls = findTwitterUrls(targetMessage.content);
 
 		if (urls.length === 0) {
 			throw new Error('There were no Twitter URLs found in the message.');
