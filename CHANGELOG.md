@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Replies from `/findroom` are now sent ephemerally.
 
+### Fixed
+- Command crash when processing options for certain commands.
+
 ## 0.8.1 - 2023-03-16
 ### Added
 - Custom errors types for `/update` command.
