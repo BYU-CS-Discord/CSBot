@@ -26,8 +26,10 @@ describe('Fix Twitter Links', () => {
 	});
 
 	test.each`
-		urls                                        | result
-		${[new URL('https://twitter.com/example')]} | ${'https://fxtwitter.com/example'}
+		urls                                                                                 | result
+		${[new URL('https://twitter.com/example')]}                                          | ${'https://fxtwitter.com/example'}
+		${[new URL('https://twitter.com/example2')]}                                         | ${'https://fxtwitter.com/example2'}
+		${[new URL('https://twitter.com/example'), new URL('https://twitter.com/example2')]} | ${'https://fxtwitter.com/example\nhttps://fxtwitter.com/example2'}
 	`(
 		'sends an ephemeral message containing fixed versions of the Twitter links returned by findTwitterURLs',
 		async ({ urls, result }: { urls: string; result: string }) => {
