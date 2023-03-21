@@ -23,7 +23,7 @@
 		"build": "rm -rf dist && ./node_modules/.bin/rollup --config rollup.config.ts --configPlugin typescript",
 		"export-version": "./node_modules/.bin/genversion ./src/constants/version.ts -es",
 		"test": "./node_modules/.bin/jest",
-		"test:watch": "npm run test -- --watch --coverage=false",
+		"test:watch": "npm run test -- --watch",
 		"docker": "npm run docker:image && npm run docker:cleanup && npm run docker:container",
 		"docker:image": "docker build --tag cs-bot-image --label cs-bot .",
 		"docker:container": "docker run --tty --interactive --rm --mount type=bind,source=$PWD,destination=/cs-bot cs-bot-image",
