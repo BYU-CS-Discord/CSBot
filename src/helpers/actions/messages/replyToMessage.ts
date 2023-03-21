@@ -128,7 +128,7 @@ export async function replyWithPrivateMessage(
 			try {
 				await source.reply(content);
 			} catch (error) {
-				logger.error(`Failed to reply with message ${JSON.stringify(content)}:`, error); // TODO: Test this part
+				logger.error(`Failed to reply with message ${JSON.stringify(content)}:`, error);
 			}
 		} else if (typeof options === 'string') {
 			return await sendEphemeralReply(source, {
