@@ -119,19 +119,17 @@ export async function replyWithPrivateMessage(
 		return await sendEphemeralReply(source, options);
 	}
 
-	if (source.channel?.type === ChannelType.GuildStageVoice) {
-		// Can't reply in stage channels
-		return false;
-	}
-
 	// If the DM was attempted and failed
 	if (message === null) {
 		// Inform the user that we tried to DM them, but they have their DMs off
 		if ('author' in source) {
 			const authorMention = userMention(source.author.id);
-			await source.channel?.send(
-				`${authorMention} I tried to DM you just now, but it looks like your DMs are off. :slight_frown:`
-			);
+			const content = `${authorMention} I tried to DM you just now, but it looks like your DMs are off. :slight_frown:`;
+			try {
+				await source.reply(content);
+			} catch (error) {
+				logger.error(`Failed to reply with message ${JSON.stringify(content)}:`, error); // TODO: Test this part
+			}
 		} else if (typeof options === 'string') {
 			return await sendEphemeralReply(source, {
 				content: `I tried to DM you just now, but it looks like your DMs are off.\n${options}`,
