@@ -115,7 +115,7 @@
 			}
 		},
 		{
-			"files": ["scripts/**/*.ts"],
+			"files": ["./*.ts", "scripts/**/*.ts"],
 			"parserOptions": {
 				"project": "./tsconfig.test.json",
 				"tsconfigRootDir": "."

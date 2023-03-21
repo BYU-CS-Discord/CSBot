@@ -4,5 +4,5 @@
 		"noEmit": true,
 		"types": ["node", "jest", "jest-extended"]
 	},
-	"include": ["src/**/*.ts", "scripts/**/*"]
+	"include": ["./*.ts", "src/**/*.ts", "scripts/**/*"]
 }
