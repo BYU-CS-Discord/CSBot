@@ -1,0 +1,35 @@
+name: Create Release
+
+# On push to main, if the latest version in CHANGELOG.md is different from the latest version tag, create a new tag and release
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# This sets appropriate permissions for the default `GITHUB_TOKEN`.
+# Protected tags are incompatible with this arrangement for now.
+permissions:
+  contents: write
+  discussions: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Parse Changelog
+        id: changelog
+        uses: coditory/changelog-parser@v1.0.2
+
+      - name: Publish Release
+        if: steps.changelog.outputs.status != 'unreleased'
+        # This action doesn't create a new release if the tag already exists
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ steps.changelog.outputs.version }}
+          name: v${{ steps.changelog.outputs.version }}
+          body: ${{ steps.changelog.outputs.description }}
+          prerelease: true
