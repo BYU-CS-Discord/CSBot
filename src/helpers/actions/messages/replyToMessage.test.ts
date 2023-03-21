@@ -1,4 +1,5 @@
 import type { Message, RepliableInteraction, TextChannel, User } from 'discord.js';
+import { ChannelType } from 'discord.js';
 
 // Mock the logger to track output
 jest.mock('../../../logger');
@@ -195,9 +196,14 @@ describe('Replies', () => {
 
 describe('Cold calls', () => {
 	const mockChannelSend = jest.fn().mockResolvedValue({ id: 'the-message' });
-	const mockChannel = {
-		send: mockChannelSend,
-	} as unknown as TextChannel;
+	let mockChannel: TextChannel;
+
+	beforeEach(() => {
+		mockChannel = {
+			send: mockChannelSend,
+			type: ChannelType.GuildText,
+		} as unknown as TextChannel;
+	});
 
 	test('sends a message in the given channel', async () => {
 		await expect(sendMessageInChannel(mockChannel, 'yo')).resolves.toBeObject();
@@ -208,11 +214,24 @@ describe('Cold calls', () => {
 	test('logs an error and returns null if the send fails', async () => {
 		const error = new Error('This is a test');
 		mockChannelSend.mockRejectedValueOnce(error);
+
 		await expect(sendMessageInChannel(mockChannel, 'yo')).resolves.toBeNull();
 		expect(mockChannelSend).toHaveBeenCalledOnce();
 		expect(mockLoggerError).toHaveBeenCalledOnceWith(
 			expect.stringContaining('send message'),
 			error
+		);
+	});
+
+	test('logs an error and returns null if the send was to a stage channel', async () => {
+		mockChannel = { ...mockChannel, type: ChannelType.GuildStageVoice } as unknown as TextChannel;
+		const error = new Error('This is a test');
+		mockChannelSend.mockRejectedValueOnce(error);
+
+		await expect(sendMessageInChannel(mockChannel, 'yo')).resolves.toBeNull();
+		expect(mockChannelSend).not.toHaveBeenCalled();
+		expect(mockLoggerError).toHaveBeenCalledOnceWith(
+			expect.stringContaining('Cannot send in GuildStageVoice channels')
 		);
 	});
 });
