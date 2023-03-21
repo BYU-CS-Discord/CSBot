@@ -87,7 +87,7 @@
 		"jest-environment-node": "29.5.0",
 		"jest-extended": "3.2.4",
 		"keep-a-changelog": "2.2.1",
-		"nodemon": "2.0.20",
+		"nodemon": "2.0.21",
 		"prettier": "2.8.6",
 		"prettier-plugin-prisma": "4.10.0",
 		"prisma": "4.3.1",
