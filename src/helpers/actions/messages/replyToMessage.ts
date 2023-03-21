@@ -119,6 +119,11 @@ export async function replyWithPrivateMessage(
 		return await sendEphemeralReply(source, options);
 	}
 
+	if (source.channel?.type === ChannelType.GuildStageVoice) {
+		// Can't reply in stage channels
+		return false;
+	}
+
 	// If the DM was attempted and failed
 	if (message === null) {
 		// Inform the user that we tried to DM them, but they have their DMs off
@@ -155,6 +160,12 @@ export async function sendMessageInChannel(
 	channel: TextBasedChannel,
 	content: string | MessageCreateOptions
 ): Promise<Message | null> {
+	if (channel.type === ChannelType.GuildStageVoice) {
+		logger.error(
+			`Failed to send message ${JSON.stringify(content)}: Cannot send in GuildStageVoice channels.`
+		);
+		return null;
+	}
 	try {
 		return await channel.send(content);
 	} catch (error) {
