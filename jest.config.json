@@ -17,6 +17,7 @@
 	},
 	"extensionsToTreatAsEsm": [".ts"],
 	"moduleNameMapper": {
+		"^(\\.{1,2}/.*/llhttp\\.wasm\\.js)$": "$1",
 		"^(\\.{1,2}/.*)\\.js$": "$1"
 	},
 	"collectCoverage": true,
