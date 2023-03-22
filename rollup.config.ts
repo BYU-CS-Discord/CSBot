@@ -6,10 +6,24 @@ import { visualizer } from 'rollup-plugin-visualizer';
 import analyze from 'rollup-plugin-analyzer';
 import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
+import replace from '@rollup/plugin-replace';
 import typescript from '@rollup/plugin-typescript';
+
+const HOME = process.env['HOME'];
 
 export default defineConfig({
 	plugins: [
+		// Prisma injects the home directory. Remove that:
+		HOME !== undefined
+			? replace({
+					values: {
+						[HOME]: '~',
+					},
+					delimiters: ['', ''],
+					preventAssignment: true,
+			  })
+			: null,
+
 		// Transpile source
 		typescript({
 			tsconfig: './tsconfig.prod.json',
@@ -30,6 +44,21 @@ export default defineConfig({
 		}),
 		visualizer(),
 	],
+	onwarn(warning, defaultHandler) {
+		// Ignore "`this` has been rewritten to `undefined`" warnings.
+		// They usually relate to modules that were transpiled from
+		// TypeScript, and check their context by querying the value
+		// of global `this`.
+		if (warning.code === 'THIS_IS_UNDEFINED') return;
+
+		// Ignore "Use of eval is strongly discouraged" warnings from
+		// prisma. Their `eval` calls are fairly tame, though this should
+		// be audited with each update.
+		const evalWhitelist = ['@prisma/client'];
+		if (warning.code === 'EVAL' && evalWhitelist.some(e => warning.loc?.file?.includes(e))) return;
+
+		defaultHandler(warning);
+	},
 	external: [
 		// Circular, uses eval
 		'discord.js',
@@ -37,11 +66,14 @@ export default defineConfig({
 		// Circular
 		'glob',
 		'yargs',
+
+		// Relies on __dirname
+		'@prisma/client',
 	],
 	input: 'src/main.ts',
 	output: {
 		file: 'dist/main.js',
-		format: 'cjs',
+		format: 'esm',
 		sourcemap: 'inline',
 	},
 });
