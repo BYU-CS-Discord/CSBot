@@ -19,7 +19,7 @@ export class EvilHangmanGame {
 		if (!isNonEmptyArray(this.possibleWords)) {
 			throw new UserMessageError("Sorry, I don't have any words of that length!");
 		}
-		this.removePossibleWords([...guessesSoFar]);
+		this.removePossibleWords(Array.from(guessesSoFar));
 	}
 
 	static newGame(length: number | null, guesses: number | null): EvilHangmanGame {
@@ -96,7 +96,7 @@ export class EvilHangmanGame {
 	}
 
 	private removePossibleWords(guesses: ReadonlyArray<string>): void {
-		const allExceptGuessed = `(?![${[...guesses].join('')}])\\w`;
+		const allExceptGuessed = `(?![${guesses.join('')}])\\w`;
 		const filterRegex = new RegExp(this.word.replaceAll('-', allExceptGuessed), 'u');
 		this.possibleWords = this.possibleWords.filter(word => filterRegex.test(word));
 	}
@@ -125,7 +125,7 @@ export class EvilHangmanGame {
 		const forms = this.possibleWords.map(possibleWord =>
 			this.getForm(guess, possibleWord, this.guessesSoFar)
 		);
-		return [...new Set(forms)];
+		return Array.from(new Set(forms));
 	}
 
 	private getForm(

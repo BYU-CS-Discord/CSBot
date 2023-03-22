@@ -8,7 +8,7 @@ const buttonMap: ReadonlyMap<Letter, Button> = new Map(
 	alphabet.map(letter => [letter, hangmanLetterButton(letter)])
 );
 
-export const letterButtons: Array<Button> = [...buttonMap.values()];
+export const letterButtons: ReadonlyArray<Button> = Array.from(buttonMap.values());
 
 /**
  * Filters the given letters from the alphabet and returns all Letter buttons whose
@@ -17,7 +17,7 @@ export const letterButtons: Array<Button> = [...buttonMap.values()];
  * @returns the buttons for every letter not given
  */
 export function getButtonsForAllLettersExcept(guessesSoFar: ReadonlySet<string>): Array<Button> {
-	return [...buttonMap.entries()]
+	return Array.from(buttonMap.entries())
 		.filter(entry => !guessesSoFar.has(entry[0]))
 		.map(entry => entry[1]);
 }
