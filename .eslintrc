@@ -123,6 +123,12 @@
 			"rules": {
 				"unicorn/no-process-exit": "off"
 			}
+		},
+		{
+			"files": ["./*.config.ts"],
+			"rules": {
+				"import/no-default-export": "off" // Rollup config requires a `default` export
+			}
 		}
 	]
 }

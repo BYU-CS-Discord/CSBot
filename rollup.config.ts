@@ -1,5 +1,3 @@
-/* eslint-disable import/no-default-export */
-
 import { defineConfig } from 'rollup';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import { visualizer } from 'rollup-plugin-visualizer';
