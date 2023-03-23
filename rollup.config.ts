@@ -55,6 +55,15 @@ export default defineConfig({
 		const evalWhitelist = ['@prisma/client'];
 		if (warning.code === 'EVAL' && evalWhitelist.some(e => warning.loc?.file?.includes(e))) return;
 
+		// 'glob' is ostensibly fixed in its v9 release. See https://github.com/isaacs/node-glob/issues/365#issuecomment-375408306.
+		const circularWhitelist = ['glob'];
+		if (
+			warning.code === 'CIRCULAR_DEPENDENCY' &&
+			circularWhitelist.some(e => warning.message.includes(e))
+		) {
+			return;
+		}
+
 		defaultHandler(warning);
 	},
 	external: [
@@ -62,7 +71,6 @@ export default defineConfig({
 		'discord.js',
 
 		// Circular
-		'glob',
 		'yargs',
 
 		// Relies on __dirname
