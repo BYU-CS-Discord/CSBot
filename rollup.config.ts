@@ -49,8 +49,8 @@ export default defineConfig({
 		// of global `this`.
 		if (warning.code === 'THIS_IS_UNDEFINED') return;
 
-		// Ignore "Use of eval is strongly discouraged" warnings from
-		// prisma. Their `eval` calls are fairly tame, though this should
+		// Ignore certain "Use of eval is strongly discouraged" warnings.
+		// These `eval` calls are fairly tame, though this should
 		// be audited with each update.
 		const evalWhitelist = ['@prisma/client'];
 		if (warning.code === 'EVAL' && evalWhitelist.some(e => warning.loc?.file?.includes(e))) return;
@@ -67,7 +67,7 @@ export default defineConfig({
 		defaultHandler(warning);
 	},
 	external: [
-		// Circular, uses eval
+		// Circular, uses eval, uses globalThis
 		'discord.js',
 
 		// Relies on __dirname
