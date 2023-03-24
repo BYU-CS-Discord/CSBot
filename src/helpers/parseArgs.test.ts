@@ -1,8 +1,8 @@
-import { parsedArgs } from './parseArgs';
+import { parseArgs } from './parseArgs';
 
 describe('Args parser', () => {
 	test('defaults both flags to `false`', () => {
-		expect(parsedArgs).toContainEntries([
+		expect(parseArgs()).toContainEntries([
 			['deploy', false],
 			['revoke', false],
 		]);

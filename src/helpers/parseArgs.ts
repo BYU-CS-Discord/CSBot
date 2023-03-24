@@ -1,7 +1,7 @@
 // See https://github.com/DefinitelyTyped/DefinitelyTyped/discussions/64875 on why we need to use @types/node v18 while running Node v16
-import { parseArgs } from 'node:util';
+import { parseArgs as _parseArgs } from 'node:util';
 
-const { values } = parseArgs({
+const { values } = _parseArgs({
 	options: {
 		// Upload Discord commands, then exit
 		deploy: { short: 'c', type: 'boolean', default: false },
@@ -12,14 +12,18 @@ const { values } = parseArgs({
 	strict: true,
 });
 
-/**
- * The command-line arguments.
- */
-export const parsedArgs = {
+const args = {
 	// Apply defaults, since the types aren't aware of them yet.
 	// See https://github.com/DefinitelyTyped/DefinitelyTyped/discussions/64868
 	deploy: values.deploy ?? false,
 	revoke: values.revoke ?? false,
 } as const;
 
-export type Args = typeof parsedArgs;
+export type Args = typeof args;
+
+/**
+ * Returns the command-line arguments, or their default values if none were set.
+ */
+export function parseArgs(): Args {
+	return args;
+}
