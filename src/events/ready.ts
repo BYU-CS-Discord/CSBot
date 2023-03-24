@@ -9,7 +9,7 @@ import { revokeCommands } from '../helpers/actions/revokeCommands';
 import { verifyCommandDeployments } from '../helpers/actions/verifyCommandDeployments';
 import { appVersion } from '../constants/meta';
 import { onEvent } from '../helpers/onEvent';
-import { parseArgs } from '../helpers/parseArgs';
+import { parsedArgs as args } from '../helpers/parseArgs';
 
 /**
  * The event handler for when the Discord Client is ready for action
@@ -18,8 +18,6 @@ export const ready = onEvent('ready', {
 	once: true,
 	async execute(client) {
 		logger.info(`Starting ${client.user.username} v${appVersion}...`);
-
-		const args = parseArgs();
 
 		// If we're only here to deploy commands, do that and then exit
 		if (args.deploy) {

@@ -70,9 +70,6 @@ export default defineConfig({
 		// Circular, uses eval
 		'discord.js',
 
-		// Circular
-		'yargs',
-
 		// Relies on __dirname
 		'@prisma/client',
 	],

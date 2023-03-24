@@ -1,6 +1,7 @@
 // External dependencies
 import 'source-map-support/register';
 import 'dotenv/config';
+import './helpers/parseArgs'; // load CLI args
 import { Client, GatewayIntentBits, Partials } from 'discord.js';
 
 // Internal dependencies
