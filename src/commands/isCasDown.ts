@@ -23,7 +23,7 @@ export const isCasDown: GlobalCommand = {
 
 		let status = statuses.down;
 
-		const res = await axios.get(statusURI).catch(() => null);
+		const res = await axios.get(statusURI);
 
 		if (res?.status === 200) {
 			status = statuses.up;
