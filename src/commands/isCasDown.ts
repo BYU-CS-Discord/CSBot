@@ -15,7 +15,7 @@ const builder = new SlashCommandBuilder()
 	.setName('iscasdown')
 	.setDescription('Checks if CAS is down');
 
-export const isCASDown: GlobalCommand = {
+export const isCasDown: GlobalCommand = {
 	info: builder,
 	requiresGuild: false,
 	async execute({ reply }) {
@@ -23,9 +23,9 @@ export const isCASDown: GlobalCommand = {
 
 		let status = statuses.down;
 
-		const req = await axios.get(statusURI).catch(() => null);
+		const res = await axios.get(statusURI).catch(() => null);
 
-		if (req?.status === 200) {
+		if (res?.status === 200) {
 			status = statuses.up;
 		}
 
