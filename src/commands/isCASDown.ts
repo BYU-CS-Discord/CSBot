@@ -25,10 +25,8 @@ export const isCASDown: GlobalCommand = {
 
 		const req = await axios.get(statusURI).catch(() => null);
 
-		if (req) {
-			if (req.status == 200) {
-				status = statuses.up;
-			}
+		if (req?.status === 200) {
+			status = statuses.up;
 		}
 
 		embed.setColor(status.color);
