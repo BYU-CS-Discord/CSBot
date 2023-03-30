@@ -3,11 +3,12 @@ import { nodeResolve } from '@rollup/plugin-node-resolve';
 import { visualizer } from 'rollup-plugin-visualizer';
 import analyze from 'rollup-plugin-analyzer';
 import commonjs from '@rollup/plugin-commonjs';
+import esbuild from 'rollup-plugin-esbuild';
 import json from '@rollup/plugin-json';
 import replace from '@rollup/plugin-replace';
-import typescript from '@rollup/plugin-typescript';
 
 const HOME = process.env['HOME'];
+const NODE_ENV = process.env['NODE_ENV'];
 
 export default defineConfig({
 	plugins: [
@@ -23,9 +24,10 @@ export default defineConfig({
 			: null,
 
 		// Transpile source
-		typescript({
+		esbuild({
 			tsconfig: './tsconfig.prod.json',
 			sourceMap: true,
+			minify: NODE_ENV === 'production',
 		}), // TS ~> JS
 		commonjs({ transformMixedEsModules: true }), // CJS ~> ESM
 		json(), // JSON ~> JS
