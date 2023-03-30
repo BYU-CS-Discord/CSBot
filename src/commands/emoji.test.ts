@@ -7,6 +7,7 @@ describe('profile', () => {
 	const mockReply = jest.fn<Promise<void>, [content: unknown]>();
 	const mockEmojiName = jest.fn<string | null, []>();
 	const mockEmojiURL = jest.fn<string | null, [options?: ImageURLOptions | undefined]>();
+	const mockRespondEphemeral = jest.fn<boolean | null, []>();
 
 	const testEmojiURL = 'https://example.com/emojis/1234567890/abcdef1234567890.png';
 
@@ -28,6 +29,7 @@ describe('profile', () => {
 						},
 					},
 					getString: mockEmojiName,
+					getBoolean: mockRespondEphemeral,
 				},
 			},
 			reply: mockReply,
@@ -35,11 +37,7 @@ describe('profile', () => {
 
 		mockEmojiName.mockReturnValue('existing emoji');
 		mockEmojiURL.mockReturnValue(testEmojiURL);
-	});
-
-	test('Throws an error when no input is provided', async () => {
-		mockEmojiName.mockReturnValue(null);
-		await expect(emoji.execute(context)).rejects.toThrow('You must provide an emoji to search for');
+		mockRespondEphemeral.mockReturnValue(true);
 	});
 
 	test('Throws an error when the target emoji does not exist', async () => {
@@ -47,7 +45,7 @@ describe('profile', () => {
 		await expect(emoji.execute(context)).rejects.toThrow('Emoji emoji not here was not found');
 	});
 
-	test('Returns the url of the target emoji', async () => {
+	test('Returns the url of the target emoji ephemerally', async () => {
 		await expect(emoji.execute(context)).resolves.toBeUndefined();
 
 		expect(mockReply).toHaveBeenCalledOnce();
@@ -59,7 +57,41 @@ describe('profile', () => {
 					image: { url: testEmojiURL },
 				}),
 			],
-			ephemeral: true,
+			ephemeral: mockRespondEphemeral() as boolean,
+		});
+	});
+
+	test('Returns the url of the target emoji ephemerally with undefined respondEphemeral', async () => {
+		mockRespondEphemeral.mockReturnValue(null);
+		await expect(emoji.execute(context)).resolves.toBeUndefined();
+
+		expect(mockReply).toHaveBeenCalledOnce();
+		expect(mockReply).toHaveBeenCalledWith({
+			content: mockEmojiName() as string,
+			embeds: [
+				new EmbedBuilder({
+					title: mockEmojiName() as string,
+					image: { url: testEmojiURL },
+				}),
+			],
+			ephemeral: true, // slash command defaults to true when no respondEphemeral boolean is given
+		});
+	});
+
+	test('Returns the url of the target emoji non-ephemerally', async () => {
+		mockRespondEphemeral.mockReturnValue(false);
+		await expect(emoji.execute(context)).resolves.toBeUndefined();
+
+		expect(mockReply).toHaveBeenCalledOnce();
+		expect(mockReply).toHaveBeenCalledWith({
+			content: mockEmojiName() as string,
+			embeds: [
+				new EmbedBuilder({
+					title: mockEmojiName() as string,
+					image: { url: testEmojiURL },
+				}),
+			],
+			ephemeral: mockRespondEphemeral() as boolean,
 		});
 	});
 });
