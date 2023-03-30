@@ -54,11 +54,11 @@ export default defineConfig({
 		// Ignore certain "Use of eval is strongly discouraged" warnings.
 		// These `eval` calls are fairly tame, though this should
 		// be audited with each update.
-		const evalWhitelist = ['@prisma/client'];
+		const evalWhitelist = ['@prisma/client', 'discord.js'];
 		if (warning.code === 'EVAL' && evalWhitelist.some(e => warning.loc?.file?.includes(e))) return;
 
 		// 'glob' is ostensibly fixed in its v9 release. See https://github.com/isaacs/node-glob/issues/365#issuecomment-375408306.
-		const circularWhitelist = ['glob'];
+		const circularWhitelist = ['glob', 'discord.js'];
 		if (
 			warning.code === 'CIRCULAR_DEPENDENCY' &&
 			circularWhitelist.some(e => warning.message.includes(e))
@@ -69,7 +69,7 @@ export default defineConfig({
 		defaultHandler(warning);
 	},
 	external: [
-		// Circular, uses eval, uses globalThis
+		// Uses globalThis in a way that breaks bundle at runtime
 		'discord.js',
 
 		// Relies on __dirname
