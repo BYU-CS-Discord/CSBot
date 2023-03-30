@@ -85,11 +85,11 @@ Begins a new game of Evil Hangman.
 
 ### /emoji
 
-Retrieves the internal picture for a custom emoji.
+Retrieves the internal picture for a custom emoji. By default responds ephemerally but when provided with a `false` boolean it responds so everyone can see the returned picture.
 
 ### /findroom ( now / at / between / when )
 
-Searches for open rooms on BYU Campus. _'Now'_, _'At'_, and _'Between'_ allow you to filter your search by time. _'When'_ allows you to see when a specified room is available.
+Searches for open rooms on BYU Campus. _'Now'_, _'At'_, and _'Between'_ allow you to filter your search by time. *'When'\_*allows you to see when a specified room is available.
 
 ## Context Menu Commands
 
