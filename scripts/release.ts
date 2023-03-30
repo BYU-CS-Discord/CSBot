@@ -1,6 +1,6 @@
 #!/usr/bin/env ts-node
 
-import './assertTsNode';
+import './assertTsNode.js';
 import { assert, literal, string, type } from 'superstruct';
 import { parser as changelogParser } from 'keep-a-changelog';
 import { readFileSync, writeFileSync } from 'node:fs';
@@ -22,7 +22,7 @@ function quote(str: string | undefined): string | undefined {
 logger.info('** release.ts **');
 
 // Load the changelog
-const here = new URL(__filename, 'file:');
+const here = import.meta.url;
 const changelogPath = new URL('../CHANGELOG.md', here).pathname;
 const packageJsonPath = new URL('../package.json', here).pathname;
 const packageLockJsonPath = new URL('../package-lock.json', here).pathname;
