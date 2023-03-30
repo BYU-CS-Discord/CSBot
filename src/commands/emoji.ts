@@ -2,7 +2,7 @@ import { DiscordAPIError, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import * as logger from '../logger';
 
 const EmojiName = 'emojiname';
-const RespondEphemeral = 'respondephemeral';
+const ShouldRespondEphemeral = 'respondephemeral';
 
 const builder = new SlashCommandBuilder()
 	.setName('emoji')
@@ -12,7 +12,7 @@ const builder = new SlashCommandBuilder()
 	)
 	.addBooleanOption(option =>
 		option
-			.setName(RespondEphemeral)
+			.setName(ShouldRespondEphemeral)
 			.setDescription(
 				'When set to false this will respond with the emoji image so everyone can see. Default is true'
 			)
@@ -23,9 +23,9 @@ export const emoji: GlobalCommand = {
 	requiresGuild: false,
 	async execute({ reply, interaction }): Promise<void> {
 		const emojiName = interaction.options.getString(EmojiName, true);
-		const respondEphemeral =
-			interaction.options.getBoolean(RespondEphemeral) !== null
-				? interaction.options.getBoolean(RespondEphemeral, true)
+		const shouldRespondEphemeral =
+			interaction.options.getBoolean(ShouldRespondEphemeral) !== null
+				? interaction.options.getBoolean(ShouldRespondEphemeral, true)
 				: true; // This slash command defaults to sending an ephemeral message
 
 		const emojiCache = interaction.options.client.emojis.cache;
@@ -38,6 +38,6 @@ export const emoji: GlobalCommand = {
 		const url = foundEmoji.url;
 		const embed = new EmbedBuilder().setTitle(emojiName).setImage(url);
 
-		await reply({ content, embeds: [embed], ephemeral: respondEphemeral });
+		await reply({ content, embeds: [embed], ephemeral: shouldRespondEphemeral });
 	},
 };

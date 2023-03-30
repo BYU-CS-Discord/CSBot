@@ -7,7 +7,7 @@ describe('profile', () => {
 	const mockReply = jest.fn<Promise<void>, [content: unknown]>();
 	const mockEmojiName = jest.fn<string | null, []>();
 	const mockEmojiURL = jest.fn<string | null, [options?: ImageURLOptions | undefined]>();
-	const mockRespondEphemeral = jest.fn<boolean | null, []>();
+	const mockShouldRespondEphemeral = jest.fn<boolean | null, []>();
 
 	const testEmojiURL = 'https://example.com/emojis/1234567890/abcdef1234567890.png';
 
@@ -29,7 +29,7 @@ describe('profile', () => {
 						},
 					},
 					getString: mockEmojiName,
-					getBoolean: mockRespondEphemeral,
+					getBoolean: mockShouldRespondEphemeral,
 				},
 			},
 			reply: mockReply,
@@ -37,7 +37,7 @@ describe('profile', () => {
 
 		mockEmojiName.mockReturnValue('existing emoji');
 		mockEmojiURL.mockReturnValue(testEmojiURL);
-		mockRespondEphemeral.mockReturnValue(true);
+		mockShouldRespondEphemeral.mockReturnValue(true);
 	});
 
 	test('Throws an error when the target emoji does not exist', async () => {
@@ -57,12 +57,12 @@ describe('profile', () => {
 					image: { url: testEmojiURL },
 				}),
 			],
-			ephemeral: mockRespondEphemeral() as boolean,
+			ephemeral: mockShouldRespondEphemeral() as boolean,
 		});
 	});
 
 	test('Returns the url of the target emoji ephemerally with undefined respondEphemeral', async () => {
-		mockRespondEphemeral.mockReturnValue(null);
+		mockShouldRespondEphemeral.mockReturnValue(null);
 		await expect(emoji.execute(context)).resolves.toBeUndefined();
 
 		expect(mockReply).toHaveBeenCalledOnce();
@@ -79,7 +79,7 @@ describe('profile', () => {
 	});
 
 	test('Returns the url of the target emoji non-ephemerally', async () => {
-		mockRespondEphemeral.mockReturnValue(false);
+		mockShouldRespondEphemeral.mockReturnValue(false);
 		await expect(emoji.execute(context)).resolves.toBeUndefined();
 
 		expect(mockReply).toHaveBeenCalledOnce();
@@ -91,7 +91,7 @@ describe('profile', () => {
 					image: { url: testEmojiURL },
 				}),
 			],
-			ephemeral: mockRespondEphemeral() as boolean,
+			ephemeral: mockShouldRespondEphemeral() as boolean,
 		});
 	});
 });
