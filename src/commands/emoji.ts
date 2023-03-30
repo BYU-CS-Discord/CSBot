@@ -23,10 +23,7 @@ export const emoji: GlobalCommand = {
 	requiresGuild: false,
 	async execute({ reply, interaction }): Promise<void> {
 		const emojiName = interaction.options.getString(EmojiName, true);
-		const shouldRespondEphemeral =
-			interaction.options.getBoolean(ShouldRespondEphemeral) !== null
-				? interaction.options.getBoolean(ShouldRespondEphemeral, true)
-				: true; // This slash command defaults to sending an ephemeral message
+		const shouldRespondEphemeral = interaction.options.getBoolean(ShouldRespondEphemeral) ?? true;
 
 		const emojiCache = interaction.options.client.emojis.cache;
 		const foundEmoji = emojiCache.find(emojiElement => emojiElement.name === emojiName);
