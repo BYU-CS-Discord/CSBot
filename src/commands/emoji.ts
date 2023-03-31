@@ -1,4 +1,5 @@
 import { DiscordAPIError, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { UserMessageError } from '../helpers/UserMessageError';
 import * as logger from '../logger';
 
 const EmojiName = 'emojiname';
@@ -28,7 +29,7 @@ export const emoji: GlobalCommand = {
 		const emojiCache = interaction.options.client.emojis.cache;
 		const foundEmoji = emojiCache.find(emojiElement => emojiElement.name === emojiName);
 		if (!foundEmoji) {
-			throw new Error(`Emoji ${emojiName} was not found`);
+			throw new UserMessageError(`Emoji ${emojiName} was not found`);
 		}
 
 		const content = emojiName;
