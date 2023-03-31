@@ -1,6 +1,5 @@
-import { DiscordAPIError, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { UserMessageError } from '../helpers/UserMessageError';
-import * as logger from '../logger';
 
 const EmojiName = 'emojiname';
 const ShouldRespondEphemeral = 'respondephemeral';
