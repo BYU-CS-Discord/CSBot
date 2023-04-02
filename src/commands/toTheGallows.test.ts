@@ -15,10 +15,8 @@ describe('toTheGallows', () => {
 	beforeEach(() => {
 		context = {
 			reply: mockReply,
-			interaction: {
-				options: {
-					getInteger: mockGetInteger,
-				},
+			options: {
+				getInteger: mockGetInteger,
 			},
 		} as unknown as TextInputCommandContext;
 
@@ -31,7 +29,7 @@ describe('toTheGallows', () => {
 		expect(mockReply).toHaveBeenCalledOnce();
 		expect(mockReply).toHaveBeenCalledWith({
 			embeds: [expect.toBeObject()],
-			components: expect.toBeArrayOfSize(5) as Array<unknown>,
+			components: expect.toBeArrayOfSize(5),
 		});
 	});
 
@@ -42,7 +40,7 @@ describe('toTheGallows', () => {
 		expect(mockReply).toHaveBeenCalledOnce();
 		expect(mockReply).toHaveBeenCalledWith({
 			embeds: [expect.toBeObject()],
-			components: expect.toBeArrayOfSize(5) as Array<unknown>,
+			components: expect.toBeArrayOfSize(5),
 		});
 
 		const call = mockReply.mock.calls[0] as [{ embeds: [EmbedBuilder] }];

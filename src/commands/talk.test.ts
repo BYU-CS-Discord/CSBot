@@ -21,17 +21,17 @@ describe('Talk Slash Command', () => {
 	const emptyBuffer: Buffer = Buffer.from([]);
 	const mockPrepare = jest.fn();
 	const mockReply = jest.fn();
+	const mockGetString = jest.fn();
+	const mockGetInteger = jest.fn();
 
 	beforeEach(() => {
 		context = {
-			interaction: {
-				options: {
-					data: {
-						length: 1,
-					},
-					getString: () => message,
-					getInteger: () => undefined,
+			options: {
+				data: {
+					length: 1,
 				},
+				getString: mockGetString,
+				getInteger: mockGetInteger,
 			},
 			channel: {
 				type: ChannelType.GuildText,
@@ -40,13 +40,13 @@ describe('Talk Slash Command', () => {
 			reply: mockReply,
 		} as unknown as TextInputCommandContext;
 		mockSay.mockReturnValue(emptyBuffer);
+		mockGetString.mockReturnValue(message);
+		mockGetInteger.mockReturnValue(null);
 	});
 
 	test('Fails if no options are provided', async () => {
-		context = {
-			...context,
-			interaction: { options: { data: { length: 0 } } },
-		} as unknown as TextInputCommandContext;
+		mockGetInteger.mockReturnValueOnce(null);
+		mockGetString.mockReturnValueOnce(null);
 		await expect(talk.execute(context)).rejects.toThrow();
 	});
 
