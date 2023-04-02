@@ -21,11 +21,11 @@ const builder = new SlashCommandBuilder()
 export const emoji: GlobalCommand = {
 	info: builder,
 	requiresGuild: false,
-	async execute({ reply, interaction }): Promise<void> {
-		const emojiName = interaction.options.getString(EmojiName, true);
-		const shouldRespondEphemeral = interaction.options.getBoolean(ShouldRespondEphemeral) ?? true;
+	async execute({ reply, client, options }): Promise<void> {
+		const emojiName = options.getString(EmojiName, true);
+		const shouldRespondEphemeral = options.getBoolean(ShouldRespondEphemeral) ?? true;
 
-		const emojiCache = interaction.options.client.emojis.cache;
+		const emojiCache = client.emojis.cache;
 		const foundEmoji = emojiCache.find(emojiElement => emojiElement.name === emojiName);
 		if (!foundEmoji) {
 			throw new UserMessageError(`Emoji ${emojiName} was not found`);

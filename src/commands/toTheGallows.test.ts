@@ -31,7 +31,7 @@ describe('toTheGallows', () => {
 		expect(mockReply).toHaveBeenCalledOnce();
 		expect(mockReply).toHaveBeenCalledWith({
 			embeds: [expect.toBeObject()],
-			components: expect.toBeArrayOfSize(5),
+			components: expect.toBeArrayOfSize(5) as Array<unknown>,
 		});
 	});
 
@@ -42,7 +42,7 @@ describe('toTheGallows', () => {
 		expect(mockReply).toHaveBeenCalledOnce();
 		expect(mockReply).toHaveBeenCalledWith({
 			embeds: [expect.toBeObject()],
-			components: expect.toBeArrayOfSize(5),
+			components: expect.toBeArrayOfSize(5) as Array<unknown>,
 		});
 
 		const call = mockReply.mock.calls[0] as [{ embeds: [EmbedBuilder] }];
