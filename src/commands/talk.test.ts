@@ -27,9 +27,6 @@ describe('Talk Slash Command', () => {
 	beforeEach(() => {
 		context = {
 			options: {
-				data: {
-					length: 1,
-				},
 				getString: mockGetString,
 				getInteger: mockGetInteger,
 			},
