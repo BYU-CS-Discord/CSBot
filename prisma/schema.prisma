@@ -12,7 +12,7 @@ datasource db {
 
 model Scoreboard {
 	id Int @id @default(autoincrement())
-	userId Int
+	userId String
 	name String
 	score Float
 }
