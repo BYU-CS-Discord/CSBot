@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { UserMessageError } from '../helpers/UserMessageError';
 import { db } from '../database';
 import { sanitize } from '../helpers/sanitize';
@@ -8,6 +8,7 @@ const AmountOption = 'amount';
 
 const TrackSubcommand = 'track';
 const UpdateSubcommand = 'update';
+const ListSubcommand = 'list';
 
 const builder = new SlashCommandBuilder()
 	.setName('stats')
@@ -39,6 +40,9 @@ const builder = new SlashCommandBuilder()
 					.setDescription('The amount to update the stat')
 					.setRequired(true)
 			)
+	)
+	.addSubcommand(subcommand =>
+		subcommand.setName(ListSubcommand).setDescription("List all stats I'm tracking for you")
 	);
 
 export const stats: GuildedCommand = {
@@ -54,6 +58,9 @@ export const stats: GuildedCommand = {
 				break;
 			case UpdateSubcommand:
 				await update(reply, interaction);
+				break;
+			case ListSubcommand:
+				await list(reply, interaction);
 				break;
 		}
 	},
@@ -135,4 +142,31 @@ async function update(
 	});
 
 	await reply(`Updated your score for "${scoreName}" to ${newScore}`);
+}
+
+async function list(
+	replyPrivately: InteractionContext['replyPrivately'],
+	interaction: ChatInputCommandInteraction
+): Promise<void> {
+	const scoreboardEntries = await db.scoreboard.findMany({
+		where: {
+			userId: interaction.user.id,
+		},
+		select: {
+			score: true,
+			name: true,
+		},
+	});
+
+	const embedDescription = scoreboardEntries
+		.map(entry => `${entry.name}: ${entry.score}`)
+		.join('\n');
+
+	const embed = new EmbedBuilder()
+		.setTitle(`Stats for ${interaction.user.username}`)
+		.setDescription(embedDescription);
+
+	await replyPrivately({
+		embeds: [embed],
+	});
 }
