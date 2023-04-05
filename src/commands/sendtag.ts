@@ -56,8 +56,8 @@ export const sendtag: GuildedCommand = {
 			.filter(choice => choice.startsWith(incompleteValue)) // TODO: Use something like Fuse.js for fast fuzzy search
 			.map(choice => ({ name: choice, value: choice }));
 	},
-	async execute({ reply, interaction }) {
-		const value = interaction.options.getString(NameOption, true);
+	async execute({ reply, options }) {
+		const value = options.getString(NameOption, true);
 		// Note that autocomplete does not force the user to select one of the valid values. We should check here that the given value is a known one.
 		await reply(`You requested the '${value}' tag!`);
 	},

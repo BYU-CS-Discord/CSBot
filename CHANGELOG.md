@@ -11,11 +11,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Use Rollup and ESBuild to create a minimal bundle to run. (Some dependencies remain externalized.)
 
-## [0.8.4] - 2023-03-21
+## [0.9.1] - 2023-03-31
 
 ### Changed
 
 - Updated most dependencies.
+
+## [0.9.0] - 2023-03-30
+
+### Added
+
+- A new `/emoji` command to retrieve the internal image used for a custom emoji.
 
 ## [0.8.3] - 2023-03-17
 
@@ -169,8 +175,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Development Environment for needed dependencies.
 
-[Unreleased]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.8.4...HEAD
-[0.8.4]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.8.3...v0.8.4
+[0.9.1]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.9.0...v0.9.1
+[0.9.0]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.8.3...v0.9.0
 [0.8.3]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.8.2...v0.8.3
 [0.8.2]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.8.1...v0.8.2
 [0.8.1]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.8.0...v0.8.1

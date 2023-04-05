@@ -14,8 +14,8 @@ const builder = new SlashCommandBuilder()
 export const profile: GlobalCommand = {
 	info: builder,
 	requiresGuild: false,
-	async execute({ client, user, interaction, reply, guild, source }) {
-		const otherUser = interaction.options.getUser(UserParamName, false);
+	async execute({ client, user, options, reply, guild, source }) {
+		const otherUser = options.getUser(UserParamName);
 
 		if (otherUser) {
 			if (source === 'dm') {

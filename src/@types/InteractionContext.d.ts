@@ -6,7 +6,6 @@ import type {
 	ChatInputCommandInteraction,
 	Client,
 	CommandInteraction,
-	CommandInteractionOption,
 	ContextMenuCommandInteraction,
 	DMChannel,
 	Guild,
@@ -119,9 +118,6 @@ declare global {
 
 		/** The message that the interaction targets. Only available for context menu commands. */
 		readonly targetMessage: Message | null;
-
-		/** The options that were given to the command. Not available for context menu commands. */
-		readonly options: ReadonlyArray<CommandInteractionOption<'cached'>> | null;
 	}
 
 	/** Information relevant to a command invocation in a DM. */
@@ -153,8 +149,8 @@ declare global {
 		/** The message that the interaction targets. Only available for context menu commands. */
 		readonly targetMessage: null;
 
-		/** The options that were given to the command. Not available for context menu commands. */
-		readonly options: ReadonlyArray<CommandInteractionOption<'cached'>>;
+		/** The options that were given to the command. */
+		readonly options: ChatInputCommandInteraction['options'];
 	}
 
 	/** Information relevant to a command invocation in a guild.*/
@@ -186,8 +182,8 @@ declare global {
 		/** The message that the interaction targets. Only available for context menu commands. */
 		readonly targetMessage: null;
 
-		/** The options that were given to the command. Not available for context menu commands. */
-		readonly options: ReadonlyArray<CommandInteractionOption<'cached'>>;
+		/** The options that were given to the command. */
+		readonly options: ChatInputCommandInteraction['options'];
 	}
 
 	interface BaseContextMenuCommandContext extends BaseCommandContext {
@@ -200,8 +196,8 @@ declare global {
 		/** The ID of the interaction target. Only available for context menu commands. */
 		readonly targetId: Snowflake;
 
-		/** The options that were given to the command. Not available for context menu commands. */
-		readonly options: null;
+		/** The options that were given to the command. */
+		readonly options: ContextMenuCommandInteraction['options'];
 	}
 
 	/** Information relevant to a user context menu command invocation.*/
