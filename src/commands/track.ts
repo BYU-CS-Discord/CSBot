@@ -1,6 +1,7 @@
 import { SlashCommandBuilder } from 'discord.js';
 import { db } from '../database';
 import { UserMessageError } from '../helpers/UserMessageError';
+import { sanitize } from '../helpers/sanitize';
 
 const ScoreNameOption = 'scorename';
 
@@ -8,14 +9,17 @@ const builder = new SlashCommandBuilder()
 	.setName('track')
 	.setDescription('Begin tracking a score for you')
 	.addStringOption(option =>
-		option.setName(ScoreNameOption).setDescription('The name of the score you would like to track')
+		option
+			.setName(ScoreNameOption)
+			.setDescription('The name of the score you would like to track')
+			.setRequired(true)
 	);
 
 export const track: GuildedCommand = {
 	info: builder,
 	requiresGuild: true,
 	async execute({ reply, interaction }): Promise<void> {
-		const scoreName = interaction.options.getString(ScoreNameOption)?.replaceAll('@', '');
+		const scoreName = sanitize(interaction.options.getString(ScoreNameOption));
 
 		if (scoreName === undefined) {
 			throw new UserMessageError('Must include score-name');
