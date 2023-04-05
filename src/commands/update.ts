@@ -1,5 +1,6 @@
 import { SlashCommandBuilder } from 'discord.js';
 import { exec as __unsafeExecuteCommand } from 'node:child_process';
+import { UserMessageError } from '../helpers/UserMessageError';
 import { debug, error } from '../logger';
 
 let numInvocations: number = 0;
@@ -14,13 +15,13 @@ export const update: GlobalCommand = {
 	async execute({ replyPrivately, user, interaction }) {
 		const admin_ids = process.env['ADMINISTRATORS']?.split(',');
 		if (!admin_ids) {
-			// TODO: make this a UserMessageException
-			throw new Error('There is no ADMINISTRATORS variable. You must set ADMINISTRATORS in .env');
+			throw new UserMessageError(
+				'There is no ADMINISTRATORS variable. You must set ADMINISTRATORS in .env'
+			);
 		}
 
 		if (!admin_ids.includes(user.id)) {
-			// TODO: make this a UserMessageException
-			throw new Error(
+			throw new UserMessageError(
 				'You do not have permission to perform this command. Contact the bot administrator.'
 			);
 		}

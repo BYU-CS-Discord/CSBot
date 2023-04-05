@@ -1,7 +1,5 @@
 # CSBot
 
-(Proper name TBD)
-
 > This project is undergoing rapid development and should be considered experimental. Use it at your own risk. 🤙
 
 A bot to help manage the activities and community of BYU's Computer Science Discord server.
@@ -23,6 +21,7 @@ These users contributed various things over time directly to this codebase. This
 - [**AverageHelper**](https://github.com/BYU-CS-Discord/CSBot/pulls?q=is%3Apr+is%3Amerged+author%3AAverageHelper) ([profile](https://github.com/AverageHelper))
 - [**SpencerHastings**](https://github.com/BYU-CS-Discord/CSBot/pulls?q=is%3Apr+is%3Amerged+author%3ASpencerHastings) ([profile](https://github.com/SpencerHastings))
 - [**Plyb**](https://github.com/BYU-CS-Discord/CSBot/pulls?q=is%3Apr+is%3Amerged+author%3APlyb) ([profile](https://github.com/Plyb))
+- [**TStansel**](https://github.com/BYU-CS-Discord/CSBot/pulls?q=is%3Amerged+is%3Apr+author%3ATStansel+) ([profile](https://github.com/TStansel))
 
 ## Contributing
 
@@ -84,9 +83,13 @@ Pulls the latest changes from the repository and restarts the bot.
 
 Begins a new game of Evil Hangman.
 
+### /emoji
+
+Retrieves the internal picture for a custom emoji. By default responds ephemerally but when provided with a `false` boolean it responds so everyone can see the returned picture.
+
 ### /findroom ( now / at / between / when )
 
-Searches for open rooms on BYU Campus. *'Now'*, *'At'*, and *'Between'* allow you to filter your search by time. *'When'* allows you to see when a specified room is available.
+Searches for open rooms on BYU Campus. _'Now'_, _'At'_, and _'Between'_ allow you to filter your search by time. *'When'\_*allows you to see when a specified room is available.
 
 ## Context Menu Commands
 

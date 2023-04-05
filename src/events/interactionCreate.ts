@@ -85,15 +85,17 @@ async function handleCommandInteraction(
 
 	let context: CommandContext;
 
+	const options = interaction.options.data;
+
 	// The following assertions assume that discord.js behaves consistently,
 	// checking the `guild` and `member` fields. See for reference
 	// https://github.com/discordjs/discord.js/blob/14.5.0/packages/discord.js/src/structures/BaseInteraction.js#L176
 
 	/* eslint-disable @typescript-eslint/consistent-type-assertions */
 	if (interaction.inGuild()) {
-		context = { ...vagueContext, source: 'guild' } as GuildedCommandContext;
+		context = { ...vagueContext, source: 'guild', options } as GuildedCommandContext;
 	} else {
-		context = { ...vagueContext, source: 'dm' } as DMCommandContext;
+		context = { ...vagueContext, source: 'dm', options } as DMCommandContext;
 	}
 	/* eslint-enable @typescript-eslint/consistent-type-assertions */
 
@@ -264,8 +266,8 @@ export async function sendErrorMessage(
 		embed.setDescription(error.message).setColor(Colors.Yellow);
 	} else {
 		const interactionDescription = interaction.isButton()
-			? `button '${interaction.customId}'`
-			: `command '${interaction.commandName}`;
+			? `\`${interaction.customId}\` button`
+			: `\`/${interaction.commandName}\` command`;
 		embed
 			.setDescription(
 				`The ${interactionDescription} encountered an error during execution.\n\n\`\`${safeErrorMessage}\`\``
