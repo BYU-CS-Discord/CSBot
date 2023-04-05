@@ -1,4 +1,10 @@
-import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import {
+	ChatInputCommandInteraction,
+	Collection,
+	EmbedBuilder,
+	SlashCommandBuilder,
+	User,
+} from 'discord.js';
 import { UserMessageError } from '../helpers/UserMessageError';
 import { db } from '../database';
 import { sanitize } from '../helpers/sanitize';
@@ -9,6 +15,8 @@ const AmountOption = 'amount';
 const TrackSubcommand = 'track';
 const UpdateSubcommand = 'update';
 const ListSubcommand = 'list';
+const UntrackSubcommand = 'untrack';
+const LeaderboardSubcommand = 'leaderboard';
 
 const builder = new SlashCommandBuilder()
 	.setName('stats')
@@ -43,13 +51,35 @@ const builder = new SlashCommandBuilder()
 	)
 	.addSubcommand(subcommand =>
 		subcommand.setName(ListSubcommand).setDescription("List all stats I'm tracking for you")
+	)
+	.addSubcommand(subcommand =>
+		subcommand
+			.setName(UntrackSubcommand)
+			.setDescription('Stops tracking a stat for you')
+			.addStringOption(option =>
+				option
+					.setName(StatNameOption)
+					.setDescription('The name of the stat you would like to stop tracking')
+					.setRequired(true)
+			)
+	)
+	.addSubcommand(subcommand =>
+		subcommand
+			.setName(LeaderboardSubcommand)
+			.setDescription('Show the leaderboard for a stat')
+			.addStringOption(option =>
+				option
+					.setName(StatNameOption)
+					.setDescription('The name of the stat for which to show the leaderboard')
+					.setRequired(true)
+			)
 	);
 
 export const stats: GuildedCommand = {
 	info: builder,
 	requiresGuild: true,
 
-	async execute({ reply, interaction }): Promise<void> {
+	async execute({ reply, interaction, client }): Promise<void> {
 		const subcommand = interaction.options.getSubcommand();
 
 		switch (subcommand) {
@@ -62,6 +92,12 @@ export const stats: GuildedCommand = {
 			case ListSubcommand:
 				await list(reply, interaction);
 				break;
+			case UntrackSubcommand:
+				await untrack(reply, interaction);
+				break;
+			case LeaderboardSubcommand:
+				await leaderboard(reply, interaction, client.users.cache);
+				break;
 		}
 	},
 };
@@ -70,45 +106,45 @@ async function track(
 	reply: InteractionContext['reply'],
 	interaction: ChatInputCommandInteraction
 ): Promise<void> {
-	const scoreName = sanitize(interaction.options.getString(StatNameOption));
+	const statName = sanitize(interaction.options.getString(StatNameOption));
 
-	if (scoreName === undefined) {
-		throw new UserMessageError('Must include score-name');
+	if (statName === undefined) {
+		throw mustIncludeNameError();
 	}
 
-	const scoreExists = Boolean(
+	const statExists = Boolean(
 		await db.scoreboard.count({
 			where: {
-				name: scoreName,
+				name: statName,
 				userId: interaction.user.id,
 			},
 		})
 	);
 
-	if (scoreExists) {
+	if (statExists) {
 		throw new UserMessageError("I'm already tracking that score for you");
 	}
 
 	await db.scoreboard.create({
 		data: {
 			userId: interaction.user.id,
-			name: scoreName,
+			name: statName,
 			score: 0,
 		},
 	});
 
-	await reply(`Now tracking "${scoreName}" for you`);
+	await reply(`Now tracking "${statName}" for you`);
 }
 
 async function update(
 	reply: InteractionContext['reply'],
 	interaction: ChatInputCommandInteraction
 ): Promise<void> {
-	const scoreName = sanitize(interaction.options.getString(StatNameOption));
+	const statName = sanitize(interaction.options.getString(StatNameOption));
 	const amount = interaction.options.getNumber(AmountOption);
 
-	if (scoreName === undefined) {
-		throw new UserMessageError('Must include the score name');
+	if (statName === undefined) {
+		throw mustIncludeNameError();
 	}
 	if (amount === null) {
 		throw new UserMessageError('Must include amount');
@@ -117,7 +153,7 @@ async function update(
 	const scoreboardEntry = await db.scoreboard.findFirst({
 		where: {
 			userId: interaction.user.id,
-			name: scoreName,
+			name: statName,
 		},
 		select: {
 			score: true,
@@ -126,9 +162,7 @@ async function update(
 	});
 
 	if (scoreboardEntry === null) {
-		throw new UserMessageError(
-			`I'm not currently tracking "${scoreName}" for you. Use /track to begin tracking that score.`
-		);
+		throw notCurrentlyTrackingError(statName);
 	}
 
 	const newScore = scoreboardEntry.score + amount;
@@ -141,7 +175,7 @@ async function update(
 		},
 	});
 
-	await reply(`Updated your score for "${scoreName}" to ${newScore}`);
+	await reply(`Updated your score for "${statName}" to ${newScore}`);
 }
 
 async function list(
@@ -169,4 +203,94 @@ async function list(
 	await replyPrivately({
 		embeds: [embed],
 	});
+}
+
+async function untrack(
+	reply: InteractionContext['reply'],
+	interaction: ChatInputCommandInteraction
+): Promise<void> {
+	const statName = sanitize(interaction.options.getString(StatNameOption));
+
+	if (statName === undefined) {
+		throw mustIncludeNameError();
+	}
+
+	const scoreboardEntry = await db.scoreboard.findFirst({
+		where: {
+			name: statName,
+			userId: interaction.user.id,
+		},
+		select: {
+			id: true,
+		},
+	});
+
+	if (scoreboardEntry === null) {
+		throw notCurrentlyTrackingError(statName);
+	}
+
+	await db.scoreboard.delete({
+		where: {
+			id: scoreboardEntry.id,
+		},
+	});
+
+	await reply(`Stopped tracking "${statName}" for you`);
+}
+
+async function leaderboard(
+	reply: InteractionContext['reply'],
+	interaction: ChatInputCommandInteraction,
+	userCache: Collection<string, User>
+): Promise<void> {
+	const statName = sanitize(interaction.options.getString(StatNameOption));
+
+	if (statName === undefined) {
+		throw mustIncludeNameError();
+	}
+
+	const scoreboardEntries = await db.scoreboard.findMany({
+		where: {
+			name: statName,
+		},
+		select: {
+			userId: true,
+			score: true,
+		},
+	});
+
+	const scoresWithUsernames = scoreboardEntries
+		.map(entry => ({
+			username: userCache.get(entry.userId)?.username,
+			userId: entry.userId,
+			score: entry.score,
+		}))
+		.sort((a, b) => b.score - a.score);
+
+	const embedDescription = scoresWithUsernames
+		.map(entry => {
+			if (entry.username === undefined) {
+				throw new Error(`Unable to find user with id ${entry.userId}`);
+			}
+			return `${entry.username}: ${entry.score}`;
+		})
+		.join('\n');
+
+	const embed = new EmbedBuilder()
+		.setTitle(`Leaderboard for ${statName}`)
+		.setDescription(embedDescription);
+
+	await reply({
+		embeds: [embed],
+	});
+}
+
+function notCurrentlyTrackingError(statName: string): UserMessageError {
+	return new UserMessageError(
+		`I'm not currently tracking "${statName}" for you. Use /track to begin tracking that score.`
+	);
+}
+
+function mustIncludeNameError(): UserMessageError {
+	return new UserMessageError('Must include stat name');
 }
