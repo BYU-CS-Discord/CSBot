@@ -79,7 +79,7 @@ export const stats: GuildedCommand = {
 	info: builder,
 	requiresGuild: true,
 
-	async execute({ reply, interaction, client }): Promise<void> {
+	async execute({ reply, replyPrivately, interaction, client }): Promise<void> {
 		const subcommand = interaction.options.getSubcommand();
 
 		switch (subcommand) {
@@ -90,7 +90,7 @@ export const stats: GuildedCommand = {
 				await update(reply, interaction);
 				break;
 			case ListSubcommand:
-				await list(reply, interaction);
+				await list(replyPrivately, interaction);
 				break;
 			case UntrackSubcommand:
 				await untrack(reply, interaction);
