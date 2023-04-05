@@ -25,9 +25,9 @@ const builder = new SlashCommandBuilder()
 export const toTheGallows: GlobalCommand = {
 	info: builder,
 	requiresGuild: false,
-	async execute({ reply, interaction }): Promise<void> {
-		const wordLength = interaction.options.getInteger(LengthOption);
-		const numGuesses = interaction.options.getInteger(GuessesOption);
+	async execute({ reply, options }): Promise<void> {
+		const wordLength = options.getInteger(LengthOption);
+		const numGuesses = options.getInteger(GuessesOption);
 
 		const game = EvilHangmanGame.newGame(wordLength, numGuesses);
 		const response = await buildEvilHangmanMessage(game.getDisplayInfo());

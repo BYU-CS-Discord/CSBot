@@ -48,13 +48,7 @@ export const talk: GlobalCommand = {
 	info: builder,
 	requiresGuild: false,
 	async execute(context) {
-		const options = context.interaction.options;
-
-		// This shouldn't happen, but it's good to have error checking anyway
-		if (options.data.length === 0) {
-			throw new Error('No options provided');
-		}
-
+		const options = context.options;
 		const message = options.getString('message', true);
 		const speakerNum = options.getInteger('speaker') ?? undefined;
 

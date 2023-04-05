@@ -21,16 +21,14 @@ describe('profile', () => {
 		} as unknown as GuildEmoji;
 
 		context = {
-			interaction: {
-				options: {
-					client: {
-						emojis: {
-							cache: [existingEmoji],
-						},
-					},
-					getString: mockEmojiName,
-					getBoolean: mockShouldRespondEphemeral,
+			client: {
+				emojis: {
+					cache: [existingEmoji],
 				},
+			},
+			options: {
+				getString: mockEmojiName,
+				getBoolean: mockShouldRespondEphemeral,
 			},
 			reply: mockReply,
 		} as unknown as TextInputCommandContext;
