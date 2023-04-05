@@ -259,6 +259,10 @@ async function leaderboard(
 		},
 	});
 
+	if (scoreboardEntries.length === 0) {
+		throw new UserMessageError(`No one is tracking the stat "${statName}"`);
+	}
+
 	const scoresWithUsernames = scoreboardEntries
 		.map(entry => ({
 			username: userCache.get(entry.userId)?.username,
