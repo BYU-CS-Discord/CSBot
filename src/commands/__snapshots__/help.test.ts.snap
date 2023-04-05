@@ -1,10 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`help presents an ephemeral embed with general info 1`] = `
-Object {
+{
   "description": "To see the list of commands, type \`/\` in your message field.
 [Visit our GitHub](https://github.com/BYU-CS-Discord/CSBot) for more details!",
-  "footer": Object {
+  "footer": {
     "icon_url": undefined,
     "text": "vX.X.X",
   },
