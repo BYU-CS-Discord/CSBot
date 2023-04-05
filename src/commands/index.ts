@@ -39,8 +39,7 @@ import { talk as talk_context } from './contextMenu/talk';
 import { toTheGallows } from './toTheGallows';
 import { update } from './update';
 import { findRoom } from './findRoom';
-import { track } from './track';
-import { updateScore } from './updateScore';
+import { stats } from './stats';
 
 _add(help);
 _add(xkcd);
@@ -52,5 +51,4 @@ _add(talk);
 _add(talk_context);
 _add(toTheGallows);
 _add(update);
-_add(track);
-_add(updateScore);
+_add(stats);
