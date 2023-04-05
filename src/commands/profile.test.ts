@@ -42,10 +42,8 @@ describe('profile', () => {
 				user: botUser,
 			},
 			user,
-			interaction: {
-				options: {
-					getUser: mockGetUser,
-				},
+			options: {
+				getUser: mockGetUser,
 			},
 			reply: mockReply,
 			replyPrivately: mockReplyPrivately,

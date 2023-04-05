@@ -15,10 +15,8 @@ describe('toTheGallows', () => {
 	beforeEach(() => {
 		context = {
 			reply: mockReply,
-			interaction: {
-				options: {
-					getInteger: mockGetInteger,
-				},
+			options: {
+				getInteger: mockGetInteger,
 			},
 		} as unknown as TextInputCommandContext;
 

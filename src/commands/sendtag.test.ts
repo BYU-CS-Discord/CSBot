@@ -10,6 +10,10 @@ describe('sendtag', () => {
 	beforeEach(() => {
 		context = {
 			reply: mockReply,
+			options: {
+				getString: mockGetString,
+				getFocused: () => '',
+			},
 			interaction: {
 				options: {
 					getString: mockGetString,

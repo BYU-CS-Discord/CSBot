@@ -4,6 +4,7 @@ import axios from 'axios';
 
 // Internal dependencies
 import * as logger from '../logger';
+import { UserMessageError } from '../helpers/UserMessageError';
 
 interface GetComicResponse {
 	month: string;
@@ -62,12 +63,14 @@ async function _getComic(endpoint: string | number): Promise<GetComicResponse> {
 	}
 }
 
+const NumberOption = 'number';
+
 const builder = new SlashCommandBuilder()
 	.setName('xkcd')
 	.setDescription('Fetches the most recent xkcd comic, or a selected one.')
 	.addIntegerOption(option =>
 		option
-			.setName('number')
+			.setName(NumberOption)
 			.setDescription('The index number of the comic you would like to have')
 			.setMinValue(1)
 	);
@@ -103,13 +106,15 @@ export const xkcd: GlobalCommand = {
 		}
 
 		// determining if a number was passed as an argument.
-		const param = options[0];
-		if (param?.value !== undefined) {
+		const param = options.getInteger(NumberOption);
+		if (param !== null) {
 			// number was provided in the command
-			comic = `${param.value as number}`;
-			if (param.value < 1 || param.value > latestComic.num) {
+			comic = `${param}`;
+			if (param < 1 || param > latestComic.num) {
 				// error checking, no negative comics or comic 0. Instead send an error message
-				throw new Error(`Please insert a valid comic number. The range is 1-${latestComic.num}.`);
+				throw new UserMessageError(
+					`Please insert a valid comic number. The range is 1-${latestComic.num}.`
+				);
 			}
 		} else {
 			// no number given, just get the latest comic.
