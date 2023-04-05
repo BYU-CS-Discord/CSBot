@@ -72,7 +72,7 @@ export default defineConfig({
 		// Uses globalThis in a way that breaks bundle at runtime
 		'discord.js',
 
-		// Relies on __dirname
+		// Relies on __dirname in a way that ESBuild cannot translate
 		'@prisma/client',
 	],
 	input: 'src/main.ts',
