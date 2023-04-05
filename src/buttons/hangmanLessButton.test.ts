@@ -28,7 +28,7 @@ describe('hangmanLessButton', () => {
 		expect(mockUpdate).toHaveBeenCalledOnce();
 		expect(mockUpdate).toHaveBeenCalledWith({
 			embeds: [expect.toBeObject()],
-			components: expect.toBeArrayOfSize(5),
+			components: expect.toBeArrayOfSize(5) as Array<unknown>,
 		});
 	});
 });

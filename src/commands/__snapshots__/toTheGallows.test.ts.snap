@@ -1,12 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`toTheGallows specifying length and number of guesses always puts the game into the same state 1`] = `
-Object {
-  "fields": Array [
-    Object {
+{
+  "fields": [
+    {
       "inline": true,
       "name": "_ _",
-      "value": "\`\`\` /---\\\\
+      "value": "\`\`\` /---\\
      |
      |
      |
@@ -14,7 +14,7 @@ Object {
     -|-
 \`\`\`",
     },
-    Object {
+    {
       "inline": true,
       "name": "_ _",
       "value": "Remaining Guesses: 4
@@ -22,7 +22,7 @@ Word: ----
 Letters Guessed: _ _",
     },
   ],
-  "footer": Object {
+  "footer": {
     "icon_url": undefined,
     "text": "vX.X.X",
   },
