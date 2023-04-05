@@ -19,6 +19,7 @@ describe('track', () => {
 	/* eslint-disable @typescript-eslint/unbound-method */
 	const mockCount = dbMock.scoreboard.count;
 	const mockCreate = dbMock.scoreboard.create;
+	const mockDelete = dbMock.scoreboard.delete;
 	const mockFindFirst = dbMock.scoreboard.findFirst;
 	const mockFindMany = dbMock.scoreboard.findMany;
 	const mockUpdate = dbMock.scoreboard.update;
@@ -176,17 +177,17 @@ describe('track', () => {
 		beforeEach(() => {
 			mockGetString.mockReturnValue(mockStatName);
 
-			mockCount.mockResolvedValue(1);
+			mockFindFirst.mockResolvedValue({
+				id: 0,
+			} as unknown as Scoreboard);
 		});
 
 		test('stops tracking a stat', async () => {
 			await expect(stats.execute(context)).resolves.toBeUndefined();
-			expect(mockCreate).toHaveBeenCalledOnce();
-			expect(mockCreate).toHaveBeenCalledWith({
-				data: {
-					userId: mockUserId,
-					name: mockStatName,
-					score: 0,
+			expect(mockDelete).toHaveBeenCalledOnce();
+			expect(mockDelete).toHaveBeenCalledWith({
+				where: {
+					id: 0,
 				},
 			});
 
@@ -200,7 +201,7 @@ describe('track', () => {
 		});
 
 		test('fails when stat isnt being tracked', async () => {
-			mockCount.mockResolvedValue(0);
+			mockFindFirst.mockResolvedValue(null);
 
 			await expect(stats.execute(context)).rejects.toThrow();
 		});
