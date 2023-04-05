@@ -1,5 +1,5 @@
 import { mockDeep, DeepMockProxy } from 'jest-mock-extended';
-import type { PrismaClient } from '@prisma/client';
+import type { PrismaClient, Scoreboard } from '@prisma/client';
 
 jest.mock('../constants/meta', () => ({
 	// Version changes frequently, so use a consistent version number to test with:
@@ -19,6 +19,8 @@ describe('track', () => {
 	/* eslint-disable @typescript-eslint/unbound-method */
 	const mockCount = dbMock.scoreboard.count;
 	const mockCreate = dbMock.scoreboard.create;
+	const mockFindFirst = dbMock.scoreboard.findFirst;
+	const mockUpdate = dbMock.scoreboard.update;
 	/* eslint-enable @typescript-eslint/unbound-method */
 
 
@@ -65,6 +67,70 @@ describe('track', () => {
 					score: 0,
 				},
 			});
+
+			expect(mockReply).toHaveBeenCalled();
+		});
+
+		test('fails when statName is not included', async () => {
+			mockGetString.mockReturnValue(null);
+
+			await expect(stats.execute(context)).rejects.toThrow();
+		});
+
+		test('fails when stat already exists', async () => {
+			mockCount.mockResolvedValue(1);
+
+			await expect(stats.execute(context)).rejects.toThrow();
+		});
+	});
+
+	describe('update', () => {
+		const mockScoreboardId = 0;
+		const mockAmount = 1;
+		const startAmount = 1;
+
+		beforeEach(() => {
+			mockGetSubcommand.mockReturnValue('update');
+			mockGetString.mockReturnValue(mockStatName);
+			mockGetNumber.mockReturnValue(mockAmount);
+			mockFindFirst.mockResolvedValue({
+				score: startAmount,
+				id: mockScoreboardId,
+			} as unknown as Scoreboard);
+		});
+
+		test('score is added', async () => {
+			await expect(stats.execute(context)).resolves.toBeUndefined();
+
+			expect(mockUpdate).toHaveBeenCalledOnce();
+			expect(mockUpdate).toHaveBeenCalledWith({
+				where: {
+					id: mockScoreboardId,
+				},
+				data: {
+					score: startAmount + mockAmount,
+				},
+			});
+
+			expect(mockReply).toHaveBeenCalled();
+		});
+
+		test('fails when statName is not included', async () => {
+			mockGetString.mockReturnValue(null);
+
+			await expect(stats.execute(context)).rejects.toThrow();
+		});
+
+		test('fails when amount is not included', async () => {
+			mockGetNumber.mockReturnValue(null);
+
+			await expect(stats.execute(context)).rejects.toThrow();
+		});
+
+		test('fails when stat to update isnt being tracked', async () => {
+			mockFindFirst.mockResolvedValue(null);
+
+			await expect(stats.execute(context)).rejects.toThrow();
 		});
 	});
 });

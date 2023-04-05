@@ -98,6 +98,8 @@ export const stats: GuildedCommand = {
 			case LeaderboardSubcommand:
 				await leaderboard(reply, interaction, client.users.cache);
 				break;
+			default:
+				throw new Error('Invalid subcommand');
 		}
 	},
 };
