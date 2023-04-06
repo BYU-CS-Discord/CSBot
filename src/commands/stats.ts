@@ -79,24 +79,24 @@ export const stats: GuildedCommand = {
 	info: builder,
 	requiresGuild: true,
 
-	async execute({ reply, replyPrivately, interaction, client }): Promise<void> {
+	async execute({ reply, replyPrivately, interaction, client, guild }): Promise<void> {
 		const subcommand = interaction.options.getSubcommand();
 
 		switch (subcommand) {
 			case TrackSubcommand:
-				await track(reply, interaction);
+				await track(reply, interaction, guild.id);
 				break;
 			case UpdateSubcommand:
-				await update(reply, interaction);
+				await update(reply, interaction, guild.id);
 				break;
 			case ListSubcommand:
-				await list(replyPrivately, interaction);
+				await list(replyPrivately, interaction, guild.id);
 				break;
 			case UntrackSubcommand:
-				await untrack(reply, interaction);
+				await untrack(reply, interaction, guild.id);
 				break;
 			case LeaderboardSubcommand:
-				await leaderboard(reply, interaction, client.users.cache);
+				await leaderboard(reply, interaction, guild.id, client.users.cache);
 				break;
 			default:
 				throw new Error('Invalid subcommand');
@@ -106,7 +106,8 @@ export const stats: GuildedCommand = {
 
 async function track(
 	reply: InteractionContext['reply'],
-	interaction: ChatInputCommandInteraction
+	interaction: ChatInputCommandInteraction,
+	guildId: string
 ): Promise<void> {
 	const statName = sanitize(interaction.options.getString(StatNameOption));
 
@@ -119,6 +120,7 @@ async function track(
 			where: {
 				name: statName,
 				userId: interaction.user.id,
+				guildId,
 			},
 		})
 	);
@@ -131,6 +133,7 @@ async function track(
 		data: {
 			userId: interaction.user.id,
 			name: statName,
+			guildId,
 			score: 0,
 		},
 	});
@@ -140,7 +143,8 @@ async function track(
 
 async function update(
 	reply: InteractionContext['reply'],
-	interaction: ChatInputCommandInteraction
+	interaction: ChatInputCommandInteraction,
+	guildId: string
 ): Promise<void> {
 	const statName = sanitize(interaction.options.getString(StatNameOption));
 	const amount = interaction.options.getNumber(AmountOption);
@@ -156,6 +160,7 @@ async function update(
 		where: {
 			userId: interaction.user.id,
 			name: statName,
+			guildId,
 		},
 		select: {
 			score: true,
@@ -182,11 +187,13 @@ async function update(
 
 async function list(
 	replyPrivately: InteractionContext['replyPrivately'],
-	interaction: ChatInputCommandInteraction
+	interaction: ChatInputCommandInteraction,
+	guildId: string
 ): Promise<void> {
 	const scoreboardEntries = await db.scoreboard.findMany({
 		where: {
 			userId: interaction.user.id,
+			guildId,
 		},
 		select: {
 			score: true,
@@ -209,7 +216,8 @@ async function list(
 
 async function untrack(
 	reply: InteractionContext['reply'],
-	interaction: ChatInputCommandInteraction
+	interaction: ChatInputCommandInteraction,
+	guildId: string
 ): Promise<void> {
 	const statName = sanitize(interaction.options.getString(StatNameOption));
 
@@ -221,6 +229,7 @@ async function untrack(
 		where: {
 			name: statName,
 			userId: interaction.user.id,
+			guildId,
 		},
 		select: {
 			id: true,
@@ -243,6 +252,7 @@ async function untrack(
 async function leaderboard(
 	reply: InteractionContext['reply'],
 	interaction: ChatInputCommandInteraction,
+	guildId: string,
 	userCache: Collection<string, User>
 ): Promise<void> {
 	const statName = sanitize(interaction.options.getString(StatNameOption));
@@ -254,6 +264,7 @@ async function leaderboard(
 	const scoreboardEntries = await db.scoreboard.findMany({
 		where: {
 			name: statName,
+			guildId,
 		},
 		select: {
 			userId: true,

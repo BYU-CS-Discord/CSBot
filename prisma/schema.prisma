@@ -13,6 +13,7 @@ datasource db {
 model Scoreboard {
 	id Int @id @default(autoincrement())
 	userId String
+	guildId String
 	name String
 	score Float
 }

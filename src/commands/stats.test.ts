@@ -14,7 +14,7 @@ jest.mock('../database', () => ({
 import { stats } from './stats';
 import { db } from '../database';
 
-describe('track', () => {
+describe('stats', () => {
 	const dbMock = db as unknown as DeepMockProxy<PrismaClient>;
 	/* eslint-disable @typescript-eslint/unbound-method */
 	const mockCount = dbMock.scoreboard.count;
@@ -27,6 +27,7 @@ describe('track', () => {
 
 	const mockUserId = 'test-user-id';
 	const mockStatName = 'stats-test';
+	const mockGuildId = 'test-guild-id';
 
 	const mockReply = jest.fn();
 	const mockReplyPrivately = jest.fn();
@@ -57,6 +58,9 @@ describe('track', () => {
 					},
 				},
 			},
+			guild: {
+				id: mockGuildId,
+			},
 		} as unknown as GuildedCommandContext;
 	});
 
@@ -79,6 +83,7 @@ describe('track', () => {
 					userId: mockUserId,
 					name: mockStatName,
 					score: 0,
+					guildId: mockGuildId,
 				},
 			});
 
