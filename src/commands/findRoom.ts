@@ -213,12 +213,12 @@ const builder = new SlashCommandBuilder()
 export const findRoom: GlobalCommand = {
 	info: builder,
 	requiresGuild: false,
-	async execute({ replyPrivately, interaction }): Promise<void> {
-		const input_bldg = interaction.options.getString('building');
-		const input_room = interaction.options.getString('room');
-		const input_timeA = interaction.options.getString('start_time');
-		const input_timeB = interaction.options.getString('end_time');
-		const type = interaction.options.getSubcommand();
+	async execute({ replyPrivately, options }): Promise<void> {
+		const input_bldg = options.getString('building');
+		const input_room = options.getString('room');
+		const input_timeA = options.getString('start_time');
+		const input_timeB = options.getString('end_time');
+		const type = options.getSubcommand();
 
 		let embedTitle = '';
 		let embedDescription = '';
