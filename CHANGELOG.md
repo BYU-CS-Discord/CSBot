@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - A new `/stats` command for stats tracking and competition
+## [0.9.2] - 2023-04-05
+
+### Fixed
+
+- Updated discord.js to v14.9.0. Fixes button interactions not responding.
 
 ## [0.9.1] - 2023-03-31
 
@@ -175,7 +180,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Development Environment for needed dependencies.
 
-[0.10.0]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.9.1...v0.10.0
+[0.9.2]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.9.1...v0.9.2
 [0.9.1]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.9.0...v0.9.1
 [0.9.0]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.8.3...v0.9.0
 [0.8.3]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.8.2...v0.8.3
