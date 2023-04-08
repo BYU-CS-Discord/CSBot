@@ -109,11 +109,7 @@ async function track(
 	interaction: ChatInputCommandInteraction,
 	guildId: string
 ): Promise<void> {
-	const statName = sanitize(interaction.options.getString(StatNameOption));
-
-	if (statName === undefined) {
-		throw mustIncludeNameError();
-	}
+	const statName = sanitize(interaction.options.getString(StatNameOption, true));
 
 	const statExists = Boolean(
 		await db.scoreboard.count({
@@ -146,15 +142,8 @@ async function update(
 	interaction: ChatInputCommandInteraction,
 	guildId: string
 ): Promise<void> {
-	const statName = sanitize(interaction.options.getString(StatNameOption));
-	const amount = interaction.options.getNumber(AmountOption);
-
-	if (statName === undefined) {
-		throw mustIncludeNameError();
-	}
-	if (amount === null) {
-		throw new UserMessageError('Must include amount');
-	}
+	const statName = sanitize(interaction.options.getString(StatNameOption, true));
+	const amount = interaction.options.getNumber(AmountOption, true);
 
 	const scoreboardEntry = await db.scoreboard.findFirst({
 		where: {
@@ -219,11 +208,7 @@ async function untrack(
 	interaction: ChatInputCommandInteraction,
 	guildId: string
 ): Promise<void> {
-	const statName = sanitize(interaction.options.getString(StatNameOption));
-
-	if (statName === undefined) {
-		throw mustIncludeNameError();
-	}
+	const statName = sanitize(interaction.options.getString(StatNameOption, true));
 
 	const scoreboardEntry = await db.scoreboard.findFirst({
 		where: {
@@ -255,11 +240,7 @@ async function leaderboard(
 	guildId: string,
 	userCache: Collection<string, User>
 ): Promise<void> {
-	const statName = sanitize(interaction.options.getString(StatNameOption));
-
-	if (statName === undefined) {
-		throw mustIncludeNameError();
-	}
+	const statName = sanitize(interaction.options.getString(StatNameOption, true));
 
 	const scoreboardEntries = await db.scoreboard.findMany({
 		where: {
@@ -306,8 +287,4 @@ function notCurrentlyTrackingError(statName: string): UserMessageError {
 	return new UserMessageError(
 		`I'm not currently tracking "${statName}" for you. Use /track to begin tracking that score.`
 	);
-}
-
-function mustIncludeNameError(): UserMessageError {
-	return new UserMessageError('Must include stat name');
 }
