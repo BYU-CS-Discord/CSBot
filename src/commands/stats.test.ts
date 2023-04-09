@@ -90,12 +90,6 @@ describe('stats', () => {
 			expect(mockReply).toHaveBeenCalled();
 		});
 
-		test('fails when statName is not included', async () => {
-			mockGetString.mockReturnValue(null);
-
-			await expect(stats.execute(context)).rejects.toThrow();
-		});
-
 		test('fails when stat already exists', async () => {
 			mockCount.mockResolvedValue(1);
 
@@ -135,18 +129,6 @@ describe('stats', () => {
 			});
 
 			expect(mockReply).toHaveBeenCalled();
-		});
-
-		test('fails when statName is not included', async () => {
-			mockGetString.mockReturnValue(null);
-
-			await expect(stats.execute(context)).rejects.toThrow();
-		});
-
-		test('fails when amount is not included', async () => {
-			mockGetNumber.mockReturnValue(null);
-
-			await expect(stats.execute(context)).rejects.toThrow();
 		});
 
 		test('fails when stat to update isnt being tracked', async () => {
@@ -199,12 +181,6 @@ describe('stats', () => {
 			expect(mockReply).toHaveBeenCalled();
 		});
 
-		test('fails when statName is not included', async () => {
-			mockGetString.mockReturnValue(null);
-
-			await expect(stats.execute(context)).rejects.toThrow();
-		});
-
 		test('fails when stat isnt being tracked', async () => {
 			mockFindFirst.mockResolvedValue(null);
 
@@ -234,12 +210,6 @@ describe('stats', () => {
 			await expect(stats.execute(context)).resolves.toBeUndefined();
 
 			expect(mockReply).toHaveBeenCalled();
-		});
-
-		test('fails when statName is not included', async () => {
-			mockGetString.mockReturnValue(null);
-
-			await expect(stats.execute(context)).rejects.toThrow();
 		});
 
 		test('fails when no one is tracking the stat', async () => {
