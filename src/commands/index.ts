@@ -40,6 +40,7 @@ import { toTheGallows } from './toTheGallows';
 import { update } from './update';
 import { findRoom } from './findRoom';
 import { emoji } from './emoji';
+import { setReactboard } from './setReactboard';
 
 _add(help);
 _add(xkcd);
@@ -52,3 +53,4 @@ _add(talk_context);
 _add(toTheGallows);
 _add(update);
 _add(emoji);
+_add(setReactboard);
