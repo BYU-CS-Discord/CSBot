@@ -1,5 +1,6 @@
 import { Client, GuildEmoji, SlashCommandBuilder } from 'discord.js';
 import { UserMessageError } from '../helpers/UserMessageError';
+import { db } from '../database';
 
 const channelOption = 'channel';
 const thresholdOption = 'threshold';
@@ -12,22 +13,29 @@ const builder = new SlashCommandBuilder()
 		option
 			.setName(channelOption)
 			.setDescription('The channel where reactboard posts will be posted')
-			.setRequired(true))
+			.setRequired(true)
+	)
 	.addIntegerOption(option =>
 		option
 			.setName(thresholdOption)
 			.setDescription(
 				'The minimum number of reacts a message should receive before being put on the board'
 			)
-			.setRequired(true))
+			.setRequired(true)
+	)
 	.addStringOption(option =>
 		option.setName(reactOption).setDescription('The react to be tracked (defaults to ⭐)')
 	);
 
+interface ReactboardReactInfo {
+	react: string;
+	isCustomReact: boolean;
+}
+
 export const setReactboard: GuildedCommand = {
 	info: builder,
 	requiresGuild: true,
-	async execute({ client, options }) {
+	async execute({ guild, client, options, replyPrivately }) {
 		const channel = options.getChannel(channelOption, true);
 		const threshold = options.getInteger(thresholdOption, true);
 		const react = options.getString(reactOption) ?? '⭐';
@@ -36,14 +44,43 @@ export const setReactboard: GuildedCommand = {
 			throw new UserMessageError('Threshold must be at least one');
 		}
 
+		let reactboardInfo: ReactboardReactInfo;
 		if (isUnicodeEmoji(react)) {
-			
+			reactboardInfo = {
+				react,
+				isCustomReact: false,
+			};
 		} else {
 			const customReact = getCustomReact(client, react);
 			if (customReact === undefined) {
 				throw new UserMessageError('React option must be a valid reaction');
 			}
+			reactboardInfo = {
+				react: customReact.id,
+				isCustomReact: true,
+			};
 		}
+
+		await db.reactboard.upsert({
+			where: {
+				location: {
+					channelId: channel.id,
+					guildId: guild.id,
+				},
+			},
+			update: {
+				threshold,
+				...reactboardInfo,
+			},
+			create: {
+				channelId: channel.id,
+				guildId: guild.id,
+				threshold,
+				...reactboardInfo,
+			},
+		});
+
+		await replyPrivately('Reactboard created!');
 	},
 };
 
