@@ -10,6 +10,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Scoreboard {
+	id Int @id @default(autoincrement())
+	userId String
+	guildId String
+	name String
+	score Float
+}
+
 // All our Models will be defined here
 // Below is an example of what one would look like in our usecase
 // NOTE NOTHING HERE IS FINAL, THIS IS JUST AN EXAMPLE

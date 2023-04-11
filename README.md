@@ -89,7 +89,11 @@ Retrieves the internal picture for a custom emoji. By default responds ephemeral
 
 ### /findroom ( now / at / between / when )
 
-Searches for open rooms on BYU Campus. _'Now'_, _'At'_, and _'Between'_ allow you to filter your search by time. *'When'\_*allows you to see when a specified room is available.
+Searches for open rooms on BYU Campus. _'Now'_, _'At'_, and _'Between'_ allow you to filter your search by time. \_'When'\_ allows you to see when a specified room is available.
+
+### /stats ( track / update / list / leaderboard / untrack )
+
+Tracks a statistic for the issuer. Use the `track` subcommand to begin tracking, `update` to add or subtract to it, `list` to show all the stats being tracked for the issuer, `leaderboard` to show the users with the highest scores for a stat, and `untrack` to stop tracking a stat for you.
 
 ## Context Menu Commands
 
