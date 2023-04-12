@@ -2,6 +2,7 @@
 import { assert, number, string, type as schema } from 'superstruct';
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { fetch } from 'undici';
+import { URL } from 'node:url';
 
 // Internal dependencies
 import * as logger from '../logger';
@@ -40,7 +41,9 @@ async function _latestCheck(): Promise<GetComicResponse> {
 
 async function _getComic(endpoint: string | number): Promise<GetComicResponse> {
 	try {
-		const res = await fetch(`https://xkcd.now.sh/?comic=${endpoint}`);
+		const url = new URL('https://xkcd.now.sh/');
+		url.searchParams.set('comic', `${endpoint}`);
+		const res = await fetch(url);
 		const status = res.status;
 		if (status !== 200) throw new Error(`${status}`);
 		const data = await res.json();

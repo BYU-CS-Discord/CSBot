@@ -1,6 +1,7 @@
 import { array, assert, boolean, string, tuple, type as schema } from 'superstruct';
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { fetch } from 'undici';
+import { URL } from 'node:url';
 
 import * as logger from '../logger';
 
@@ -83,7 +84,7 @@ export function convertTo12Hour(time: string): string {
 	return 'ERR';
 }
 
-async function _getRoomsFromEndpoint(endpoint: string): Promise<GetRoomsResponse> {
+async function _getRoomsFromEndpoint(endpoint: URL): Promise<GetRoomsResponse> {
 	try {
 		const res = await fetch(endpoint);
 		const status = res.status;
@@ -102,12 +103,12 @@ async function _getRoomsFromEndpoint(endpoint: string): Promise<GetRoomsResponse
 }
 
 async function _getRoomsNow(building: string): Promise<GetRoomsResponse> {
-	const url = `https://pi.zyancey.com/now/${building}`;
+	const url = new URL(`https://pi.zyancey.com/now/${building}`);
 	return await _getRoomsFromEndpoint(url);
 }
 
 async function _getRoomsAt(building: string, timeA: string): Promise<GetRoomsResponse> {
-	const url = `https://pi.zyancey.com/at/${building}/${timeA}`;
+	const url = new URL(`https://pi.zyancey.com/at/${building}/${timeA}`);
 	return await _getRoomsFromEndpoint(url);
 }
 
@@ -116,7 +117,7 @@ async function _getRoomsBetween(
 	timeA: string,
 	timeB: string
 ): Promise<GetRoomsResponse> {
-	const url = `https://pi.zyancey.com/between/${building}/${timeA}/${timeB}`;
+	const url = new URL(`https://pi.zyancey.com/between/${building}/${timeA}/${timeB}`);
 	return await _getRoomsFromEndpoint(url);
 }
 
