@@ -118,7 +118,8 @@ async function _getRoomsBetween(
 
 async function _getWhenRoom(building: string, room: string): Promise<GetRoomInfoResponse> {
 	try {
-		return await fetch(`https://pi.zyancey.com/when/${building}/${room}`, getRoomInfoResponse);
+		const endpoint = new URL(`https://pi.zyancey.com/when/${building}/${room}`);
+		return await fetch(endpoint, getRoomInfoResponse);
 	} catch (error_) {
 		logger.error('Error in getting Room Info:');
 		logger.error(error_);
