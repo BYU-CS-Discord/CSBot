@@ -1,17 +1,22 @@
+import { array, assert, boolean, string, tuple, type as schema } from 'superstruct';
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { fetch } from 'undici';
 
 import * as logger from '../logger';
 
-interface GetRoomInfoResponse {
-	busySince: string;
-	busyUntil: string;
-	isInUse: boolean;
-}
+const getRoomInfoResponse = schema({
+	busySince: string(),
+	busyUntil: string(),
+	isInUse: boolean(),
+});
 
-interface GetRoomsResponse {
-	Rooms: Array<[string, string]>;
-}
+type GetRoomInfoResponse = typeof getRoomInfoResponse.TYPE;
+
+const getRoomsResponse = schema({
+	Rooms: array(tuple([string(), string()])),
+});
+
+type GetRoomsResponse = typeof getRoomsResponse.TYPE;
 
 const timeChoices = [
 	{ name: '8:00 AM', value: '08:00:00' },
@@ -84,7 +89,8 @@ async function _getRoomsFromEndpoint(endpoint: string): Promise<GetRoomsResponse
 		const status = res.status;
 		if (status !== 200) throw new Error(`${status}`);
 		const data = await res.json();
-		return data as GetRoomsResponse;
+		assert(data, getRoomsResponse);
+		return data;
 	} catch (error_) {
 		logger.error('Error in getting Room Info:');
 		logger.error(error_);
@@ -120,7 +126,8 @@ async function _getWhenRoom(building: string, room: string): Promise<GetRoomInfo
 		const status = res.status;
 		if (status !== 200) throw new Error(`${status}`);
 		const data = await res.json();
-		return data as GetRoomInfoResponse;
+		assert(data, getRoomInfoResponse);
+		return data;
 	} catch (error_) {
 		logger.error('Error in getting Room Info:');
 		logger.error(error_);

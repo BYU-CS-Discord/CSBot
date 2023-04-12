@@ -1,4 +1,5 @@
 // External dependencies
+import { assert, number, string, type as schema } from 'superstruct';
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { fetch } from 'undici';
 
@@ -6,19 +7,21 @@ import { fetch } from 'undici';
 import * as logger from '../logger';
 import { UserMessageError } from '../helpers/UserMessageError';
 
-interface GetComicResponse {
-	month: string;
-	num: number;
-	link: string;
-	news: string;
-	safe_title: string;
-	transcript: string;
-	alt: string;
-	year: string;
-	title: string;
-	day: string;
-	img: string;
-}
+const getComicResponse = schema({
+	month: string(),
+	num: number(),
+	link: string(),
+	news: string(),
+	safe_title: string(),
+	transcript: string(),
+	alt: string(),
+	year: string(),
+	title: string(),
+	day: string(),
+	img: string(),
+});
+
+type GetComicResponse = typeof getComicResponse.TYPE;
 
 /**
  * a quick call to see the latest comic.
@@ -41,7 +44,8 @@ async function _getComic(endpoint: string | number): Promise<GetComicResponse> {
 		const status = res.status;
 		if (status !== 200) throw new Error(`${status}`);
 		const data = await res.json();
-		return data as GetComicResponse; // TODO: BUILD A TYPE GUARD AROUND THIS
+		assert(data, getComicResponse);
+		return data;
 	} catch (error_) {
 		logger.error('Error in getting an XKCD comic:');
 		logger.error(error_);
