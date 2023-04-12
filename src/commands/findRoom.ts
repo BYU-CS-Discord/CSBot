@@ -1,4 +1,5 @@
 import { array, assert, boolean, string, tuple, type as schema } from 'superstruct';
+import { describeCode, HttpStatusCode } from '../helpers/HttpStatusCode';
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { fetch } from 'undici';
 import { URL } from 'node:url';
@@ -87,8 +88,10 @@ export function convertTo12Hour(time: string): string {
 async function _getRoomsFromEndpoint(endpoint: URL): Promise<GetRoomsResponse> {
 	try {
 		const res = await fetch(endpoint);
-		const status = res.status;
-		if (status !== 200) throw new Error(`${status}`);
+		if (res.status !== HttpStatusCode.OK) {
+			throw new Error(`${res.status}: ${describeCode(res.status)}`);
+		}
+
 		const data = await res.json();
 		assert(data, getRoomsResponse);
 		return data;
@@ -124,8 +127,10 @@ async function _getRoomsBetween(
 async function _getWhenRoom(building: string, room: string): Promise<GetRoomInfoResponse> {
 	try {
 		const res = await fetch(`https://pi.zyancey.com/when/${building}/${room}`);
-		const status = res.status;
-		if (status !== 200) throw new Error(`${status}`);
+		if (res.status !== HttpStatusCode.OK) {
+			throw new Error(`${res.status}: ${describeCode(res.status)}`);
+		}
+
 		const data = await res.json();
 		assert(data, getRoomInfoResponse);
 		return data;
