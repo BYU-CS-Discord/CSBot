@@ -1,7 +1,8 @@
-import type { Response } from 'undici';
-import { fetch } from 'undici';
+import { fetch } from '../helpers/fetch';
+import { HttpStatusCode } from '../helpers/HttpStatusCode';
+import { NetworkError } from '../helpers/NetworkError';
 
-jest.mock('undici', () => ({ fetch: jest.fn() }));
+jest.mock('../helpers/fetch', () => ({ fetch: jest.fn() }));
 
 const mockedFetch = fetch as jest.Mock<ReturnType<typeof fetch>, Parameters<typeof fetch>>;
 
@@ -9,22 +10,18 @@ const mockedFetch = fetch as jest.Mock<ReturnType<typeof fetch>, Parameters<type
 jest.mock('../logger');
 
 const latestGood = {
-	status: 200,
-	json: (): Promise<unknown> =>
-		Promise.resolve({
-			month: '9',
-			num: 2679,
-			link: '',
-			year: '2022',
-			news: '',
-			safe_title: 'Quantified Self',
-			transcript: '',
-			alt: "It's made me way more excited about ferris wheels, subways, car washes, waterslides, and store entrances that have double doors with a divider in the middle.",
-			img: 'https://imgs.xkcd.com/comics/quantified_self.png',
-			title: 'Quantified Self',
-			day: '30',
-		}),
-} as unknown as Response;
+	month: '9',
+	num: 2679,
+	link: '',
+	year: '2022',
+	news: '',
+	safe_title: 'Quantified Self',
+	transcript: '',
+	alt: "It's made me way more excited about ferris wheels, subways, car washes, waterslides, and store entrances that have double doors with a divider in the middle.",
+	img: 'https://imgs.xkcd.com/comics/quantified_self.png',
+	title: 'Quantified Self',
+	day: '30',
+};
 
 const chosen = {
 	month: '1',
@@ -41,14 +38,7 @@ const chosen = {
 	img: 'https://imgs.xkcd.com/comics/sheep.jpg',
 };
 
-const chosenGood = {
-	status: 200,
-	json: (): Promise<unknown> => Promise.resolve(chosen),
-} as unknown as Response;
-
-const badResponse = {
-	status: 400,
-} as unknown as Response;
+const badResponse = new NetworkError(HttpStatusCode.BAD_REQUEST);
 
 // Import the code to test
 import { xkcd } from './xkcd';
@@ -97,7 +87,7 @@ describe('xkcd', () => {
 	});
 
 	test('Returning an embed with a comic given by a number parameter', async () => {
-		mockedFetch.mockResolvedValue(chosenGood);
+		mockedFetch.mockResolvedValue(chosen);
 		mockedFetch.mockResolvedValueOnce(latestGood);
 		mockGetInteger.mockReturnValueOnce(chosen.num);
 		await expect(xkcd.execute(context)).resolves.toBeUndefined();
@@ -110,7 +100,7 @@ describe('xkcd', () => {
 	});
 
 	test('Checking when a second call to the API fails', async () => {
-		mockedFetch.mockResolvedValue(badResponse);
+		mockedFetch.mockRejectedValue(badResponse);
 		mockedFetch.mockResolvedValueOnce(latestGood);
 		mockGetInteger.mockReturnValueOnce(chosen.num);
 		await expect(xkcd.execute(context)).rejects.toThrow();
@@ -118,7 +108,7 @@ describe('xkcd', () => {
 	});
 
 	test('Checking when a first call to the API fails', async () => {
-		mockedFetch.mockResolvedValue(badResponse);
+		mockedFetch.mockRejectedValue(badResponse);
 		mockGetInteger.mockReturnValueOnce(chosen.num);
 		await expect(xkcd.execute(context)).rejects.toThrow();
 		expect(mockSendTyping).toHaveBeenCalledOnce();

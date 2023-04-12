@@ -1,8 +1,7 @@
 // External dependencies
-import { assert, number, string, type as schema } from 'superstruct';
-import { describeCode, HttpStatusCode } from '../helpers/HttpStatusCode';
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
-import { fetch } from 'undici';
+import { fetch } from '../helpers/fetch';
+import { number, string, type as schema } from 'superstruct';
 import { URL } from 'node:url';
 
 // Internal dependencies
@@ -44,14 +43,7 @@ async function _getComic(endpoint: string | number): Promise<GetComicResponse> {
 	try {
 		const url = new URL('https://xkcd.now.sh/');
 		url.searchParams.set('comic', `${endpoint}`);
-		const res = await fetch(url);
-		if (res.status !== HttpStatusCode.OK) {
-			throw new Error(`${res.status}: ${describeCode(res.status)}`);
-		}
-
-		const data = await res.json();
-		assert(data, getComicResponse);
-		return data;
+		return await fetch(url, getComicResponse);
 	} catch (error_) {
 		logger.error('Error in getting an XKCD comic:');
 		logger.error(error_);
