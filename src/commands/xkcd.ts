@@ -1,6 +1,6 @@
 // External dependencies
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
-import axios from 'axios';
+import { fetch } from 'undici';
 
 // Internal dependencies
 import * as logger from '../logger';
@@ -37,12 +37,11 @@ async function _latestCheck(): Promise<GetComicResponse> {
 
 async function _getComic(endpoint: string | number): Promise<GetComicResponse> {
 	try {
-		const { data, status } = await axios.get<GetComicResponse>(
-			`https://xkcd.now.sh/?comic=${endpoint}`
-		);
-		// TODO: BUILD A TYPE GUARD AROUND THIS
+		const res = await fetch(`https://xkcd.now.sh/?comic=${endpoint}`);
+		const status = res.status;
 		if (status !== 200) throw new Error(`${status}`);
-		return data;
+		const data = await res.json();
+		return data as GetComicResponse; // TODO: BUILD A TYPE GUARD AROUND THIS
 	} catch (error_) {
 		logger.error('Error in getting an XKCD comic:');
 		logger.error(error_);

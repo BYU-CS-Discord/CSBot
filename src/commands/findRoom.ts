@@ -1,5 +1,5 @@
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
-import axios from 'axios';
+import { fetch } from 'undici';
 
 import * as logger from '../logger';
 
@@ -80,9 +80,11 @@ export function convertTo12Hour(time: string): string {
 
 async function _getRoomsFromEndpoint(endpoint: string): Promise<GetRoomsResponse> {
 	try {
-		const { data, status } = await axios.get<GetRoomsResponse>(endpoint);
+		const res = await fetch(endpoint);
+		const status = res.status;
 		if (status !== 200) throw new Error(`${status}`);
-		return data;
+		const data = await res.json();
+		return data as GetRoomsResponse;
 	} catch (error_) {
 		logger.error('Error in getting Room Info:');
 		logger.error(error_);
@@ -114,11 +116,11 @@ async function _getRoomsBetween(
 
 async function _getWhenRoom(building: string, room: string): Promise<GetRoomInfoResponse> {
 	try {
-		const { data, status } = await axios.get<GetRoomInfoResponse>(
-			`https://pi.zyancey.com/when/${building}/${room}`
-		);
+		const res = await fetch(`https://pi.zyancey.com/when/${building}/${room}`);
+		const status = res.status;
 		if (status !== 200) throw new Error(`${status}`);
-		return data;
+		const data = await res.json();
+		return data as GetRoomInfoResponse;
 	} catch (error_) {
 		logger.error('Error in getting Room Info:');
 		logger.error(error_);
