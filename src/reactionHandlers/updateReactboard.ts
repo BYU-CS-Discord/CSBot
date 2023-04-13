@@ -62,7 +62,14 @@ async function addNewPosts(reaction: MessageReaction): Promise<void> {
 
 	const updatePromises = reactboardsToPostTo.map(async reactboard => {
 		const channel = await getChannel(reaction, reactboard.channelId);
-		await channel.send(reaction.count.toString());
+		const reactboardMessage = await channel.send(reaction.count.toString());
+		await db.reactboardPost.create({
+			data: {
+				reactboardId: reactboard.id,
+				originalMessageId: reaction.message.id,
+				reactboardMessageId: reactboardMessage.id,
+			},
+		});
 	});
 
 	await Promise.all(updatePromises);
