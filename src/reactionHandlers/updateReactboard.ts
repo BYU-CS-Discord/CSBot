@@ -9,18 +9,34 @@ export const updateReactboard: ReactionHandler = {
 
 		await updateExistingPosts(fullReaction);
 
-		const reactboards = await db.reactboard.findMany({
+		const reactboardsToPostTo = await db.reactboard.findMany({
 			where: {
 				guildId: reaction.message.guildId,
 				react: reaction.emoji.id,
+				threshold: {
+					lte: fullReaction.count,
+				},
+				reactboardPosts: {
+					none: {
+						originalMessageId: fullReaction.message.id,
+					},
+				},
 			},
 		});
 
-		for (const reactboard of reactboards) {
-			if (fullReaction.count >= reactboard.threshold) {
-				console.log('new post!');
+		const updatePromises = reactboardsToPostTo.map(async reactboard => {
+			const channel = await reaction.client.channels.fetch(reactboard.channelId);
+			if (
+				channel === null ||
+				!channel.isTextBased() ||
+				channel.type === ChannelType.GuildStageVoice
+			) {
+				throw new Error('Could not find channel');
 			}
-		}
+			await channel.send(fullReaction.count.toString());
+		});
+
+		await Promise.all(updatePromises);
 	},
 };
 
@@ -35,11 +51,9 @@ async function updateExistingPosts(reaction: MessageReaction): Promise<void> {
 	});
 
 	const updatePromises = reactboardPosts.map(async reactboardPost => {
-		const reactboardChannel = await reaction.client.channels.cache
-			.get(reactboardPost.reactboard.channelId)
-			?.fetch();
+		const reactboardChannel = await reaction.client.channels.fetch(reactboardPost.reactboard.channelId);
 		if (
-			reactboardChannel === undefined ||
+			reactboardChannel === null ||
 			!reactboardChannel.isTextBased() ||
 			reactboardChannel.type === ChannelType.GuildStageVoice
 		) {
