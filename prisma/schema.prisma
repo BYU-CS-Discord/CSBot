@@ -31,6 +31,14 @@ model reactboardPost {
 	reactboardMessageId String
 }
 
+model Scoreboard {
+	id Int @id @default(autoincrement())
+	userId String
+	guildId String
+	name String
+	score Float
+}
+
 // model Tag {
 // 	id        Int      @id @default(autoincrement())
 // 	createdAt DateTime @default(now())
@@ -44,12 +52,4 @@ model reactboardPost {
 // 	userId         String   @unique
 //  starredCount   Int
 //  leaderboards   Leaderboard[]
-// }
-
-// model Leaderboard {
-// 	id         Int      @id @default(autoincrement())
-// 	createdAt  DateTime @default(now())
-//  name       String
-//  users	   User[]
-//  userCounts Int[]
 // }
