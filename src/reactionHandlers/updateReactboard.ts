@@ -1,4 +1,4 @@
-import { ChannelType } from 'discord.js';
+import { ChannelType, MessageReaction } from 'discord.js';
 import { db } from '../database';
 
 export const updateReactboard: ReactionHandler = {
@@ -7,30 +7,7 @@ export const updateReactboard: ReactionHandler = {
 		if (reaction.emoji.id === null) return; // idless reactions???
 		const fullReaction = await reaction.fetch();
 
-		const reactboardPosts = await db.reactboardPost.findMany({
-			where: {
-				originalMessageId: reaction.message.id,
-			},
-			include: {
-				reactboard: true,
-			},
-		});
-
-		if (reactboardPost.length > 0) {
-			const updatePromises = reactboardPosts.map(async reactboardPost => {
-				const reactboardChannel = await reaction.client.channels.cache
-					.get(reactboardPost.reactboard.channelId)
-					?.fetch();
-				if (
-					reactboardChannel === undefined ||
-					!reactboardChannel.isTextBased() ||
-					reactboardChannel.type === ChannelType.GuildStageVoice
-				) {
-					throw new Error('Could not find channel');
-				}
-				reactboardChannel.messages
-			})
-		}
+		await updateExistingPosts(fullReaction);
 
 		const reactboards = await db.reactboard.findMany({
 			where: {
@@ -46,3 +23,33 @@ export const updateReactboard: ReactionHandler = {
 		}
 	},
 };
+
+async function updateExistingPosts(reaction: MessageReaction): Promise<void> {
+	const reactboardPosts = await db.reactboardPost.findMany({
+		where: {
+			originalMessageId: reaction.message.id,
+		},
+		include: {
+			reactboard: true,
+		},
+	});
+
+	const updatePromises = reactboardPosts.map(async reactboardPost => {
+		const reactboardChannel = await reaction.client.channels.cache
+			.get(reactboardPost.reactboard.channelId)
+			?.fetch();
+		if (
+			reactboardChannel === undefined ||
+			!reactboardChannel.isTextBased() ||
+			reactboardChannel.type === ChannelType.GuildStageVoice
+		) {
+			throw new Error('Could not find channel');
+		}
+		const reactboardMessage = await reactboardChannel.messages.fetch(
+			reactboardPost.reactboardMessageId
+		);
+		await reactboardMessage.edit(reaction.count.toString());
+	});
+
+	await Promise.all(updatePromises);
+}
