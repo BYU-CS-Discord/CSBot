@@ -1,4 +1,14 @@
-import { ChannelType, MessageReaction } from 'discord.js';
+import {
+	ChannelType,
+	DMChannel,
+	MessageReaction,
+	NewsChannel,
+	PartialDMChannel,
+	PrivateThreadChannel,
+	PublicThreadChannel,
+	TextChannel,
+	VoiceChannel,
+} from 'discord.js';
 import { db } from '../database';
 
 export const updateReactboard: ReactionHandler = {
@@ -25,14 +35,7 @@ export const updateReactboard: ReactionHandler = {
 		});
 
 		const updatePromises = reactboardsToPostTo.map(async reactboard => {
-			const channel = await reaction.client.channels.fetch(reactboard.channelId);
-			if (
-				channel === null ||
-				!channel.isTextBased() ||
-				channel.type === ChannelType.GuildStageVoice
-			) {
-				throw new Error('Could not find channel');
-			}
+			const channel = await getChannel(fullReaction, reactboard.channelId);
 			await channel.send(fullReaction.count.toString());
 		});
 
@@ -51,14 +54,7 @@ async function updateExistingPosts(reaction: MessageReaction): Promise<void> {
 	});
 
 	const updatePromises = reactboardPosts.map(async reactboardPost => {
-		const reactboardChannel = await reaction.client.channels.fetch(reactboardPost.reactboard.channelId);
-		if (
-			reactboardChannel === null ||
-			!reactboardChannel.isTextBased() ||
-			reactboardChannel.type === ChannelType.GuildStageVoice
-		) {
-			throw new Error('Could not find channel');
-		}
+		const reactboardChannel = await getChannel(reaction, reactboardPost.reactboard.channelId);
 		const reactboardMessage = await reactboardChannel.messages.fetch(
 			reactboardPost.reactboardMessageId
 		);
@@ -66,4 +62,23 @@ async function updateExistingPosts(reaction: MessageReaction): Promise<void> {
 	});
 
 	await Promise.all(updatePromises);
+}
+
+async function getChannel(
+	reaction: MessageReaction,
+	channelId: string
+): Promise<
+	| DMChannel
+	| PartialDMChannel
+	| NewsChannel
+	| TextChannel
+	| PrivateThreadChannel
+	| PublicThreadChannel<boolean>
+	| VoiceChannel
+> {
+	const channel = await reaction.client.channels.fetch(channelId);
+	if (channel === null || !channel.isTextBased() || channel.type === ChannelType.GuildStageVoice) {
+		throw new Error('Could not find channel');
+	}
+	return channel;
 }
