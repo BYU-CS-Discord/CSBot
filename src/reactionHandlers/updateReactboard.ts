@@ -13,33 +13,10 @@ import { db } from '../database';
 
 export const updateReactboard: ReactionHandler = {
 	async execute({ reaction, user }) {
-		if (reaction.message.guildId === null) return; // ignore guildless messages? How is that a thing?
-		if (reaction.emoji.id === null) return; // idless reactions???
 		const fullReaction = await reaction.fetch();
 
 		await updateExistingPosts(fullReaction);
-
-		const reactboardsToPostTo = await db.reactboard.findMany({
-			where: {
-				guildId: reaction.message.guildId,
-				react: reaction.emoji.id,
-				threshold: {
-					lte: fullReaction.count,
-				},
-				reactboardPosts: {
-					none: {
-						originalMessageId: fullReaction.message.id,
-					},
-				},
-			},
-		});
-
-		const updatePromises = reactboardsToPostTo.map(async reactboard => {
-			const channel = await getChannel(fullReaction, reactboard.channelId);
-			await channel.send(fullReaction.count.toString());
-		});
-
-		await Promise.all(updatePromises);
+		await addNewPosts(fullReaction);
 	},
 };
 
@@ -59,6 +36,33 @@ async function updateExistingPosts(reaction: MessageReaction): Promise<void> {
 			reactboardPost.reactboardMessageId
 		);
 		await reactboardMessage.edit(reaction.count.toString());
+	});
+
+	await Promise.all(updatePromises);
+}
+
+async function addNewPosts(reaction: MessageReaction): Promise<void> {
+	if (reaction.message.guildId === null) return; // ignore guildless messages? How is that a thing?
+	if (reaction.emoji.id === null) return; // idless reactions???
+
+	const reactboardsToPostTo = await db.reactboard.findMany({
+		where: {
+			guildId: reaction.message.guildId,
+			react: reaction.emoji.id,
+			threshold: {
+				lte: reaction.count,
+			},
+			reactboardPosts: {
+				none: {
+					originalMessageId: reaction.message.id,
+				},
+			},
+		},
+	});
+
+	const updatePromises = reactboardsToPostTo.map(async reactboard => {
+		const channel = await getChannel(reaction, reactboard.channelId);
+		await channel.send(reaction.count.toString());
 	});
 
 	await Promise.all(updatePromises);
