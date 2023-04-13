@@ -190,9 +190,10 @@ async function list(
 		},
 	});
 
-	const embedDescription = scoreboardEntries
-		.map(entry => `${entry.name}: ${entry.score}`)
-		.join('\n');
+	const embedDescription =
+		scoreboardEntries.length > 0
+			? scoreboardEntries.map(entry => `${entry.name}: ${entry.score}`).join('\n')
+			: "You're not currently tracking anything!";
 
 	const embed = new EmbedBuilder()
 		.setTitle(`Stats for ${interaction.user.username}`)
