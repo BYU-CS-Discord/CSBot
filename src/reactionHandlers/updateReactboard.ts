@@ -1,6 +1,8 @@
 import {
+	Attachment,
 	ChannelType,
 	DMChannel,
+	EmbedBuilder,
 	MessageReaction,
 	NewsChannel,
 	PartialDMChannel,
@@ -10,9 +12,10 @@ import {
 	VoiceChannel,
 } from 'discord.js';
 import { db } from '../database';
+import { appVersion } from '../constants/meta';
 
 export const updateReactboard: ReactionHandler = {
-	async execute({ reaction, user }) {
+	async execute({ reaction }) {
 		const fullReaction = await reaction.fetch();
 
 		await updateExistingPosts(fullReaction);
@@ -38,7 +41,7 @@ async function updateExistingPosts(reaction: MessageReaction): Promise<void> {
 		const reactboardMessage = await reactboardChannel.messages.fetch(
 			reactboardPost.reactboardMessageId
 		);
-		await reactboardMessage.edit(reaction.count.toString());
+		await reactboardMessage.edit({ embeds: [await buildEmbed(reaction)] });
 	});
 
 	await Promise.all(updatePromises);
@@ -64,7 +67,7 @@ async function addNewPosts(reaction: MessageReaction): Promise<void> {
 
 	const updatePromises = reactboardsToPostTo.map(async reactboard => {
 		const channel = await getChannel(reaction, reactboard.channelId);
-		const reactboardMessage = await channel.send(reaction.count.toString());
+		const reactboardMessage = await channel.send({ embeds: [await buildEmbed(reaction)] });
 		await db.reactboardPost.create({
 			data: {
 				reactboardId: reactboard.id,
@@ -103,4 +106,55 @@ function getDbReactName(reaction: MessageReaction): string {
 	}
 
 	return name;
+}
+
+async function buildEmbed(reaction: MessageReaction): Promise<EmbedBuilder> {
+	const message = await reaction.message.fetch();
+	const name = reaction.message.author?.username || '';
+	const avatarUrl = reaction.message.author?.displayAvatarURL();
+	const content = message.cleanContent;
+	const image = extractImageUrl(message.attachments.first());
+	const emoji = reaction.emoji.toString();
+	const guildId = message.guildId;
+
+	if (guildId === null) {
+		throw new Error('Reactboard embed must be in guild');
+	}
+
+	const embed = new EmbedBuilder()
+		.setAuthor({ name, iconURL: avatarUrl })
+		.setFooter({ text: `v${appVersion}` })
+		.setColor('Gold')
+		.setTimestamp(new Date())
+		.setImage(image)
+		.addFields([
+			{
+				name: `${emoji} Reacts`,
+				value: reaction.count.toString(),
+				inline: true,
+			},
+			{
+				name: 'Channel',
+				value: message.channel.toString(),
+				inline: true,
+			},
+			{
+				name: ':arrow_heading_up: Jump',
+				value: `[Click Me](https://discordapp.com/channels/${guildId}/${message.channel.id}/${message.id})`,
+				inline: true,
+			},
+		]);
+
+	if (content.length > 0) {
+		embed.setDescription(content);
+	}
+
+	return embed;
+}
+
+function extractImageUrl(attachment: Attachment | undefined): string | null {
+	if (!attachment?.contentType?.includes('image')) {
+		return null;
+	}
+	return attachment.url;
 }
