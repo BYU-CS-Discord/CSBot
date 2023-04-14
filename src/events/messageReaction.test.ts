@@ -1,16 +1,11 @@
 import type { MessageReaction, User } from 'discord.js';
-import { messageReactionAdd } from './messageReactionAdd';
+import { buildExecute } from './messageReaction';
 
-// eslint-disable-next-line no-var
-var mockAllReactionHandlers = new Set<ReactionHandler>(); // I'm not sure why it needs a var here
-jest.mock('../reactionHandlers', () => ({
-	allReactionHandlers: mockAllReactionHandlers,
-}));
 const mockHandlerExecute = jest.fn<Promise<void>, []>();
 const mockReactionHandler = {
 	execute: mockHandlerExecute,
 };
-mockAllReactionHandlers.add(mockReactionHandler);
+const testExecute = buildExecute(new Set([mockReactionHandler]));
 
 describe('Reaction duplication', () => {
 	let mockRandom: jest.SpyInstance<number, []>;
@@ -49,25 +44,25 @@ describe('Reaction duplication', () => {
 
 	test('ignores emoji with an empty name', async () => {
 		mockReaction.emoji.name = '';
-		await expect(messageReactionAdd.execute(mockReaction, mockSender)).resolves.toBeUndefined();
+		await expect(testExecute(mockReaction, mockSender)).resolves.toBeUndefined();
 		expect(mockHandlerExecute).not.toHaveBeenCalled();
 	});
 
 	test('ignores emoji with a null name', async () => {
 		mockReaction.emoji.name = null;
-		await expect(messageReactionAdd.execute(mockReaction, mockSender)).resolves.toBeUndefined();
+		await expect(testExecute(mockReaction, mockSender)).resolves.toBeUndefined();
 		expect(mockHandlerExecute).not.toHaveBeenCalled();
 	});
 
 	test('ignores bot reacts', async () => {
 		mockSender.bot = true;
-		await expect(messageReactionAdd.execute(mockReaction, mockSender)).resolves.toBeUndefined();
+		await expect(testExecute(mockReaction, mockSender)).resolves.toBeUndefined();
 		expect(mockHandlerExecute).not.toHaveBeenCalled();
 	});
 
 	test("ignores the bot's own reacts", async () => {
 		mockReaction.me = true;
-		await expect(messageReactionAdd.execute(mockReaction, mockSender)).resolves.toBeUndefined();
+		await expect(testExecute(mockReaction, mockSender)).resolves.toBeUndefined();
 		expect(mockHandlerExecute).not.toHaveBeenCalled();
 	});
 });

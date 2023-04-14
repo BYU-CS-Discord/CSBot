@@ -1,4 +1,4 @@
-import { _add, allReactionHandlers } from './index';
+import { _add, allReactionHandlers } from './remove';
 
 describe('allReactionHandlers', () => {
 	test('index is not empty', () => {

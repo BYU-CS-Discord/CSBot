@@ -59,9 +59,11 @@ import { error } from './error';
 import { interactionCreate } from './interactionCreate';
 import { messageReactionAdd } from './messageReactionAdd';
 import { ready } from './ready';
+import { messageReactionRemove } from './messageReactionRemove';
 
 _add(error as EventHandler);
 _add(interactionCreate as EventHandler);
 _add(messageReactionAdd as EventHandler);
+_add(messageReactionRemove as EventHandler);
 _add(ready as EventHandler);
 // Not sure why these type casts are necessary, but they seem sound. We can remove them when TS gets smarter, or we learn what I did wrong
