@@ -24,6 +24,9 @@ async function updateExistingPosts(reaction: MessageReaction): Promise<void> {
 	const reactboardPosts = await db.reactboardPost.findMany({
 		where: {
 			originalMessageId: reaction.message.id,
+			reactboard: {
+				react: getDbReactName(reaction),
+			},
 		},
 		include: {
 			reactboard: true,
@@ -42,13 +45,12 @@ async function updateExistingPosts(reaction: MessageReaction): Promise<void> {
 }
 
 async function addNewPosts(reaction: MessageReaction): Promise<void> {
-	if (reaction.message.guildId === null) return; // ignore guildless messages? How is that a thing?
-	if (reaction.emoji.id === null) return; // idless reactions???
+	if (reaction.message.guildId === null) return; // ignore guildless messages
 
 	const reactboardsToPostTo = await db.reactboard.findMany({
 		where: {
 			guildId: reaction.message.guildId,
-			react: reaction.emoji.id,
+			react: getDbReactName(reaction),
 			threshold: {
 				lte: reaction.count,
 			},
@@ -92,4 +94,13 @@ async function getChannel(
 		throw new Error('Could not find channel');
 	}
 	return channel;
+}
+
+function getDbReactName(reaction: MessageReaction): string {
+	const name = reaction.emoji.id ?? reaction.emoji.name;
+	if (name === null) {
+		throw new Error('Could not identify react emoji');
+	}
+
+	return name;
 }
