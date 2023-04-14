@@ -174,7 +174,7 @@ ADMINISTRATORS=COMMA,SEPARATED,ID,LIST
 
 ### Invite your bot to your server
 
-Go to https://discordapi.com/permissions.html#378091424832 and paste in your bot's client ID to get an invite link.
+Go to https://discordapi.com/permissions.html#379165174848 and paste in your bot's client ID to get an invite link.
 
 ### Setting up Docker
 

@@ -3,6 +3,7 @@ import {
 	ChannelType,
 	DMChannel,
 	EmbedBuilder,
+	Message,
 	MessageReaction,
 	NewsChannel,
 	PartialDMChannel,
@@ -15,15 +16,43 @@ import { db } from '../database';
 import { appVersion } from '../constants/meta';
 
 export const updateReactboard: ReactionHandler = {
-	async execute({ reaction }) {
+	async execute({ reaction, user }) {
 		const fullReaction = await reaction.fetch();
+		const fullMessage = await reaction.message.fetch();
+		const fullUser = await user.fetch();
+		if (fullMessage.guildId === null) return; // ignore guildless messages
 
-		await updateExistingPosts(fullReaction);
-		await addNewPosts(fullReaction);
+		const reactboardExists =
+			(await db.reactboard.count({
+				where: {
+					guildId: fullMessage.guildId,
+					react: getDbReactName(fullReaction),
+				},
+			})) > 0;
+		if (reactboardExists) {
+			if (fullMessage.author.bot) {
+				await fullMessage.channel.send(
+					`${user.toString()}, you can't use that react on bot messages!`
+				);
+				await reaction.users.remove(fullUser);
+				return;
+			}
+
+			if (fullMessage.author.id === user.id) {
+				await fullMessage.channel.send(
+					`${user.toString()}, you can't use that react your own messages!`
+				);
+				await reaction.users.remove(fullUser);
+				return;
+			}
+		}
+
+		await updateExistingPosts(fullReaction, fullMessage);
+		await addNewPosts(fullReaction, fullMessage);
 	},
 };
 
-async function updateExistingPosts(reaction: MessageReaction): Promise<void> {
+async function updateExistingPosts(reaction: MessageReaction, message: Message): Promise<void> {
 	const reactboardPosts = await db.reactboardPost.findMany({
 		where: {
 			originalMessageId: reaction.message.id,
@@ -41,13 +70,13 @@ async function updateExistingPosts(reaction: MessageReaction): Promise<void> {
 		const reactboardMessage = await reactboardChannel.messages.fetch(
 			reactboardPost.reactboardMessageId
 		);
-		await reactboardMessage.edit({ embeds: [await buildEmbed(reaction)] });
+		await reactboardMessage.edit({ embeds: [buildEmbed(reaction, message)] });
 	});
 
 	await Promise.all(updatePromises);
 }
 
-async function addNewPosts(reaction: MessageReaction): Promise<void> {
+async function addNewPosts(reaction: MessageReaction, message: Message): Promise<void> {
 	if (reaction.message.guildId === null) return; // ignore guildless messages
 
 	const reactboardsToPostTo = await db.reactboard.findMany({
@@ -67,7 +96,7 @@ async function addNewPosts(reaction: MessageReaction): Promise<void> {
 
 	const updatePromises = reactboardsToPostTo.map(async reactboard => {
 		const channel = await getChannel(reaction, reactboard.channelId);
-		const reactboardMessage = await channel.send({ embeds: [await buildEmbed(reaction)] });
+		const reactboardMessage = await channel.send({ embeds: [buildEmbed(reaction, message)] });
 		await db.reactboardPost.create({
 			data: {
 				reactboardId: reactboard.id,
@@ -108,8 +137,7 @@ function getDbReactName(reaction: MessageReaction): string {
 	return name;
 }
 
-async function buildEmbed(reaction: MessageReaction): Promise<EmbedBuilder> {
-	const message = await reaction.message.fetch();
+function buildEmbed(reaction: MessageReaction, message: Message): EmbedBuilder {
 	const name = reaction.message.author?.username || '';
 	const avatarUrl = reaction.message.author?.displayAvatarURL();
 	const content = message.cleanContent;
