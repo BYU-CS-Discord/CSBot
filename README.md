@@ -95,6 +95,10 @@ Searches for open rooms on BYU Campus. _'Now'_, _'At'_, and _'Between'_ allow yo
 
 Tracks a statistic for the issuer. Use the `track` subcommand to begin tracking, `update` to add or subtract to it, `list` to show all the stats being tracked for the issuer, `leaderboard` to show the users with the highest scores for a stat, and `untrack` to stop tracking a stat for you.
 
+### /setreactboard
+
+Creates a new reactboard or updates an existing one. A reactboard is a channel where the bot will repost messages that recieve a specified number of a specified reaction. The primary use is for a starboard where messages that recieve the right number of stars will be added, along with how many stars they recieved.
+
 ## Context Menu Commands
 
 You can find these in Discord by invoking the context menu (right-clicking) on any message in any channel where you're allowed to run commands.
