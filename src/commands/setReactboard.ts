@@ -7,6 +7,7 @@ const thresholdOption = 'threshold';
 const reactOption = 'react';
 
 const builder = new SlashCommandBuilder()
+	.setDefaultMemberPermissions('0')
 	.setName('setreactboard')
 	.setDescription('Creates or modifies reaction board in this server')
 	.addChannelOption(option =>
