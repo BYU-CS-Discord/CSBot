@@ -45,10 +45,10 @@ export const updateReactboard: ReactionHandler = {
 				await reaction.users.remove(fullUser);
 				return;
 			}
-		}
 
-		await updateExistingPosts(fullReaction, fullMessage);
-		await addNewPosts(fullReaction, fullMessage);
+			await updateExistingPosts(fullReaction, fullMessage);
+			await addNewPosts(fullReaction, fullMessage);
+		}
 	},
 };
 
@@ -138,8 +138,8 @@ function getDbReactName(reaction: MessageReaction): string {
 }
 
 function buildEmbed(reaction: MessageReaction, message: Message): EmbedBuilder {
-	const name = reaction.message.author?.username || '';
-	const avatarUrl = reaction.message.author?.displayAvatarURL();
+	const name = message.author.username;
+	const avatarUrl = message.author.displayAvatarURL();
 	const content = message.cleanContent;
 	const image = extractImageUrl(message.attachments.first());
 	const emoji = reaction.emoji.toString();
