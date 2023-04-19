@@ -97,7 +97,7 @@ Tracks a statistic for the issuer. Use the `track` subcommand to begin tracking,
 
 ### /setreactboard
 
-Creates a new reactboard or updates an existing one. A reactboard is a channel where the bot will repost messages that recieve a specified number of a specified reaction. The primary use is for a starboard where messages that recieve the right number of stars will be added, along with how many stars they recieved.
+Creates a new reactboard or updates an existing one. A reactboard is a channel where the bot will repost messages that recieve a specified number of a specified reaction. The primary use is for a starboard where messages that receive the right number of stars will be added, along with how many stars they received.
 
 ## Context Menu Commands
 

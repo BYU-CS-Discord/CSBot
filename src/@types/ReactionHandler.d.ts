@@ -1,4 +1,4 @@
-import { MessageReaction, PartialMessageReaction, PartialUser, User } from 'discord.js';
+import type { MessageReaction, PartialMessageReaction, PartialUser, User } from 'discord.js';
 
 declare global {
 	interface ReactionHandler {

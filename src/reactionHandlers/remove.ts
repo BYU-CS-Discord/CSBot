@@ -18,7 +18,7 @@ export const allReactionHandlers: ReadonlySet<ReactionHandler> = _allHandlers;
  */
 export function _add(handler: ReactionHandler): void {
 	if (_allHandlers.has(handler)) {
-		throw new TypeError('Failed to add handler when a command with that name was already added');
+		throw new TypeError('Failed to add handler that was already registered');
 	}
 
 	_allHandlers.add(handler);
