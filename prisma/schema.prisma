@@ -28,6 +28,7 @@ model ReactboardPost {
 	reactboardId Int
 	reactboard Reactboard @relation(fields: [reactboardId], references: [id])
 	originalMessageId String
+	originalChannelId String
 	reactboardMessageId String
 }
 
