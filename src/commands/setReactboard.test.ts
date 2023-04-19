@@ -38,15 +38,11 @@ describe('setReactboard', () => {
 				getInteger: mockGetInteger,
 				getChannel: mockGetChannel,
 			},
-			client: {
-				emojis: {
-					cache: {
-						get: mockGetEmoji,
-					},
-				},
-			},
 			guild: {
 				id: mockGuildId,
+				emojis: {
+					fetch: mockGetEmoji,
+				},
 			},
 		} as unknown as GuildedCommandContext;
 
