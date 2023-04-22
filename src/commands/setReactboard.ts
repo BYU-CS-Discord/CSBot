@@ -1,4 +1,4 @@
-import { Client, GuildEmoji, SlashCommandBuilder } from 'discord.js';
+import { Guild, GuildEmoji, SlashCommandBuilder } from 'discord.js';
 import { UserMessageError } from '../helpers/UserMessageError';
 import { db } from '../database';
 
@@ -36,7 +36,7 @@ interface ReactboardReactInfo {
 export const setReactboard: GuildedCommand = {
 	info: builder,
 	requiresGuild: true,
-	async execute({ guild, client, options, replyPrivately }) {
+	async execute({ guild, options, replyPrivately }) {
 		const channel = options.getChannel(channelOption, true);
 		const threshold = options.getInteger(thresholdOption, true);
 		const react = options.getString(reactOption) ?? '⭐';
@@ -52,7 +52,7 @@ export const setReactboard: GuildedCommand = {
 				isCustomReact: false,
 			};
 		} else {
-			const customReact = getCustomReact(client, react);
+			const customReact = await getCustomReact(guild, react);
 			if (customReact === undefined) {
 				throw new UserMessageError('React option must be a valid reaction');
 			}
@@ -89,10 +89,10 @@ function isUnicodeEmoji(str: string): boolean {
 	return Boolean(str.match(/^\p{Extended_Pictographic}$/u));
 }
 
-function getCustomReact(client: Client<true>, str: string): GuildEmoji | undefined {
+async function getCustomReact(guild: Guild, str: string): Promise<GuildEmoji | undefined> {
 	const reactId = str.match(/^<a?:.+?:(\d+?)>$/u)?.[1];
 	if (reactId === undefined) {
 		return undefined;
 	}
-	return client.emojis.cache.get(reactId);
+	return guild.emojis.fetch(reactId);
 }

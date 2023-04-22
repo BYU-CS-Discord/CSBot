@@ -6,7 +6,6 @@ describe('allReactionHandlers', () => {
 	});
 
 	test('commands can be added', () => {
-		// eslint-disable-next-line no-empty-function, @typescript-eslint/no-empty-function
-		expect(() => _add({ execute: () => {} } as unknown as ReactionHandler)).not.toThrow(TypeError);
+		expect(() => _add({ execute: () => undefined })).not.toThrow(TypeError);
 	});
 });

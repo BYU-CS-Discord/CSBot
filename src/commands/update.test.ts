@@ -1,4 +1,6 @@
 import type { User } from 'discord.js';
+// Mock the logger so nothing is printed
+jest.mock('../logger');
 
 // Overwrite the exec function
 const mockExec = jest.fn((command: string, callback: () => void) => {

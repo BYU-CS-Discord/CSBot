@@ -17,9 +17,11 @@ import { appVersion } from '../constants/meta';
 
 export const updateReactboard: ReactionHandler = {
 	async execute({ reaction, user }) {
-		const fullReaction = await reaction.fetch();
-		const fullMessage = await reaction.message.fetch();
-		const fullUser = await user.fetch();
+		const fullReaction = reaction.partial ? await reaction.fetch() : reaction;
+		const fullMessage = reaction.message.partial
+			? await reaction.message.fetch()
+			: reaction.message;
+		const fullUser = user.partial ? await user.fetch() : user;
 		if (fullMessage.guildId === null) return; // ignore guildless messages
 
 		const reactboardExists =
@@ -29,26 +31,26 @@ export const updateReactboard: ReactionHandler = {
 					react: getDbReactName(fullReaction),
 				},
 			})) > 0;
-		if (reactboardExists) {
-			if (fullMessage.author.bot) {
-				await fullMessage.channel.send(
-					`${user.toString()}, you can't use that react on bot messages!`
-				);
-				await reaction.users.remove(fullUser);
-				return;
-			}
+		if (!reactboardExists) return; // abort if no reactboard
 
-			if (fullMessage.author.id === user.id) {
-				await fullMessage.channel.send(
-					`${user.toString()}, you can't use that react your own messages!`
-				);
-				await reaction.users.remove(fullUser);
-				return;
-			}
-
-			await updateExistingPosts(fullReaction, fullMessage);
-			await addNewPosts(fullReaction, fullMessage);
+		if (fullMessage.author.bot) {
+			await fullMessage.channel.send(
+				`${user.toString()}, you can't use that react on bot messages!`
+			);
+			await reaction.users.remove(fullUser);
+			return;
 		}
+
+		if (fullMessage.author.id === user.id) {
+			await fullMessage.channel.send(
+				`${user.toString()}, you can't use that react your own messages!`
+			);
+			await reaction.users.remove(fullUser);
+			return;
+		}
+
+		await updateExistingPosts(fullReaction, fullMessage);
+		await addNewPosts(fullReaction, fullMessage);
 	},
 };
 
@@ -56,6 +58,7 @@ async function updateExistingPosts(reaction: MessageReaction, message: Message):
 	const reactboardPosts = await db.reactboardPost.findMany({
 		where: {
 			originalMessageId: reaction.message.id,
+			originalChannelId: reaction.message.channelId,
 			reactboard: {
 				react: getDbReactName(reaction),
 			},
@@ -89,6 +92,7 @@ async function addNewPosts(reaction: MessageReaction, message: Message): Promise
 			reactboardPosts: {
 				none: {
 					originalMessageId: reaction.message.id,
+					originalChannelId: reaction.message.channelId,
 				},
 			},
 		},
@@ -101,6 +105,7 @@ async function addNewPosts(reaction: MessageReaction, message: Message): Promise
 			data: {
 				reactboardId: reactboard.id,
 				originalMessageId: reaction.message.id,
+				originalChannelId: reaction.message.channelId,
 				reactboardMessageId: reactboardMessage.id,
 			},
 		});

@@ -10,7 +10,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model reactboard {
+model Reactboard {
 	id Int @id @default(autoincrement())
 	guildId String
 	channelId String
@@ -20,14 +20,15 @@ model reactboard {
 
 	@@unique([guildId, channelId], name: "location")
 
-	reactboardPosts reactboardPost[]
+	reactboardPosts ReactboardPost[]
 }
 
-model reactboardPost {
+model ReactboardPost {
 	id Int @id @default(autoincrement())
 	reactboardId Int
-	reactboard reactboard @relation(fields: [reactboardId], references: [id])
+	reactboard Reactboard @relation(fields: [reactboardId], references: [id])
 	originalMessageId String
+	originalChannelId String
 	reactboardMessageId String
 }
 
