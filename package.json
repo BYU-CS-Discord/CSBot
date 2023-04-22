@@ -9,7 +9,7 @@
 		"restart": "./node_modules/.bin/pm2 restart cs-bot",
 		"update": "git pull && npm run setup",
 		"dev": "NODE_ENV=development ./node_modules/.bin/nodemon --inspect ./dist/main.js",
-		"setup": "npm ci && npm run export-version && npm run build --production && npm run commands:deploy",
+		"setup": "npm ci && npm run export-version && npm run db:migrate && npm run build --production && npm run commands:deploy",
 		"commands:deploy": "node . --deploy",
 		"commands:revoke": "node . --revoke",
 		"release": "./node_modules/.bin/ts-node --esm -P tsconfig.test.json ./scripts/release.ts",
