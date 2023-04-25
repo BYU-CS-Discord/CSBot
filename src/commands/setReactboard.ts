@@ -22,6 +22,7 @@ const builder = new SlashCommandBuilder()
 			.setDescription(
 				'The minimum number of reacts a message should receive before being put on the board'
 			)
+			.setMinValue(1)
 			.setRequired(true)
 	)
 	.addStringOption(option =>
