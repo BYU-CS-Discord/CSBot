@@ -39,6 +39,7 @@ import { talk as talk_context } from './contextMenu/talk';
 import { toTheGallows } from './toTheGallows';
 import { update } from './update';
 import { findRoom } from './findRoom';
+import { stats } from './stats';
 import { emoji } from './emoji';
 
 _add(help);
@@ -51,4 +52,5 @@ _add(talk);
 _add(talk_context);
 _add(toTheGallows);
 _add(update);
+_add(stats);
 _add(emoji);

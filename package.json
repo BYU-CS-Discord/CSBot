@@ -1,6 +1,6 @@
 {
 	"name": "csbot",
-	"version": "0.9.3",
+	"version": "0.10.1",
 	"description": "The One beneath the Supreme Overlord's rule. A bot to help manage the BYU CS Discord, successor to Ze Kaiser (https://github.com/arkenstorm/ze-kaiser)",
 	"private": true,
 	"scripts": {
@@ -91,6 +91,7 @@
 		"jest": "29.5.0",
 		"jest-environment-node": "29.5.0",
 		"jest-extended": "3.2.4",
+		"jest-mock-extended": "3.0.4",
 		"keep-a-changelog": "2.2.1",
 		"nodemon": "2.0.21",
 		"prettier": "2.8.6",
