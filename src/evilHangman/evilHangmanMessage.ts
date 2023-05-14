@@ -1,19 +1,15 @@
-import {
-	ActionRowBuilder,
-	ButtonBuilder,
-	EmbedBuilder,
-	Message,
-	MessageReplyOptions,
-} from 'discord.js';
+import type { ButtonBuilder, MessageReplyOptions } from 'discord.js';
+import { ActionRowBuilder, EmbedBuilder } from 'discord.js';
+import { appVersion } from '../constants/meta';
+import { EvilHangmanDisplayInfo, EvilHangmanWinState } from './evilHangmanGame';
+import { format } from '../helpers/format';
+import { GAME_INFO_FORMAT } from './gameInfoParser';
+import { getButtonsForAllLettersExcept } from './hangmanLetterButtons';
+import { getHangmanArt } from './evilHangmanAsciiArt';
 import { hangmanLessButton } from '../buttons/hangmanLessButton';
 import { hangmanMoreButton } from '../buttons/hangmanMoreButton';
-import { appVersion } from '../constants/meta';
-import { getHangmanArt } from './evilHangmanAsciiArt';
-import { EvilHangmanDisplayInfo, EvilHangmanGame, EvilHangmanWinState } from './evilHangmanGame';
-import { getButtonsForAllLettersExcept } from './hangmanLetterButtons';
 
 type Page = 0 | 1;
-const GAME_INFO_FORMAT = 'Remaining Guesses: {0}\nWord: {1}\nLetters Guessed: {2}';
 export async function buildEvilHangmanMessage(
 	gameInfo: EvilHangmanDisplayInfo,
 	page: Page = 0
@@ -101,38 +97,4 @@ function getButtons(
 	}
 
 	return rows;
-}
-
-const FORMAT_ERROR_MESSAGE = 'Incorrect message format for Evil Hangman';
-const parser = new RegExp(format(GAME_INFO_FORMAT, '(\\d*)', '([\\w-]*)', '([a-z,]*)'), 'u');
-export function parseEvilHangmanMessage(message: Message): EvilHangmanGame {
-	const gameStateString = message.embeds[0]?.data?.fields?.[1]?.value;
-	if (gameStateString === undefined) {
-		throw new Error(FORMAT_ERROR_MESSAGE);
-	}
-	const parseResult = parser.exec(gameStateString);
-	if (parseResult === null) {
-		throw new Error(FORMAT_ERROR_MESSAGE);
-	}
-
-	const [, guessesRemainingString, word, guessedLettersString] = parseResult;
-	if (
-		guessesRemainingString === undefined ||
-		word === undefined ||
-		guessedLettersString === undefined
-	) {
-		throw new Error(FORMAT_ERROR_MESSAGE);
-	}
-
-	const guessesRemaining = Number.parseInt(guessesRemainingString, 10);
-	const guessedLetters = new Set(
-		guessedLettersString?.split(',').filter(letter => letter.length === 1)
-	);
-	return new EvilHangmanGame(word, guessesRemaining, guessedLetters);
-}
-
-function format(source: string, ...args: Array<string>): string {
-	return source.replace(/\{(\d+)\}/gu, (match, number: number) => {
-		return (args[number] !== 'undefined' ? args[number] : match) ?? '';
-	});
 }

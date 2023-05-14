@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Made some internal structures read-only, to enforce interface contracts at compile time and reduce some cases of array duplication.
+- Straightened out internal circular dependencies, in preparation for Rollup build and ESM.
 
 ## [0.10.1] - 2023-04-13
 
