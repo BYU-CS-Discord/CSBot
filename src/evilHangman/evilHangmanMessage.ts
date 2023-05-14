@@ -64,7 +64,10 @@ export async function buildEvilHangmanMessage(
 const MAX_BUTTONS_PER_ROW = 5;
 const MAX_BUTTON_ROWS = 5;
 const MAX_BUTTONS_TOTAL = MAX_BUTTONS_PER_ROW * MAX_BUTTON_ROWS;
-function getButtons(guessesSoFar: Set<string>, page: Page): Array<ActionRowBuilder<ButtonBuilder>> {
+function getButtons(
+	guessesSoFar: ReadonlySet<string>,
+	page: Page
+): Array<ActionRowBuilder<ButtonBuilder>> {
 	const letterButtons = getButtonsForAllLettersExcept(guessesSoFar);
 	if (letterButtons.length > MAX_BUTTONS_TOTAL) {
 		if (page === 0) {

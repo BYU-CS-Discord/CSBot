@@ -95,8 +95,8 @@ export class EvilHangmanGame {
 		this.word = newWord;
 	}
 
-	private removePossibleWords(guesses: Array<string>): void {
-		const allExceptGuessed = `(?![${[...guesses].join('')}])\\w`;
+	private removePossibleWords(guesses: ReadonlyArray<string>): void {
+		const allExceptGuessed = `(?![${guesses.join('')}])\\w`;
 		const filterRegex = new RegExp(this.word.replaceAll('-', allExceptGuessed), 'u');
 		this.possibleWords = this.possibleWords.filter(word => filterRegex.test(word));
 	}
@@ -128,7 +128,11 @@ export class EvilHangmanGame {
 		return [...new Set(forms)];
 	}
 
-	private getForm(guess: string, dictionaryWord: string, guessesSoFar: Set<string>): string {
+	private getForm(
+		guess: string,
+		dictionaryWord: string,
+		guessesSoFar: ReadonlySet<string>
+	): string {
 		const letterArray = dictionaryWord.split('');
 		const formArray = letterArray.map((letter: string) => {
 			if (guessesSoFar.has(letter) || guess === letter) {
