@@ -1,7 +1,7 @@
-export function isNonEmptyArray<T>(array: Array<T>): array is NonEmptyArray<T>;
+export function isNonEmptyArray<T>(tbd: Array<T>): tbd is NonEmptyArray<T>;
 
-export function isNonEmptyArray<T>(array: ReadonlyArray<T>): array is ReadonlyNonEmptyArray<T>;
+export function isNonEmptyArray<T>(tbd: ReadonlyArray<T>): tbd is ReadonlyNonEmptyArray<T>;
 
-export function isNonEmptyArray<T>(array: ReadonlyArray<T>): array is NonEmptyArray<T> {
-	return array.length > 0;
+export function isNonEmptyArray<T>(tbd: ReadonlyArray<T>): tbd is NonEmptyArray<T> {
+	return tbd.length > 0;
 }
