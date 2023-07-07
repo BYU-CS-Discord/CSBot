@@ -1,6 +1,6 @@
 {
 	"name": "csbot",
-	"version": "0.11.0",
+	"version": "0.11.1",
 	"description": "The One beneath the Supreme Overlord's rule. A bot to help manage the BYU CS Discord, successor to Ze Kaiser (https://github.com/arkenstorm/ze-kaiser)",
 	"private": true,
 	"scripts": {
@@ -23,7 +23,7 @@
 		"build": "rm -rf dist && ./node_modules/.bin/tsc -p tsconfig.prod.json",
 		"export-version": "./node_modules/.bin/genversion ./src/constants/version.ts -es",
 		"test": "./node_modules/.bin/jest",
-		"test:watch": "npm run test -- --watch --coverage=false",
+		"test:watch": "npm run test -- --watch",
 		"docker": "npm run docker:image && npm run docker:cleanup && npm run docker:container",
 		"docker:image": "docker build --tag cs-bot-image --label cs-bot .",
 		"docker:container": "docker run --tty --interactive --rm --mount type=bind,source=$PWD,destination=/cs-bot cs-bot-image",
@@ -66,7 +66,7 @@
 	},
 	"devDependencies": {
 		"@types/jest": "29.5.0",
-		"@types/lodash": "4.14.185",
+		"@types/lodash": "4.14.191",
 		"@types/node": "16.9.6",
 		"@types/source-map-support": "0.5.6",
 		"@types/tmp": "0.2.3",
@@ -76,6 +76,7 @@
 		"eslint-config-prettier": "8.8.0",
 		"eslint-config-strictest": "0.7.0",
 		"eslint-plugin-deprecation": "1.3.3",
+		"eslint-plugin-file-progress": "1.3.0",
 		"eslint-plugin-import": "2.27.5",
 		"eslint-plugin-jest": "27.2.1",
 		"eslint-plugin-node": "11.1.0",

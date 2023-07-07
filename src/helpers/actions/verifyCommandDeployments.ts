@@ -98,11 +98,11 @@ async function diffGlobalCommandDeployments(client: Client<true>): Promise<Diff 
 
 interface Diff {
 	readonly issue: 'length' | 'content';
-	expected: string | number;
-	actual: string | number;
+	readonly expected: string | number;
+	readonly actual: string | number;
 }
 
-function diffArrays(expected: Array<string>, actual: Array<string>): Diff | null {
+function diffArrays(expected: ReadonlyArray<string>, actual: ReadonlyArray<string>): Diff | null {
 	if (actual.length !== expected.length) {
 		return {
 			issue: 'length',
