@@ -4,7 +4,7 @@ const mockLogin = jest.fn();
 class MockClient {
 	login = mockLogin;
 
-	constructor(...args: Array<unknown>) {
+	constructor(...args: ReadonlyArray<unknown>) {
 		mockConstructClient(...args);
 	}
 }
