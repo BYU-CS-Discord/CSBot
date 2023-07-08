@@ -12,7 +12,7 @@ export async function deployCommands(client: Client<true>): Promise<void> {
 	await revokeCommands(client); // fresh start!
 
 	logger.info('Deploying commands...');
-	const commands: Array<Command> = Array.from(allCommands.values());
+	const commands: ReadonlyArray<Command> = Array.from(allCommands.values());
 	if (commands.length === 0) return;
 	logger.info(`Syncing ${commands.length} command(s)...`);
 
@@ -74,7 +74,7 @@ async function prepareGuildedCommands(
 
 async function prepareCommandsForGuild(
 	guild: Guild,
-	guildCommands: Array<GuildedCommand>
+	guildCommands: ReadonlyArray<GuildedCommand>
 ): Promise<void> {
 	const commandBuilders = guildCommands.map(deployableCommand);
 	logger.info(
