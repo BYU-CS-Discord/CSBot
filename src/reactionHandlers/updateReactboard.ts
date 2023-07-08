@@ -58,7 +58,6 @@ async function updateExistingPosts(reaction: MessageReaction, message: Message):
 	const reactboardPosts = await db.reactboardPost.findMany({
 		where: {
 			originalMessageId: reaction.message.id,
-			originalChannelId: reaction.message.channelId,
 			reactboard: {
 				react: getDbReactName(reaction),
 			},
@@ -92,7 +91,6 @@ async function addNewPosts(reaction: MessageReaction, message: Message): Promise
 			reactboardPosts: {
 				none: {
 					originalMessageId: reaction.message.id,
-					originalChannelId: reaction.message.channelId,
 				},
 			},
 		},
@@ -105,7 +103,6 @@ async function addNewPosts(reaction: MessageReaction, message: Message): Promise
 			data: {
 				reactboardId: reactboard.id,
 				originalMessageId: reaction.message.id,
-				originalChannelId: reaction.message.channelId,
 				reactboardMessageId: reactboardMessage.id,
 			},
 		});
