@@ -1,4 +1,4 @@
-import type { PrismaClient, reactboard, reactboardPost } from '@prisma/client';
+import type { PrismaClient, Reactboard, ReactboardPost } from '@prisma/client';
 import { DeepMockProxy, mockDeep } from 'jest-mock-extended';
 
 jest.mock('../database', () => ({
@@ -186,7 +186,7 @@ describe('updateReactboard', () => {
 					channelId: mockReactboardChannelId,
 				},
 				reactboardPost: mockReactboardPostId,
-			} as unknown as reactboardPost,
+			} as unknown as ReactboardPost,
 		]);
 
 		await expect(updateReactboard.execute(context)).resolves.toBeUndefined();
@@ -200,7 +200,7 @@ describe('updateReactboard', () => {
 			{
 				channelId: mockReactboardChannelId,
 				id: mockReactboardId,
-			} as unknown as reactboard,
+			} as unknown as Reactboard,
 		]);
 
 		await expect(updateReactboard.execute(context)).resolves.toBeUndefined();
