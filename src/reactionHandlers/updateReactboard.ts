@@ -43,7 +43,7 @@ export const updateReactboard: ReactionHandler = {
 
 		if (fullMessage.author.id === user.id) {
 			await fullMessage.channel.send(
-				`${user.toString()}, you can't use that react your own messages!`
+				`${user.toString()}, you can't use that react on your own messages!`
 			);
 			await reaction.users.remove(fullUser);
 			return;
