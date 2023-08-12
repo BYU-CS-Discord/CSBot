@@ -1,6 +1,6 @@
 {
 	"name": "csbot",
-	"version": "0.11.1",
+	"version": "0.11.2",
 	"description": "The One beneath the Supreme Overlord's rule. A bot to help manage the BYU CS Discord, successor to Ze Kaiser (https://github.com/arkenstorm/ze-kaiser)",
 	"private": true,
 	"scripts": {
@@ -45,7 +45,7 @@
 	},
 	"homepage": "https://github.com/BYU-CS-Discord/CSBot#readme",
 	"engines": {
-		"node": "^16.19.0"
+		"node": "^18.17.0"
 	},
 	"main": "./dist/main.js",
 	"type": "commonjs",
@@ -67,7 +67,7 @@
 	"devDependencies": {
 		"@types/jest": "29.5.0",
 		"@types/lodash": "4.14.191",
-		"@types/node": "16.9.6",
+		"@types/node": "18.17.5",
 		"@types/source-map-support": "0.5.6",
 		"@types/tmp": "0.2.3",
 		"@typescript-eslint/eslint-plugin": "5.56.0",

@@ -116,12 +116,12 @@ If you've read this far, and don't plan to run or develop on the bot yourself, o
 
 ### Prerequisites
 
-This project requires [NodeJS](https://nodejs.org/) (version 16.19 or later) and [NPM](https://npmjs.org/). To make sure you have them available on your machine, try running the following command:
+This project requires [NodeJS](https://nodejs.org/) (version 18.17 or later) and [NPM](https://npmjs.org/). To make sure you have them available on your machine, try running the following command:
 
 ```sh
 $ node -v && npm -v
-v16.19.0
-8.19.3
+v18.17.1
+9.6.7
 ```
 
 If you are using Linux, you will also need to install the following package to use the `/talk` command:
