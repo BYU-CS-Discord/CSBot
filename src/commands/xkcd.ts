@@ -1,24 +1,28 @@
 // External dependencies
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
-import axios from 'axios';
+import { fetch } from '../helpers/fetch';
+import { number, string, type as schema } from 'superstruct';
+import { URL } from 'node:url';
 
 // Internal dependencies
 import * as logger from '../logger';
 import { UserMessageError } from '../helpers/UserMessageError';
 
-interface GetComicResponse {
-	month: string;
-	num: number;
-	link: string;
-	news: string;
-	safe_title: string;
-	transcript: string;
-	alt: string;
-	year: string;
-	title: string;
-	day: string;
-	img: string;
-}
+const getComicResponse = schema({
+	month: string(),
+	num: number(),
+	link: string(),
+	news: string(),
+	safe_title: string(),
+	transcript: string(),
+	alt: string(),
+	year: string(),
+	title: string(),
+	day: string(),
+	img: string(),
+});
+
+type GetComicResponse = typeof getComicResponse.TYPE;
 
 /**
  * a quick call to see the latest comic.
@@ -37,12 +41,9 @@ async function _latestCheck(): Promise<GetComicResponse> {
 
 async function _getComic(endpoint: string | number): Promise<GetComicResponse> {
 	try {
-		const { data, status } = await axios.get<GetComicResponse>(
-			`https://xkcd.now.sh/?comic=${endpoint}`
-		);
-		// TODO: BUILD A TYPE GUARD AROUND THIS
-		if (status !== 200) throw new Error(`${status}`);
-		return data;
+		const url = new URL('https://xkcd.now.sh/');
+		url.searchParams.set('comic', `${endpoint}`);
+		return await fetch(url, getComicResponse);
 	} catch (error_) {
 		logger.error('Error in getting an XKCD comic:');
 		logger.error(error_);
