@@ -10,12 +10,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: node:16.19.0
+      image: node:18.17.0
       env:
         DOCKER: true
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Own all files
         run: USER=$(/usr/bin/id -run) && chown -R $USER ./

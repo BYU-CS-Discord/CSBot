@@ -1,17 +1,23 @@
+import { array, boolean, string, tuple, type as schema } from 'superstruct';
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
-import axios from 'axios';
+import { fetchJson } from '../helpers/fetch';
+import { URL } from 'node:url';
 
 import * as logger from '../logger';
 
-interface GetRoomInfoResponse {
-	busySince: string;
-	busyUntil: string;
-	isInUse: boolean;
-}
+const getRoomInfoResponse = schema({
+	busySince: string(),
+	busyUntil: string(),
+	isInUse: boolean(),
+});
 
-interface GetRoomsResponse {
-	Rooms: Array<[string, string]>;
-}
+type GetRoomInfoResponse = typeof getRoomInfoResponse.TYPE;
+
+const getRoomsResponse = schema({
+	Rooms: array(tuple([string(), string()])),
+});
+
+type GetRoomsResponse = typeof getRoomsResponse.TYPE;
 
 const timeChoices = [
 	{ name: '8:00 AM', value: '08:00:00' },
@@ -78,11 +84,9 @@ export function convertTo12Hour(time: string): string {
 	return 'ERR';
 }
 
-async function _getRoomsFromEndpoint(endpoint: string): Promise<GetRoomsResponse> {
+async function _getRoomsFromEndpoint(endpoint: URL): Promise<GetRoomsResponse> {
 	try {
-		const { data, status } = await axios.get<GetRoomsResponse>(endpoint);
-		if (status !== 200) throw new Error(`${status}`);
-		return data;
+		return await fetchJson(endpoint, getRoomsResponse);
 	} catch (error_) {
 		logger.error('Error in getting Room Info:');
 		logger.error(error_);
@@ -94,12 +98,12 @@ async function _getRoomsFromEndpoint(endpoint: string): Promise<GetRoomsResponse
 }
 
 async function _getRoomsNow(building: string): Promise<GetRoomsResponse> {
-	const url = `https://pi.zyancey.com/now/${building}`;
+	const url = new URL(`https://pi.zyancey.com/now/${building}`);
 	return await _getRoomsFromEndpoint(url);
 }
 
 async function _getRoomsAt(building: string, timeA: string): Promise<GetRoomsResponse> {
-	const url = `https://pi.zyancey.com/at/${building}/${timeA}`;
+	const url = new URL(`https://pi.zyancey.com/at/${building}/${timeA}`);
 	return await _getRoomsFromEndpoint(url);
 }
 
@@ -108,17 +112,14 @@ async function _getRoomsBetween(
 	timeA: string,
 	timeB: string
 ): Promise<GetRoomsResponse> {
-	const url = `https://pi.zyancey.com/between/${building}/${timeA}/${timeB}`;
+	const url = new URL(`https://pi.zyancey.com/between/${building}/${timeA}/${timeB}`);
 	return await _getRoomsFromEndpoint(url);
 }
 
 async function _getWhenRoom(building: string, room: string): Promise<GetRoomInfoResponse> {
 	try {
-		const { data, status } = await axios.get<GetRoomInfoResponse>(
-			`https://pi.zyancey.com/when/${building}/${room}`
-		);
-		if (status !== 200) throw new Error(`${status}`);
-		return data;
+		const endpoint = new URL(`https://pi.zyancey.com/when/${building}/${room}`);
+		return await fetchJson(endpoint, getRoomInfoResponse);
 	} catch (error_) {
 		logger.error('Error in getting Room Info:');
 		logger.error(error_);

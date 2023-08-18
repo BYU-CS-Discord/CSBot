@@ -11,6 +11,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Use Rollup and ESBuild to create a minimal bundle to run. (Some dependencies remain externalized.)
 
+## [0.12.0] - 2023-08-18
+
+### Changed
+
+- Updated engine requirement to Node 18. This is a breaking change, as the update process may not be as simple as running `/update`.
+- Use built-in `fetch` at runtime, instead of `undici`.
+
+## [0.11.2] - 2023-07-07
+
+### Changed
+
+- Use `undici` instead of `axios` for network requests.
+- Log HTTP status text when encountering non-200 statuses.
+- Properly guard API boundaries against type poisoning.
+
 ## [0.11.1] - 2023-06-28
 
 ### Changed
@@ -206,7 +221,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Development Environment for needed dependencies.
 
-[Unreleased]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.11.1...HEAD
+[Unreleased]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.12.0...HEAD
+[0.12.0]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.11.2...v0.12.0
+[0.11.2]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.11.1...v0.11.2
 [0.11.1]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.11.0...v0.11.1
 [0.11.0]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.10.1...v0.11.0
 [0.10.1]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.10.0...v0.10.1
