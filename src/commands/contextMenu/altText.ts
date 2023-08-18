@@ -21,7 +21,7 @@ export const altText: MessageContextMenuCommand = {
 			return await replyPrivately('The attachment in this message has no text description.');
 		}
 
-		if (attachments.every(a => a.description === null || !a.description.trim())) {
+		if (attachments.every(a => !a.description?.trim())) {
 			return await replyPrivately(
 				`None of the ${attachments.length} attachments in this message contains a text description.`
 			);

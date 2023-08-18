@@ -1,12 +1,9 @@
 // External dependencies
+import type { AttachmentPayload } from 'discord.js';
+import type { AudioResource } from '@discordjs/voice';
 import { writeFileSync, createReadStream } from 'node:fs';
 import isNumber from 'lodash-es/isNumber';
-import {
-	SlashCommandBuilder,
-	AttachmentPayload,
-	ChannelType,
-	PermissionFlagsBits,
-} from 'discord.js';
+import { SlashCommandBuilder, ChannelType, PermissionFlagsBits } from 'discord.js';
 import {
 	createAudioResource,
 	createAudioPlayer,
@@ -16,7 +13,6 @@ import {
 	VoiceConnectionStatus,
 	NoSubscriberBehavior,
 	entersState,
-	AudioResource,
 } from '@discordjs/voice';
 import { say, Speaker } from 'dectalk';
 import { fileSync } from 'tmp';

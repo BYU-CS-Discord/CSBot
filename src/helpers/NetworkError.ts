@@ -1,4 +1,5 @@
-import { describeCode, HttpStatusCode } from './HttpStatusCode';
+import type { HttpStatusCode } from './HttpStatusCode';
+import { describeCode } from './HttpStatusCode';
 
 /**
  * An object that represents an HTTP status returned from an API request.

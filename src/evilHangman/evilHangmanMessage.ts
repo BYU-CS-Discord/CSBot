@@ -1,7 +1,8 @@
 import type { ButtonBuilder, MessageReplyOptions } from 'discord.js';
+import type { EvilHangmanDisplayInfo } from './evilHangmanGame';
 import { ActionRowBuilder, EmbedBuilder } from 'discord.js';
 import { appVersion } from '../constants/meta';
-import { EvilHangmanDisplayInfo, EvilHangmanWinState } from './evilHangmanGame';
+import { EvilHangmanWinState } from './evilHangmanGame';
 import { format } from '../helpers/format';
 import { GAME_INFO_FORMAT } from './gameInfoParser';
 import { getButtonsForAllLettersExcept } from './hangmanLetterButtons';

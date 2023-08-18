@@ -37,7 +37,7 @@
 		"no-dupe-else-if": "warn",
 		"consistent-return": "off", // TS handles this
 		"no-duplicate-imports": "off", // typescript-eslint handles this
-		"@typescript-eslint/no-duplicate-imports": "error",
+		"import/no-duplicates": "error",
 		"@typescript-eslint/no-empty-interface": "off",
 		"@typescript-eslint/require-await": "warn",
 		"@typescript-eslint/no-inferrable-types": "off",
@@ -52,6 +52,15 @@
 		],
 		"@typescript-eslint/consistent-type-definitions": ["warn", "interface"],
 		"@typescript-eslint/array-type": ["warn", { "default": "generic" }],
+		"@typescript-eslint/no-unsafe-enum-comparison": "off",
+		"@typescript-eslint/consistent-type-imports": [
+			"error",
+			{
+				"prefer": "type-imports",
+				"fixStyle": "separate-type-imports",
+				"disallowTypeAnnotations": false
+			}
+		], // Replaces `importsNotUsedAsValues` tsconfig flag
 		"@typescript-eslint/dot-notation": "off",
 		"unicorn/catch-error-name": ["warn", { "name": "error" }],
 		"unicorn/import-index": ["error", { "ignoreImports": true }],
@@ -126,6 +135,10 @@
 		},
 		{
 			"files": ["./*.config.ts"],
+			"parserOptions": {
+				"project": "./tsconfig.test.json",
+				"tsconfigRootDir": "."
+			},
 			"rules": {
 				"import/no-default-export": "off" // Rollup config requires a `default` export
 			}

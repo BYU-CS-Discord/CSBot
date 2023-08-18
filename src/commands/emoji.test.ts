@@ -1,4 +1,5 @@
-import { EmbedBuilder, GuildEmoji, ImageURLOptions } from 'discord.js';
+import type { GuildEmoji, ImageURLOptions } from 'discord.js';
+import { EmbedBuilder } from 'discord.js';
 import { emoji } from './emoji';
 
 jest.mock('../logger');

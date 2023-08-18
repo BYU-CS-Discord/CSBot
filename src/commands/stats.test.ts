@@ -1,5 +1,6 @@
-import { mockDeep, DeepMockProxy } from 'jest-mock-extended';
+import type { DeepMockProxy } from 'jest-mock-extended';
 import type { PrismaClient, Scoreboard } from '@prisma/client';
+import { mockDeep } from 'jest-mock-extended';
 
 jest.mock('../constants/meta', () => ({
 	// Version changes frequently, so use a consistent version number to test with:
