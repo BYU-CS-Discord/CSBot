@@ -1,5 +1,5 @@
 // External dependencies
-import toString from 'lodash/toString';
+import toString from 'lodash-es/toString';
 import type {
 	AutocompleteInteraction,
 	ButtonInteraction,

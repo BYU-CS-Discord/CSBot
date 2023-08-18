@@ -1,6 +1,6 @@
 // External dependencies
 import { writeFileSync, createReadStream } from 'node:fs';
-import isNumber from 'lodash/isNumber';
+import isNumber from 'lodash-es/isNumber';
 import {
 	SlashCommandBuilder,
 	AttachmentPayload,
