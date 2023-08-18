@@ -1,6 +1,6 @@
 // External dependencies
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
-import { fetch } from '../helpers/fetch';
+import { fetchJson } from '../helpers/fetch';
 import { number, string, type as schema } from 'superstruct';
 import { URL } from 'node:url';
 
@@ -43,7 +43,7 @@ async function _getComic(endpoint: string | number): Promise<GetComicResponse> {
 	try {
 		const url = new URL('https://xkcd.now.sh/');
 		url.searchParams.set('comic', `${endpoint}`);
-		return await fetch(url, getComicResponse);
+		return await fetchJson(url, getComicResponse);
 	} catch (error_) {
 		logger.error('Error in getting an XKCD comic:');
 		logger.error(error_);

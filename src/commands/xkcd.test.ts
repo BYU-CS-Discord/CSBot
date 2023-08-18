@@ -1,10 +1,13 @@
-import { fetch } from '../helpers/fetch';
+import { fetchJson } from '../helpers/fetch';
 import { HttpStatusCode } from '../helpers/HttpStatusCode';
 import { NetworkError } from '../helpers/NetworkError';
 
-jest.mock('../helpers/fetch', () => ({ fetch: jest.fn() }));
+jest.mock('../helpers/fetch', () => ({ fetchJson: jest.fn() }));
 
-const mockedFetch = fetch as jest.Mock<ReturnType<typeof fetch>, Parameters<typeof fetch>>;
+const mockedFetchJson = fetchJson as jest.Mock<
+	ReturnType<typeof fetchJson>,
+	Parameters<typeof fetchJson>
+>;
 
 // Mock the logger so nothing is printed
 jest.mock('../logger');
@@ -61,7 +64,7 @@ describe('xkcd', () => {
 	});
 
 	test('Throws an error when the number is out of bounds', async () => {
-		mockedFetch.mockResolvedValue(latestGood);
+		mockedFetchJson.mockResolvedValue(latestGood);
 
 		// they just need the number from the initial call
 		mockGetInteger.mockReturnValueOnce(-1);
@@ -75,7 +78,7 @@ describe('xkcd', () => {
 	});
 
 	test('Returning an embed with the latest comic when no number is given', async () => {
-		mockedFetch.mockResolvedValue(latestGood);
+		mockedFetchJson.mockResolvedValue(latestGood);
 		mockGetInteger.mockReturnValueOnce(null);
 		await expect(xkcd.execute(context)).resolves.toBeUndefined();
 		expect(mockReply).toHaveBeenCalledOnce();
@@ -87,8 +90,8 @@ describe('xkcd', () => {
 	});
 
 	test('Returning an embed with a comic given by a number parameter', async () => {
-		mockedFetch.mockResolvedValue(chosen);
-		mockedFetch.mockResolvedValueOnce(latestGood);
+		mockedFetchJson.mockResolvedValue(chosen);
+		mockedFetchJson.mockResolvedValueOnce(latestGood);
 		mockGetInteger.mockReturnValueOnce(chosen.num);
 		await expect(xkcd.execute(context)).resolves.toBeUndefined();
 		expect(mockReply).toHaveBeenCalledOnce();
@@ -100,15 +103,15 @@ describe('xkcd', () => {
 	});
 
 	test('Checking when a second call to the API fails', async () => {
-		mockedFetch.mockRejectedValue(badResponse);
-		mockedFetch.mockResolvedValueOnce(latestGood);
+		mockedFetchJson.mockRejectedValue(badResponse);
+		mockedFetchJson.mockResolvedValueOnce(latestGood);
 		mockGetInteger.mockReturnValueOnce(chosen.num);
 		await expect(xkcd.execute(context)).rejects.toThrow();
 		expect(mockSendTyping).toHaveBeenCalledOnce();
 	});
 
 	test('Checking when a first call to the API fails', async () => {
-		mockedFetch.mockRejectedValue(badResponse);
+		mockedFetchJson.mockRejectedValue(badResponse);
 		mockGetInteger.mockReturnValueOnce(chosen.num);
 		await expect(xkcd.execute(context)).rejects.toThrow();
 		expect(mockSendTyping).toHaveBeenCalledOnce();
