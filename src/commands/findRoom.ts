@@ -1,6 +1,6 @@
 import { array, boolean, string, tuple, type as schema } from 'superstruct';
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
-import { fetch } from '../helpers/fetch';
+import { fetchJson } from '../helpers/fetch';
 import { URL } from 'node:url';
 
 import * as logger from '../logger';
@@ -86,7 +86,7 @@ export function convertTo12Hour(time: string): string {
 
 async function _getRoomsFromEndpoint(endpoint: URL): Promise<GetRoomsResponse> {
 	try {
-		return await fetch(endpoint, getRoomsResponse);
+		return await fetchJson(endpoint, getRoomsResponse);
 	} catch (error_) {
 		logger.error('Error in getting Room Info:');
 		logger.error(error_);
@@ -119,7 +119,7 @@ async function _getRoomsBetween(
 async function _getWhenRoom(building: string, room: string): Promise<GetRoomInfoResponse> {
 	try {
 		const endpoint = new URL(`https://pi.zyancey.com/when/${building}/${room}`);
-		return await fetch(endpoint, getRoomInfoResponse);
+		return await fetchJson(endpoint, getRoomInfoResponse);
 	} catch (error_) {
 		logger.error('Error in getting Room Info:');
 		logger.error(error_);

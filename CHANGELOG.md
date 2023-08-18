@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Updated engine requirement to Node 18.
+- Use built-in `fetch` at runtime, instead of `undici`.
 
 ## [0.11.2] - 2023-07-07
 
