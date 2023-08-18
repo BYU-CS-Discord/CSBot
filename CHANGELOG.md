@@ -5,11 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.11.3] - 2023-08-18
+## [0.12.0] - 2023-08-18
 
 ### Changed
 
-- Updated engine requirement to Node 18.
+- Updated engine requirement to Node 18. This is a breaking change, as the update process may not be as simple as running `/update`.
 - Use built-in `fetch` at runtime, instead of `undici`.
 
 ## [0.11.2] - 2023-07-07
@@ -215,7 +215,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Development Environment for needed dependencies.
 
-[0.11.3]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.11.2...v0.11.3
+[0.12.0]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.11.2...v0.12.0
 [0.11.2]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.11.1...v0.11.2
 [0.11.1]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.11.0...v0.11.1
 [0.11.0]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.10.1...v0.11.0
