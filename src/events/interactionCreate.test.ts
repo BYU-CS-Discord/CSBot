@@ -363,7 +363,7 @@ describe('on(interactionCreate)', () => {
 			expect(mockInteractionReply).toHaveBeenCalledOnce();
 
 			const lastCall = mockInteractionReply.mock.lastCall as unknown as [
-				{ embeds: [{ data: { description: string } }] }
+				{ embeds: [{ data: { description: string } }] },
 			];
 			const description = lastCall[0].embeds[0].data.description;
 			expect(description).toBe(userErrorMessage);

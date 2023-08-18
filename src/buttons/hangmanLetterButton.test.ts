@@ -37,7 +37,7 @@ describe('hangmanMoreButton', () => {
 
 		expect(mockUpdate).toHaveBeenCalledOnce();
 		const lastCall = mockUpdate.mock.lastCall as unknown as [
-			{ embeds: [{ data: { fields: [unknown, { value: string }] } }] }
+			{ embeds: [{ data: { fields: [unknown, { value: string }] } }] },
 		];
 		const afterInfo = lastCall[0].embeds[0].data.fields[1].value;
 		expect(afterInfo).toBeString();
