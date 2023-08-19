@@ -2,13 +2,13 @@ import type { GuildEmoji, ImageURLOptions } from 'discord.js';
 import { EmbedBuilder } from 'discord.js';
 import { emoji } from './emoji';
 
-jest.mock('../logger');
+vi.mock('../logger');
 
 describe('profile', () => {
-	const mockReply = jest.fn<Promise<void>, [content: unknown]>();
-	const mockEmojiName = jest.fn<string | null, []>();
-	const mockEmojiURL = jest.fn<string | null, [options?: ImageURLOptions | undefined]>();
-	const mockShouldRespondEphemeral = jest.fn<boolean | null, []>();
+	const mockReply = vi.fn<[content: unknown], Promise<void>>();
+	const mockEmojiName = vi.fn<[], string | null>();
+	const mockEmojiURL = vi.fn<[options?: ImageURLOptions | undefined], string | null>();
+	const mockShouldRespondEphemeral = vi.fn<[], boolean | null>();
 
 	const testEmojiURL = 'https://example.com/emojis/1234567890/abcdef1234567890.png';
 
@@ -47,8 +47,7 @@ describe('profile', () => {
 	test('Returns the url of the target emoji ephemerally', async () => {
 		await expect(emoji.execute(context)).resolves.toBeUndefined();
 
-		expect(mockReply).toHaveBeenCalledOnce();
-		expect(mockReply).toHaveBeenCalledWith({
+		expect(mockReply).toHaveBeenCalledExactlyOnceWith({
 			content: mockEmojiName() as string,
 			embeds: [
 				new EmbedBuilder({
@@ -64,8 +63,7 @@ describe('profile', () => {
 		mockShouldRespondEphemeral.mockReturnValue(null);
 		await expect(emoji.execute(context)).resolves.toBeUndefined();
 
-		expect(mockReply).toHaveBeenCalledOnce();
-		expect(mockReply).toHaveBeenCalledWith({
+		expect(mockReply).toHaveBeenCalledExactlyOnceWith({
 			content: mockEmojiName() as string,
 			embeds: [
 				new EmbedBuilder({
@@ -81,8 +79,7 @@ describe('profile', () => {
 		mockShouldRespondEphemeral.mockReturnValue(false);
 		await expect(emoji.execute(context)).resolves.toBeUndefined();
 
-		expect(mockReply).toHaveBeenCalledOnce();
-		expect(mockReply).toHaveBeenCalledWith({
+		expect(mockReply).toHaveBeenCalledExactlyOnceWith({
 			content: mockEmojiName() as string,
 			embeds: [
 				new EmbedBuilder({

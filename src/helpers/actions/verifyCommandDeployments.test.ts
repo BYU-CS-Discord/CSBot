@@ -1,11 +1,11 @@
 import type { Client } from 'discord.js';
 import { Collection, SlashCommandBuilder } from 'discord.js';
 
-const mockAllCommands = new Map<string, Command>();
-jest.mock('../../commands', () => ({ allCommands: mockAllCommands }));
+const mockAllCommands = vi.hoisted(() => new Map<string, Command>());
+vi.mock('../../commands', () => ({ allCommands: mockAllCommands }));
 
 // Mock the logger to track output
-jest.mock('../../logger');
+vi.mock('../../logger');
 import { warn as mockLoggerWarn } from '../../logger';
 
 import { deployableCommand } from './deployCommands';
@@ -38,8 +38,8 @@ describe('Verify command deployments', () => {
 		},
 	];
 
-	const mockFetchApplicationCommands = jest.fn();
-	const mockFetchGuildCommands = jest.fn();
+	const mockFetchApplicationCommands = vi.fn();
+	const mockFetchGuildCommands = vi.fn();
 
 	const mockClient = {
 		application: {

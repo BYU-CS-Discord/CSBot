@@ -3,14 +3,14 @@ import { DiscordAPIError, EmbedBuilder } from 'discord.js';
 import { DiscordErrorCode } from '../helpers/DiscordErrorCode';
 import { profile } from './profile';
 
-jest.mock('../logger');
+vi.mock('../logger');
 
 describe('profile', () => {
-	const mockReply = jest.fn<Promise<void>, [content: unknown]>();
-	const mockReplyPrivately = jest.fn<Promise<void>, [content: string]>();
-	const mockGetUser = jest.fn<User | null, [name: string, required?: boolean | undefined]>();
-	const mockGuildMembersFetch = jest.fn<Promise<GuildMember>, [options: UserResolvable]>();
-	const mockAvatarURL = jest.fn<string | null, [options?: ImageURLOptions | undefined]>();
+	const mockReply = vi.fn<[content: unknown], Promise<void>>();
+	const mockReplyPrivately = vi.fn<[content: string], Promise<void>>();
+	const mockGetUser = vi.fn<[name: string, required?: boolean | undefined], User | null>();
+	const mockGuildMembersFetch = vi.fn<[options: UserResolvable], Promise<GuildMember>>();
+	const mockAvatarURL = vi.fn<[options?: ImageURLOptions | undefined], string | null>();
 
 	const testAvatar = 'https://example.com/avatars/1234567890/abcdef1234567890.png';
 	let context: TextInputCommandContext;
@@ -124,8 +124,7 @@ describe('profile', () => {
 	test("Returns the url of the supplied user's profile picture", async () => {
 		await expect(profile.execute(context)).resolves.toBeUndefined();
 		expect(mockReplyPrivately).not.toHaveBeenCalled();
-		expect(mockReply).toHaveBeenCalledOnce();
-		expect(mockReply).toHaveBeenCalledWith({
+		expect(mockReply).toHaveBeenCalledExactlyOnceWith({
 			content: `<@${otherUser.id}>'s profile:`,
 			embeds: [
 				new EmbedBuilder({
@@ -157,8 +156,7 @@ describe('profile', () => {
 
 			await expect(profile.execute(context)).resolves.toBeUndefined();
 			expect(mockReplyPrivately).not.toHaveBeenCalled();
-			expect(mockReply).toHaveBeenCalledOnce();
-			expect(mockReply).toHaveBeenCalledWith({
+			expect(mockReply).toHaveBeenCalledExactlyOnceWith({
 				content: 'Your profile:',
 				embeds: [
 					new EmbedBuilder({
@@ -182,8 +180,7 @@ describe('profile', () => {
 
 		await expect(profile.execute(context)).resolves.toBeUndefined();
 		expect(mockReplyPrivately).not.toHaveBeenCalled();
-		expect(mockReply).toHaveBeenCalledOnce();
-		expect(mockReply).toHaveBeenCalledWith({
+		expect(mockReply).toHaveBeenCalledExactlyOnceWith({
 			content: 'My profile:',
 			embeds: [
 				new EmbedBuilder({

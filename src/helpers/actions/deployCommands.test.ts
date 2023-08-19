@@ -1,24 +1,25 @@
 import type { Client } from 'discord.js';
+import type { Mock } from 'vitest';
 import { SlashCommandBuilder } from 'discord.js';
 
 // Mock the logger so nothing is printed
-jest.mock('../../logger');
+vi.mock('../../logger');
 
-const mockAllCommands = new Map<string, Command>();
-jest.mock('../../commands', () => ({
+const mockAllCommands = vi.hoisted(() => new Map<string, Command>());
+vi.mock('../../commands', () => ({
 	allCommands: mockAllCommands,
 }));
 
-jest.mock('./revokeCommands');
+vi.mock('./revokeCommands');
 import { revokeCommands } from './revokeCommands';
-const mockRevokeCommands = revokeCommands as jest.Mock;
+const mockRevokeCommands = revokeCommands as Mock;
 
 import { deployCommands } from './deployCommands';
 
 describe('Command deployments', () => {
-	const mockApplicationCommandsSet = jest.fn();
-	const mockGuildCommandsSet = jest.fn();
-	const mockFetchOauthGuilds = jest.fn();
+	const mockApplicationCommandsSet = vi.fn();
+	const mockGuildCommandsSet = vi.fn();
+	const mockFetchOauthGuilds = vi.fn();
 
 	const mockClient = {
 		application: {

@@ -45,6 +45,6 @@ export async function _main(): Promise<void> {
 /* istanbul ignore next */
 // Not Constantinople
 if (process.env['NODE_ENV'] !== 'test') {
-	// Jest will never hit this without hax:
+	// Vitest will never hit this without hax:
 	void _main();
 }

@@ -1,19 +1,24 @@
 import type { RepliableInteraction } from 'discord.js';
+import type { Mock } from 'vitest';
 
-jest.mock('../helpers/actions/messages/replyToMessage');
+vi.mock('../helpers/actions/messages/replyToMessage');
 import { sendMessageInChannel } from '../helpers/actions/messages/replyToMessage';
-const mockSendMessageInChannel = sendMessageInChannel as jest.Mock;
+const mockSendMessageInChannel = sendMessageInChannel as Mock;
 
 // Mock the logger to track output
-jest.mock('../logger');
+vi.mock('../logger');
 import { error as mockLoggerError } from '../logger';
 
 import { followUpFactory as factory } from './followUp';
 
 describe('follow-up message', () => {
 	const testMessage = { id: 'test-message' };
-	mockSendMessageInChannel.mockResolvedValue(testMessage);
-	const mockInteractionFollowUp = jest.fn().mockResolvedValue(testMessage);
+	const mockInteractionFollowUp = vi.fn();
+
+	beforeEach(() => {
+		mockSendMessageInChannel.mockResolvedValue(testMessage);
+		mockInteractionFollowUp.mockResolvedValue(testMessage);
+	});
 
 	const interaction = {
 		channel: {
@@ -37,16 +42,17 @@ describe('follow-up message', () => {
 		mockInteractionFollowUp.mockRejectedValueOnce(testError);
 		await expect(followUp('yo')).resolves.toBeFalse();
 		expect(mockSendMessageInChannel).not.toHaveBeenCalled();
-		expect(mockLoggerError).toHaveBeenCalledOnce();
-		expect(mockLoggerError).toHaveBeenCalledWith(expect.stringContaining('follow up'), testError);
+		expect(mockLoggerError).toHaveBeenCalledExactlyOnceWith(
+			expect.stringContaining('follow up'),
+			testError
+		);
 	});
 
 	test("uses Discord's default if reply is not specified", async () => {
 		await expect(followUp({ content: 'yo' })).resolves.toBe(testMessage);
 		expect(mockLoggerError).not.toHaveBeenCalled();
 		expect(mockSendMessageInChannel).not.toHaveBeenCalled();
-		expect(mockInteractionFollowUp).toHaveBeenCalledOnce();
-		expect(mockInteractionFollowUp).toHaveBeenCalledWith({ content: 'yo' });
+		expect(mockInteractionFollowUp).toHaveBeenCalledExactlyOnceWith({ content: 'yo' });
 	});
 
 	test('logs an error if the follow-up with options fails', async () => {
@@ -54,24 +60,26 @@ describe('follow-up message', () => {
 		mockInteractionFollowUp.mockRejectedValueOnce(testError);
 		await expect(followUp({ content: 'yo' })).resolves.toBeFalse();
 		expect(mockSendMessageInChannel).not.toHaveBeenCalled();
-		expect(mockLoggerError).toHaveBeenCalledOnce();
-		expect(mockLoggerError).toHaveBeenCalledWith(expect.stringContaining('follow up'), testError);
+		expect(mockLoggerError).toHaveBeenCalledExactlyOnceWith(
+			expect.stringContaining('follow up'),
+			testError
+		);
 	});
 
 	test("uses Discord's default if reply is enabled", async () => {
 		await expect(followUp({ content: 'yo', reply: true })).resolves.toBe(testMessage);
 		expect(mockLoggerError).not.toHaveBeenCalled();
 		expect(mockSendMessageInChannel).not.toHaveBeenCalled();
-		expect(mockInteractionFollowUp).toHaveBeenCalledOnce();
-		expect(mockInteractionFollowUp).toHaveBeenCalledWith({ content: 'yo' });
+		expect(mockInteractionFollowUp).toHaveBeenCalledExactlyOnceWith({ content: 'yo' });
 	});
 
 	test('sends a plain message in the original channel if reply is disabled', async () => {
 		await expect(followUp({ content: 'yo', reply: false })).resolves.toBe(testMessage);
 		expect(mockLoggerError).not.toHaveBeenCalled();
 		expect(mockInteractionFollowUp).not.toHaveBeenCalled();
-		expect(mockSendMessageInChannel).toHaveBeenCalledOnce();
-		expect(mockSendMessageInChannel).toHaveBeenCalledWith(interaction.channel, { content: 'yo' });
+		expect(mockSendMessageInChannel).toHaveBeenCalledExactlyOnceWith(interaction.channel, {
+			content: 'yo',
+		});
 	});
 
 	test('returns false if the plain message fallback failed', async () => {
@@ -79,7 +87,8 @@ describe('follow-up message', () => {
 		await expect(followUp({ content: 'yo', reply: false })).resolves.toBeFalse();
 		expect(mockLoggerError).not.toHaveBeenCalled();
 		expect(mockInteractionFollowUp).not.toHaveBeenCalled();
-		expect(mockSendMessageInChannel).toHaveBeenCalledOnce();
-		expect(mockSendMessageInChannel).toHaveBeenCalledWith(interaction.channel, { content: 'yo' });
+		expect(mockSendMessageInChannel).toHaveBeenCalledExactlyOnceWith(interaction.channel, {
+			content: 'yo',
+		});
 	});
 });

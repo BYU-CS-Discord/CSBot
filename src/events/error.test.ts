@@ -1,5 +1,5 @@
 // Mock the logger to track output
-jest.mock('../logger');
+vi.mock('../logger');
 import { error as mockLoggerError } from '../logger';
 
 // Import the code to test

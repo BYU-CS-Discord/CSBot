@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Use Rollup and ESBuild to create a minimal bundle to run. (Some dependencies remain externalized.)
+- Use Vitest instead of Jest for forward compatibility with ESM.
 
 ## [0.12.0] - 2023-08-18
 

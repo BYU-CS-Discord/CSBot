@@ -22,13 +22,13 @@ import {
 import { UserMessageError } from '../helpers/UserMessageError';
 
 // Mock allCommands to isolate our test code
-const mockAllCommands = new Map<string, Command>();
-jest.mock('../commands', () => ({
+const mockAllCommands = vi.hoisted(() => new Map<string, Command>());
+vi.mock('../commands', () => ({
 	allCommands: mockAllCommands,
 }));
 
 // Create two mock commands to track handler behavior
-const mockGlobalExecute = jest.fn();
+const mockGlobalExecute = vi.fn();
 const mockGlobalCommand: ChatInputCommand = {
 	info: new SlashCommandBuilder() //
 		.setName('global-test')
@@ -38,7 +38,7 @@ const mockGlobalCommand: ChatInputCommand = {
 };
 mockAllCommands.set(mockGlobalCommand.info.name, mockGlobalCommand);
 
-const mockGlobalAutocomplete = jest.fn().mockReturnValue([{ name: 'Sample', value: 'sample' }]);
+const mockGlobalAutocomplete = vi.fn();
 const mockGlobalAutocompleteCommand: ChatInputCommand = {
 	info: new SlashCommandBuilder() //
 		.setName('global-autocomplete-test')
@@ -96,7 +96,7 @@ const mockErrorUserContextMenuCommand: UserContextMenuCommand = {
 };
 mockAllCommands.set(mockErrorUserContextMenuCommand.info.name, mockErrorUserContextMenuCommand);
 
-const mockGuildedExecute = jest.fn();
+const mockGuildedExecute = vi.fn();
 const mockGuildedCommand: ChatInputCommand = {
 	info: new SlashCommandBuilder() //
 		.setName('guilded-test')
@@ -141,8 +141,8 @@ const mockUserMessageErrorGlobalCommand: Command = {
 mockAllCommands.set(mockUserMessageErrorGlobalCommand.info.name, mockUserMessageErrorGlobalCommand);
 
 // Mock allButtons to isolate our test code
-const mockAllButtons = new Map<string, Button>();
-jest.mock('../buttons', () => ({
+const mockAllButtons = vi.hoisted(() => new Map<string, Button>());
+vi.mock('../buttons', () => ({
 	allButtons: mockAllButtons,
 }));
 
@@ -163,7 +163,7 @@ const mockErrorButton: Button = {
 mockAllButtons.set(mockErrorButton.customId, mockErrorButton);
 
 // Mock the logger to track output
-jest.mock('../logger');
+vi.mock('../logger');
 import { error as mockLoggerError } from '../logger';
 
 // Import the code to test
@@ -175,7 +175,7 @@ const selfUid = 'self-1234';
 const otherUid = 'other-1234';
 const channelId = 'the-channel-1234';
 
-const mockGuildMembersFetch = jest.fn();
+const mockGuildMembersFetch = vi.fn();
 
 // Helper function to create Interactions
 // Reduces code duplication
@@ -215,6 +215,10 @@ function defaultInteraction(): Interaction {
 }
 
 describe('on(interactionCreate)', () => {
+	beforeEach(() => {
+		mockGlobalAutocomplete.mockReturnValue([{ name: 'Sample', value: 'sample' }]);
+	});
+
 	describe('commands', () => {
 		test('logs interaction errors', async () => {
 			const interaction = defaultInteraction();
@@ -319,7 +323,7 @@ describe('on(interactionCreate)', () => {
 				channel: channel,
 			} as unknown as Interaction;
 
-			const mockInteractionReply = jest.fn();
+			const mockInteractionReply = vi.fn();
 			(interaction as CommandInteraction).reply = mockInteractionReply;
 
 			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
@@ -334,7 +338,7 @@ describe('on(interactionCreate)', () => {
 			const interaction = defaultInteraction();
 			(interaction as CommandInteraction).commandName = mockErrorGlobalCommand.info.name;
 
-			const mockInteractionReply = jest.fn();
+			const mockInteractionReply = vi.fn();
 			(interaction as CommandInteraction).reply = mockInteractionReply;
 
 			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
@@ -345,7 +349,7 @@ describe('on(interactionCreate)', () => {
 			const interaction = defaultInteraction();
 			(interaction as CommandInteraction).commandName = mockErrorGuildedCommand.info.name;
 
-			const mockInteractionReply = jest.fn();
+			const mockInteractionReply = vi.fn();
 			(interaction as CommandInteraction).reply = mockInteractionReply;
 
 			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
@@ -356,7 +360,7 @@ describe('on(interactionCreate)', () => {
 			const interaction = defaultInteraction();
 			(interaction as CommandInteraction).commandName = mockUserMessageErrorGlobalCommand.info.name;
 
-			const mockInteractionReply = jest.fn();
+			const mockInteractionReply = vi.fn();
 			(interaction as CommandInteraction).reply = mockInteractionReply;
 
 			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
@@ -374,7 +378,7 @@ describe('on(interactionCreate)', () => {
 			(interaction as CommandInteraction).commandName =
 				mockErrorMessageContextMenuCommand.info.name;
 
-			const mockInteractionReply = jest.fn();
+			const mockInteractionReply = vi.fn();
 			(interaction as CommandInteraction).reply = mockInteractionReply;
 			(interaction as CommandInteraction).isMessageContextMenuCommand = (): boolean => true;
 
@@ -386,7 +390,7 @@ describe('on(interactionCreate)', () => {
 			const interaction = defaultInteraction();
 			(interaction as CommandInteraction).commandName = mockErrorUserContextMenuCommand.info.name;
 
-			const mockInteractionReply = jest.fn();
+			const mockInteractionReply = vi.fn();
 			(interaction as CommandInteraction).reply = mockInteractionReply;
 			(interaction as CommandInteraction).isUserContextMenuCommand = (): boolean => true;
 
@@ -400,7 +404,7 @@ describe('on(interactionCreate)', () => {
 
 			(interaction as CommandInteraction).replied = true;
 
-			const mockInteractionEditReply = jest.fn();
+			const mockInteractionEditReply = vi.fn();
 			(interaction as CommandInteraction).editReply = mockInteractionEditReply;
 
 			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
@@ -414,7 +418,7 @@ describe('on(interactionCreate)', () => {
 			interaction.inGuild = (): boolean => false;
 			interaction.member = null;
 
-			const mockChannelFetch = jest.fn();
+			const mockChannelFetch = vi.fn();
 			const channel = {
 				type: ChannelType.DM,
 				partial: true,
@@ -510,9 +514,9 @@ describe('on(interactionCreate)', () => {
 	});
 
 	describe('autocomplete', () => {
-		const mockRespond = jest.fn<
-			Promise<void>,
-			[options: Array<ApplicationCommandOptionChoiceData>]
+		const mockRespond = vi.fn<
+			[options: Array<ApplicationCommandOptionChoiceData>],
+			Promise<void>
 		>();
 
 		let interaction: AutocompleteInteraction;
@@ -533,8 +537,7 @@ describe('on(interactionCreate)', () => {
 			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 			expect(mockGlobalExecute).not.toHaveBeenCalled();
 			expect(mockGuildedExecute).not.toHaveBeenCalled();
-			expect(mockRespond).toHaveBeenCalledOnce();
-			expect(mockRespond).toHaveBeenCalledWith([]);
+			expect(mockRespond).toHaveBeenCalledExactlyOnceWith([]);
 			expect(mockGlobalAutocomplete).not.toHaveBeenCalled();
 		});
 
@@ -544,8 +547,7 @@ describe('on(interactionCreate)', () => {
 			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 			expect(mockGlobalExecute).not.toHaveBeenCalled();
 			expect(mockGuildedExecute).not.toHaveBeenCalled();
-			expect(mockRespond).toHaveBeenCalledOnce();
-			expect(mockRespond).toHaveBeenCalledWith([]);
+			expect(mockRespond).toHaveBeenCalledExactlyOnceWith([]);
 			expect(mockGlobalAutocomplete).not.toHaveBeenCalled();
 		});
 
@@ -555,8 +557,7 @@ describe('on(interactionCreate)', () => {
 			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 			expect(mockGlobalExecute).not.toHaveBeenCalled();
 			expect(mockGuildedExecute).not.toHaveBeenCalled();
-			expect(mockRespond).toHaveBeenCalledOnce();
-			expect(mockRespond).toHaveBeenCalledWith([]);
+			expect(mockRespond).toHaveBeenCalledExactlyOnceWith([]);
 			expect(mockGlobalAutocomplete).not.toHaveBeenCalled();
 		});
 
@@ -566,8 +567,7 @@ describe('on(interactionCreate)', () => {
 			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 			expect(mockGlobalExecute).not.toHaveBeenCalled();
 			expect(mockGuildedExecute).not.toHaveBeenCalled();
-			expect(mockRespond).toHaveBeenCalledOnce();
-			expect(mockRespond).toHaveBeenCalledWith([]);
+			expect(mockRespond).toHaveBeenCalledExactlyOnceWith([]);
 			expect(mockGlobalAutocomplete).not.toHaveBeenCalled();
 		});
 
@@ -576,8 +576,7 @@ describe('on(interactionCreate)', () => {
 			expect(mockGlobalExecute).not.toHaveBeenCalled();
 			expect(mockGuildedExecute).not.toHaveBeenCalled();
 			expect(mockRespond).toHaveBeenCalledOnce();
-			expect(mockGlobalAutocomplete).toHaveBeenCalledOnce();
-			expect(mockGlobalAutocomplete).toHaveBeenCalledWith(interaction);
+			expect(mockGlobalAutocomplete).toHaveBeenCalledExactlyOnceWith(interaction);
 		});
 
 		test('returns zero results if theres an error fetching the autocomplete values', async () => {
@@ -588,10 +587,8 @@ describe('on(interactionCreate)', () => {
 			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 			expect(mockGlobalExecute).not.toHaveBeenCalled();
 			expect(mockGuildedExecute).not.toHaveBeenCalled();
-			expect(mockRespond).toHaveBeenCalledOnce();
-			expect(mockRespond).toHaveBeenCalledWith([]);
-			expect(mockGlobalAutocomplete).toHaveBeenCalledOnce();
-			expect(mockGlobalAutocomplete).toHaveBeenCalledWith(interaction);
+			expect(mockRespond).toHaveBeenCalledExactlyOnceWith([]);
+			expect(mockGlobalAutocomplete).toHaveBeenCalledExactlyOnceWith(interaction);
 		});
 
 		test('doesn\t die if the error handler fails to respond with zero results', async () => {
@@ -603,10 +600,8 @@ describe('on(interactionCreate)', () => {
 			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 			expect(mockGlobalExecute).not.toHaveBeenCalled();
 			expect(mockGuildedExecute).not.toHaveBeenCalled();
-			expect(mockRespond).toHaveBeenCalledOnce();
-			expect(mockRespond).toHaveBeenCalledWith([]);
-			expect(mockGlobalAutocomplete).toHaveBeenCalledOnce();
-			expect(mockGlobalAutocomplete).toHaveBeenCalledWith(interaction);
+			expect(mockRespond).toHaveBeenCalledExactlyOnceWith([]);
+			expect(mockGlobalAutocomplete).toHaveBeenCalledExactlyOnceWith(interaction);
 		});
 	});
 
@@ -636,7 +631,7 @@ describe('on(interactionCreate)', () => {
 		interaction.isButton = (): boolean => true;
 		interaction.customId = mockErrorButton.customId;
 
-		const mockInteractionReply = jest.fn();
+		const mockInteractionReply = vi.fn();
 		interaction.reply = mockInteractionReply;
 
 		await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();

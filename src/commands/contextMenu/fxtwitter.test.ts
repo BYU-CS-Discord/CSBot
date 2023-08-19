@@ -1,7 +1,7 @@
 import { fxtwitter } from './fxtwitter';
 
 describe('Fix Twitter Links', () => {
-	const mockReplyPrivately = jest.fn();
+	const mockReplyPrivately = vi.fn();
 	let context: MessageContextMenuCommandContext;
 
 	beforeEach(() => {
@@ -52,8 +52,7 @@ describe('Fix Twitter Links', () => {
 			context.targetMessage.content = content;
 
 			await expect(fxtwitter.execute(context)).resolves.toBeUndefined();
-			expect(mockReplyPrivately).toHaveBeenCalledOnce();
-			expect(mockReplyPrivately).toHaveBeenCalledWith(expect.stringContaining(result));
+			expect(mockReplyPrivately).toHaveBeenCalledExactlyOnceWith(expect.stringContaining(result));
 		}
 	);
 });

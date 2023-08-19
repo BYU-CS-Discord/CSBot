@@ -2,7 +2,7 @@ import { letterButtons } from '../evilHangman/hangmanLetterButtons';
 import { UserMessageError } from '../helpers/UserMessageError';
 
 describe('hangmanMoreButton', () => {
-	const mockUpdate = jest.fn();
+	const mockUpdate = vi.fn();
 	const beforeInfo = 'Remaining Guesses: 3\nWord: ---\nLetters Guessed: a';
 	const message = {
 		embeds: [

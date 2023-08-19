@@ -3,7 +3,7 @@ import { Collection } from 'discord.js';
 import { altText } from './altText';
 
 describe('Get Alt Text', () => {
-	const mockReplyPrivately = jest.fn();
+	const mockReplyPrivately = vi.fn();
 	let context: MessageContextMenuCommandContext;
 	let mockAttachments: Collection<string, Attachment>;
 
@@ -21,7 +21,7 @@ describe('Get Alt Text', () => {
 	test('tells the user when there are no images', async () => {
 		const response = 'This message contains no attachments.';
 		await expect(altText.execute(context)).resolves.toBeUndefined();
-		expect(mockReplyPrivately).toHaveBeenCalledOnceWith(response);
+		expect(mockReplyPrivately).toHaveBeenCalledExactlyOnceWith(response);
 	});
 
 	test('tells the user when there is only one undescribed image', async () => {
@@ -31,7 +31,7 @@ describe('Get Alt Text', () => {
 
 		const response = 'The attachment in this message has no text description.';
 		await expect(altText.execute(context)).resolves.toBeUndefined();
-		expect(mockReplyPrivately).toHaveBeenCalledOnceWith(response);
+		expect(mockReplyPrivately).toHaveBeenCalledExactlyOnceWith(response);
 	});
 
 	test('tells the user when none of two attachments contains a description', async () => {
@@ -44,7 +44,7 @@ describe('Get Alt Text', () => {
 
 		const response = 'None of the 2 attachments in this message contains a text description.';
 		await expect(altText.execute(context)).resolves.toBeUndefined();
-		expect(mockReplyPrivately).toHaveBeenCalledOnceWith(response);
+		expect(mockReplyPrivately).toHaveBeenCalledExactlyOnceWith(response);
 	});
 
 	test('tells the user when no attachments contains a description, or some are only whitespace', async () => {
@@ -60,7 +60,7 @@ describe('Get Alt Text', () => {
 
 		const response = 'None of the 3 attachments in this message contains a text description.';
 		await expect(altText.execute(context)).resolves.toBeUndefined();
-		expect(mockReplyPrivately).toHaveBeenCalledOnceWith(response);
+		expect(mockReplyPrivately).toHaveBeenCalledExactlyOnceWith(response);
 	});
 
 	test('replies with the image description', async () => {
@@ -71,7 +71,7 @@ describe('Get Alt Text', () => {
 
 		const response = `## Image Description\n> ${description}`;
 		await expect(altText.execute(context)).resolves.toBeUndefined();
-		expect(mockReplyPrivately).toHaveBeenCalledOnceWith(response);
+		expect(mockReplyPrivately).toHaveBeenCalledExactlyOnceWith(response);
 	});
 
 	test('replies with the description of each image', async () => {
@@ -90,7 +90,7 @@ describe('Get Alt Text', () => {
 
 		const response = `## Image Descriptions\n### Image 1\n> ${description1}\n### Image 2\n> ${description2}\n### Image 3\n> ${description3}`;
 		await expect(altText.execute(context)).resolves.toBeUndefined();
-		expect(mockReplyPrivately).toHaveBeenCalledOnceWith(response);
+		expect(mockReplyPrivately).toHaveBeenCalledExactlyOnceWith(response);
 	});
 
 	test('replies with the description of each image, noting images without description', async () => {
@@ -112,6 +112,6 @@ describe('Get Alt Text', () => {
 
 		const response = `## Image Descriptions\n### Image 1\n> ${description1}\n### Image 2\n> ${description2}\n### Image 3\n> ${description3}\n### Image 4 has no description`;
 		await expect(altText.execute(context)).resolves.toBeUndefined();
-		expect(mockReplyPrivately).toHaveBeenCalledOnceWith(response);
+		expect(mockReplyPrivately).toHaveBeenCalledExactlyOnceWith(response);
 	});
 });

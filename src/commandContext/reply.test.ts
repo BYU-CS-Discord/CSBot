@@ -1,13 +1,13 @@
 import type { RepliableInteraction } from 'discord.js';
 
 // Mock the logger to track output
-jest.mock('../logger');
+vi.mock('../logger');
 import { error as mockLoggerError } from '../logger';
 
 import { replyFactory as factory } from './reply';
 
 describe('public reply', () => {
-	const mockInteractionReply = jest.fn();
+	const mockInteractionReply = vi.fn();
 
 	const interaction = {
 		user: { id: 'user-id-1234' },
@@ -49,8 +49,7 @@ describe('public reply', () => {
 		const testError = new Error('This is a test');
 		mockInteractionReply.mockRejectedValueOnce(testError);
 		await expect(reply('yo')).resolves.toBeUndefined();
-		expect(mockLoggerError).toHaveBeenCalledOnce();
-		expect(mockLoggerError).toHaveBeenCalledWith(
+		expect(mockLoggerError).toHaveBeenCalledExactlyOnceWith(
 			expect.stringContaining('reply to interaction'),
 			testError
 		);

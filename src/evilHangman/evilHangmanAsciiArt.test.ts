@@ -11,10 +11,10 @@ describe('evilHangmanAsciiArt.ts', () => {
 	] as const;
 	test.each(tests)('frame %i of %i has not changed', async (frame, ofFrame) => {
 		await expect(getHangmanArt(frame, ofFrame)).resolves.toMatchSnapshot();
-		await expect(getHangmanArt(frame, ofFrame)).resolves.not.toEqual('');
+		await expect(getHangmanArt(frame, ofFrame)).resolves.not.toBe('');
 	});
 
 	test('out of bounds resolves to empty string', async () => {
-		await expect(getHangmanArt(11, 10)).resolves.toEqual('');
+		await expect(getHangmanArt(11, 10)).resolves.toBe('');
 	});
 });

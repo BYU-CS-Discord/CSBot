@@ -1,16 +1,17 @@
+import type { Mock } from 'vitest';
 import { fetchJson } from '../helpers/fetch';
 import { HttpStatusCode } from '../helpers/HttpStatusCode';
 import { NetworkError } from '../helpers/NetworkError';
 
-jest.mock('../helpers/fetch', () => ({ fetchJson: jest.fn() }));
+vi.mock('../helpers/fetch', () => ({ fetchJson: vi.fn() }));
 
-const mockedFetchJson = fetchJson as jest.Mock<
-	ReturnType<typeof fetchJson>,
-	Parameters<typeof fetchJson>
+const mockedFetchJson = fetchJson as Mock<
+	Parameters<typeof fetchJson>,
+	ReturnType<typeof fetchJson>
 >;
 
 // Mock the logger so nothing is printed
-jest.mock('../logger');
+vi.mock('../logger');
 
 const latestGood = {
 	month: '9',
@@ -47,9 +48,9 @@ const badResponse = new NetworkError(HttpStatusCode.BAD_REQUEST);
 import { xkcd } from './xkcd';
 
 describe('xkcd', () => {
-	const mockReply = jest.fn();
-	const mockSendTyping = jest.fn();
-	const mockGetInteger = jest.fn();
+	const mockReply = vi.fn();
+	const mockSendTyping = vi.fn();
+	const mockGetInteger = vi.fn();
 	let context: TextInputCommandContext;
 
 	beforeEach(() => {
@@ -81,9 +82,8 @@ describe('xkcd', () => {
 		mockedFetchJson.mockResolvedValue(latestGood);
 		mockGetInteger.mockReturnValueOnce(null);
 		await expect(xkcd.execute(context)).resolves.toBeUndefined();
-		expect(mockReply).toHaveBeenCalledOnce();
 		expect(mockSendTyping).toHaveBeenCalledOnce();
-		expect(mockReply).toHaveBeenCalledWith({
+		expect(mockReply).toHaveBeenCalledExactlyOnceWith({
 			embeds: [expect.toBeObject()],
 			ephemeral: false,
 		});
@@ -94,9 +94,8 @@ describe('xkcd', () => {
 		mockedFetchJson.mockResolvedValueOnce(latestGood);
 		mockGetInteger.mockReturnValueOnce(chosen.num);
 		await expect(xkcd.execute(context)).resolves.toBeUndefined();
-		expect(mockReply).toHaveBeenCalledOnce();
 		expect(mockSendTyping).toHaveBeenCalledOnce();
-		expect(mockReply).toHaveBeenCalledWith({
+		expect(mockReply).toHaveBeenCalledExactlyOnceWith({
 			embeds: [expect.toBeObject()],
 			ephemeral: false,
 		});

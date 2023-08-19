@@ -1,14 +1,14 @@
 import type { Client } from 'discord.js';
 
 // Mock the logger so nothing is printed
-jest.mock('../../logger');
+vi.mock('../../logger');
 
 import { revokeCommands } from './revokeCommands';
 
 describe('Command revocations', () => {
-	const mockApplicationCommandsSet = jest.fn();
-	const mockGuildCommandsSet = jest.fn();
-	const mockFetchOauthGuilds = jest.fn();
+	const mockApplicationCommandsSet = vi.fn();
+	const mockGuildCommandsSet = vi.fn();
+	const mockFetchOauthGuilds = vi.fn();
 
 	const mockClient = {
 		application: {

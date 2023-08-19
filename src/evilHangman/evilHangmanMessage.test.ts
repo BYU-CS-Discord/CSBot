@@ -26,7 +26,7 @@ describe('evilHangmanMessage', () => {
 				winState: EvilHangmanWinState.WON,
 			});
 			const winEmbed = winMessage.embeds?.[0] as EmbedBuilder;
-			expect(winEmbed.data.description).not.toBeUndefined();
+			expect(winEmbed.data.description).toBeDefined();
 			expect(winMessage.components).toBeEmpty();
 
 			const lostMessage = await buildEvilHangmanMessage({
@@ -37,7 +37,7 @@ describe('evilHangmanMessage', () => {
 				correctWord: '',
 			});
 			const lostEmbed = lostMessage.embeds?.[0] as EmbedBuilder;
-			expect(lostEmbed.data.description).not.toBeUndefined();
+			expect(lostEmbed.data.description).toBeDefined();
 			expect(lostMessage.components).toBeEmpty();
 		});
 

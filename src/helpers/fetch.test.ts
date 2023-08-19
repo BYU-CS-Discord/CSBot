@@ -4,7 +4,7 @@ import { NetworkError } from './NetworkError';
 import { string, type as schema, StructError } from 'superstruct';
 import { URL } from 'node:url';
 
-const mockFetch = jest.spyOn(global, 'fetch');
+const mockFetch = vi.spyOn(global, 'fetch');
 
 describe('fetchJson', () => {
 	const url = new URL('https://example.com');
@@ -25,7 +25,7 @@ describe('fetchJson', () => {
 		} as unknown as Response);
 
 		const data = await fetchJson(url, struct);
-		expect(mockFetch).toHaveBeenCalledOnceWith(url);
+		expect(mockFetch).toHaveBeenCalledExactlyOnceWith(url, undefined);
 		expect(data).toStrictEqual(res);
 	});
 
@@ -39,7 +39,7 @@ describe('fetchJson', () => {
 		await expect(() => fetchJson(url, struct)).rejects.toStrictEqual(
 			new NetworkError(HttpStatusCode.BAD_REQUEST)
 		);
-		expect(mockFetch).toHaveBeenCalledOnceWith(url);
+		expect(mockFetch).toHaveBeenCalledExactlyOnceWith(url, undefined);
 	});
 
 	test('throws a StructError with malformed data', async () => {
@@ -51,6 +51,6 @@ describe('fetchJson', () => {
 		} as unknown as Response);
 
 		await expect(() => fetchJson(url, struct)).rejects.toThrow(StructError);
-		expect(mockFetch).toHaveBeenCalledOnceWith(url);
+		expect(mockFetch).toHaveBeenCalledExactlyOnceWith(url, undefined);
 	});
 });

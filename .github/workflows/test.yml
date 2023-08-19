@@ -37,6 +37,3 @@ jobs:
 
       - name: Run unit tests
         run: npm test
-
-      # - name: Report test coverage
-      #   uses: ArtiomTr/jest-coverage-report-action@v2.2.2

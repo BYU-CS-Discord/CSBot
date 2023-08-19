@@ -1,24 +1,28 @@
 // Create a mocked client to track 'on' and 'once' calls
-const mockOn = jest.fn();
-const mockOnce = jest.fn();
-class MockClient {
-	on = mockOn;
-	once = mockOnce;
-}
+const mockOn = vi.fn();
+const mockOnce = vi.fn();
+const MockClient = vi.hoisted(() => {
+	return class {
+		on = mockOn;
+		once = mockOnce;
+	};
+});
 
 // Overwrite discord.js to use the MockClient instead of Client
-const Discord = jest.requireActual<typeof import('discord.js')>('discord.js');
-jest.mock('discord.js', () => ({
-	...Discord,
-	Client: MockClient,
-}));
+vi.mock('discord.js', async () => {
+	const Discord = await vi.importActual<typeof import('discord.js')>('discord.js');
+	return {
+		...Discord,
+		Client: MockClient,
+	};
+});
 
 // Re-import Client (which is now MockedClient) so we can use it
 import { Client } from 'discord.js';
 const client = new Client({ intents: [] });
 
 // Mock the logger so nothing is printed
-jest.mock('../logger');
+vi.mock('../logger');
 
 // Import the code to test
 import { _add, allEventHandlers, registerEventHandlers } from './index';

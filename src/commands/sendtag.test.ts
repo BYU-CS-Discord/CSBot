@@ -2,8 +2,8 @@ import type { AutocompleteInteraction } from 'discord.js';
 import { sendtag } from './sendtag';
 
 describe('sendtag', () => {
-	const mockReply = jest.fn<Promise<void>, [content: string]>();
-	const mockGetString = jest.fn<string, [name: string, required: true]>();
+	const mockReply = vi.fn<[content: string], Promise<void>>();
+	const mockGetString = vi.fn<[name: string, required: true], string>();
 
 	let context: GuildedCommandContext;
 
@@ -30,8 +30,7 @@ describe('sendtag', () => {
 		const value = 'lorem ipsum';
 		mockGetString.mockReturnValue(value);
 		await expect(sendtag.execute(context)).resolves.toBeUndefined();
-		expect(mockReply).toHaveBeenCalledOnce();
-		expect(mockReply).toHaveBeenCalledWith(`You requested the '${value}' tag!`);
+		expect(mockReply).toHaveBeenCalledExactlyOnceWith(`You requested the '${value}' tag!`);
 	});
 
 	test('returns an array for autocomplete', () => {

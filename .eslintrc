@@ -110,13 +110,10 @@
 	"overrides": [
 		{
 			"files": ["src/**/*.test.ts", "src/**/__mocks__/**/*.ts"],
-			"extends": ["plugin:jest/recommended"],
-			"plugins": ["jest"],
+			"extends": ["plugin:vitest/recommended"],
+			"plugins": ["vitest"],
 			"parserOptions": {
 				"project": "./tsconfig.test.json"
-			},
-			"env": {
-				"jest": true
 			},
 			"rules": {
 				"prettier/prettier": "warn",

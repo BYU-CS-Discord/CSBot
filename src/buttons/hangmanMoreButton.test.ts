@@ -1,7 +1,7 @@
 import { hangmanMoreButton } from './hangmanMoreButton';
 
 describe('hangmanMoreButton', () => {
-	const mockUpdate = jest.fn();
+	const mockUpdate = vi.fn();
 	const message = {
 		embeds: [
 			{
@@ -25,10 +25,9 @@ describe('hangmanMoreButton', () => {
 	test('updates response to have second page of buttons', async () => {
 		await expect(hangmanMoreButton.execute(context)).resolves.toBeUndefined();
 
-		expect(mockUpdate).toHaveBeenCalledOnce();
-		expect(mockUpdate).toHaveBeenCalledWith({
+		expect(mockUpdate).toHaveBeenCalledExactlyOnceWith({
 			embeds: [expect.toBeObject()],
-			components: expect.toBeArrayOfSize(1) as Array<unknown>,
+			components: expect.toBeArrayOfSize(1),
 		});
 	});
 });

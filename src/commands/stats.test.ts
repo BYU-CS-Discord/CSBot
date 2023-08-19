@@ -1,14 +1,17 @@
-import type { DeepMockProxy } from 'jest-mock-extended';
+import type { DeepMockProxy } from 'vitest-mock-extended';
 import type { PrismaClient, Scoreboard } from '@prisma/client';
-import { mockDeep } from 'jest-mock-extended';
+import { mockDeep } from 'vitest-mock-extended';
 
-jest.mock('../constants/meta', () => ({
-	// Version changes frequently, so use a consistent version number to test with:
-	appVersion: 'X.X.X',
-	repo: jest.requireActual<typeof import('../constants/meta')>('../constants/meta').repo,
-}));
+vi.mock('../constants/meta', async () => {
+	const { repo } = await vi.importActual<typeof import('../constants/meta')>('../constants/meta');
+	return {
+		// Version changes frequently, so use a consistent version number to test with:
+		appVersion: 'X.X.X',
+		repo,
+	};
+});
 
-jest.mock('../database', () => ({
+vi.mock('../database', () => ({
 	db: mockDeep<PrismaClient>(),
 }));
 
@@ -16,7 +19,7 @@ import { stats } from './stats';
 import { db } from '../database';
 
 describe('stats', () => {
-	const dbMock = db as unknown as DeepMockProxy<PrismaClient>;
+	const dbMock = db as DeepMockProxy<PrismaClient>;
 	/* eslint-disable @typescript-eslint/unbound-method */
 	const mockCount = dbMock.scoreboard.count;
 	const mockCreate = dbMock.scoreboard.create;
@@ -30,12 +33,12 @@ describe('stats', () => {
 	const mockStatName = 'stats-test';
 	const mockGuildId = 'test-guild-id';
 
-	const mockReply = jest.fn();
-	const mockReplyPrivately = jest.fn();
-	const mockGetString = jest.fn<string | null, [name: string]>();
-	const mockGetNumber = jest.fn<number | null, [name: string]>();
-	const mockGetSubcommand = jest.fn();
-	const mockGetUser = jest.fn();
+	const mockReply = vi.fn();
+	const mockReplyPrivately = vi.fn();
+	const mockGetString = vi.fn<[name: string], string | null>();
+	const mockGetNumber = vi.fn<[name: string], number | null>();
+	const mockGetSubcommand = vi.fn();
+	const mockGetUser = vi.fn();
 	let context: GuildedCommandContext;
 
 	beforeEach(() => {
@@ -66,20 +69,15 @@ describe('stats', () => {
 	});
 
 	describe('track', () => {
-		beforeAll(() => {
-			mockGetSubcommand.mockReturnValue('track');
-		});
-
 		beforeEach(() => {
+			mockGetSubcommand.mockReturnValue('track');
 			mockGetString.mockReturnValue(mockStatName);
-
 			mockCount.mockResolvedValue(0);
 		});
 
 		test('begins tracking a stat', async () => {
 			await expect(stats.execute(context)).resolves.toBeUndefined();
-			expect(mockCreate).toHaveBeenCalledOnce();
-			expect(mockCreate).toHaveBeenCalledWith({
+			expect(mockCreate).toHaveBeenCalledExactlyOnceWith({
 				data: {
 					userId: mockUserId,
 					name: mockStatName,
@@ -103,11 +101,8 @@ describe('stats', () => {
 		const mockAmount = 1;
 		const startAmount = 1;
 
-		beforeAll(() => {
-			mockGetSubcommand.mockReturnValue('update');
-		});
-
 		beforeEach(() => {
+			mockGetSubcommand.mockReturnValue('update');
 			mockGetString.mockReturnValue(mockStatName);
 			mockGetNumber.mockReturnValue(mockAmount);
 			mockFindFirst.mockResolvedValue({
@@ -119,8 +114,7 @@ describe('stats', () => {
 		test('score is added', async () => {
 			await expect(stats.execute(context)).resolves.toBeUndefined();
 
-			expect(mockUpdate).toHaveBeenCalledOnce();
-			expect(mockUpdate).toHaveBeenCalledWith({
+			expect(mockUpdate).toHaveBeenCalledExactlyOnceWith({
 				where: {
 					id: mockScoreboardId,
 				},
@@ -140,11 +134,8 @@ describe('stats', () => {
 	});
 
 	describe('list', () => {
-		beforeAll(() => {
-			mockGetSubcommand.mockReturnValue('list');
-		});
-
 		test('replies privately', async () => {
+			mockGetSubcommand.mockReturnValue('list');
 			mockFindMany.mockResolvedValue([
 				{
 					score: 1,
@@ -158,11 +149,8 @@ describe('stats', () => {
 	});
 
 	describe('untrack', () => {
-		beforeAll(() => {
-			mockGetSubcommand.mockReturnValue('untrack');
-		});
-
 		beforeEach(() => {
+			mockGetSubcommand.mockReturnValue('untrack');
 			mockGetString.mockReturnValue(mockStatName);
 
 			mockFindFirst.mockResolvedValue({
@@ -172,8 +160,7 @@ describe('stats', () => {
 
 		test('stops tracking a stat', async () => {
 			await expect(stats.execute(context)).resolves.toBeUndefined();
-			expect(mockDelete).toHaveBeenCalledOnce();
-			expect(mockDelete).toHaveBeenCalledWith({
+			expect(mockDelete).toHaveBeenCalledExactlyOnceWith({
 				where: {
 					id: 0,
 				},
@@ -190,11 +177,8 @@ describe('stats', () => {
 	});
 
 	describe('leaderboard', () => {
-		beforeAll(() => {
-			mockGetSubcommand.mockReturnValue('leaderboard');
-		});
-
 		beforeEach(() => {
+			mockGetSubcommand.mockReturnValue('leaderboard');
 			mockGetString.mockReturnValue(mockStatName);
 			mockFindMany.mockResolvedValue([
 				{
