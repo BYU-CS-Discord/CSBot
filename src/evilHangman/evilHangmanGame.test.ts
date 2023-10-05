@@ -53,7 +53,7 @@ describe('EvilHangmanGame', () => {
 	test('making a guess adds the guess to guessesSoFar', () => {
 		const guess = 'b';
 		const displayInfo = game.makeGuess(guess);
-		expect([...displayInfo.guessesSoFar]).toInclude(guess);
+		expect(Array.from(displayInfo.guessesSoFar)).toInclude(guess);
 	});
 
 	test('making an incorrect guess decrements guessesRemaining', () => {

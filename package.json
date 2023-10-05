@@ -1,6 +1,6 @@
 {
 	"name": "csbot",
-	"version": "0.10.2",
+	"version": "0.12.1",
 	"description": "The One beneath the Supreme Overlord's rule. A bot to help manage the BYU CS Discord, successor to Ze Kaiser (https://github.com/arkenstorm/ze-kaiser)",
 	"private": true,
 	"scripts": {
@@ -23,7 +23,7 @@
 		"build": "rm -rf dist && ./node_modules/.bin/tsc -p tsconfig.prod.json",
 		"export-version": "./node_modules/.bin/genversion ./src/constants/version.ts -es",
 		"test": "./node_modules/.bin/jest",
-		"test:watch": "npm run test -- --watch --coverage=false",
+		"test:watch": "npm run test -- --watch",
 		"docker": "npm run docker:image && npm run docker:cleanup && npm run docker:container",
 		"docker:image": "docker build --tag cs-bot-image --label cs-bot .",
 		"docker:container": "docker run --tty --interactive --rm --mount type=bind,source=$PWD,destination=/cs-bot cs-bot-image",
@@ -45,29 +45,27 @@
 	},
 	"homepage": "https://github.com/BYU-CS-Discord/CSBot#readme",
 	"engines": {
-		"node": "^16.19.0"
+		"node": "^18.17.0"
 	},
 	"main": "./dist/main.js",
 	"type": "commonjs",
 	"dependencies": {
 		"@discordjs/voice": "0.15.0",
 		"@prisma/client": "4.3.1",
-		"axios": "1.3.4",
 		"dectalk": "1.3.1",
 		"discord.js": "14.9.0",
 		"dotenv": "16.0.3",
 		"ffmpeg-static": "5.1.0",
 		"libsodium-wrappers": "0.7.10",
 		"lodash": "4.17.21",
-		"pm2": "5.2.2",
 		"source-map-support": "0.5.21",
-		"tmp": "0.2.1",
-		"yargs": "17.5.1"
+		"superstruct": "1.0.3",
+		"tmp": "0.2.1"
 	},
 	"devDependencies": {
 		"@types/jest": "29.5.0",
-		"@types/lodash": "4.14.185",
-		"@types/node": "16.9.6",
+		"@types/lodash": "4.14.191",
+		"@types/node": "18.17.5",
 		"@types/source-map-support": "0.5.6",
 		"@types/tmp": "0.2.3",
 		"@typescript-eslint/eslint-plugin": "5.56.0",
@@ -76,6 +74,7 @@
 		"eslint-config-prettier": "8.8.0",
 		"eslint-config-strictest": "0.7.0",
 		"eslint-plugin-deprecation": "1.3.3",
+		"eslint-plugin-file-progress": "1.3.0",
 		"eslint-plugin-import": "2.27.5",
 		"eslint-plugin-jest": "27.2.1",
 		"eslint-plugin-node": "11.1.0",
@@ -89,13 +88,14 @@
 		"jest-mock-extended": "3.0.4",
 		"keep-a-changelog": "2.2.1",
 		"nodemon": "2.0.21",
+		"pm2": "5.2.2",
 		"prettier": "2.8.6",
 		"prettier-plugin-prisma": "4.10.0",
 		"prisma": "4.3.1",
 		"semver": "7.3.8",
-		"superstruct": "1.0.3",
 		"ts-jest": "29.0.5",
 		"ts-node": "10.9.1",
-		"typescript": "4.9.5"
+		"typescript": "4.9.5",
+		"undici": "5.23.0"
 	}
 }

@@ -1,26 +1,29 @@
-import axios from 'axios';
-jest.mock('axios');
+import { fetchJson } from '../helpers/fetch';
+import { HttpStatusCode } from '../helpers/HttpStatusCode';
+import { NetworkError } from '../helpers/NetworkError';
 
-const mockedAxios = axios as jest.Mocked<typeof axios>;
+jest.mock('../helpers/fetch', () => ({ fetchJson: jest.fn() }));
+
+const mockedFetchJson = fetchJson as jest.Mock<
+	ReturnType<typeof fetchJson>,
+	Parameters<typeof fetchJson>
+>;
 
 // Mock the logger so nothing is printed
 jest.mock('../logger');
 
 const latestGood = {
-	status: 200,
-	data: {
-		month: '9',
-		num: 2679,
-		link: '',
-		year: '2022',
-		news: '',
-		safe_title: 'Quantified Self',
-		transcript: '',
-		alt: "It's made me way more excited about ferris wheels, subways, car washes, waterslides, and store entrances that have double doors with a divider in the middle.",
-		img: 'https://imgs.xkcd.com/comics/quantified_self.png',
-		title: 'Quantified Self',
-		day: '30',
-	},
+	month: '9',
+	num: 2679,
+	link: '',
+	year: '2022',
+	news: '',
+	safe_title: 'Quantified Self',
+	transcript: '',
+	alt: "It's made me way more excited about ferris wheels, subways, car washes, waterslides, and store entrances that have double doors with a divider in the middle.",
+	img: 'https://imgs.xkcd.com/comics/quantified_self.png',
+	title: 'Quantified Self',
+	day: '30',
 };
 
 const chosen = {
@@ -38,15 +41,7 @@ const chosen = {
 	img: 'https://imgs.xkcd.com/comics/sheep.jpg',
 };
 
-const chosenGood = {
-	status: 200,
-	data: chosen,
-};
-
-const badResponse = {
-	status: 400,
-	data: null,
-};
+const badResponse = new NetworkError(HttpStatusCode.BAD_REQUEST);
 
 // Import the code to test
 import { xkcd } from './xkcd';
@@ -69,7 +64,7 @@ describe('xkcd', () => {
 	});
 
 	test('Throws an error when the number is out of bounds', async () => {
-		mockedAxios.get.mockResolvedValue(latestGood);
+		mockedFetchJson.mockResolvedValue(latestGood);
 
 		// they just need the number from the initial call
 		mockGetInteger.mockReturnValueOnce(-1);
@@ -83,7 +78,7 @@ describe('xkcd', () => {
 	});
 
 	test('Returning an embed with the latest comic when no number is given', async () => {
-		mockedAxios.get.mockResolvedValue(latestGood);
+		mockedFetchJson.mockResolvedValue(latestGood);
 		mockGetInteger.mockReturnValueOnce(null);
 		await expect(xkcd.execute(context)).resolves.toBeUndefined();
 		expect(mockReply).toHaveBeenCalledOnce();
@@ -95,8 +90,8 @@ describe('xkcd', () => {
 	});
 
 	test('Returning an embed with a comic given by a number parameter', async () => {
-		mockedAxios.get.mockResolvedValue(chosenGood);
-		mockedAxios.get.mockResolvedValueOnce(latestGood);
+		mockedFetchJson.mockResolvedValue(chosen);
+		mockedFetchJson.mockResolvedValueOnce(latestGood);
 		mockGetInteger.mockReturnValueOnce(chosen.num);
 		await expect(xkcd.execute(context)).resolves.toBeUndefined();
 		expect(mockReply).toHaveBeenCalledOnce();
@@ -108,15 +103,15 @@ describe('xkcd', () => {
 	});
 
 	test('Checking when a second call to the API fails', async () => {
-		mockedAxios.get.mockResolvedValue(badResponse);
-		mockedAxios.get.mockResolvedValueOnce(latestGood);
+		mockedFetchJson.mockRejectedValue(badResponse);
+		mockedFetchJson.mockResolvedValueOnce(latestGood);
 		mockGetInteger.mockReturnValueOnce(chosen.num);
 		await expect(xkcd.execute(context)).rejects.toThrow();
 		expect(mockSendTyping).toHaveBeenCalledOnce();
 	});
 
 	test('Checking when a first call to the API fails', async () => {
-		mockedAxios.get.mockResolvedValue(badResponse);
+		mockedFetchJson.mockRejectedValue(badResponse);
 		mockGetInteger.mockReturnValueOnce(chosen.num);
 		await expect(xkcd.execute(context)).rejects.toThrow();
 		expect(mockSendTyping).toHaveBeenCalledOnce();

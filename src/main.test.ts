@@ -1,10 +1,12 @@
+import 'jest-extended';
+
 // Create a mocked client to track constructor and 'login' calls
 const mockConstructClient = jest.fn();
 const mockLogin = jest.fn();
 class MockClient {
 	login = mockLogin;
 
-	constructor(...args: Array<unknown>) {
+	constructor(...args: ReadonlyArray<unknown>) {
 		mockConstructClient(...args);
 	}
 }

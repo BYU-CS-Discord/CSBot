@@ -1,14 +1,14 @@
 import { hangmanLetterButton, Letter } from '../buttons/hangmanLetterButton';
 
-const alphabet: Array<Letter> = new Array(26)
+const alphabet: ReadonlyArray<Letter> = new Array(26)
 	.fill(null)
 	.map((x, i) => String.fromCharCode(i + 97) as Letter);
 
-const buttonMap: Map<Letter, Button> = new Map(
+const buttonMap: ReadonlyMap<Letter, Button> = new Map(
 	alphabet.map(letter => [letter, hangmanLetterButton(letter)])
 );
 
-export const letterButtons: Array<Button> = [...buttonMap.values()];
+export const letterButtons: ReadonlyArray<Button> = Array.from(buttonMap.values());
 
 /**
  * Filters the given letters from the alphabet and returns all Letter buttons whose
@@ -16,8 +16,8 @@ export const letterButtons: Array<Button> = [...buttonMap.values()];
  * @param guessesSoFar a set of letters which should not be included
  * @returns the buttons for every letter not given
  */
-export function getButtonsForAllLettersExcept(guessesSoFar: Set<string>): Array<Button> {
-	return [...buttonMap.entries()]
+export function getButtonsForAllLettersExcept(guessesSoFar: ReadonlySet<string>): Array<Button> {
+	return Array.from(buttonMap.entries())
 		.filter(entry => !guessesSoFar.has(entry[0]))
 		.map(entry => entry[1]);
 }

@@ -5,11 +5,39 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.10.2] - 2024-04-14
+## [0.12.1] - 2023-10-05
 
 ### Fixed
 
 - Bug where uncached users in a leaderboard throws an error
+
+## [0.12.0] - 2023-08-18
+
+### Changed
+
+- Updated engine requirement to Node 18. This is a breaking change, as the update process may not be as simple as running `/update`.
+- Use built-in `fetch` at runtime, instead of `undici`.
+
+## [0.11.2] - 2023-07-07
+
+### Changed
+
+- Use `undici` instead of `axios` for network requests.
+- Log HTTP status text when encountering non-200 statuses.
+- Properly guard API boundaries against type poisoning.
+
+## [0.11.1] - 2023-06-28
+
+### Changed
+
+- Made some internal structures read-only, to enforce interface contracts at compile time and reduce some cases of array duplication.
+- Straightened out internal circular dependencies, in preparation for Rollup build and ESM.
+
+## [0.11.0] - 2023-05-31
+
+### Added
+
+- New context menu command to retrieve the image descriptions (alt text) for a given message's attachments.
 
 ## [0.10.1] - 2023-04-13
 
@@ -193,7 +221,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Development Environment for needed dependencies.
 
-[0.10.2]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.10.1...v0.10.2
+[0.12.1]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.12.0...v0.12.1
+[0.12.0]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.11.2...v0.12.0
+[0.11.2]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.11.1...v0.11.2
+[0.11.1]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.11.0...v0.11.1
+[0.11.0]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.10.1...v0.11.0
 [0.10.1]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.10.0...v0.10.1
 [0.10.0]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.9.2...v0.10.0
 [0.9.2]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.9.1...v0.9.2
