@@ -1,7 +1,7 @@
 # Use this file to specify a canonical name for `git log` to use for
 # your email address, as used in commit authorship. Useful for when your
 # name has changed over the repo's history, or you want to use a different
-# name than what's listed in GitHub..
+# name than what's listed in GitHub.
 #
 # NOTE: Some GitHub commits contain a "Co-authored by" line in the commit
 # message that contains your old name. The only way to fix those, as far
