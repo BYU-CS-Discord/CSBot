@@ -1,10 +1,4 @@
-import {
-	ChatInputCommandInteraction,
-	Collection,
-	EmbedBuilder,
-	SlashCommandBuilder,
-	User,
-} from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder, userMention } from 'discord.js';
 import { UserMessageError } from '../helpers/UserMessageError';
 import { db } from '../database';
 import { sanitize } from '../helpers/sanitize';
@@ -79,7 +73,7 @@ export const stats: GuildedCommand = {
 	info: builder,
 	requiresGuild: true,
 
-	async execute({ reply, replyPrivately, interaction, client, guild }): Promise<void> {
+	async execute({ reply, replyPrivately, interaction, guild }): Promise<void> {
 		const subcommand = interaction.options.getSubcommand();
 
 		switch (subcommand) {
@@ -96,7 +90,7 @@ export const stats: GuildedCommand = {
 				await untrack(reply, interaction, guild.id);
 				break;
 			case LeaderboardSubcommand:
-				await leaderboard(reply, interaction, guild.id, client.users.cache);
+				await leaderboard(reply, interaction, guild.id);
 				break;
 			default:
 				throw new Error('Invalid subcommand');
@@ -238,8 +232,7 @@ async function untrack(
 async function leaderboard(
 	reply: InteractionContext['reply'],
 	interaction: ChatInputCommandInteraction,
-	guildId: string,
-	userCache: Collection<string, User>
+	guildId: string
 ): Promise<void> {
 	const statName = sanitize(interaction.options.getString(StatNameOption, true));
 
@@ -258,20 +251,11 @@ async function leaderboard(
 		throw new UserMessageError(`No one is tracking the stat "${statName}"`);
 	}
 
-	const scoresWithUsernames = scoreboardEntries
-		.map(entry => ({
-			username: userCache.get(entry.userId)?.username,
-			userId: entry.userId,
-			score: entry.score,
-		}))
-		.sort((a, b) => b.score - a.score);
+	const scoresSorted = scoreboardEntries.sort((a, b) => b.score - a.score);
 
-	const embedDescription = scoresWithUsernames
+	const embedDescription = scoresSorted
 		.map(entry => {
-			if (entry.username === undefined) {
-				throw new Error(`Unable to find user with id ${entry.userId}`);
-			}
-			return `${entry.username}: ${entry.score}`;
+			return `${userMention(entry.userId)}: ${entry.score}`;
 		})
 		.join('\n');
 

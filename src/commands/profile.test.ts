@@ -1,5 +1,5 @@
 import type { GuildMember, ImageURLOptions, User, UserResolvable } from 'discord.js';
-import { DiscordAPIError, EmbedBuilder } from 'discord.js';
+import { DiscordAPIError, EmbedBuilder, userMention } from 'discord.js';
 import { DiscordErrorCode } from '../helpers/DiscordErrorCode';
 import { profile } from './profile';
 
@@ -126,7 +126,7 @@ describe('profile', () => {
 		expect(mockReplyPrivately).not.toHaveBeenCalled();
 		expect(mockReply).toHaveBeenCalledOnce();
 		expect(mockReply).toHaveBeenCalledWith({
-			content: `<@${otherUser.id}>'s profile:`,
+			content: `${userMention(otherUser.id)}'s profile:`,
 			embeds: [
 				new EmbedBuilder({
 					title: otherUser.username,
