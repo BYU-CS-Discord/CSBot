@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder, userMention } from 'discord.js';
 import { UserMessageError } from '../helpers/UserMessageError';
 import { db } from '../database';
 import { sanitize } from '../helpers/sanitize';
@@ -255,7 +255,7 @@ async function leaderboard(
 
 	const embedDescription = scoresSorted
 		.map(entry => {
-			return `<@${entry.userId}>: ${entry.score}`;
+			return `${userMention(entry.userId)}: ${entry.score}`;
 		})
 		.join('\n');
 
