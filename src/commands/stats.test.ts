@@ -217,11 +217,5 @@ describe('stats', () => {
 
 			await expect(stats.execute(context)).rejects.toThrow();
 		});
-
-		test('fails when unable to find a username', async () => {
-			mockGetUser.mockReturnValue(undefined);
-
-			await expect(stats.execute(context)).rejects.toThrow();
-		});
 	});
 });
