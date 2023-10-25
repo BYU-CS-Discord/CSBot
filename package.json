@@ -18,7 +18,7 @@
 		"db:introspect": "./node_modules/.bin/prisma db pull",
 		"db:generate": "./node_modules/.bin/prisma generate --schema ./prisma/schema.prisma",
 		"db:migrations:generate": "./node_modules/.bin/prisma migrate dev --create-only",
-		"lint": "./node_modules/.bin/eslint . --ext .ts",
+		"lint": "./node_modules/.bin/eslint .",
 		"lint:fix": "npm run lint -- --fix",
 		"build": "rm -rf dist && ./node_modules/.bin/tsc -p tsconfig.prod.json",
 		"export-version": "./node_modules/.bin/genversion ./src/constants/version.ts -es",

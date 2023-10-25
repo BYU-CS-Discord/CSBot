@@ -23,8 +23,7 @@
 	],
 	"parser": "@typescript-eslint/parser",
 	"parserOptions": {
-		"project": "./tsconfig.prod.json",
-		"tsconfigRootDir": "./"
+		"project": "./tsconfig.eslint.json"
 	},
 	"env": {
 		"node": true
