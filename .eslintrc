@@ -101,13 +101,8 @@
 	"overrides": [
 		{
 			"files": ["src/**/*.test.ts", "src/**/__mocks__/**/*.ts"],
-			"extends": ["plugin:jest/recommended"],
-			"plugins": ["jest"],
 			"parserOptions": {
 				"project": "./tsconfig.test.json"
-			},
-			"env": {
-				"jest": true
 			},
 			"rules": {
 				"prettier/prettier": "warn",
