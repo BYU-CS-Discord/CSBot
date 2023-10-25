@@ -543,6 +543,7 @@ describe('on(interactionCreate)', () => {
 			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 			expect(mockGlobalExecute).not.toHaveBeenCalled();
 			expect(mockGuildedExecute).not.toHaveBeenCalled();
+			expect(mockRespond).toHaveBeenCalledOnce();
 			expect(mockRespond).toHaveBeenCalledWith([]);
 			expect(mockGlobalAutocomplete).not.toHaveBeenCalled();
 		});
@@ -553,6 +554,7 @@ describe('on(interactionCreate)', () => {
 			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 			expect(mockGlobalExecute).not.toHaveBeenCalled();
 			expect(mockGuildedExecute).not.toHaveBeenCalled();
+			expect(mockRespond).toHaveBeenCalledOnce();
 			expect(mockRespond).toHaveBeenCalledWith([]);
 			expect(mockGlobalAutocomplete).not.toHaveBeenCalled();
 		});
@@ -563,6 +565,7 @@ describe('on(interactionCreate)', () => {
 			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 			expect(mockGlobalExecute).not.toHaveBeenCalled();
 			expect(mockGuildedExecute).not.toHaveBeenCalled();
+			expect(mockRespond).toHaveBeenCalledOnce();
 			expect(mockRespond).toHaveBeenCalledWith([]);
 			expect(mockGlobalAutocomplete).not.toHaveBeenCalled();
 		});
@@ -573,6 +576,7 @@ describe('on(interactionCreate)', () => {
 			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 			expect(mockGlobalExecute).not.toHaveBeenCalled();
 			expect(mockGuildedExecute).not.toHaveBeenCalled();
+			expect(mockRespond).toHaveBeenCalledOnce();
 			expect(mockRespond).toHaveBeenCalledWith([]);
 			expect(mockGlobalAutocomplete).not.toHaveBeenCalled();
 		});
@@ -582,6 +586,7 @@ describe('on(interactionCreate)', () => {
 			expect(mockGlobalExecute).not.toHaveBeenCalled();
 			expect(mockGuildedExecute).not.toHaveBeenCalled();
 			expect(mockRespond).toHaveBeenCalledOnce();
+			expect(mockGlobalAutocomplete).toHaveBeenCalledOnce();
 			expect(mockGlobalAutocomplete).toHaveBeenCalledWith(interaction);
 		});
 
@@ -593,7 +598,9 @@ describe('on(interactionCreate)', () => {
 			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 			expect(mockGlobalExecute).not.toHaveBeenCalled();
 			expect(mockGuildedExecute).not.toHaveBeenCalled();
+			expect(mockRespond).toHaveBeenCalledOnce();
 			expect(mockRespond).toHaveBeenCalledWith([]);
+			expect(mockGlobalAutocomplete).toHaveBeenCalledOnce();
 			expect(mockGlobalAutocomplete).toHaveBeenCalledWith(interaction);
 		});
 
@@ -606,7 +613,9 @@ describe('on(interactionCreate)', () => {
 			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 			expect(mockGlobalExecute).not.toHaveBeenCalled();
 			expect(mockGuildedExecute).not.toHaveBeenCalled();
+			expect(mockRespond).toHaveBeenCalledOnce();
 			expect(mockRespond).toHaveBeenCalledWith([]);
+			expect(mockGlobalAutocomplete).toHaveBeenCalledOnce();
 			expect(mockGlobalAutocomplete).toHaveBeenCalledWith(interaction);
 		});
 	});
