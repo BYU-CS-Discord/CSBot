@@ -1,11 +1,13 @@
+import { beforeEach, describe, expect, test, vi } from 'vitest';
+
 // Mock the talkMessage functionality
-const mockSpeak = jest.fn();
-jest.mock('../talk', () => ({
+const mockSpeak = vi.hoisted(() => vi.fn());
+vi.mock('../talk', () => ({
 	speak: mockSpeak,
 }));
 
 // Mock the logger so nothing is printed
-jest.mock('../../logger');
+vi.mock('../../logger');
 
 // Import the code to test
 import { talk } from './talk';

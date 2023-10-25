@@ -1,16 +1,18 @@
 import type { GuildMember, ImageURLOptions, User, UserResolvable } from 'discord.js';
 import { DiscordAPIError, EmbedBuilder, userMention } from 'discord.js';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+
 import { DiscordErrorCode } from '../helpers/DiscordErrorCode';
 import { profile } from './profile';
 
-jest.mock('../logger');
+vi.mock('../logger');
 
 describe('profile', () => {
-	const mockReply = jest.fn<Promise<void>, [content: unknown]>();
-	const mockReplyPrivately = jest.fn<Promise<void>, [content: string]>();
-	const mockGetUser = jest.fn<User | null, [name: string, required?: boolean | undefined]>();
-	const mockGuildMembersFetch = jest.fn<Promise<GuildMember>, [options: UserResolvable]>();
-	const mockAvatarURL = jest.fn<string | null, [options?: ImageURLOptions | undefined]>();
+	const mockReply = vi.fn<[content: unknown], Promise<void>>();
+	const mockReplyPrivately = vi.fn<[content: string], Promise<void>>();
+	const mockGetUser = vi.fn<[name: string, required?: boolean | undefined], User | null>();
+	const mockGuildMembersFetch = vi.fn<[options: UserResolvable], Promise<GuildMember>>();
+	const mockAvatarURL = vi.fn<[options?: ImageURLOptions | undefined], string | null>();
 
 	const testAvatar = 'https://example.com/avatars/1234567890/abcdef1234567890.png';
 	let context: TextInputCommandContext;
@@ -58,6 +60,10 @@ describe('profile', () => {
 		mockGetUser.mockReturnValue(otherUser);
 		mockAvatarURL.mockReturnValue(testAvatar);
 		mockGuildMembersFetch.mockResolvedValue(otherUser as unknown as GuildMember);
+	});
+
+	afterEach(() => {
+		vi.resetAllMocks();
 	});
 
 	test('Throws an error when we fail to fetch the target member for an API reason', async () => {

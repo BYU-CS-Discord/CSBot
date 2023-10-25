@@ -1,18 +1,20 @@
 import type { RepliableInteraction } from 'discord.js';
 import { ChannelType } from 'discord.js';
+import type { Mock } from 'vitest';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
 
 // Mock the logger so nothing is printed
-jest.mock('../logger');
+vi.mock('../logger');
 
 import { sendTypingFactory as factory } from './sendTyping';
 
 describe('typing indicator', () => {
-	let mockSendTyping: jest.Mock<void, []>;
+	let mockSendTyping: Mock<[], void>;
 	let interaction: RepliableInteraction;
 	let sendTyping: () => void;
 
 	beforeEach(() => {
-		mockSendTyping = jest.fn<undefined, []>();
+		mockSendTyping = vi.fn<[], undefined>();
 		interaction = {
 			channel: {
 				sendTyping: mockSendTyping,

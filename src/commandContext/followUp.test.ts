@@ -1,19 +1,29 @@
 import type { RepliableInteraction } from 'discord.js';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+import type { Mock } from 'vitest';
 
-jest.mock('../helpers/actions/messages/replyToMessage');
+vi.mock('../helpers/actions/messages/replyToMessage');
 import { sendMessageInChannel } from '../helpers/actions/messages/replyToMessage';
-const mockSendMessageInChannel = sendMessageInChannel as jest.Mock;
+const mockSendMessageInChannel = sendMessageInChannel as Mock;
 
 // Mock the logger to track output
-jest.mock('../logger');
+vi.mock('../logger');
 import { error as mockLoggerError } from '../logger';
 
 import { followUpFactory as factory } from './followUp';
 
 describe('follow-up message', () => {
 	const testMessage = { id: 'test-message' };
-	mockSendMessageInChannel.mockResolvedValue(testMessage);
-	const mockInteractionFollowUp = jest.fn().mockResolvedValue(testMessage);
+	const mockInteractionFollowUp = vi.fn();
+
+	beforeEach(() => {
+		mockSendMessageInChannel.mockResolvedValue(testMessage);
+		mockInteractionFollowUp.mockResolvedValue(testMessage);
+	});
+
+	afterEach(() => {
+		vi.resetAllMocks();
+	});
 
 	const interaction = {
 		channel: {
@@ -35,7 +45,7 @@ describe('follow-up message', () => {
 	test('logs an error if the follow-up fails', async () => {
 		const testError = new Error('This is a test');
 		mockInteractionFollowUp.mockRejectedValueOnce(testError);
-		await expect(followUp('yo')).resolves.toBeFalse();
+		await expect(followUp('yo')).resolves.toBeFalsy();
 		expect(mockSendMessageInChannel).not.toHaveBeenCalled();
 		expect(mockLoggerError).toHaveBeenCalledOnce();
 		expect(mockLoggerError).toHaveBeenCalledWith(expect.stringContaining('follow up'), testError);
@@ -52,7 +62,7 @@ describe('follow-up message', () => {
 	test('logs an error if the follow-up with options fails', async () => {
 		const testError = new Error('This is a test');
 		mockInteractionFollowUp.mockRejectedValueOnce(testError);
-		await expect(followUp({ content: 'yo' })).resolves.toBeFalse();
+		await expect(followUp({ content: 'yo' })).resolves.toBeFalsy();
 		expect(mockSendMessageInChannel).not.toHaveBeenCalled();
 		expect(mockLoggerError).toHaveBeenCalledOnce();
 		expect(mockLoggerError).toHaveBeenCalledWith(expect.stringContaining('follow up'), testError);
@@ -71,15 +81,19 @@ describe('follow-up message', () => {
 		expect(mockLoggerError).not.toHaveBeenCalled();
 		expect(mockInteractionFollowUp).not.toHaveBeenCalled();
 		expect(mockSendMessageInChannel).toHaveBeenCalledOnce();
-		expect(mockSendMessageInChannel).toHaveBeenCalledWith(interaction.channel, { content: 'yo' });
+		expect(mockSendMessageInChannel).toHaveBeenCalledWith(interaction.channel, {
+			content: 'yo',
+		});
 	});
 
 	test('returns false if the plain message fallback failed', async () => {
 		mockSendMessageInChannel.mockResolvedValueOnce(null);
-		await expect(followUp({ content: 'yo', reply: false })).resolves.toBeFalse();
+		await expect(followUp({ content: 'yo', reply: false })).resolves.toBeFalsy();
 		expect(mockLoggerError).not.toHaveBeenCalled();
 		expect(mockInteractionFollowUp).not.toHaveBeenCalled();
 		expect(mockSendMessageInChannel).toHaveBeenCalledOnce();
-		expect(mockSendMessageInChannel).toHaveBeenCalledWith(interaction.channel, { content: 'yo' });
+		expect(mockSendMessageInChannel).toHaveBeenCalledWith(interaction.channel, {
+			content: 'yo',
+		});
 	});
 });

@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`help presents an ephemeral embed with general info 1`] = `
+exports[`help > presents an ephemeral embed with general info 1`] = `
 {
   "description": "To see the list of commands, type \`/\` in your message field.
 [Visit our GitHub](https://github.com/BYU-CS-Discord/CSBot) for more details!",
