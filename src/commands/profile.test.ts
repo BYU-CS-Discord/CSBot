@@ -15,7 +15,7 @@ describe('profile', () => {
 	const mockAvatarURL = vi.fn<[options?: ImageURLOptions | undefined], string | null>();
 
 	const testAvatar = 'https://example.com/avatars/1234567890/abcdef1234567890.png';
-	let context: TextInputCommandContext;
+	let context: unknown;
 	let user: User;
 	let otherUser: User;
 	let botUser: User;
@@ -55,7 +55,7 @@ describe('profile', () => {
 				},
 			},
 			source: 'guild',
-		} as unknown as TextInputCommandContext;
+		};
 
 		mockGetUser.mockReturnValue(otherUser);
 		mockAvatarURL.mockReturnValue(testAvatar);
@@ -121,7 +121,7 @@ describe('profile', () => {
 	});
 
 	test("Throws an error when trying to get another user's profile picture in DMs", async () => {
-		context = { ...context, guild: null, source: 'dm' } as unknown as TextInputCommandContext;
+		context = { ...(context as object), guild: null, source: 'dm' };
 
 		await expect(profile.execute(context)).rejects.toThrow();
 		// "That user isn't here!"
@@ -152,7 +152,7 @@ describe('profile', () => {
 		"Returns the url of the caller's profile picture (in DMs: %p, explicitly: %p)",
 		async (inDMs, explicitly) => {
 			if (inDMs) {
-				context = { ...context, guild: null, source: 'dm' } as unknown as TextInputCommandContext;
+				context = { ...(context as object), guild: null, source: 'dm' };
 			}
 			if (explicitly) {
 				mockGetUser.mockReturnValue(user); // param was given
@@ -181,7 +181,7 @@ describe('profile', () => {
 		false,
 	])("Returns the url of the bot's profile picture (in DMs: %p)", async inDMs => {
 		if (inDMs) {
-			context = { ...context, guild: null, source: 'dm' } as unknown as TextInputCommandContext;
+			context = { ...(context as object), guild: null, source: 'dm' };
 		}
 		mockGetUser.mockReturnValue(botUser);
 		mockGuildMembersFetch.mockResolvedValue(botUser as unknown as GuildMember);
