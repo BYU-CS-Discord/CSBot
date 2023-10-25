@@ -45,7 +45,7 @@
 	},
 	"homepage": "https://github.com/BYU-CS-Discord/CSBot#readme",
 	"engines": {
-		"node": "^18.17.0"
+		"node": ">=20"
 	},
 	"main": "./dist/main.js",
 	"type": "commonjs",
