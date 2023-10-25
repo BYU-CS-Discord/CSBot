@@ -20,7 +20,7 @@
 		"db:migrations:generate": "./node_modules/.bin/prisma migrate dev --create-only",
 		"lint": "./node_modules/.bin/eslint .",
 		"lint:fix": "npm run lint -- --fix",
-		"build": "rm -rf dist && ./node_modules/.bin/tsc -p tsconfig.prod.json",
+		"build": "rm -rf dist && ./node_modules/.bin/tsc",
 		"export-version": "./node_modules/.bin/genversion ./src/constants/version.ts -es",
 		"test": "./node_modules/.bin/vitest",
 		"docker": "npm run docker:image && npm run docker:cleanup && npm run docker:container",
