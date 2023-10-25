@@ -12,7 +12,7 @@
 		"setup": "npm ci && npm run export-version && npm run build --production && npm run commands:deploy",
 		"commands:deploy": "node . --deploy",
 		"commands:revoke": "node . --revoke",
-		"release": "./node_modules/.bin/ts-node --esm -P tsconfig.test.json ./scripts/release.ts",
+		"release": "./node_modules/.bin/ts-node -P tsconfig.test.json ./scripts/release.ts",
 		"db:init": "./node_modules/.bin/prisma migrate resolve --applied 20220915022732_initial_state  # TODO: Use this to set initial tables on the database",
 		"db:migrate": "./node_modules/.bin/prisma migrate deploy",
 		"db:introspect": "./node_modules/.bin/prisma db pull",
