@@ -95,28 +95,5 @@
 		"spaced-comment": ["warn", "always", { "exceptions": ["*"] }], // doc comments exist
 		"yoda": "error",
 		"import/no-default-export": "error"
-	},
-
-	"overrides": [
-		{
-			"files": ["src/**/*.test.ts", "src/**/__mocks__/**/*.ts"],
-			"parserOptions": {
-				"project": "./tsconfig.test.json"
-			},
-			"rules": {
-				"prettier/prettier": "warn",
-				"max-nested-callbacks": "off" // unit tests involve a lot of nested callbacks
-			}
-		},
-		{
-			"files": ["scripts/**/*.ts"],
-			"parserOptions": {
-				"project": "./tsconfig.test.json",
-				"tsconfigRootDir": "."
-			},
-			"rules": {
-				"unicorn/no-process-exit": "off"
-			}
-		}
-	]
+	}
 }

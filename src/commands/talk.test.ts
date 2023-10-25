@@ -98,7 +98,6 @@ describe('Talk Slash Command', () => {
 
 	// Idk what else - how to handle interconnected event handlers?
 
-	// eslint-disable-next-line jest/no-commented-out-tests
 	// test('Replies with content of the message in voice channels', async () => {
 	// 	context = {
 	// 		...context,

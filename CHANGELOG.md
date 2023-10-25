@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Use Vitest instead of Jest for forward compatibility with ESM.
 - Simplified TypeScript build settings and followed @typescript-eslint standards
+- Simplified Eslint settings
 
 ## [0.12.1] - 2023-10-05
 
