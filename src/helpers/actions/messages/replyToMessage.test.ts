@@ -201,6 +201,7 @@ describe('Replies', () => {
 			expect(mockChannelSend).not.toHaveBeenCalled();
 			expect(mockReply).toHaveBeenCalledOnce();
 			expect(mockReply).toHaveBeenCalledWith(expect.stringContaining('tried to DM you'));
+			expect(mockLoggerError).toHaveBeenCalledOnce();
 			expect(mockLoggerError).toHaveBeenCalledWith(
 				expect.stringContaining('Failed to send direct message'),
 				expect.any(Error)
@@ -258,6 +259,7 @@ describe('Cold calls', () => {
 
 		await expect(sendMessageInChannel(mockChannel, 'yo')).resolves.toBeNull();
 		expect(mockChannelSend).toHaveBeenCalledOnce();
+		expect(mockLoggerError).toHaveBeenCalledOnce();
 		expect(mockLoggerError).toHaveBeenCalledWith(expect.stringContaining('send message'), error);
 	});
 
@@ -268,6 +270,7 @@ describe('Cold calls', () => {
 
 		await expect(sendMessageInChannel(mockChannel, 'yo')).resolves.toBeNull();
 		expect(mockChannelSend).not.toHaveBeenCalled();
+		expect(mockLoggerError).toHaveBeenCalledOnce();
 		expect(mockLoggerError).toHaveBeenCalledWith(
 			expect.stringContaining('Cannot send in GuildStageVoice channels')
 		);
