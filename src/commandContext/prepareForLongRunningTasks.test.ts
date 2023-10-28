@@ -1,19 +1,24 @@
 import type { RepliableInteraction } from 'discord.js';
+import { afterEach, describe, expect, test, vi } from 'vitest';
 
 // Mock the logger to track output
-jest.mock('../logger');
+vi.mock('../logger');
 import { error as mockLoggerError } from '../logger';
 
 import { prepareForLongRunningTasksFactory as factory } from './prepareForLongRunningTasks';
 
 describe('prepareForLongRunningTasks', () => {
-	const mockInteractionDeferReply = jest.fn();
+	const mockInteractionDeferReply = vi.fn();
 
 	const interaction = {
 		deferReply: mockInteractionDeferReply,
 	} as unknown as RepliableInteraction;
 
 	const prepareForLongRunningTasks = factory(interaction);
+
+	afterEach(() => {
+		vi.resetAllMocks();
+	});
 
 	test('requests interaction deferrment', async () => {
 		await expect(prepareForLongRunningTasks()).resolves.toBeUndefined();
@@ -38,7 +43,6 @@ describe('prepareForLongRunningTasks', () => {
 
 		expect(mockInteractionDeferReply).toHaveBeenCalledOnce();
 		expect(mockLoggerError).toHaveBeenCalledOnce();
-		expect(mockLoggerError).toHaveBeenCalledAfter(mockInteractionDeferReply);
 		expect(mockLoggerError).toHaveBeenCalledWith(expect.stringContaining('defer reply'), testError);
 	});
 });

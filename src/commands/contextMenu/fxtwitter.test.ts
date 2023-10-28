@@ -1,7 +1,9 @@
+import { beforeEach, describe, expect, test, vi } from 'vitest';
+
 import { fxtwitter } from './fxtwitter';
 
 describe('Fix Twitter Links', () => {
-	const mockReplyPrivately = jest.fn();
+	const mockReplyPrivately = vi.fn();
 	let context: MessageContextMenuCommandContext;
 
 	beforeEach(() => {

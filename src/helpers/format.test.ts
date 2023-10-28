@@ -1,3 +1,5 @@
+import { describe, expect, test } from 'vitest';
+
 import { format } from './format';
 
 describe('format template strings', () => {

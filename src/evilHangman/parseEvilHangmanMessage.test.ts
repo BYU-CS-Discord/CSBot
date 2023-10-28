@@ -1,4 +1,6 @@
 import type { Message } from 'discord.js';
+import { beforeEach, describe, expect, test } from 'vitest';
+
 import { parseEvilHangmanMessage } from './parseEvilHangmanMessage';
 
 describe('parseEvilHangmanMessage', () => {
@@ -14,6 +16,7 @@ describe('parseEvilHangmanMessage', () => {
 			},
 		],
 	} as unknown as Message;
+
 	beforeEach(() => {
 		field.value = 'Remaining Guesses: 4\nWord: -----\nLetters Guessed: ';
 	});
@@ -23,7 +26,7 @@ describe('parseEvilHangmanMessage', () => {
 		const displayInfo = game.getDisplayInfo();
 		expect(displayInfo.guessesRemaining).toEqual(4);
 		expect(displayInfo.word).toEqual('-----');
-		expect(displayInfo.guessesSoFar).toBeEmpty();
+		expect(displayInfo.guessesSoFar.size).toEqual(0);
 	});
 
 	test('incorrect message format throws an error', () => {

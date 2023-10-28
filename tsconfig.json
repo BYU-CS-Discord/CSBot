@@ -1,4 +1,27 @@
 {
-	"files": [],
-	"references": [{ "path": "./tsconfig.prod.json" }, { "path": "./tsconfig.test.json" }]
+	"include": ["src/**/*.ts"],
+	"exclude": ["src/**/*.test.ts", "**/__mocks__/**/*.ts"],
+	"compilerOptions": {
+		"target": "ES2022",
+		"module": "CommonJS",
+		"lib": ["ES2022"],
+		"allowSyntheticDefaultImports": true,
+		"moduleResolution": "node",
+		"esModuleInterop": true,
+		"declaration": false,
+		"removeComments": true,
+		"sourceMap": true,
+		"outDir": "./dist",
+		"isolatedModules": true,
+		"strict": true,
+		"useUnknownInCatchVariables": true,
+		"noFallthroughCasesInSwitch": true,
+		"noImplicitReturns": true,
+		"noPropertyAccessFromIndexSignature": true,
+		"noUncheckedIndexedAccess": true,
+		"typeRoots": ["./node_modules/@types", "./src/@types"],
+		"types": ["node"],
+		"skipLibCheck": true, // disable this once our deps get their act together
+		"forceConsistentCasingInFileNames": true
+	}
 }

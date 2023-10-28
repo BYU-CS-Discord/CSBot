@@ -1,8 +1,13 @@
-jest.mock('../constants/meta', () => ({
-	// Version changes frequently, so use a consistent version number to test with:
-	appVersion: 'X.X.X',
-	repo: jest.requireActual<typeof import('../constants/meta')>('../constants/meta').repo,
-}));
+import { describe, expect, test, vi } from 'vitest';
+
+vi.mock('../constants/meta', async () => {
+	const { repo } = await vi.importActual<typeof import('../constants/meta')>('../constants/meta');
+	return {
+		// Version changes frequently, so use a consistent version number to test with:
+		appVersion: 'X.X.X',
+		repo,
+	};
+});
 
 import { convertTo12Hour } from './findRoom';
 
