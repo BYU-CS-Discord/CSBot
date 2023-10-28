@@ -45,7 +45,7 @@ describe('follow-up message', () => {
 	test('logs an error if the follow-up fails', async () => {
 		const testError = new Error('This is a test');
 		mockInteractionFollowUp.mockRejectedValueOnce(testError);
-		await expect(followUp('yo')).resolves.toBeFalsy();
+		await expect(followUp('yo')).resolves.toBe(false);
 		expect(mockSendMessageInChannel).not.toHaveBeenCalled();
 		expect(mockLoggerError).toHaveBeenCalledOnce();
 		expect(mockLoggerError).toHaveBeenCalledWith(expect.stringContaining('follow up'), testError);
@@ -62,7 +62,7 @@ describe('follow-up message', () => {
 	test('logs an error if the follow-up with options fails', async () => {
 		const testError = new Error('This is a test');
 		mockInteractionFollowUp.mockRejectedValueOnce(testError);
-		await expect(followUp({ content: 'yo' })).resolves.toBeFalsy();
+		await expect(followUp({ content: 'yo' })).resolves.toBe(false);
 		expect(mockSendMessageInChannel).not.toHaveBeenCalled();
 		expect(mockLoggerError).toHaveBeenCalledOnce();
 		expect(mockLoggerError).toHaveBeenCalledWith(expect.stringContaining('follow up'), testError);
@@ -88,7 +88,7 @@ describe('follow-up message', () => {
 
 	test('returns false if the plain message fallback failed', async () => {
 		mockSendMessageInChannel.mockResolvedValueOnce(null);
-		await expect(followUp({ content: 'yo', reply: false })).resolves.toBeFalsy();
+		await expect(followUp({ content: 'yo', reply: false })).resolves.toBe(false);
 		expect(mockLoggerError).not.toHaveBeenCalled();
 		expect(mockInteractionFollowUp).not.toHaveBeenCalled();
 		expect(mockSendMessageInChannel).toHaveBeenCalledOnce();
