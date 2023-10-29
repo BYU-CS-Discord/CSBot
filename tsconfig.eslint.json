@@ -3,6 +3,7 @@
 	"include": ["**/*"],
 	"exclude": [],
 	"compilerOptions": {
+		"module": "ESNext",
 		"noEmit": true
 	}
 }
