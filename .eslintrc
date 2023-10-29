@@ -137,7 +137,7 @@
 				"tsconfigRootDir": "."
 			},
 			"rules": {
-				"import/no-default-export": "off" // Rollup config requires a `default` export
+				"import/no-default-export": "off" // Config files tend to require a `default` export
 			}
 		}
 	]
