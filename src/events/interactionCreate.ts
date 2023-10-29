@@ -9,7 +9,9 @@ import type {
 	GuildTextBasedChannel,
 	RepliableInteraction,
 } from 'discord.js';
+import { dirname } from 'node:path';
 import { EmbedBuilder, Colors, ApplicationCommandType, ChannelType } from 'discord.js';
+import { fileURLToPath } from 'node:url';
 
 // Internal dependencies
 import * as logger from '../logger';
@@ -24,6 +26,8 @@ import { replyPrivatelyFactory } from '../commandContext/replyPrivately';
 import { sendTypingFactory } from '../commandContext/sendTyping';
 import { allButtons } from '../buttons';
 import { UserMessageError } from '../helpers/UserMessageError';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 /**
  * The event handler for Discord Interactions (usually chat commands)
