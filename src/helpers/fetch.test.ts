@@ -1,8 +1,10 @@
+import { string, type as schema, StructError } from 'superstruct';
+import { URL } from 'node:url';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+
 import { fetchJson } from './fetch';
 import { HttpStatusCode } from './HttpStatusCode';
 import { NetworkError } from './NetworkError';
-import { string, type as schema, StructError } from 'superstruct';
-import { URL } from 'node:url';
 
 const mockFetch = vi.spyOn(global, 'fetch');
 
@@ -16,6 +18,10 @@ describe('fetchJson', () => {
 		mockFetch.mockRejectedValue(new Error('This is a test'));
 	});
 
+	afterEach(() => {
+		vi.resetAllMocks();
+	});
+
 	test('returns well-formed data with 200 response', async () => {
 		const res = { foo: 'bar' };
 		mockFetch.mockResolvedValueOnce({
@@ -25,7 +31,8 @@ describe('fetchJson', () => {
 		} as unknown as Response);
 
 		const data = await fetchJson(url, struct);
-		expect(mockFetch).toHaveBeenCalledExactlyOnceWith(url, undefined);
+		expect(mockFetch).toHaveBeenCalledOnce();
+		expect(mockFetch).toHaveBeenCalledWith(url, undefined);
 		expect(data).toStrictEqual(res);
 	});
 
@@ -39,7 +46,8 @@ describe('fetchJson', () => {
 		await expect(() => fetchJson(url, struct)).rejects.toStrictEqual(
 			new NetworkError(HttpStatusCode.BAD_REQUEST)
 		);
-		expect(mockFetch).toHaveBeenCalledExactlyOnceWith(url, undefined);
+		expect(mockFetch).toHaveBeenCalledOnce();
+		expect(mockFetch).toHaveBeenCalledWith(url, undefined);
 	});
 
 	test('throws a StructError with malformed data', async () => {
@@ -51,6 +59,7 @@ describe('fetchJson', () => {
 		} as unknown as Response);
 
 		await expect(() => fetchJson(url, struct)).rejects.toThrow(StructError);
-		expect(mockFetch).toHaveBeenCalledExactlyOnceWith(url, undefined);
+		expect(mockFetch).toHaveBeenCalledOnce();
+		expect(mockFetch).toHaveBeenCalledWith(url, undefined);
 	});
 });

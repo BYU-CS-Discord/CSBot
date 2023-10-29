@@ -1,3 +1,5 @@
+import { beforeEach, describe, expect, test, vi } from 'vitest';
+
 import { fxtwitter } from './fxtwitter';
 
 describe('Fix Twitter Links', () => {
@@ -52,7 +54,8 @@ describe('Fix Twitter Links', () => {
 			context.targetMessage.content = content;
 
 			await expect(fxtwitter.execute(context)).resolves.toBeUndefined();
-			expect(mockReplyPrivately).toHaveBeenCalledExactlyOnceWith(expect.stringContaining(result));
+			expect(mockReplyPrivately).toHaveBeenCalledOnce();
+			expect(mockReplyPrivately).toHaveBeenCalledWith(expect.stringContaining(result));
 		}
 	);
 });

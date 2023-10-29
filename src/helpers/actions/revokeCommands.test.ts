@@ -1,4 +1,5 @@
 import type { Client } from 'discord.js';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
 // Mock the logger so nothing is printed
 vi.mock('../../logger');
@@ -44,6 +45,10 @@ describe('Command revocations', () => {
 					}),
 			},
 		]);
+	});
+
+	afterEach(() => {
+		vi.resetAllMocks();
 	});
 
 	test('clears global commands', async () => {

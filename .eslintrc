@@ -1,6 +1,6 @@
 {
 	"root": true,
-	"ignorePatterns": ["dist", "node_modules", "src/constants/version.ts"],
+	"ignorePatterns": ["dist", "node_modules", "coverage", "src/constants/version.ts"],
 
 	"extends": [
 		"strictest/eslint",
@@ -23,8 +23,8 @@
 	],
 	"parser": "@typescript-eslint/parser",
 	"parserOptions": {
-		"project": "./tsconfig.prod.json",
-		"tsconfigRootDir": "./"
+		"project": "./tsconfig.eslint.json",
+		"tsconfigRootDir": "."
 	},
 	"env": {
 		"node": true
@@ -113,7 +113,7 @@
 			"extends": ["plugin:vitest/recommended"],
 			"plugins": ["vitest"],
 			"parserOptions": {
-				"project": "./tsconfig.test.json"
+				"project": "./tsconfig.eslint.json"
 			},
 			"rules": {
 				"prettier/prettier": "warn",
@@ -123,7 +123,7 @@
 		{
 			"files": ["./*.ts", "scripts/**/*.ts"],
 			"parserOptions": {
-				"project": "./tsconfig.test.json",
+				"project": "./tsconfig.eslint.json",
 				"tsconfigRootDir": "."
 			},
 			"rules": {
@@ -133,7 +133,7 @@
 		{
 			"files": ["./*.config.ts"],
 			"parserOptions": {
-				"project": "./tsconfig.test.json",
+				"project": "./tsconfig.eslint.json",
 				"tsconfigRootDir": "."
 			},
 			"rules": {

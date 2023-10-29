@@ -1,4 +1,8 @@
 import type { User } from 'discord.js';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+
+// Mock the logger to prevent extra output
+vi.mock('../logger');
 
 // Mock the logger to prevent extra output
 vi.mock('../logger');
@@ -51,6 +55,7 @@ describe('update', () => {
 
 	afterEach(() => {
 		process.env[ADMINISTRATORS_VARIABLE] = originalAdministrators;
+		vi.resetAllMocks();
 	});
 
 	test('can be used by Bot admins', async () => {

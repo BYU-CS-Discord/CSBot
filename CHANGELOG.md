@@ -9,8 +9,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Use Rollup and ESBuild to create a minimal bundle to run. (Some dependencies remain externalized.)
+- Upgraded to node 20 LTS
 - Use Vitest instead of Jest for forward compatibility with ESM.
+- Simplified TypeScript build settings and followed @typescript-eslint standards
+- Simplified Eslint settings
+- Use Rollup and ESBuild to create a minimal bundle to run. (Some dependencies remain externalized.)
+
+### Fixed
+
+- Release script using ts-node-esm for a non-ESM project
+- Release script URLs not compatible with local dev environments
+
+## [0.12.1] - 2023-10-05
+
+### Fixed
+
+- Bug where uncached users in a leaderboard throws an error
 
 ## [0.12.0] - 2023-08-18
 
@@ -222,7 +236,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Development Environment for needed dependencies.
 
-[Unreleased]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.12.0...HEAD
+[Unreleased]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.12.1...HEAD
+[0.12.1]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.12.0...v0.12.1
 [0.12.0]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.11.2...v0.12.0
 [0.11.2]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.11.1...v0.11.2
 [0.11.1]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.11.0...v0.11.1

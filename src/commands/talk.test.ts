@@ -1,5 +1,5 @@
-// External dependencies
 import { ChannelType } from 'discord.js';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
 // Overwrite dectalk say method
 const mockSay = vi.hoisted(() => vi.fn());
@@ -41,6 +41,10 @@ describe('Talk Slash Command', () => {
 		mockSay.mockReturnValue(emptyBuffer);
 		mockGetString.mockReturnValue(message);
 		mockGetInteger.mockReturnValue(null);
+	});
+
+	afterEach(() => {
+		vi.resetAllMocks();
 	});
 
 	test('Fails if no options are provided', async () => {

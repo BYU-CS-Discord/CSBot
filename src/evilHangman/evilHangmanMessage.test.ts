@@ -1,4 +1,6 @@
 import type { EmbedBuilder } from '@discordjs/builders';
+import { describe, expect, test } from 'vitest';
+
 import { EvilHangmanWinState } from './evilHangmanGame';
 import { buildEvilHangmanMessage } from './evilHangmanMessage';
 
@@ -11,11 +13,12 @@ describe('evilHangmanMessage', () => {
 				guessesSoFar: new Set(),
 				winState: EvilHangmanWinState.IN_PROGRESS,
 			});
-			expect(message.embeds).toBeArray();
-			const embed = message.embeds?.[0] as EmbedBuilder;
-			expect(embed).toBeObject();
+			expect(message.embeds).toBeDefined();
+			const embed = message.embeds?.[0] as EmbedBuilder | undefined;
+			expect(embed).toBeDefined();
 			expect(embed?.data?.description).toBeUndefined();
-			expect(message.components).toBeArrayOfSize(5);
+			expect(message.components).toBeDefined();
+			expect(message.components?.length).toBe(5);
 		});
 
 		test('win and lost states have descriptions and no buttons', async () => {
@@ -27,7 +30,8 @@ describe('evilHangmanMessage', () => {
 			});
 			const winEmbed = winMessage.embeds?.[0] as EmbedBuilder;
 			expect(winEmbed.data.description).toBeDefined();
-			expect(winMessage.components).toBeEmpty();
+			expect(winMessage.components).toBeDefined();
+			expect(winMessage.components?.length).toBe(0);
 
 			const lostMessage = await buildEvilHangmanMessage({
 				word: '',
@@ -38,7 +42,8 @@ describe('evilHangmanMessage', () => {
 			});
 			const lostEmbed = lostMessage.embeds?.[0] as EmbedBuilder;
 			expect(lostEmbed.data.description).toBeDefined();
-			expect(lostMessage.components).toBeEmpty();
+			expect(lostMessage.components).toBeDefined();
+			expect(lostMessage.components?.length).toBe(0);
 		});
 
 		test('second page has only one row of buttons', async () => {
@@ -51,7 +56,8 @@ describe('evilHangmanMessage', () => {
 				},
 				1
 			);
-			expect(message.components).toBeArrayOfSize(1);
+			expect(message.components).toBeDefined();
+			expect(message.components?.length).toBe(1);
 		});
 	});
 });

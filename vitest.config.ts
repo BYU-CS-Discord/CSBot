@@ -1,16 +1,12 @@
 import { defineConfig } from 'vitest/config';
 
+// eslint-disable-next-line import/no-default-export
 export default defineConfig({
 	test: {
-		globals: true,
 		typecheck: {
 			checker: 'tsc',
-			tsconfig: './tsconfig.test.json',
+			tsconfig: './tsconfig.json',
 		},
-		mockReset: true,
-		clearMocks: true,
-		setupFiles: ['./vitestSetup.ts'],
-		environment: 'node',
 		coverage: {
 			enabled: true,
 			provider: 'istanbul',

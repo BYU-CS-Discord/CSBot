@@ -1,3 +1,5 @@
+import { describe, expect, test, vi } from 'vitest';
+
 // Mock the logger to track output
 vi.mock('../logger');
 import { error as mockLoggerError } from '../logger';

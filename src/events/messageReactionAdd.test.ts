@@ -1,5 +1,7 @@
 import type { MessageReaction, User } from 'discord.js';
 import type { SpyInstance } from 'vitest';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+
 import { messageReactionAdd } from './messageReactionAdd';
 
 vi.mock('../logger');
@@ -39,7 +41,7 @@ describe('Reaction duplication', () => {
 	});
 
 	afterEach(() => {
-		mockRandom.mockRestore();
+		vi.restoreAllMocks();
 	});
 
 	test("sometimes duplicates a user's react", async () => {

@@ -1,7 +1,10 @@
+import type { MessageReplyOptions } from 'discord.js';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
+
 import { hangmanLessButton } from './hangmanLessButton';
 
 describe('hangmanLessButton', () => {
-	const mockUpdate = vi.fn();
+	const mockUpdate = vi.fn<[MessageReplyOptions]>();
 	const message = {
 		embeds: [
 			{
@@ -25,9 +28,10 @@ describe('hangmanLessButton', () => {
 	test('updates response to have first (full) page of buttons', async () => {
 		await expect(hangmanLessButton.execute(context)).resolves.toBeUndefined();
 
-		expect(mockUpdate).toHaveBeenCalledExactlyOnceWith({
-			embeds: [expect.toBeObject()],
-			components: expect.toBeArrayOfSize(5),
-		});
+		expect(mockUpdate).toHaveBeenCalledOnce();
+		const response = mockUpdate.mock.calls.at(0)?.at(0);
+		expect(response?.embeds?.length).toBe(1);
+		expect(response?.embeds?.at(0)).toBeTypeOf('object');
+		expect(response?.components?.length).toBe(5);
 	});
 });

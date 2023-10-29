@@ -1,3 +1,5 @@
+import { beforeEach, describe, expect, test } from 'vitest';
+
 import { EvilHangmanGame, EvilHangmanWinState } from './evilHangmanGame';
 
 describe('EvilHangmanGame', () => {
@@ -11,7 +13,7 @@ describe('EvilHangmanGame', () => {
 		const displayInfo = game.getDisplayInfo();
 		expect(displayInfo.word).toMatch(/-*/u);
 		expect(displayInfo.winState).toBe(EvilHangmanWinState.IN_PROGRESS);
-		expect(displayInfo.guessesSoFar).toBeEmpty();
+		expect(displayInfo.guessesSoFar.size).toBe(0);
 	});
 
 	test('newGame with specified length uses that length of word', () => {
@@ -53,7 +55,7 @@ describe('EvilHangmanGame', () => {
 	test('making a guess adds the guess to guessesSoFar', () => {
 		const guess = 'b';
 		const displayInfo = game.makeGuess(guess);
-		expect(Array.from(displayInfo.guessesSoFar)).toInclude(guess);
+		expect(Array.from(displayInfo.guessesSoFar)).toContain(guess);
 	});
 
 	test('making an incorrect guess decrements guessesRemaining', () => {

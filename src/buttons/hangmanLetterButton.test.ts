@@ -1,3 +1,5 @@
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+
 import { letterButtons } from '../evilHangman/hangmanLetterButtons';
 import { UserMessageError } from '../helpers/UserMessageError';
 
@@ -24,6 +26,10 @@ describe('hangmanMoreButton', () => {
 		} as unknown as ButtonContext;
 	});
 
+	afterEach(() => {
+		vi.resetAllMocks();
+	});
+
 	test('different letter buttons have unique ids', () => {
 		const aButton = letterButtons[0];
 		const bButton = letterButtons[1];
@@ -40,7 +46,6 @@ describe('hangmanMoreButton', () => {
 			{ embeds: [{ data: { fields: [unknown, { value: string }] } }] },
 		];
 		const afterInfo = lastCall[0].embeds[0].data.fields[1].value;
-		expect(afterInfo).toBeString();
 		expect(afterInfo).not.toEqual(beforeInfo);
 	}, 15000);
 

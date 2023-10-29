@@ -19,6 +19,8 @@ import {
 	ContextMenuCommandBuilder,
 	SlashCommandBuilder,
 } from 'discord.js';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+
 import { UserMessageError } from '../helpers/UserMessageError';
 
 // Mock allCommands to isolate our test code
@@ -217,6 +219,10 @@ function defaultInteraction(): Interaction {
 describe('on(interactionCreate)', () => {
 	beforeEach(() => {
 		mockGlobalAutocomplete.mockReturnValue([{ name: 'Sample', value: 'sample' }]);
+	});
+
+	afterEach(() => {
+		vi.resetAllMocks();
 	});
 
 	describe('commands', () => {
@@ -537,7 +543,8 @@ describe('on(interactionCreate)', () => {
 			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 			expect(mockGlobalExecute).not.toHaveBeenCalled();
 			expect(mockGuildedExecute).not.toHaveBeenCalled();
-			expect(mockRespond).toHaveBeenCalledExactlyOnceWith([]);
+			expect(mockRespond).toHaveBeenCalledOnce();
+			expect(mockRespond).toHaveBeenCalledWith([]);
 			expect(mockGlobalAutocomplete).not.toHaveBeenCalled();
 		});
 
@@ -547,7 +554,8 @@ describe('on(interactionCreate)', () => {
 			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 			expect(mockGlobalExecute).not.toHaveBeenCalled();
 			expect(mockGuildedExecute).not.toHaveBeenCalled();
-			expect(mockRespond).toHaveBeenCalledExactlyOnceWith([]);
+			expect(mockRespond).toHaveBeenCalledOnce();
+			expect(mockRespond).toHaveBeenCalledWith([]);
 			expect(mockGlobalAutocomplete).not.toHaveBeenCalled();
 		});
 
@@ -557,7 +565,8 @@ describe('on(interactionCreate)', () => {
 			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 			expect(mockGlobalExecute).not.toHaveBeenCalled();
 			expect(mockGuildedExecute).not.toHaveBeenCalled();
-			expect(mockRespond).toHaveBeenCalledExactlyOnceWith([]);
+			expect(mockRespond).toHaveBeenCalledOnce();
+			expect(mockRespond).toHaveBeenCalledWith([]);
 			expect(mockGlobalAutocomplete).not.toHaveBeenCalled();
 		});
 
@@ -567,7 +576,8 @@ describe('on(interactionCreate)', () => {
 			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 			expect(mockGlobalExecute).not.toHaveBeenCalled();
 			expect(mockGuildedExecute).not.toHaveBeenCalled();
-			expect(mockRespond).toHaveBeenCalledExactlyOnceWith([]);
+			expect(mockRespond).toHaveBeenCalledOnce();
+			expect(mockRespond).toHaveBeenCalledWith([]);
 			expect(mockGlobalAutocomplete).not.toHaveBeenCalled();
 		});
 
@@ -576,7 +586,8 @@ describe('on(interactionCreate)', () => {
 			expect(mockGlobalExecute).not.toHaveBeenCalled();
 			expect(mockGuildedExecute).not.toHaveBeenCalled();
 			expect(mockRespond).toHaveBeenCalledOnce();
-			expect(mockGlobalAutocomplete).toHaveBeenCalledExactlyOnceWith(interaction);
+			expect(mockGlobalAutocomplete).toHaveBeenCalledOnce();
+			expect(mockGlobalAutocomplete).toHaveBeenCalledWith(interaction);
 		});
 
 		test('returns zero results if theres an error fetching the autocomplete values', async () => {
@@ -587,8 +598,10 @@ describe('on(interactionCreate)', () => {
 			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 			expect(mockGlobalExecute).not.toHaveBeenCalled();
 			expect(mockGuildedExecute).not.toHaveBeenCalled();
-			expect(mockRespond).toHaveBeenCalledExactlyOnceWith([]);
-			expect(mockGlobalAutocomplete).toHaveBeenCalledExactlyOnceWith(interaction);
+			expect(mockRespond).toHaveBeenCalledOnce();
+			expect(mockRespond).toHaveBeenCalledWith([]);
+			expect(mockGlobalAutocomplete).toHaveBeenCalledOnce();
+			expect(mockGlobalAutocomplete).toHaveBeenCalledWith(interaction);
 		});
 
 		test('doesn\t die if the error handler fails to respond with zero results', async () => {
@@ -600,8 +613,10 @@ describe('on(interactionCreate)', () => {
 			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 			expect(mockGlobalExecute).not.toHaveBeenCalled();
 			expect(mockGuildedExecute).not.toHaveBeenCalled();
-			expect(mockRespond).toHaveBeenCalledExactlyOnceWith([]);
-			expect(mockGlobalAutocomplete).toHaveBeenCalledExactlyOnceWith(interaction);
+			expect(mockRespond).toHaveBeenCalledOnce();
+			expect(mockRespond).toHaveBeenCalledWith([]);
+			expect(mockGlobalAutocomplete).toHaveBeenCalledOnce();
+			expect(mockGlobalAutocomplete).toHaveBeenCalledWith(interaction);
 		});
 	});
 

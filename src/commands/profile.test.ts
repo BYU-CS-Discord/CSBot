@@ -1,5 +1,7 @@
 import type { GuildMember, ImageURLOptions, User, UserResolvable } from 'discord.js';
-import { DiscordAPIError, EmbedBuilder } from 'discord.js';
+import { DiscordAPIError, EmbedBuilder, userMention } from 'discord.js';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+
 import { DiscordErrorCode } from '../helpers/DiscordErrorCode';
 import { profile } from './profile';
 
@@ -13,7 +15,7 @@ describe('profile', () => {
 	const mockAvatarURL = vi.fn<[options?: ImageURLOptions | undefined], string | null>();
 
 	const testAvatar = 'https://example.com/avatars/1234567890/abcdef1234567890.png';
-	let context: TextInputCommandContext;
+	let context: unknown;
 	let user: User;
 	let otherUser: User;
 	let botUser: User;
@@ -53,11 +55,15 @@ describe('profile', () => {
 				},
 			},
 			source: 'guild',
-		} as unknown as TextInputCommandContext;
+		};
 
 		mockGetUser.mockReturnValue(otherUser);
 		mockAvatarURL.mockReturnValue(testAvatar);
 		mockGuildMembersFetch.mockResolvedValue(otherUser as unknown as GuildMember);
+	});
+
+	afterEach(() => {
+		vi.resetAllMocks();
 	});
 
 	test('Throws an error when we fail to fetch the target member for an API reason', async () => {
@@ -115,7 +121,7 @@ describe('profile', () => {
 	});
 
 	test("Throws an error when trying to get another user's profile picture in DMs", async () => {
-		context = { ...context, guild: null, source: 'dm' } as unknown as TextInputCommandContext;
+		context = { ...(context as object), guild: null, source: 'dm' };
 
 		await expect(profile.execute(context)).rejects.toThrow();
 		// "That user isn't here!"
@@ -124,8 +130,9 @@ describe('profile', () => {
 	test("Returns the url of the supplied user's profile picture", async () => {
 		await expect(profile.execute(context)).resolves.toBeUndefined();
 		expect(mockReplyPrivately).not.toHaveBeenCalled();
-		expect(mockReply).toHaveBeenCalledExactlyOnceWith({
-			content: `<@${otherUser.id}>'s profile:`,
+		expect(mockReply).toHaveBeenCalledOnce();
+		expect(mockReply).toHaveBeenCalledWith({
+			content: `${userMention(otherUser.id)}'s profile:`,
 			embeds: [
 				new EmbedBuilder({
 					title: otherUser.username,
@@ -145,7 +152,7 @@ describe('profile', () => {
 		"Returns the url of the caller's profile picture (in DMs: %p, explicitly: %p)",
 		async (inDMs, explicitly) => {
 			if (inDMs) {
-				context = { ...context, guild: null, source: 'dm' } as unknown as TextInputCommandContext;
+				context = { ...(context as object), guild: null, source: 'dm' };
 			}
 			if (explicitly) {
 				mockGetUser.mockReturnValue(user); // param was given
@@ -156,7 +163,8 @@ describe('profile', () => {
 
 			await expect(profile.execute(context)).resolves.toBeUndefined();
 			expect(mockReplyPrivately).not.toHaveBeenCalled();
-			expect(mockReply).toHaveBeenCalledExactlyOnceWith({
+			expect(mockReply).toHaveBeenCalledOnce();
+			expect(mockReply).toHaveBeenCalledWith({
 				content: 'Your profile:',
 				embeds: [
 					new EmbedBuilder({
@@ -173,14 +181,15 @@ describe('profile', () => {
 		false,
 	])("Returns the url of the bot's profile picture (in DMs: %p)", async inDMs => {
 		if (inDMs) {
-			context = { ...context, guild: null, source: 'dm' } as unknown as TextInputCommandContext;
+			context = { ...(context as object), guild: null, source: 'dm' };
 		}
 		mockGetUser.mockReturnValue(botUser);
 		mockGuildMembersFetch.mockResolvedValue(botUser as unknown as GuildMember);
 
 		await expect(profile.execute(context)).resolves.toBeUndefined();
 		expect(mockReplyPrivately).not.toHaveBeenCalled();
-		expect(mockReply).toHaveBeenCalledExactlyOnceWith({
+		expect(mockReply).toHaveBeenCalledOnce();
+		expect(mockReply).toHaveBeenCalledWith({
 			content: 'My profile:',
 			embeds: [
 				new EmbedBuilder({

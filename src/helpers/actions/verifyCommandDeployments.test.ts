@@ -1,5 +1,6 @@
 import type { Client } from 'discord.js';
 import { Collection, SlashCommandBuilder } from 'discord.js';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
 const mockAllCommands = vi.hoisted(() => new Map<string, Command>());
 vi.mock('../../commands', () => ({ allCommands: mockAllCommands }));
@@ -87,6 +88,10 @@ describe('Verify command deployments', () => {
 				deployedGlobal.set(cmd.info.name, cmd);
 			}
 		}
+	});
+
+	afterEach(() => {
+		vi.resetAllMocks();
 	});
 
 	describe('Guild commands', () => {

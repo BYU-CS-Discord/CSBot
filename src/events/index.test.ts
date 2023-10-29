@@ -1,3 +1,5 @@
+import { describe, expect, test, vi } from 'vitest';
+
 // Create a mocked client to track 'on' and 'once' calls
 const mockOn = vi.fn();
 const mockOnce = vi.fn();

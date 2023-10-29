@@ -1,3 +1,5 @@
+import { describe, expect, test } from 'vitest';
+
 import { getHangmanArt } from './evilHangmanAsciiArt';
 
 describe('evilHangmanAsciiArt.ts', () => {

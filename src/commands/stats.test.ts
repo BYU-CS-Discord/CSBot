@@ -1,6 +1,7 @@
-import type { DeepMockProxy } from 'vitest-mock-extended';
 import type { PrismaClient, Scoreboard } from '@prisma/client';
+import type { DeepMockProxy } from 'vitest-mock-extended';
 import { mockDeep } from 'vitest-mock-extended';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
 
 vi.mock('../constants/meta', async () => {
 	const { repo } = await vi.importActual<typeof import('../constants/meta')>('../constants/meta');
@@ -77,7 +78,8 @@ describe('stats', () => {
 
 		test('begins tracking a stat', async () => {
 			await expect(stats.execute(context)).resolves.toBeUndefined();
-			expect(mockCreate).toHaveBeenCalledExactlyOnceWith({
+			expect(mockCreate).toHaveBeenCalledOnce();
+			expect(mockCreate).toHaveBeenCalledWith({
 				data: {
 					userId: mockUserId,
 					name: mockStatName,
@@ -114,7 +116,8 @@ describe('stats', () => {
 		test('score is added', async () => {
 			await expect(stats.execute(context)).resolves.toBeUndefined();
 
-			expect(mockUpdate).toHaveBeenCalledExactlyOnceWith({
+			expect(mockUpdate).toHaveBeenCalledOnce();
+			expect(mockUpdate).toHaveBeenCalledWith({
 				where: {
 					id: mockScoreboardId,
 				},
@@ -160,7 +163,8 @@ describe('stats', () => {
 
 		test('stops tracking a stat', async () => {
 			await expect(stats.execute(context)).resolves.toBeUndefined();
-			expect(mockDelete).toHaveBeenCalledExactlyOnceWith({
+			expect(mockDelete).toHaveBeenCalledOnce();
+			expect(mockDelete).toHaveBeenCalledWith({
 				where: {
 					id: 0,
 				},
@@ -199,12 +203,6 @@ describe('stats', () => {
 
 		test('fails when no one is tracking the stat', async () => {
 			mockFindMany.mockResolvedValue([]);
-
-			await expect(stats.execute(context)).rejects.toThrow();
-		});
-
-		test('fails when unable to find a username', async () => {
-			mockGetUser.mockReturnValue(undefined);
 
 			await expect(stats.execute(context)).rejects.toThrow();
 		});

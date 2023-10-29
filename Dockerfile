@@ -1,4 +1,4 @@
-FROM node:18.17.0-slim
+FROM node:20-slim
 RUN apt update
 RUN apt upgrade --yes
 

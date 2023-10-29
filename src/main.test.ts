@@ -1,4 +1,5 @@
 import type { Mock } from 'vitest';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
 // Create a mocked client to track constructor and 'login' calls
 const mockConstructClient = vi.fn();

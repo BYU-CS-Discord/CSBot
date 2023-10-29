@@ -1,6 +1,6 @@
 {
 	"name": "csbot",
-	"version": "0.12.0",
+	"version": "0.12.1",
 	"description": "The One beneath the Supreme Overlord's rule. A bot to help manage the BYU CS Discord, successor to Ze Kaiser (https://github.com/arkenstorm/ze-kaiser)",
 	"private": true,
 	"scripts": {
@@ -12,18 +12,17 @@
 		"setup": "npm ci && npm run db:generate && npm run export-version && npm run build --production && npm run commands:deploy",
 		"commands:deploy": "node . --deploy",
 		"commands:revoke": "node . --revoke",
-		"release": "./node_modules/.bin/ts-node --esm -P tsconfig.test.json ./scripts/release.ts",
+		"release": "./node_modules/.bin/ts-node ./scripts/release.ts",
 		"db:init": "./node_modules/.bin/prisma migrate resolve --applied 20220915022732_initial_state  # TODO: Use this to set initial tables on the database",
 		"db:migrate": "./node_modules/.bin/prisma migrate deploy",
 		"db:introspect": "./node_modules/.bin/prisma db pull",
 		"db:generate": "./node_modules/.bin/prisma generate --schema ./prisma/schema.prisma",
 		"db:migrations:generate": "./node_modules/.bin/prisma migrate dev --create-only",
-		"lint": "./node_modules/.bin/eslint . --ext .ts",
+		"lint": "./node_modules/.bin/eslint .",
 		"lint:fix": "npm run lint -- --fix",
 		"build": "rm -rf dist && ./node_modules/.bin/rollup --config rollup.config.ts --configPlugin esbuild",
 		"export-version": "./node_modules/.bin/genversion ./src/constants/version.ts -es",
-		"test": "./node_modules/.bin/vitest run",
-		"test:watch": "./node_modules/.bin/vitest watch",
+		"test": "./node_modules/.bin/vitest",
 		"docker": "npm run docker:image && npm run docker:cleanup && npm run docker:container",
 		"docker:image": "docker build --tag cs-bot-image --label cs-bot .",
 		"docker:container": "docker run --tty --interactive --rm --mount type=bind,source=$PWD,destination=/cs-bot cs-bot-image",
@@ -45,7 +44,7 @@
 	},
 	"homepage": "https://github.com/BYU-CS-Discord/CSBot#readme",
 	"engines": {
-		"node": "^18.17.0"
+		"node": ">=20"
 	},
 	"main": "./dist/main.js",
 	"type": "module",
@@ -68,7 +67,7 @@
 		"@rollup/plugin-node-resolve": "15.0.1",
 		"@rollup/plugin-replace": "5.0.2",
 		"@types/lodash-es": "4.17.8",
-		"@types/node": "18.17.5",
+		"@types/node": "20.8.8",
 		"@types/source-map-support": "0.5.6",
 		"@types/tmp": "0.2.3",
 		"@typescript-eslint/eslint-plugin": "6.4.0",
@@ -87,9 +86,8 @@
 		"eslint-plugin-unicorn": "48.0.1",
 		"eslint-plugin-vitest": "0.2.8",
 		"genversion": "3.1.1",
-		"jest-extended": "4.0.1",
 		"keep-a-changelog": "2.2.1",
-		"nodemon": "2.0.21",
+		"nodemon": "3.0.1",
 		"pm2": "5.2.2",
 		"prettier": "3.0.2",
 		"prettier-plugin-prisma": "5.0.0",
@@ -98,11 +96,10 @@
 		"rollup-plugin-analyzer": "4.0.0",
 		"rollup-plugin-esbuild": "5.0.0",
 		"rollup-plugin-visualizer": "5.9.0",
-		"semver": "7.3.8",
+		"semver": "7.5.4",
 		"ts-node": "10.9.1",
 		"typescript": "4.9.5",
-		"undici": "5.23.0",
 		"vitest": "0.34.2",
-		"vitest-mock-extended": "1.2.0"
+		"vitest-mock-extended": "1.3.1"
 	}
 }

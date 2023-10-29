@@ -1,3 +1,5 @@
+import { beforeEach, describe, expect, test, vi } from 'vitest';
+
 // Mock the talkMessage functionality
 const mockSpeak = vi.hoisted(() => vi.fn());
 vi.mock('../talk', () => ({

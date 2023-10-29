@@ -1,5 +1,6 @@
 import type { RepliableInteraction } from 'discord.js';
 import type { Mock } from 'vitest';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
 vi.mock('../helpers/actions/messages/replyToMessage');
 import { replyWithPrivateMessage } from '../helpers/actions/messages/replyToMessage';
@@ -32,6 +33,10 @@ describe('ephemeral and DM replies', () => {
 		replyPrivately = factory(interaction);
 	});
 
+	afterEach(() => {
+		vi.resetAllMocks();
+	});
+
 	test('sends an ephemeral reply to check DMs', async () => {
 		await expect(replyPrivately('yo DMs', true)).resolves.toBeUndefined();
 		expect(mockInteractionReply).toHaveBeenCalledWith({
@@ -49,10 +54,8 @@ describe('ephemeral and DM replies', () => {
 			content: expect.stringContaining('Check your DMs') as string,
 			ephemeral: true,
 		});
-		expect(mockLoggerError).toHaveBeenCalledExactlyOnceWith(
-			expect.stringContaining('to reply'),
-			testError
-		);
+		expect(mockLoggerError).toHaveBeenCalledOnce();
+		expect(mockLoggerError).toHaveBeenCalledWith(expect.stringContaining('to reply'), testError);
 		expect(mockSendDM).toHaveBeenCalledWith(interaction, 'yo DMs', true);
 	});
 
@@ -100,10 +103,8 @@ describe('ephemeral and DM replies', () => {
 		expect(mockInteractionEditReply).toHaveBeenCalledWith(
 			expect.stringContaining('Check your DMs')
 		);
-		expect(mockLoggerError).toHaveBeenCalledExactlyOnceWith(
-			expect.stringContaining('edit reply'),
-			testError
-		);
+		expect(mockLoggerError).toHaveBeenCalledOnce();
+		expect(mockLoggerError).toHaveBeenCalledWith(expect.stringContaining('edit reply'), testError);
 		expect(mockSendDM).toHaveBeenCalledWith(interaction, { content: 'yo' }, true);
 	});
 
@@ -140,10 +141,8 @@ describe('ephemeral and DM replies', () => {
 			content: 'yo in secret',
 			ephemeral: true,
 		});
-		expect(mockLoggerError).toHaveBeenCalledExactlyOnceWith(
-			expect.stringContaining('follow up'),
-			testError
-		);
+		expect(mockLoggerError).toHaveBeenCalledOnce();
+		expect(mockLoggerError).toHaveBeenCalledWith(expect.stringContaining('follow up'), testError);
 	});
 
 	test('logs an error if the ephemeral follow-up message from options failed', async () => {
@@ -157,9 +156,7 @@ describe('ephemeral and DM replies', () => {
 			content: 'yo object in secret',
 			ephemeral: true,
 		});
-		expect(mockLoggerError).toHaveBeenCalledExactlyOnceWith(
-			expect.stringContaining('follow up'),
-			testError
-		);
+		expect(mockLoggerError).toHaveBeenCalledOnce();
+		expect(mockLoggerError).toHaveBeenCalledWith(expect.stringContaining('follow up'), testError);
 	});
 });

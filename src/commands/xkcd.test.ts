@@ -1,4 +1,6 @@
 import type { Mock } from 'vitest';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+
 import { fetchJson } from '../helpers/fetch';
 import { HttpStatusCode } from '../helpers/HttpStatusCode';
 import { NetworkError } from '../helpers/NetworkError';
@@ -64,6 +66,10 @@ describe('xkcd', () => {
 		mockGetInteger.mockReturnValue(null);
 	});
 
+	afterEach(() => {
+		vi.resetAllMocks();
+	});
+
 	test('Throws an error when the number is out of bounds', async () => {
 		mockedFetchJson.mockResolvedValue(latestGood);
 
@@ -83,8 +89,9 @@ describe('xkcd', () => {
 		mockGetInteger.mockReturnValueOnce(null);
 		await expect(xkcd.execute(context)).resolves.toBeUndefined();
 		expect(mockSendTyping).toHaveBeenCalledOnce();
-		expect(mockReply).toHaveBeenCalledExactlyOnceWith({
-			embeds: [expect.toBeObject()],
+		expect(mockReply).toHaveBeenCalledOnce();
+		expect(mockReply).toHaveBeenCalledWith({
+			embeds: [expect.objectContaining({})],
 			ephemeral: false,
 		});
 	});
@@ -95,8 +102,9 @@ describe('xkcd', () => {
 		mockGetInteger.mockReturnValueOnce(chosen.num);
 		await expect(xkcd.execute(context)).resolves.toBeUndefined();
 		expect(mockSendTyping).toHaveBeenCalledOnce();
-		expect(mockReply).toHaveBeenCalledExactlyOnceWith({
-			embeds: [expect.toBeObject()],
+		expect(mockReply).toHaveBeenCalledOnce();
+		expect(mockReply).toHaveBeenCalledWith({
+			embeds: [expect.objectContaining({})],
 			ephemeral: false,
 		});
 	});

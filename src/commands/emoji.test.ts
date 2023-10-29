@@ -1,5 +1,7 @@
 import type { GuildEmoji, ImageURLOptions } from 'discord.js';
 import { EmbedBuilder } from 'discord.js';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+
 import { emoji } from './emoji';
 
 vi.mock('../logger');
@@ -39,6 +41,10 @@ describe('profile', () => {
 		mockShouldRespondEphemeral.mockReturnValue(true);
 	});
 
+	afterEach(() => {
+		vi.resetAllMocks();
+	});
+
 	test('Throws an error when the target emoji does not exist', async () => {
 		mockEmojiName.mockReturnValue('emoji not here');
 		await expect(emoji.execute(context)).rejects.toThrow('Emoji emoji not here was not found');
@@ -47,7 +53,8 @@ describe('profile', () => {
 	test('Returns the url of the target emoji ephemerally', async () => {
 		await expect(emoji.execute(context)).resolves.toBeUndefined();
 
-		expect(mockReply).toHaveBeenCalledExactlyOnceWith({
+		expect(mockReply).toHaveBeenCalledOnce();
+		expect(mockReply).toHaveBeenCalledWith({
 			content: mockEmojiName() as string,
 			embeds: [
 				new EmbedBuilder({
@@ -63,7 +70,8 @@ describe('profile', () => {
 		mockShouldRespondEphemeral.mockReturnValue(null);
 		await expect(emoji.execute(context)).resolves.toBeUndefined();
 
-		expect(mockReply).toHaveBeenCalledExactlyOnceWith({
+		expect(mockReply).toHaveBeenCalledOnce();
+		expect(mockReply).toHaveBeenCalledWith({
 			content: mockEmojiName() as string,
 			embeds: [
 				new EmbedBuilder({
@@ -79,7 +87,8 @@ describe('profile', () => {
 		mockShouldRespondEphemeral.mockReturnValue(false);
 		await expect(emoji.execute(context)).resolves.toBeUndefined();
 
-		expect(mockReply).toHaveBeenCalledExactlyOnceWith({
+		expect(mockReply).toHaveBeenCalledOnce();
+		expect(mockReply).toHaveBeenCalledWith({
 			content: mockEmojiName() as string,
 			embeds: [
 				new EmbedBuilder({

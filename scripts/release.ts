@@ -4,7 +4,6 @@ import './assertTsNode.js';
 import { assert, literal, string, type } from 'superstruct';
 import { parser as changelogParser } from 'keep-a-changelog';
 import { readFileSync, writeFileSync } from 'node:fs';
-import { URL } from 'node:url';
 import * as semver from 'semver';
 
 const logger = console;

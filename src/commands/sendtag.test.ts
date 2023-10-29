@@ -1,4 +1,6 @@
 import type { AutocompleteInteraction } from 'discord.js';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
+
 import { sendtag } from './sendtag';
 
 describe('sendtag', () => {
@@ -30,12 +32,13 @@ describe('sendtag', () => {
 		const value = 'lorem ipsum';
 		mockGetString.mockReturnValue(value);
 		await expect(sendtag.execute(context)).resolves.toBeUndefined();
-		expect(mockReply).toHaveBeenCalledExactlyOnceWith(`You requested the '${value}' tag!`);
+		expect(mockReply).toHaveBeenCalledOnce();
+		expect(mockReply).toHaveBeenCalledWith(`You requested the '${value}' tag!`);
 	});
 
 	test('returns an array for autocomplete', () => {
 		expect(
 			sendtag.autocomplete?.(context.interaction as unknown as AutocompleteInteraction)
-		).toBeArray();
+		).toBeDefined();
 	});
 });

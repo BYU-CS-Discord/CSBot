@@ -1,4 +1,5 @@
 import type { RepliableInteraction } from 'discord.js';
+import { describe, expect, test, vi } from 'vitest';
 
 // Mock the logger to track output
 vi.mock('../logger');
@@ -49,7 +50,8 @@ describe('public reply', () => {
 		const testError = new Error('This is a test');
 		mockInteractionReply.mockRejectedValueOnce(testError);
 		await expect(reply('yo')).resolves.toBeUndefined();
-		expect(mockLoggerError).toHaveBeenCalledExactlyOnceWith(
+		expect(mockLoggerError).toHaveBeenCalledOnce();
+		expect(mockLoggerError).toHaveBeenCalledWith(
 			expect.stringContaining('reply to interaction'),
 			testError
 		);

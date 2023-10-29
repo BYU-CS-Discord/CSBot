@@ -1,3 +1,5 @@
+import { vi } from 'vitest';
+
 /**
  * The mock function serving as the `debug` method of the logger.
  * @public
