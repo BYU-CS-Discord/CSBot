@@ -66,6 +66,7 @@
 		"@rollup/plugin-json": "6.0.0",
 		"@rollup/plugin-node-resolve": "15.0.1",
 		"@rollup/plugin-replace": "5.0.2",
+		"@rollup/plugin-typescript": "11.1.5",
 		"@types/lodash-es": "4.17.8",
 		"@types/node": "20.8.8",
 		"@types/source-map-support": "0.5.6",

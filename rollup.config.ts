@@ -6,6 +6,7 @@ import commonjs from '@rollup/plugin-commonjs';
 import esbuild from 'rollup-plugin-esbuild';
 import json from '@rollup/plugin-json';
 import replace from '@rollup/plugin-replace';
+import typescript from '@rollup/plugin-typescript';
 
 const HOME = process.env['HOME'];
 const NODE_ENV = process.env['NODE_ENV'];
@@ -22,6 +23,11 @@ export default defineConfig({
 					preventAssignment: true,
 			  })
 			: null,
+
+		// Check types
+		typescript({
+			tsconfig: './tsconfig.prod.json',
+		}),
 
 		// Transpile source
 		esbuild({

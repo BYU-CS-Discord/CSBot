@@ -3,7 +3,7 @@
 	"exclude": ["src/**/*.test.ts", "**/__mocks__/**/*.ts"],
 	"compilerOptions": {
 		"target": "ES2022",
-		"module": "CommonJS",
+		"module": "ESNext",
 		"lib": ["ES2022"],
 		"allowSyntheticDefaultImports": true,
 		"moduleResolution": "node",
