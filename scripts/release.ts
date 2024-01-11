@@ -64,7 +64,7 @@ const versioned = type({
 });
 const versionedLock = type({
 	version: string(),
-	lockfileVersion: literal(2),
+	lockfileVersion: literal(3),
 	packages: type({
 		'': type({
 			version: string(),
