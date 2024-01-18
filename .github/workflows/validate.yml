@@ -27,14 +27,14 @@ jobs:
       - name: Generate version
         run: npm run export-version
 
-      - name: Check that linting succeeds
+      - name: Lint
         run: npm run lint
 
-      - name: Check that build succeeds
+      - name: Build
         run: npm run build
 
-      - name: Run unit tests
+      - name: Tests
         run: npm test
 
-      # - name: Report test coverage
+      # - name: Coverage
       #   uses: ArtiomTr/jest-coverage-report-action@v2.2.2
