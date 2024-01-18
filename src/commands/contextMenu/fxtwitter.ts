@@ -10,7 +10,7 @@ export const fxtwitter: MessageContextMenuCommand = {
 		const content = targetMessage.content;
 
 		const urlRanges = positionsOfUriInText(content);
-		if (urlRanges === null) {
+		if (urlRanges.length === 0) {
 			throw new Error('There were no URLs found in the message.');
 		}
 

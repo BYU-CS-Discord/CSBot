@@ -6,10 +6,10 @@ import { positionsOfUriInText } from './positionsOfUriInText';
 describe('Identifying URIs in strings', () => {
 	test.each`
 		msg                                                            | ranges
-		${''}                                                          | ${null}
-		${'nothing'}                                                   | ${null}
-		${'still nothing'}                                             | ${null}
-		${'https://nope'}                                              | ${null}
+		${''}                                                          | ${[]}
+		${'nothing'}                                                   | ${[]}
+		${'still nothing'}                                             | ${[]}
+		${'https://nope'}                                              | ${[]}
 		${'https://yep.com'}                                           | ${[{ start: 0, end: 15 }]}
 		${'https://yep.com at the start'}                              | ${[{ start: 0, end: 15 }]}
 		${'at the end https://yep.com'}                                | ${[{ start: 11, end: 26 }]}
@@ -21,7 +21,7 @@ describe('Identifying URIs in strings', () => {
 		${'https://yep.com https://yep.com then https://yep.com ends'} | ${[{ start: 0, end: 15 }, { start: 16, end: 31 }, { start: 37, end: 52 }]}
 	`(
 		"correctly identifies URI substring range(s) in string '$msg'",
-		({ msg, ranges }: { msg: string; ranges: NonEmptyArray<Range> | null }) => {
+		({ msg, ranges }: { msg: string; ranges: Array<Range> | null }) => {
 			expect(positionsOfUriInText(msg)).toStrictEqual(ranges);
 		}
 	);
