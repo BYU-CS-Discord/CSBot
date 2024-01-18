@@ -1,4 +1,5 @@
 name: Validate
+# Lints, builds, and tests the project whenever a pull request is opened or merged
 
 on:
   pull_request:
@@ -15,8 +16,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Own all files
-        run: USER=$(/usr/bin/id -run) && chown -R $USER ./
       - name: Setup node
         uses: actions/setup-node@v3
         with:
