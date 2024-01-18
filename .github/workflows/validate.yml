@@ -9,10 +9,6 @@ on:
 jobs:
   validate:
     runs-on: ubuntu-latest
-    container:
-      image: node:18.17.0
-      env:
-        DOCKER: true
 
     steps:
       - name: Checkout repository
@@ -20,6 +16,8 @@ jobs:
 
       - name: Own all files
         run: USER=$(/usr/bin/id -run) && chown -R $USER ./
+      - name: Setup node
+        uses: actions/setup-node@v3
 
       - name: Install dependencies
         run: npm ci
