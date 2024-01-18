@@ -1,4 +1,4 @@
-name: Tests
+name: Validate
 
 on:
   pull_request:
@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  validate:
     runs-on: ubuntu-latest
     container:
       image: node:18.17.0
