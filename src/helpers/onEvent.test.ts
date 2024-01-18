@@ -9,6 +9,7 @@ describe('Creating event handlers', () => {
 	// few arguments, or arguments of the wrong type.
 
 	test('creates a proper event handler', () => {
+		// eslint-disable-next-line unicorn/consistent-function-scoping
 		const execute = (): void => undefined;
 		const handler = onEvent('ready', {
 			once: true,

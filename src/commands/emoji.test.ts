@@ -55,14 +55,17 @@ describe('profile', () => {
 
 		expect(mockReply).toHaveBeenCalledOnce();
 		expect(mockReply).toHaveBeenCalledWith({
-			content: mockEmojiName() as string,
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			content: mockEmojiName()!,
 			embeds: [
 				new EmbedBuilder({
-					title: mockEmojiName() as string,
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+					title: mockEmojiName()!,
 					image: { url: testEmojiURL },
 				}),
 			],
-			ephemeral: mockShouldRespondEphemeral() as boolean,
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			ephemeral: mockShouldRespondEphemeral()!,
 		});
 	});
 
@@ -72,10 +75,12 @@ describe('profile', () => {
 
 		expect(mockReply).toHaveBeenCalledOnce();
 		expect(mockReply).toHaveBeenCalledWith({
-			content: mockEmojiName() as string,
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			content: mockEmojiName()!,
 			embeds: [
 				new EmbedBuilder({
-					title: mockEmojiName() as string,
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+					title: mockEmojiName()!,
 					image: { url: testEmojiURL },
 				}),
 			],
@@ -89,14 +94,17 @@ describe('profile', () => {
 
 		expect(mockReply).toHaveBeenCalledOnce();
 		expect(mockReply).toHaveBeenCalledWith({
-			content: mockEmojiName() as string,
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			content: mockEmojiName()!,
 			embeds: [
 				new EmbedBuilder({
-					title: mockEmojiName() as string,
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+					title: mockEmojiName()!,
 					image: { url: testEmojiURL },
 				}),
 			],
-			ephemeral: mockShouldRespondEphemeral() as boolean,
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			ephemeral: mockShouldRespondEphemeral()!,
 		});
 	});
 });

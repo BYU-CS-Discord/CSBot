@@ -24,6 +24,7 @@ export async function fetchJson<T, S>(
 	const res = await fetch(input, init);
 
 	const status = res.status;
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
 	if (status !== HttpStatusCode.OK) {
 		throw new NetworkError(status);
 	}

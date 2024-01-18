@@ -48,6 +48,7 @@ const loginError = new Error('Failed to log in. This is a test.');
 
 describe('main', () => {
 	beforeEach(() => {
+		// eslint-disable-next-line unicorn/no-useless-undefined
 		mockConstructClient.mockReturnValue(undefined);
 		mockLogin.mockResolvedValue(mockToken);
 	});

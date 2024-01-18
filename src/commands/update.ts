@@ -3,7 +3,7 @@ import { exec as __unsafeExecuteCommand } from 'node:child_process';
 import { UserMessageError } from '../helpers/UserMessageError';
 import { debug, error } from '../logger';
 
-let numInvocations: number = 0;
+let numInvocations = 0;
 const info = new SlashCommandBuilder()
 	.setName('update')
 	.setDescription('Pulls the latest changes and restarts the bot')
