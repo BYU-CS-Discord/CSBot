@@ -22,13 +22,9 @@ export const fxtwitter: MessageContextMenuCommand = {
 
 		const urls: Array<URL> = [];
 		for (const { start, end } of urlRanges) {
-			try {
-				const url = new URL(content.slice(start, end));
-				if (twitterPermutations.has(url.hostname) || xPermutations.has(url.hostname)) {
-					urls.push(url);
-				}
-			} catch {
-				continue; // Not actually a URL, so skip to the next one
+			const url = new URL(content.slice(start, end));
+			if (twitterPermutations.has(url.hostname) || xPermutations.has(url.hostname)) {
+				urls.push(url);
 			}
 		}
 
