@@ -62,9 +62,7 @@ describe('once(ready)', () => {
 			deploy: false,
 			revoke: false,
 		});
-		// eslint-disable-next-line unicorn/no-useless-undefined
 		mockDeployCommands.mockResolvedValue(undefined);
-		// eslint-disable-next-line unicorn/no-useless-undefined
 		mockRevokeCommands.mockResolvedValue(undefined);
 		mockSetActivity.mockReturnValue({});
 	});
