@@ -47,7 +47,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Use `undici` instead of `axios` for network requests.
 - Log HTTP status text when encountering non-200 statuses.
 - Properly guard API boundaries against type poisoning.
->>>>>>> main
 
 ## [0.11.1] - 2023-06-28
 
