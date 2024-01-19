@@ -1,19 +1,22 @@
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+import type { SpyInstance } from 'vitest';
+
 import type { MessageReaction, User } from 'discord.js';
 import { buildExecute } from './messageReaction';
 
-const mockHandlerExecute = jest.fn<Promise<void>, []>();
+const mockHandlerExecute = vi.fn<[], Promise<void>>();
 const mockReactionHandler = {
 	execute: mockHandlerExecute,
 };
 const testExecute = buildExecute(new Set([mockReactionHandler]));
 
 describe('Reaction duplication', () => {
-	let mockRandom: jest.SpyInstance<number, []>;
+	let mockRandom: SpyInstance<[], number>;
 	let mockReaction: MessageReaction;
 	let mockSender: User;
 
 	beforeEach(() => {
-		mockRandom = jest.spyOn(global.Math, 'random').mockReturnValue(1);
+		mockRandom = vi.spyOn(global.Math, 'random').mockReturnValue(1);
 
 		mockReaction = {
 			me: false,

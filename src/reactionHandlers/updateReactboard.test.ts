@@ -1,13 +1,16 @@
-import type { PrismaClient, Reactboard, ReactboardPost } from '@prisma/client';
-import { DeepMockProxy, mockDeep } from 'jest-mock-extended';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
+import { mockDeep } from 'vitest-mock-extended';
+import type { DeepMockProxy } from 'vitest-mock-extended';
 
-jest.mock('../database', () => ({
-	db: mockDeep<PrismaClient>(),
-}));
+import type { PrismaClient, Reactboard, ReactboardPost } from '@prisma/client';
+import { ChannelType } from 'discord.js';
 
 import { db } from '../database';
-import { ChannelType } from 'discord.js';
 import { updateReactboard } from './updateReactboard';
+
+vi.mock('../database', () => ({
+	db: mockDeep<PrismaClient>(),
+}));
 
 describe('updateReactboard', () => {
 	const dbMock = db as unknown as DeepMockProxy<PrismaClient>;
@@ -29,16 +32,16 @@ describe('updateReactboard', () => {
 	const mockReactboardId = 0;
 	const mockReact = '⭐';
 
-	const mockReactionFetch = jest.fn();
-	const mockMessageFetch = jest.fn();
-	const mockUserFetch = jest.fn();
-	const mockChannelFetch = jest.fn();
-	const mockMessageFetchById = jest.fn();
-	const mockSend = jest.fn();
-	const mockEdit = jest.fn();
-	const mockChannelIsTextBased = jest.fn();
-	const mockRemoveReact = jest.fn();
-	const mockAvatarUrl = jest.fn();
+	const mockReactionFetch = vi.fn();
+	const mockMessageFetch = vi.fn();
+	const mockUserFetch = vi.fn();
+	const mockChannelFetch = vi.fn();
+	const mockMessageFetchById = vi.fn();
+	const mockSend = vi.fn();
+	const mockEdit = vi.fn();
+	const mockChannelIsTextBased = vi.fn();
+	const mockRemoveReact = vi.fn();
+	const mockAvatarUrl = vi.fn();
 	let context: ReactionHandlerContext;
 
 	const baseAuthor = {
@@ -126,6 +129,8 @@ describe('updateReactboard', () => {
 		mockSend.mockResolvedValue({
 			id: mockReactboardPostId,
 		});
+
+		vi.clearAllMocks();
 	});
 
 	test('does nothing if the react isnt in a guild', async () => {

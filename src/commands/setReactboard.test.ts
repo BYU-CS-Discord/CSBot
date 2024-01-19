@@ -1,20 +1,22 @@
-import type { PrismaClient } from '@prisma/client';
-import { DeepMockProxy, mockDeep } from 'jest-mock-extended';
-import type { TextChannel } from 'discord.js';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
+import type { DeepMockProxy } from 'vitest-mock-extended';
+import { mockDeep } from 'vitest-mock-extended';
 
-jest.mock('../database', () => ({
-	db: mockDeep<PrismaClient>(),
-}));
+import type { PrismaClient } from '@prisma/client';
+import type { TextChannel } from 'discord.js';
 
 import { setReactboard } from './setReactboard';
 import { db } from '../database';
 import { UserMessageError } from '../helpers/UserMessageError';
 
+vi.mock('../database', () => ({
+	db: mockDeep<PrismaClient>(),
+}));
+
 describe('setReactboard', () => {
 	const dbMock = db as unknown as DeepMockProxy<PrismaClient>;
-	/* eslint-disable @typescript-eslint/unbound-method */
+	// eslint-disable-next-line @typescript-eslint/unbound-method
 	const mockUpsert = dbMock.reactboard.upsert;
-	/* eslint-enable @typescript-eslint/unbound-method */
 
 	const mockGuildId = 'test-guild-id';
 	const mockChannel = {
@@ -23,11 +25,11 @@ describe('setReactboard', () => {
 	const mockThreshold = 5;
 	const mockReact = '⭐';
 
-	const mockReplyPrivately = jest.fn();
-	const mockGetString = jest.fn<string | null, [name: string]>();
-	const mockGetInteger = jest.fn<number, [name: string]>();
-	const mockGetChannel = jest.fn<TextChannel | null, [name: string]>();
-	const mockGetEmoji = jest.fn();
+	const mockReplyPrivately = vi.fn();
+	const mockGetString = vi.fn<[name: string], string | null>();
+	const mockGetInteger = vi.fn<[name: string], number>();
+	const mockGetChannel = vi.fn<[name: string], TextChannel | null>();
+	const mockGetEmoji = vi.fn();
 	let context: GuildedCommandContext;
 
 	beforeEach(() => {
@@ -49,6 +51,8 @@ describe('setReactboard', () => {
 		mockGetChannel.mockReturnValue(mockChannel as unknown as TextChannel);
 		mockGetInteger.mockReturnValue(mockThreshold);
 		mockGetString.mockReturnValue(mockReact);
+
+		vi.clearAllMocks();
 	});
 
 	test('upserts a reactboard', async () => {

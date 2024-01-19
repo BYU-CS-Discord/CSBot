@@ -1,16 +1,19 @@
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+import type { SpyInstance } from 'vitest';
+
 import type { MessageReaction, User } from 'discord.js';
 import { duplicate } from './duplicate';
 
 describe('Reaction duplication', () => {
-	const mockResendReact = jest.fn<Promise<unknown>, []>();
+	const mockResendReact = vi.fn<[], Promise<unknown>>();
 
-	let mockRandom: jest.SpyInstance<number, []>;
+	let mockRandom: SpyInstance<[], number>;
 	let mockReaction: MessageReaction;
 	let mockSender: User;
 	let mockContext: ReactionHandlerContext;
 
 	beforeEach(() => {
-		mockRandom = jest.spyOn(global.Math, 'random').mockReturnValue(1);
+		mockRandom = vi.spyOn(global.Math, 'random').mockReturnValue(1);
 
 		mockReaction = {
 			me: false,
@@ -39,6 +42,8 @@ describe('Reaction duplication', () => {
 			reaction: mockReaction,
 			user: mockSender,
 		};
+
+		vi.clearAllMocks();
 	});
 
 	afterEach(() => {

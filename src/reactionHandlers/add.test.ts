@@ -1,3 +1,5 @@
+import { describe, expect, test } from 'vitest';
+
 import { _add, allReactionHandlers } from './add';
 
 describe('allReactionHandlers', () => {
