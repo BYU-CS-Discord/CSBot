@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Release script using ts-node-esm for a non-ESM project
 - Release script URLs not compatible with local dev environments
+- All package vulnerabilities
 
 ## [0.12.1] - 2023-10-05
 
