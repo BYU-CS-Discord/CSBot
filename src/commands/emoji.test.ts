@@ -8,7 +8,7 @@ vi.mock('../logger');
 
 describe('profile', () => {
 	const mockReply = vi.fn<[content: unknown], Promise<void>>();
-	const mockEmojiName = vi.fn<[], string | null>();
+	const mockEmojiName = vi.fn<[], string | undefined>();
 	const mockEmojiURL = vi.fn<[options?: ImageURLOptions | undefined], string | null>();
 	const mockShouldRespondEphemeral = vi.fn<[], boolean | null>();
 
@@ -55,17 +55,14 @@ describe('profile', () => {
 
 		expect(mockReply).toHaveBeenCalledOnce();
 		expect(mockReply).toHaveBeenCalledWith({
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			content: mockEmojiName()!,
+			content: mockEmojiName(),
 			embeds: [
 				new EmbedBuilder({
-					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-					title: mockEmojiName()!,
+					title: mockEmojiName(),
 					image: { url: testEmojiURL },
 				}),
 			],
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			ephemeral: mockShouldRespondEphemeral()!,
+			ephemeral: mockShouldRespondEphemeral(),
 		});
 	});
 
@@ -75,12 +72,10 @@ describe('profile', () => {
 
 		expect(mockReply).toHaveBeenCalledOnce();
 		expect(mockReply).toHaveBeenCalledWith({
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			content: mockEmojiName()!,
+			content: mockEmojiName(),
 			embeds: [
 				new EmbedBuilder({
-					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-					title: mockEmojiName()!,
+					title: mockEmojiName(),
 					image: { url: testEmojiURL },
 				}),
 			],
@@ -94,17 +89,14 @@ describe('profile', () => {
 
 		expect(mockReply).toHaveBeenCalledOnce();
 		expect(mockReply).toHaveBeenCalledWith({
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			content: mockEmojiName()!,
+			content: mockEmojiName(),
 			embeds: [
 				new EmbedBuilder({
-					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-					title: mockEmojiName()!,
+					title: mockEmojiName(),
 					image: { url: testEmojiURL },
 				}),
 			],
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			ephemeral: mockShouldRespondEphemeral()!,
+			ephemeral: mockShouldRespondEphemeral(),
 		});
 	});
 });
