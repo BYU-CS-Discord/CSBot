@@ -1,20 +1,22 @@
 import type { RepliableInteraction } from 'discord.js';
+import type { Mock } from 'vitest';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
-jest.mock('../helpers/actions/messages/replyToMessage');
+vi.mock('../helpers/actions/messages/replyToMessage');
 import { replyWithPrivateMessage } from '../helpers/actions/messages/replyToMessage';
-const mockSendDM = replyWithPrivateMessage as jest.Mock;
+const mockSendDM = replyWithPrivateMessage as Mock;
 
 // Mock the logger to track output
-jest.mock('../logger');
+vi.mock('../logger');
 import { info as mockLoggerInfo, error as mockLoggerError } from '../logger';
 
 import { replyPrivatelyFactory as factory } from './replyPrivately';
 
 describe('ephemeral and DM replies', () => {
 	mockSendDM.mockResolvedValue(true);
-	const mockInteractionReply = jest.fn();
-	const mockInteractionEditReply = jest.fn();
-	const mockInteractionFollowUp = jest.fn();
+	const mockInteractionReply = vi.fn();
+	const mockInteractionEditReply = vi.fn();
+	const mockInteractionFollowUp = vi.fn();
 
 	let interaction: RepliableInteraction;
 	let replyPrivately: CommandContext['replyPrivately'];
@@ -29,6 +31,10 @@ describe('ephemeral and DM replies', () => {
 		} as unknown as RepliableInteraction;
 
 		replyPrivately = factory(interaction);
+	});
+
+	afterEach(() => {
+		vi.resetAllMocks();
 	});
 
 	test('sends an ephemeral reply to check DMs', async () => {

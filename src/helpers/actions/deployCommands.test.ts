@@ -1,24 +1,26 @@
 import type { Client } from 'discord.js';
 import { SlashCommandBuilder } from 'discord.js';
+import type { Mock } from 'vitest';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
 // Mock the logger so nothing is printed
-jest.mock('../../logger');
+vi.mock('../../logger');
 
-const mockAllCommands = new Map<string, Command>();
-jest.mock('../../commands', () => ({
+const mockAllCommands = vi.hoisted(() => new Map<string, Command>());
+vi.mock('../../commands', () => ({
 	allCommands: mockAllCommands,
 }));
 
-jest.mock('./revokeCommands');
+vi.mock('./revokeCommands');
 import { revokeCommands } from './revokeCommands';
-const mockRevokeCommands = revokeCommands as jest.Mock;
+const mockRevokeCommands = revokeCommands as Mock;
 
 import { deployCommands } from './deployCommands';
 
 describe('Command deployments', () => {
-	const mockApplicationCommandsSet = jest.fn();
-	const mockGuildCommandsSet = jest.fn();
-	const mockFetchOauthGuilds = jest.fn();
+	const mockApplicationCommandsSet = vi.fn();
+	const mockGuildCommandsSet = vi.fn();
+	const mockFetchOauthGuilds = vi.fn();
 
 	const mockClient = {
 		application: {
@@ -107,6 +109,10 @@ describe('Command deployments', () => {
 		}
 	});
 
+	afterEach(() => {
+		vi.resetAllMocks();
+	});
+
 	test('does no deployments if there are no commands to deploy', async () => {
 		mockAllCommands.clear();
 		await expect(deployCommands(mockClient)).resolves.toBeUndefined();
@@ -116,29 +122,26 @@ describe('Command deployments', () => {
 		expect(mockFetchOauthGuilds).not.toHaveBeenCalled();
 	});
 
-	test('calls mockRevokeCommands before any deployments', async () => {
-		await expect(deployCommands(mockClient)).resolves.toBeUndefined();
+	test('revokes commands before deploying', async () => {
+		mockRevokeCommands.mockRejectedValue(new Error('This is a test'));
+		await expect(deployCommands(mockClient)).rejects.toThrowError();
 		expect(mockRevokeCommands).toHaveBeenCalledOnce();
-		expect(mockRevokeCommands).toHaveBeenCalledBefore(mockApplicationCommandsSet);
-		expect(mockRevokeCommands).toHaveBeenCalledBefore(mockGuildCommandsSet);
-		expect(mockRevokeCommands).toHaveBeenCalledBefore(mockFetchOauthGuilds);
+		expect(mockApplicationCommandsSet).not.toHaveBeenCalled();
+		expect(mockGuildCommandsSet).not.toHaveBeenCalled();
+		expect(mockFetchOauthGuilds).not.toHaveBeenCalled();
 	});
 
 	test('continues deployments if global commands fail to deploy', async () => {
 		mockApplicationCommandsSet.mockRejectedValueOnce(new Error('This is a test'));
 		await expect(deployCommands(mockClient)).resolves.toBeUndefined();
-		expect(mockRevokeCommands).toHaveBeenCalledOnce();
-		expect(mockRevokeCommands).toHaveBeenCalledBefore(mockApplicationCommandsSet);
-		expect(mockRevokeCommands).toHaveBeenCalledBefore(mockGuildCommandsSet);
-		expect(mockRevokeCommands).toHaveBeenCalledBefore(mockFetchOauthGuilds);
+		expect(mockApplicationCommandsSet).toHaveBeenCalledOnce();
+		expect(mockGuildCommandsSet).toHaveBeenCalledOnce();
 	});
 
 	test('continues deployments if guild-bound commands fail to deploy', async () => {
 		mockGuildCommandsSet.mockRejectedValueOnce(new Error('This is a test'));
 		await expect(deployCommands(mockClient)).resolves.toBeUndefined();
-		expect(mockRevokeCommands).toHaveBeenCalledOnce();
-		expect(mockRevokeCommands).toHaveBeenCalledBefore(mockApplicationCommandsSet);
-		expect(mockRevokeCommands).toHaveBeenCalledBefore(mockGuildCommandsSet);
-		expect(mockRevokeCommands).toHaveBeenCalledBefore(mockFetchOauthGuilds);
+		expect(mockApplicationCommandsSet).toHaveBeenCalledOnce();
+		expect(mockGuildCommandsSet).toHaveBeenCalledOnce();
 	});
 });

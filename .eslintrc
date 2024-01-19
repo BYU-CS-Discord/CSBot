@@ -1,6 +1,6 @@
 {
 	"root": true,
-	"ignorePatterns": ["dist", "node_modules", "src/constants/version.ts"],
+	"ignorePatterns": ["dist", "node_modules", "coverage", "src/constants/version.ts"],
 
 	"extends": [
 		"strictest/eslint",
@@ -23,8 +23,7 @@
 	],
 	"parser": "@typescript-eslint/parser",
 	"parserOptions": {
-		"project": "./tsconfig.prod.json",
-		"tsconfigRootDir": "./"
+		"project": "./tsconfig.eslint.json"
 	},
 	"env": {
 		"node": true
@@ -96,33 +95,5 @@
 		"spaced-comment": ["warn", "always", { "exceptions": ["*"] }], // doc comments exist
 		"yoda": "error",
 		"import/no-default-export": "error"
-	},
-
-	"overrides": [
-		{
-			"files": ["src/**/*.test.ts", "src/**/__mocks__/**/*.ts"],
-			"extends": ["plugin:jest/recommended"],
-			"plugins": ["jest"],
-			"parserOptions": {
-				"project": "./tsconfig.test.json"
-			},
-			"env": {
-				"jest": true
-			},
-			"rules": {
-				"prettier/prettier": "warn",
-				"max-nested-callbacks": "off" // unit tests involve a lot of nested callbacks
-			}
-		},
-		{
-			"files": ["scripts/**/*.ts"],
-			"parserOptions": {
-				"project": "./tsconfig.test.json",
-				"tsconfigRootDir": "."
-			},
-			"rules": {
-				"unicorn/no-process-exit": "off"
-			}
-		}
-	]
+	}
 }

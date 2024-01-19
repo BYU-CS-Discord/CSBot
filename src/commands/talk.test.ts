@@ -1,16 +1,18 @@
-// External dependencies
 import { ChannelType } from 'discord.js';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
 // Overwrite dectalk say method
-const mockSay = jest.fn();
-const dectalk = jest.requireActual<typeof import('dectalk')>('dectalk');
-jest.mock('dectalk', () => ({
-	...dectalk,
-	say: mockSay,
-}));
+const mockSay = vi.hoisted(() => vi.fn());
+vi.mock('dectalk', async () => {
+	const dectalk = await vi.importActual<typeof import('dectalk')>('dectalk');
+	return {
+		...dectalk,
+		say: mockSay,
+	};
+});
 
 // Mock the logger so nothing is printed
-jest.mock('../logger');
+vi.mock('../logger');
 
 // Import the code to test
 import { talk } from './talk';
@@ -19,10 +21,10 @@ describe('Talk Slash Command', () => {
 	const message = 'test';
 	let context: TextInputCommandContext;
 	const emptyBuffer: Buffer = Buffer.from([]);
-	const mockPrepare = jest.fn();
-	const mockReply = jest.fn();
-	const mockGetString = jest.fn();
-	const mockGetInteger = jest.fn();
+	const mockPrepare = vi.fn();
+	const mockReply = vi.fn();
+	const mockGetString = vi.fn();
+	const mockGetInteger = vi.fn();
 
 	beforeEach(() => {
 		context = {
@@ -39,6 +41,10 @@ describe('Talk Slash Command', () => {
 		mockSay.mockReturnValue(emptyBuffer);
 		mockGetString.mockReturnValue(message);
 		mockGetInteger.mockReturnValue(null);
+	});
+
+	afterEach(() => {
+		vi.resetAllMocks();
 	});
 
 	test('Fails if no options are provided', async () => {
@@ -92,7 +98,6 @@ describe('Talk Slash Command', () => {
 
 	// Idk what else - how to handle interconnected event handlers?
 
-	// eslint-disable-next-line jest/no-commented-out-tests
 	// test('Replies with content of the message in voice channels', async () => {
 	// 	context = {
 	// 		...context,

@@ -1,3 +1,5 @@
+import { describe, expect, test } from 'vitest';
+
 import { _add, allCommands } from './index';
 
 describe('allCommands', () => {

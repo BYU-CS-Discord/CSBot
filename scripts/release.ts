@@ -4,7 +4,7 @@ import './assertTsNode';
 import { assert, literal, string, type } from 'superstruct';
 import { parser as changelogParser } from 'keep-a-changelog';
 import { readFileSync, writeFileSync } from 'node:fs';
-import { URL } from 'node:url';
+import { join } from 'node:path';
 import * as semver from 'semver';
 
 const logger = console;
@@ -22,10 +22,9 @@ function quote(str: string | undefined): string | undefined {
 logger.info('** release.ts **');
 
 // Load the changelog
-const here = new URL(__filename, 'file:');
-const changelogPath = new URL('../CHANGELOG.md', here).pathname;
-const packageJsonPath = new URL('../package.json', here).pathname;
-const packageLockJsonPath = new URL('../package-lock.json', here).pathname;
+const changelogPath = join(__dirname, '../CHANGELOG.md');
+const packageJsonPath = join(__dirname, '../package.json');
+const packageLockJsonPath = join(__dirname, '../package-lock.json');
 logger.info('Loading changelog from', quote(changelogPath));
 
 const rawChangelog = readFileSync(changelogPath, 'utf-8');
@@ -65,7 +64,7 @@ const versioned = type({
 });
 const versionedLock = type({
 	version: string(),
-	lockfileVersion: literal(2),
+	lockfileVersion: literal(3),
 	packages: type({
 		'': type({
 			version: string(),

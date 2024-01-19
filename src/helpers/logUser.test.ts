@@ -1,4 +1,6 @@
 import type { User } from 'discord.js';
+import { beforeEach, describe, expect, test } from 'vitest';
+
 import { logUser } from './logUser';
 
 describe('Log user ID', () => {
