@@ -14,7 +14,7 @@ const uriRegex =
  */
 export function positionsOfUriInText(str: string): Array<Range> {
 	const results: Array<Range> = [];
-	let match: RegExpExecArray | null = null;
+	let match: RegExpExecArray | null;
 
 	while ((match = uriRegex.exec(str))) {
 		const range: Range = {
@@ -23,11 +23,9 @@ export function positionsOfUriInText(str: string): Array<Range> {
 		};
 
 		// Just in case the regex returns a match that is not a valid URI
-		if (!URL.canParse(match[0])) {
-			continue;
+		if (URL.canParse(match[0])) {
+			results.push(range);
 		}
-
-		results.push(range);
 	}
 
 	return results;
