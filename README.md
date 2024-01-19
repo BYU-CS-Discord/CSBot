@@ -99,9 +99,9 @@ Tracks a statistic for the issuer. Use the `track` subcommand to begin tracking,
 
 You can find these in Discord by invoking the context menu (right-clicking) on any message in any channel where you're allowed to run commands.
 
-### Fix Twitter Links
+### Fix Twitter/X Links
 
-Transforms [twitter.com](https://twitter.com/) links in the given message to [FixTweet](https://github.com/FixTweet/FixTweet) links in an ephemeral reply. Please use fxtwitter in your own messages, especially when the tweet is a video. Twitter's default embed stinks on some platforms.
+Transforms [twitter.com](https://twitter.com/) and [x.com](https://x.com/) links in the given message to [FxTweet/FixupX](https://github.com/FixTweet/FxTwitter) links in an ephemeral reply. Please use fxtwitter/fixupx in your own messages, especially when the tweet is a video. The default embed stinks on some platforms.
 
 ### Talk
 

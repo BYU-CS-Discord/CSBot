@@ -1,4 +1,4 @@
-name: Create Release
+name: Create release
 
 # On push to main, if the latest version in CHANGELOG.md is different from the latest version tag, create a new tag and release
 
@@ -18,13 +18,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - name: Parse Changelog
+      - name: Parse changelog
         id: changelog
         uses: coditory/changelog-parser@v1.0.2
 
-      - name: Publish Release
+      - name: Publish release
         if: steps.changelog.outputs.status != 'unreleased'
         # This action doesn't create a new release if the tag already exists
         uses: softprops/action-gh-release@v1

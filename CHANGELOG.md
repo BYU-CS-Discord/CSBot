@@ -10,16 +10,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Upgraded to node 20 LTS
-- Use Vitest instead of Jest for forward compatibility with ESM.
+- Use Vitest instead of Jest for forward compatibility with ESM
 - Simplified TypeScript build settings and followed @typescript-eslint standards
 - Moved to new ESLint flat configuration
 - Moved to new ESLint stylistic packages
 - Package lockfile to version 3
+- "Fix Twitter Links" to support alternative x.com links
+- Revamped GitHub workflows
 
 ### Fixed
 
 - Release script using ts-node-esm for a non-ESM project
 - Release script URLs not compatible with local dev environments
+- All package vulnerabilities
 
 ## [0.12.1] - 2023-10-05
 
