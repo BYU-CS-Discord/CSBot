@@ -9,7 +9,6 @@ import { replyWithPrivateMessage } from '../helpers/actions/messages/replyToMess
 export function replyPrivatelyFactory(
 	interaction: RepliableInteraction
 ): CommandContext['replyPrivately'] {
-	// eslint-disable-next-line @typescript-eslint/no-inferrable-types
 	return async function replyPrivately(options, viaDM: boolean = false) {
 		if (viaDM) {
 			// We need to say *something* to the interaction itself, or Discord will think we died.

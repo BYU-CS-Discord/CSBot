@@ -121,6 +121,7 @@ module.exports = [
 			// Overrides
 			'@typescript-eslint/array-type': ['error', { default: 'generic' }],
 			'@typescript-eslint/no-confusing-void-expression': 0,
+			'@typescript-eslint/no-inferrable-types': 0, // we like to be extra explicit with types sometimes
 			'@typescript-eslint/no-invalid-void-type': ['error', { allowAsThisParameter: true }],
 			'import/namespace': 0, // FIXME false positives in test files
 			'import/no-unresolved': 0, // handled by TypeScript
