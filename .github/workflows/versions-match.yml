@@ -1,4 +1,4 @@
-name: Check Versions Match
+name: Check versions match
 
 # On PR to main, check that package.json and package-lock.json share the version, and that CHANGELOG.md is spec-compliant. Block otherwise.
 
