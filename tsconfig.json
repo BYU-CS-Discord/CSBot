@@ -5,6 +5,7 @@
 		"target": "ESNext",
 		"module": "CommonJS",
 		"typeRoots": ["node_modules/@types", "src/@types"],
+		"skipLibCheck": true,
 		"outDir": "dist",
 		"esModuleInterop": true,
 		"isolatedModules": true,
