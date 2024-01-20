@@ -89,7 +89,6 @@ async function handleCommandInteraction(
 	// checking the `guild` and `member` fields. See for reference
 	// https://github.com/discordjs/discord.js/blob/14.5.0/packages/discord.js/src/structures/BaseInteraction.js#L176
 
-	/* eslint-disable @typescript-eslint/consistent-type-assertions */
 	if (interaction.inGuild()) {
 		context = {
 			...vagueContext,
@@ -103,7 +102,6 @@ async function handleCommandInteraction(
 			options: interaction.options,
 		} as DMCommandContext;
 	}
-	/* eslint-enable @typescript-eslint/consistent-type-assertions */
 
 	if (interaction.isChatInputCommand()) {
 		context = { ...context, interaction, options: interaction.options };

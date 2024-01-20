@@ -42,9 +42,10 @@ module.exports = [
 			ecmaVersion: 2022,
 			globals: {
 				...globals.node,
-				...globals.es2021, // es2022 is not available (https://github.com/sindresorhus/globals/issues/183)
-				NodeJS: true,
 			},
+		},
+		linterOptions: {
+			reportUnusedDisableDirectives: 'error',
 		},
 		rules: {
 			// Recommended
