@@ -39,7 +39,7 @@ module.exports = [
 			promise: promise,
 		},
 		languageOptions: {
-			ecmaVersion: 2022,
+			ecmaVersion: 'latest',
 			globals: {
 				...globals.node,
 			},

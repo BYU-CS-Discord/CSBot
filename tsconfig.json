@@ -2,10 +2,10 @@
 	"include": ["src"],
 	"exclude": ["**/*.test.*", "**/__mocks__/**"],
 	"compilerOptions": {
-		"target": "ES2022",
+		"target": "ESNext",
 		"module": "CommonJS",
-		"typeRoots": ["./node_modules/@types", "./src/@types"],
-		"outDir": "./dist",
+		"typeRoots": ["node_modules/@types", "src/@types"],
+		"outDir": "dist",
 		"esModuleInterop": true,
 		"isolatedModules": true,
 		"removeComments": true,
