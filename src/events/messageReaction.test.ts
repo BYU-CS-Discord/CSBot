@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
-import type { SpyInstance } from 'vitest';
+import type { MockInstance } from 'vitest';
 
 import type { MessageReaction, User } from 'discord.js';
 import { buildExecute } from './messageReaction';
@@ -11,7 +11,7 @@ const mockReactionHandler = {
 const testExecute = buildExecute(new Set([mockReactionHandler]));
 
 describe('Reaction duplication', () => {
-	let mockRandom: SpyInstance<[], number>;
+	let mockRandom: MockInstance<[], number>;
 	let mockReaction: MessageReaction;
 	let mockSender: User;
 

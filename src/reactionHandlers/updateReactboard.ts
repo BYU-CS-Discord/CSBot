@@ -1,5 +1,6 @@
 import {
 	Attachment,
+	channelMention,
 	ChannelType,
 	DMChannel,
 	EmbedBuilder,
@@ -10,6 +11,7 @@ import {
 	PrivateThreadChannel,
 	PublicThreadChannel,
 	TextChannel,
+	userMention,
 	VoiceChannel,
 } from 'discord.js';
 import { db } from '../database';
@@ -35,7 +37,7 @@ export const updateReactboard: ReactionHandler = {
 
 		if (fullMessage.author.bot) {
 			await fullMessage.channel.send(
-				`${user.toString()}, you can't use that react on bot messages!`
+				`${userMention(user.id)}, you can't use that react on bot messages!`
 			);
 			await reaction.users.remove(fullUser);
 			return;
@@ -43,7 +45,7 @@ export const updateReactboard: ReactionHandler = {
 
 		if (fullMessage.author.id === user.id) {
 			await fullMessage.channel.send(
-				`${user.toString()}, you can't use that react on your own messages!`
+				`${userMention(user.id)}, you can't use that react on your own messages!`
 			);
 			await reaction.users.remove(fullUser);
 			return;
@@ -123,7 +125,7 @@ async function getChannel(
 	| NewsChannel
 	| TextChannel
 	| PrivateThreadChannel
-	| PublicThreadChannel<boolean>
+	| PublicThreadChannel
 	| VoiceChannel
 > {
 	const channel = await reaction.client.channels.fetch(channelId);
@@ -168,7 +170,7 @@ function buildEmbed(reaction: MessageReaction, message: Message): EmbedBuilder {
 			},
 			{
 				name: 'Channel',
-				value: message.channel.toString(),
+				value: channelMention(message.channel.id),
 				inline: true,
 			},
 			{

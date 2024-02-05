@@ -14,12 +14,11 @@ vi.mock('../database', () => ({
 
 describe('updateReactboard', () => {
 	const dbMock = db as unknown as DeepMockProxy<PrismaClient>;
-	/* eslint-disable @typescript-eslint/unbound-method */
+
 	const mockReactboardCount = dbMock.reactboard.count;
 	const mockReactboardPostFindMany = dbMock.reactboardPost.findMany;
 	const mockReactboardFindMany = dbMock.reactboard.findMany;
 	const mockReactboardPostCreate = dbMock.reactboardPost.create;
-	/* eslint-enable @typescript-eslint/unbound-method */
 
 	const mockGuildId = 'test-guild-id';
 	const mockMessageId = 'test-message-id';
@@ -200,7 +199,7 @@ describe('updateReactboard', () => {
 		expect(mockReactboardPostCreate).not.toHaveBeenCalled();
 	});
 
-	test('creates new reactboard post if one doesnt already exist', async () => {
+	test("creates new reactboard post if one doesn't already exist", async () => {
 		mockReactboardFindMany.mockResolvedValue([
 			{
 				channelId: mockReactboardChannelId,
