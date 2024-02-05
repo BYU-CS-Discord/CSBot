@@ -4,6 +4,9 @@ import type { MockInstance } from 'vitest';
 import type { MessageReaction, User } from 'discord.js';
 import { duplicate } from './duplicate';
 
+// Mock the logger so nothing is printed
+vi.mock('../logger');
+
 describe('Reaction duplication', () => {
 	const mockResendReact = vi.fn<[], Promise<unknown>>();
 
