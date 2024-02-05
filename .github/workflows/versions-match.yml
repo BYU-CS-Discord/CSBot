@@ -1,4 +1,4 @@
-name: Check Versions Match
+name: Check versions match
 
 # On PR to main, check that package.json and package-lock.json share the version, and that CHANGELOG.md is spec-compliant. Block otherwise.
 
@@ -12,16 +12,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Set up Node
+      - name: Setup node
         uses: actions/setup-node@v3
         with:
-          node-version: 18.x
+          node-version-file: '.nvmrc'
           cache: 'npm'
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: npm ci
 
-      - name: Check versions Match
+      - name: Check versions match
         run: npm run release

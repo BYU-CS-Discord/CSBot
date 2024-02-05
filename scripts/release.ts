@@ -27,7 +27,7 @@ const packageJsonPath = new URL('../package.json', here).pathname;
 const packageLockJsonPath = new URL('../package-lock.json', here).pathname;
 logger.info('Loading changelog from', quote(changelogPath));
 
-const rawChangelog = readFileSync(changelogPath, 'utf-8');
+const rawChangelog = readFileSync(changelogPath, 'utf8');
 const changelog = changelogParser(rawChangelog);
 
 const releases = changelog.releases;
@@ -38,7 +38,7 @@ const thisRelease = releases[thisReleaseIdx];
 if (!thisRelease?.version) throw new TypeError('No versioned release was found.');
 
 // Handy info
-logger.info('latest release:', thisRelease.version?.toString());
+logger.info('latest release:', thisRelease.version.toString());
 
 const prevRelease = releases[thisReleaseIdx + 1];
 logger.info('previous release:', prevRelease?.version?.toString());
@@ -51,10 +51,10 @@ const newChangelog = changelog.toString();
 writeFileSync(changelogPath, newChangelog);
 
 const didFixChangelog = rawChangelog !== newChangelog;
-if (!didFixChangelog) {
-	logger.info('Changelog was already spec compliant.');
-} else {
+if (didFixChangelog) {
 	logger.info('Fixed formatting for spec compliance.');
+} else {
+	logger.info('Changelog was already spec compliant.');
 }
 
 // Fix package.json and package-lock.json
@@ -72,8 +72,8 @@ const versionedLock = type({
 	}),
 });
 
-const packageJson: unknown = JSON.parse(readFileSync(packageJsonPath, 'utf-8'));
-const packageLockJson: unknown = JSON.parse(readFileSync(packageLockJsonPath, 'utf-8'));
+const packageJson: unknown = JSON.parse(readFileSync(packageJsonPath, 'utf8'));
+const packageLockJson: unknown = JSON.parse(readFileSync(packageLockJsonPath, 'utf8'));
 
 assert(packageJson, versioned);
 assert(packageLockJson, versionedLock);
@@ -109,10 +109,10 @@ const newPackageJson = `${JSON.stringify(packageJson, undefined, '\t')}\n`;
 writeFileSync(packageJsonPath, newPackageJson);
 
 const didFixPackageJson = oldPackageJson !== newPackageJson;
-if (!didFixPackageJson) {
-	logger.info('package.json already had the correct version.');
-} else {
+if (didFixPackageJson) {
 	logger.info('Updated package.json version.');
+} else {
+	logger.info('package.json already had the correct version.');
 }
 
 // Update package-lock.json
@@ -124,10 +124,10 @@ const newPackageLockJson = `${JSON.stringify(packageLockJson, undefined, '\t')}\
 writeFileSync(packageLockJsonPath, newPackageLockJson);
 
 const didFixPackageLockJson = oldPackageLockJson !== newPackageLockJson;
-if (!didFixPackageLockJson) {
-	logger.info('package-lock.json already had the correct version.');
-} else {
+if (didFixPackageLockJson) {
 	logger.info('Updated package-lock.json version.');
+} else {
+	logger.info('package-lock.json already had the correct version.');
 }
 
 // If we fixed the changelog or updated package.json, throw

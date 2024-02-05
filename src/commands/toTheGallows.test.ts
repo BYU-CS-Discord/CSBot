@@ -50,7 +50,7 @@ describe('toTheGallows', () => {
 
 		const response = mockReply.mock.calls.at(0)?.at(0);
 		expect(response?.embeds?.length).toBe(1);
-		const embed = response?.embeds?.at(0) as EmbedBuilder;
+		const embed = response?.embeds?.at(0) as EmbedBuilder | undefined;
 		expect(embed?.data).toMatchSnapshot();
 		expect(response?.components?.length).toBe(5);
 	});

@@ -1,7 +1,8 @@
-import type { PrismaClient, Scoreboard } from '@prisma/client';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
 import type { DeepMockProxy } from 'vitest-mock-extended';
 import { mockDeep } from 'vitest-mock-extended';
-import { beforeEach, describe, expect, test, vi } from 'vitest';
+
+import type { PrismaClient, Scoreboard } from '@prisma/client';
 
 vi.mock('../constants/meta', async () => {
 	const { repo } = await vi.importActual<typeof import('../constants/meta')>('../constants/meta');

@@ -29,13 +29,12 @@ const builder = new SlashCommandBuilder()
 	.addIntegerOption(option => {
 		option.setRequired(false).setName('speaker').setDescription('Whose voice to use');
 
-		Object.values(Speaker)
-			.filter(isNumber)
-			.forEach(value => {
-				const name = Speaker[value];
-				if (name === undefined) return;
-				option = option.addChoices({ name, value });
-			});
+		const elements = Object.values(Speaker).filter(element => isNumber(element)) as Array<number>;
+		elements.forEach(value => {
+			const name = Speaker[value];
+			if (name === undefined) return;
+			option = option.addChoices({ name, value });
+		});
 
 		return option;
 	});

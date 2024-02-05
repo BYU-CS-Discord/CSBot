@@ -1,5 +1,6 @@
 import type { ChatInputCommandInteraction } from 'discord.js';
 import { EmbedBuilder, SlashCommandBuilder, userMention } from 'discord.js';
+
 import { UserMessageError } from '../helpers/UserMessageError';
 import { db } from '../database';
 import { sanitize } from '../helpers/sanitize';

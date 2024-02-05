@@ -24,7 +24,7 @@ export async function fetchJson<T, S>(
 	const res = await fetch(input, init);
 
 	const status = res.status;
-	if (status !== HttpStatusCode.OK) {
+	if (status !== (HttpStatusCode.OK as number)) {
 		throw new NetworkError(status);
 	}
 

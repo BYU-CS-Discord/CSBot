@@ -19,7 +19,7 @@ export async function buildEvilHangmanMessage(
 		GAME_INFO_FORMAT,
 		gameInfo.guessesRemaining.toString(),
 		gameInfo.word,
-		Array.from(gameInfo.guessesSoFar).join()
+		Array.from(gameInfo.guessesSoFar).join(',')
 	)}_ _`; // The italic space here is a bit of a hack, but it prevents discord from trimming the message which messes up the regex match
 	const totalGuesses = gameInfo.guessesRemaining + gameInfo.guessesSoFar.size;
 	const hangmanArt = `\`\`\`${await getHangmanArt(gameInfo.guessesRemaining, totalGuesses)}\`\`\``;

@@ -10,21 +10,25 @@ export const altText: MessageContextMenuCommand = {
 		const attachments: ReadonlyArray<Attachment> = Array.from(targetMessage.attachments.values());
 
 		if (!isNonEmptyArray(attachments)) {
-			return await replyPrivately('This message contains no attachments.');
+			await replyPrivately('This message contains no attachments.');
+			return;
 		}
 
 		if (attachments.length === 1) {
 			const description = attachments[0].description?.trim();
 			if (description) {
-				return await replyPrivately(`## Image Description\n> ${description}`);
+				await replyPrivately(`## Image Description\n> ${description}`);
+				return;
 			}
-			return await replyPrivately('The attachment in this message has no text description.');
+			await replyPrivately('The attachment in this message has no text description.');
+			return;
 		}
 
 		if (attachments.every(a => !a.description?.trim())) {
-			return await replyPrivately(
+			await replyPrivately(
 				`None of the ${attachments.length} attachments in this message contains a text description.`
 			);
+			return;
 		}
 
 		let response = '## Image Descriptions';
@@ -39,6 +43,6 @@ export const altText: MessageContextMenuCommand = {
 			idx += 1;
 		}
 
-		return await replyPrivately(response);
+		await replyPrivately(response);
 	},
 };

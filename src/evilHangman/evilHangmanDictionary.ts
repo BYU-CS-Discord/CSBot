@@ -1,4 +1,4 @@
-import fs from 'fs';
+import fs from 'node:fs';
 
 const DICTIONARY_PATH = './res/dictionary.txt';
 export const allWords: ReadonlyArray<string> = fs

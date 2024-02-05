@@ -108,7 +108,10 @@ export const xkcd: GlobalCommand = {
 
 		// determining if a number was passed as an argument.
 		const param = options.getInteger(NumberOption);
-		if (param !== null) {
+		if (param === null) {
+			// no number given, just get the latest comic.
+			comic = 'latest';
+		} else {
 			// number was provided in the command
 			comic = `${param}`;
 			if (param < 1 || param > latestComic.num) {
@@ -117,20 +120,17 @@ export const xkcd: GlobalCommand = {
 					`Please insert a valid comic number. The range is 1-${latestComic.num}.`
 				);
 			}
-		} else {
-			// no number given, just get the latest comic.
-			comic = 'latest';
 		}
-		if (comic !== 'latest') {
+		if (comic === 'latest') {
+			// just use the OG call to build the embed, since they want the latest.
+			results = latestComic;
+		} else {
 			// get the comic from the API.
 			const requestedComic = await _getComic(comic);
 			if (requestedComic.num === -1) {
 				throw new Error('XKCD call failed. Please try again later.');
 			}
 			results = requestedComic;
-		} else {
-			// just use the OG call to build the embed, since they want the latest.
-			results = latestComic;
 		}
 
 		// we should have the data in response, build the embed.
@@ -141,7 +141,7 @@ export const xkcd: GlobalCommand = {
 			})
 			.setURL(`https://xkcd.com/${results.num}/`)
 			.setImage(results.img)
-			.setDescription(`${results.alt}`)
+			.setDescription(results.alt)
 			.setTimestamp()
 			.setFooter({ text: `Posted ${results.month}-${results.day}-${results.year}` });
 

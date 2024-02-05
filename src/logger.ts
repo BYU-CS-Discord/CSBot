@@ -1,3 +1,5 @@
+import type { Console } from 'node:console';
+
 /**
  * The default logger for this application. Set to the console for now.
  * Should not be accessed outside this logger file - instead, use the endpoint methods.

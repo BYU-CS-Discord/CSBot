@@ -47,7 +47,7 @@ describe('hangmanMoreButton', () => {
 		];
 		const afterInfo = lastCall[0].embeds[0].data.fields[1].value;
 		expect(afterInfo).not.toEqual(beforeInfo);
-	}, 15000);
+	}, 15_000);
 
 	test('guessing an already guessed letter shows an error message', async () => {
 		const aButton = letterButtons[0];

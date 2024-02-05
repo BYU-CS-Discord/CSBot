@@ -1,27 +1,29 @@
+import { URL } from 'node:url';
+
 export interface Range {
 	start: number;
 	end: number;
 }
 
+const uriRegex =
+	/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/gu;
+
 /**
  * Returns an array of index positions in the given string that may
  * encapsulate URLs, or `null` if no URLs were found.
  */
-export function positionsOfUriInText(str: string): NonEmptyArray<Range> | null {
-	const uri =
-		/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/gu;
+export function positionsOfUriInText(str: string): Array<Range> {
+	const results: Array<Range> = [];
+	let match: RegExpExecArray | null;
 
-	let results: NonEmptyArray<Range> | null = null;
-	let match: RegExpExecArray | null = null;
-
-	while ((match = uri.exec(str))) {
+	while ((match = uriRegex.exec(str))) {
 		const range: Range = {
 			start: match.index,
-			end: match.index + (match[0]?.length ?? 0),
+			end: match.index + match[0].length,
 		};
-		if (!results) {
-			results = [range];
-		} else {
+
+		// Just in case the regex returns a match that is not a valid URI
+		if (URL.canParse(match[0])) {
 			results.push(range);
 		}
 	}

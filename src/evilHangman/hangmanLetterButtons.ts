@@ -1,9 +1,9 @@
 import type { Letter } from '../buttons/hangmanLetterButton';
 import { hangmanLetterButton } from '../buttons/hangmanLetterButton';
 
-const alphabet: ReadonlyArray<Letter> = new Array(26)
+const alphabet: ReadonlyArray<Letter> = Array.from({ length: 26 })
 	.fill(null)
-	.map((x, i) => String.fromCharCode(i + 97) as Letter);
+	.map((x, i) => String.fromCodePoint(i + 97) as Letter);
 
 const buttonMap: ReadonlyMap<Letter, Button> = new Map(
 	alphabet.map(letter => [letter, hangmanLetterButton(letter)])
