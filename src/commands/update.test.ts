@@ -4,9 +4,6 @@ import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 // Mock the logger to prevent extra output
 vi.mock('../logger');
 
-// Mock the logger to prevent extra output
-vi.mock('../logger');
-
 // Overwrite the exec function
 const mockExec = vi.hoisted(() => vi.fn());
 vi.mock('node:child_process', async () => {

@@ -10,7 +10,7 @@ import promise from 'eslint-plugin-promise';
 import unicorn from 'eslint-plugin-unicorn';
 import vitest from 'eslint-plugin-vitest';
 
-import { nodeBuiltin } from 'globals';
+import globals from 'globals';
 
 export default [
 	{
@@ -40,7 +40,7 @@ export default [
 			promise: promise,
 		},
 		languageOptions: {
-			globals: nodeBuiltin,
+			globals: globals.nodeBuiltin,
 		},
 		linterOptions: {
 			reportUnusedDisableDirectives: 'error',
@@ -105,7 +105,6 @@ export default [
 			deprecation: deprecation,
 		},
 		languageOptions: {
-			sourceType: 'module',
 			parser: tsParser,
 			parserOptions: {
 				project: './tsconfig.eslint.json',

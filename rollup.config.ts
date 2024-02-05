@@ -14,15 +14,15 @@ const NODE_ENV = process.env['NODE_ENV'];
 export default defineConfig({
 	plugins: [
 		// Prisma injects the home directory. Remove that:
-		HOME !== undefined
-			? replace({
+		HOME === undefined
+			? null
+			: replace({
 					values: {
 						[HOME]: '~',
 					},
 					delimiters: ['', ''],
 					preventAssignment: true,
-			  })
-			: null,
+				}),
 
 		// Check types
 		typescript({

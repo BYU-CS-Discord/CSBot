@@ -1,4 +1,11 @@
 {
 	"files": [],
-	"references": [{ "path": "./tsconfig.prod.json" }, { "path": "./tsconfig.eslint.json" }]
+	"references": [
+		{
+			"path": "./tsconfig.prod.json"
+		},
+		{
+			"path": "./tsconfig.eslint.json"
+		},
+	],
 }

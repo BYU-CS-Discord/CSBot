@@ -3,6 +3,6 @@
 	"include": ["**/*"],
 	"exclude": [],
 	"compilerOptions": {
-		"noEmit": true
-	}
+		"noEmit": true,
+	},
 }
