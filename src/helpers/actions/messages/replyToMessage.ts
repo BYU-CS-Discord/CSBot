@@ -1,4 +1,3 @@
-// External dependencies
 import type {
 	InteractionReplyOptions,
 	Message,
@@ -10,7 +9,6 @@ import type {
 } from 'discord.js';
 import { ChannelType, channelMention, userMention } from 'discord.js';
 
-// Internal dependencies
 import * as logger from '../../../logger';
 import { logUser } from '../../logUser';
 

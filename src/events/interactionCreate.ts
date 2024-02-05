@@ -1,4 +1,3 @@
-// External dependencies
 import toString from 'lodash/toString';
 import type {
 	AutocompleteInteraction,
@@ -11,7 +10,6 @@ import type {
 } from 'discord.js';
 import { EmbedBuilder, Colors, ApplicationCommandType, ChannelType } from 'discord.js';
 
-// Internal dependencies
 import * as logger from '../logger';
 import { allCommands } from '../commands';
 import { DISCORD_API_MAX_CHOICES } from '../constants/apiLimitations';

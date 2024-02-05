@@ -1,9 +1,7 @@
-// External dependencies
 import 'source-map-support/register';
 import 'dotenv/config';
 import { Client, GatewayIntentBits, Partials } from 'discord.js';
 
-// Internal dependencies
 import * as logger from './logger';
 import { registerEventHandlers } from './events';
 

@@ -1,8 +1,6 @@
-// External dependencies
 import type { RepliableInteraction } from 'discord.js';
 import { ChannelType } from 'discord.js';
 
-// Internal dependencies
 import * as logger from '../logger';
 
 export function sendTypingFactory(interaction: RepliableInteraction): CommandContext['sendTyping'] {

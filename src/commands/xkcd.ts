@@ -1,10 +1,8 @@
-// External dependencies
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { fetchJson } from '../helpers/fetch';
 import { number, string, type as schema } from 'superstruct';
 import { URL } from 'node:url';
 
-// Internal dependencies
 import * as logger from '../logger';
 import { UserMessageError } from '../helpers/UserMessageError';
 

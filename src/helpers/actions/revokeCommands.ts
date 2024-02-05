@@ -1,7 +1,5 @@
-// External dependencies
 import type { Client } from 'discord.js';
 
-// Internal dependencies
 import * as logger from '../../logger';
 
 /**

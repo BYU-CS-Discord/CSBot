@@ -1,7 +1,5 @@
-// External dependencies
 import type { InteractionReplyOptions, RepliableInteraction } from 'discord.js';
 
-// Internal dependencies
 import * as logger from '../logger';
 import { sendMessageInChannel } from '../helpers/actions/messages/replyToMessage';
 

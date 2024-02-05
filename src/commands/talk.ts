@@ -1,4 +1,3 @@
-// External dependencies
 import { writeFileSync, createReadStream } from 'node:fs';
 import isNumber from 'lodash/isNumber';
 import {
@@ -21,7 +20,6 @@ import {
 import { say, Speaker } from 'dectalk';
 import { fileSync } from 'tmp';
 
-// Internal depedencies
 import * as logger from '../logger';
 
 const builder = new SlashCommandBuilder()

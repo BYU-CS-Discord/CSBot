@@ -1,8 +1,6 @@
-// External dependencies
 import type { Client, Guild, RESTPostAPIApplicationCommandsJSONBody } from 'discord.js';
 import { ApplicationCommandType } from 'discord.js';
 
-// Internal dependencies
 import * as logger from '../../logger';
 import { allCommands } from '../../commands';
 import { isNonEmptyArray } from '../guards/isNonEmptyArray';

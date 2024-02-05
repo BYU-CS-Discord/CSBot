@@ -1,4 +1,3 @@
-// Internal dependencies
 import * as logger from '../logger';
 import { onEvent } from '../helpers/onEvent';
 
