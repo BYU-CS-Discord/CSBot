@@ -58,31 +58,6 @@ This project's source is licensed under the [Unlicense](LICENSE) license. All co
 
 You can find these in Discord by typing `/` in the message input box in any channel where you're allowed to run commands.
 
-### /help
-
-Prints some info about the bot, including the current running version and a link to the code repository.
-
-### /profile
-
-Retrieves the profile picture of the given user.
-
-### /xkcd
-
-Retrieves the most recent [xkcd](https://xkcd.com/) comic, or the given one.
-
-### /talk
-
-Uses the [dectalk](https://github.com/babakinha/dectalk) text-to-speech engine to speak the message you give it,
-either sending a .wav file in a text channel or talking out loud in a voice channel. Comes with 9 different voices.
-
-### /update
-
-Pulls the latest changes from the repository and restarts the bot.
-
-### /tothegallows
-
-Begins a new game of Evil Hangman.
-
 ### /emoji
 
 Retrieves the internal picture for a custom emoji. By default responds ephemerally but when provided with a `false` boolean it responds so everyone can see the returned picture.
@@ -91,13 +66,50 @@ Retrieves the internal picture for a custom emoji. By default responds ephemeral
 
 Searches for open rooms on BYU Campus. _'Now'_, _'At'_, and _'Between'_ allow you to filter your search by time. \_'When'\_ allows you to see when a specified room is available.
 
+### /help
+
+Prints some info about the bot, including the current running version and a link to the code repository.
+
+### /iscasdown
+
+Checks whether BYU's CAS system is operational, because it crashes fairly often.
+
+### /profile
+
+Retrieves the profile picture of the given user.
+
+### /sendtag
+
+Not complete. For now, this command simply auto-completes the tag the user types, but it does not send the tag.
+
 ### /stats ( track / update / list / leaderboard / untrack )
 
 Tracks a statistic for the issuer. Use the `track` subcommand to begin tracking, `update` to add or subtract to it, `list` to show all the stats being tracked for the issuer, `leaderboard` to show the users with the highest scores for a stat, and `untrack` to stop tracking a stat for you.
 
+### /talk
+
+Uses the [dectalk](https://github.com/babakinha/dectalk) text-to-speech engine to speak the message you give it,
+either sending a .wav file in a text channel or talking out loud in a voice channel. Comes with 9 different voices.
+
+### /tothegallows
+
+Begins a new game of Evil Hangman.
+
+### /update
+
+Pulls the latest changes from the repository and restarts the bot.
+
+### /xkcd
+
+Retrieves the most recent [xkcd](https://xkcd.com/) comic, or the given one.
+
 ## Context Menu Commands
 
 You can find these in Discord by invoking the context menu (right-clicking) on any message in any channel where you're allowed to run commands.
+
+### Alt Text
+
+Prints the alt text attached to any images included in the message you use it on.
 
 ### Fix Twitter/X Links
 
