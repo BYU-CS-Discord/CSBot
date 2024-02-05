@@ -14,11 +14,12 @@ vi.mock('../database', () => ({
 
 describe('updateReactboard', () => {
 	const dbMock = db as unknown as DeepMockProxy<PrismaClient>;
-
+	/* eslint-disable @typescript-eslint/unbound-method */
 	const mockReactboardCount = dbMock.reactboard.count;
 	const mockReactboardPostFindMany = dbMock.reactboardPost.findMany;
 	const mockReactboardFindMany = dbMock.reactboard.findMany;
 	const mockReactboardPostCreate = dbMock.reactboardPost.create;
+	/* eslint-enable @typescript-eslint/unbound-method */
 
 	const mockGuildId = 'test-guild-id';
 	const mockMessageId = 'test-message-id';
