@@ -1,14 +1,13 @@
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
-import axios from 'axios';
 
 const statusURI = 'https://cas.byu.edu/cas/serviceValidate';
 
 const statuses = {
 	down: {
 		message: 'CAS is down again.',
-		color: 0xdc2626,
+		color: 0xdc_26_26,
 	},
-	up: { message: 'CAS is running, for now.', color: 0x16a34a },
+	up: { message: 'CAS is running, for now.', color: 0x16_a3_4a },
 };
 
 const builder = new SlashCommandBuilder()
@@ -23,9 +22,9 @@ export const isCasDown: GlobalCommand = {
 
 		let status = statuses.down;
 
-		const res = await axios.get(statusURI);
+		const res = await fetch(statusURI);
 
-		if (res?.status === 200) {
+		if (res.status === 200) {
 			status = statuses.up;
 		}
 
