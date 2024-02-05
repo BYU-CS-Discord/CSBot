@@ -3,7 +3,9 @@
 		"esbenp.prettier-vscode",
 		"dbaeumer.vscode-eslint",
 		"mikestead.dotenv",
-		"Prisma.prisma",
-		"Gruntfuggly.todo-tree"
+		"prisma.prisma",
+		"gruntfuggly.todo-tree",
+		"ms-vscode-remote.remote-containers",
+		"firsttris.vscode-jest-runner"
 	]
 }

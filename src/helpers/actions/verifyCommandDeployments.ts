@@ -70,9 +70,8 @@ async function diffGuildCommandDeployments(
 		.sort(sortAlphabetically);
 
 	for (const guild of guilds) {
-		const actualCommandNames = (await guild.commands.fetch())
-			.map(c => c.name)
-			.sort(sortAlphabetically);
+		const commands = await guild.commands.fetch();
+		const actualCommandNames = commands.map(c => c.name).sort(sortAlphabetically);
 
 		const diff = diffArrays(expectedCommandNames, actualCommandNames);
 		if (diff) return { ...diff, guild };
@@ -87,9 +86,8 @@ async function diffGlobalCommandDeployments(client: Client<true>): Promise<Diff 
 		.map(c => c.info.name)
 		.sort(sortAlphabetically);
 
-	const actualCommandNames = (await client.application.commands.fetch())
-		.map(c => c.name)
-		.sort(sortAlphabetically);
+	const commands = await client.application.commands.fetch();
+	const actualCommandNames = commands.map(c => c.name).sort(sortAlphabetically);
 
 	return diffArrays(expectedCommandNames, actualCommandNames);
 }
@@ -98,11 +96,11 @@ async function diffGlobalCommandDeployments(client: Client<true>): Promise<Diff 
 
 interface Diff {
 	readonly issue: 'length' | 'content';
-	expected: string | number;
-	actual: string | number;
+	readonly expected: string | number;
+	readonly actual: string | number;
 }
 
-function diffArrays(expected: Array<string>, actual: Array<string>): Diff | null {
+function diffArrays(expected: ReadonlyArray<string>, actual: ReadonlyArray<string>): Diff | null {
 	if (actual.length !== expected.length) {
 		return {
 			issue: 'length',
@@ -111,8 +109,8 @@ function diffArrays(expected: Array<string>, actual: Array<string>): Diff | null
 		};
 	}
 
-	for (let idx = 0; idx < actual.length; idx++) {
-		const deployedName = actual[idx] ?? '';
+	for (const [idx, element] of actual.entries()) {
+		const deployedName = element;
 		const expectedName = expected[idx] ?? '';
 		if (deployedName !== expectedName) {
 			return {

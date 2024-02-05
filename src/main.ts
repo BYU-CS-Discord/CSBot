@@ -21,6 +21,7 @@ export async function _main(): Promise<void> {
 			GatewayIntentBits.GuildMessageReactions,
 			GatewayIntentBits.DirectMessages,
 			GatewayIntentBits.GuildMessageTyping,
+			GatewayIntentBits.GuildVoiceStates,
 		],
 		partials: [Partials.Reaction, Partials.Channel, Partials.Message],
 		allowedMentions: {
@@ -40,14 +41,9 @@ export async function _main(): Promise<void> {
 	}
 }
 
-// Throw error if outside docker container
-if (process.env['DOCKER'] !== 'true') {
-	throw new Error('Docker environment not detected. Please see the README for setup instructions.');
-}
-
 /* istanbul ignore next */
 // Not Constantinople
 if (process.env['NODE_ENV'] !== 'test') {
-	// Jest will never hit this without hax:
+	// Vitest will never hit this without hax:
 	void _main();
 }

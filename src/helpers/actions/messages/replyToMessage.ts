@@ -1,10 +1,10 @@
 // External dependencies
 import type {
-	CommandInteraction,
 	InteractionReplyOptions,
 	Message,
 	MessageCreateOptions,
 	MessageReplyOptions,
+	RepliableInteraction,
 	TextBasedChannel,
 	User,
 } from 'discord.js';
@@ -47,7 +47,7 @@ async function sendDMReply(
 ): Promise<Message | null> {
 	const user: User = source.author;
 	try {
-		const content = typeof options !== 'string' ? options.content ?? null : options;
+		const content = typeof options === 'string' ? options : options.content ?? null;
 		const response = replyMessage(source.channel, content);
 		if (typeof options === 'string') {
 			return await sendDM(user, response);
@@ -60,7 +60,7 @@ async function sendDMReply(
 }
 
 async function sendEphemeralReply(
-	source: CommandInteraction,
+	source: RepliableInteraction,
 	options: string | InteractionReplyOptions
 ): Promise<boolean> {
 	// Returns boolean and not message, because we cannot fetch ephemeral messages
@@ -93,7 +93,7 @@ async function sendEphemeralReply(
  * or a boolean value indicating whether an ephemeral reply succeeded or failed.
  */
 export async function replyWithPrivateMessage(
-	source: Message | CommandInteraction,
+	source: Message | RepliableInteraction,
 	options: string | Omit<MessageCreateOptions, 'reply' | 'flags'>,
 	preferDMs: boolean
 ): Promise<Message | boolean> {
@@ -124,9 +124,12 @@ export async function replyWithPrivateMessage(
 		// Inform the user that we tried to DM them, but they have their DMs off
 		if ('author' in source) {
 			const authorMention = userMention(source.author.id);
-			await source.channel?.send(
-				`${authorMention} I tried to DM you just now, but it looks like your DMs are off. :slight_frown:`
-			);
+			const content = `${authorMention} I tried to DM you just now, but it looks like your DMs are off. :slight_frown:`;
+			try {
+				await source.reply(content);
+			} catch (error) {
+				logger.error(`Failed to reply with message ${JSON.stringify(content)}:`, error);
+			}
 		} else if (typeof options === 'string') {
 			return await sendEphemeralReply(source, {
 				content: `I tried to DM you just now, but it looks like your DMs are off.\n${options}`,
@@ -155,6 +158,12 @@ export async function sendMessageInChannel(
 	channel: TextBasedChannel,
 	content: string | MessageCreateOptions
 ): Promise<Message | null> {
+	if (channel.type === ChannelType.GuildStageVoice) {
+		logger.error(
+			`Failed to send message ${JSON.stringify(content)}: Cannot send in GuildStageVoice channels.`
+		);
+		return null;
+	}
 	try {
 		return await channel.send(content);
 	} catch (error) {

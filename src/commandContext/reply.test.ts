@@ -1,18 +1,19 @@
-import type { CommandInteraction } from 'discord.js';
+import type { RepliableInteraction } from 'discord.js';
+import { describe, expect, test, vi } from 'vitest';
 
 // Mock the logger to track output
-jest.mock('../logger');
+vi.mock('../logger');
 import { error as mockLoggerError } from '../logger';
 
 import { replyFactory as factory } from './reply';
 
 describe('public reply', () => {
-	const mockInteractionReply = jest.fn();
+	const mockInteractionReply = vi.fn();
 
 	const interaction = {
 		user: { id: 'user-id-1234' },
 		reply: mockInteractionReply,
-	} as unknown as CommandInteraction;
+	} as unknown as RepliableInteraction;
 
 	const reply = factory(interaction);
 

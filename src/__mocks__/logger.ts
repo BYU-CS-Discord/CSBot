@@ -1,23 +1,25 @@
-/**
- * The jest Mock serving as the `debug` endpoint of the logger.
- * @public
- */
-export const debug = jest.fn();
+import { vi } from 'vitest';
 
 /**
- * The jest Mock serving as the `info` endpoint of the logger.
+ * The mock function serving as the `debug` method of the logger.
  * @public
  */
-export const info = jest.fn();
+export const debug = vi.fn();
 
 /**
- * The jest Mock serving as the `warn` endpoint of the logger.
+ * The mock function serving as the `info` method of the logger.
  * @public
  */
-export const warn = jest.fn();
+export const info = vi.fn();
 
 /**
- * The jest Mock serving as the `error` endpoint of the logger.
+ * The mock function serving as the `warn` method of the logger.
  * @public
  */
-export const error = jest.fn();
+export const warn = vi.fn();
+
+/**
+ * The mock function serving as the `error` method of the logger.
+ * @public
+ */
+export const error = vi.fn();

@@ -1,22 +1,24 @@
-import type { CommandInteraction } from 'discord.js';
+import type { RepliableInteraction } from 'discord.js';
+import type { Mock } from 'vitest';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
-jest.mock('../helpers/actions/messages/replyToMessage');
+vi.mock('../helpers/actions/messages/replyToMessage');
 import { replyWithPrivateMessage } from '../helpers/actions/messages/replyToMessage';
-const mockSendDM = replyWithPrivateMessage as jest.Mock;
+const mockSendDM = replyWithPrivateMessage as Mock;
 
 // Mock the logger to track output
-jest.mock('../logger');
+vi.mock('../logger');
 import { info as mockLoggerInfo, error as mockLoggerError } from '../logger';
 
 import { replyPrivatelyFactory as factory } from './replyPrivately';
 
 describe('ephemeral and DM replies', () => {
 	mockSendDM.mockResolvedValue(true);
-	const mockInteractionReply = jest.fn();
-	const mockInteractionEditReply = jest.fn();
-	const mockInteractionFollowUp = jest.fn();
+	const mockInteractionReply = vi.fn();
+	const mockInteractionEditReply = vi.fn();
+	const mockInteractionFollowUp = vi.fn();
 
-	let interaction: CommandInteraction;
+	let interaction: RepliableInteraction;
 	let replyPrivately: CommandContext['replyPrivately'];
 
 	beforeEach(() => {
@@ -26,9 +28,13 @@ describe('ephemeral and DM replies', () => {
 			reply: mockInteractionReply,
 			editReply: mockInteractionEditReply,
 			followUp: mockInteractionFollowUp,
-		} as unknown as CommandInteraction;
+		} as unknown as RepliableInteraction;
 
 		replyPrivately = factory(interaction);
+	});
+
+	afterEach(() => {
+		vi.resetAllMocks();
 	});
 
 	test('sends an ephemeral reply to check DMs', async () => {
@@ -66,7 +72,7 @@ describe('ephemeral and DM replies', () => {
 	});
 
 	test('edits the previous reply message if deferred, sending a DM with text', async () => {
-		interaction = { ...interaction, deferred: true } as unknown as CommandInteraction;
+		interaction = { ...interaction, deferred: true } as unknown as RepliableInteraction;
 		replyPrivately = factory(interaction);
 
 		await expect(replyPrivately('yo DMs', true)).resolves.toBeUndefined();
@@ -77,7 +83,7 @@ describe('ephemeral and DM replies', () => {
 	});
 
 	test('edits the previous reply message if deferred, sending a DM with object', async () => {
-		interaction = { ...interaction, deferred: true } as unknown as CommandInteraction;
+		interaction = { ...interaction, deferred: true } as unknown as RepliableInteraction;
 		replyPrivately = factory(interaction);
 
 		await expect(replyPrivately({ content: 'yo DMs' }, true)).resolves.toBeUndefined();
@@ -90,7 +96,7 @@ describe('ephemeral and DM replies', () => {
 	test('logs an error if the initial reply edit failed', async () => {
 		const testError = new Error('This is a test');
 		mockInteractionEditReply.mockRejectedValueOnce(testError);
-		interaction = { ...interaction, deferred: true } as unknown as CommandInteraction;
+		interaction = { ...interaction, deferred: true } as unknown as RepliableInteraction;
 		replyPrivately = factory(interaction);
 
 		await expect(replyPrivately({ content: 'yo' }, true)).resolves.toBeUndefined();
@@ -103,7 +109,7 @@ describe('ephemeral and DM replies', () => {
 	});
 
 	test('sends an ephemeral follow-up message to the interaction if the interaction is deferred', async () => {
-		interaction = { ...interaction, deferred: true } as unknown as CommandInteraction;
+		interaction = { ...interaction, deferred: true } as unknown as RepliableInteraction;
 		replyPrivately = factory(interaction);
 
 		await expect(replyPrivately('yo in secret')).resolves.toBeUndefined();
@@ -114,7 +120,7 @@ describe('ephemeral and DM replies', () => {
 	});
 
 	test('sends an ephemeral follow-up message from options to the interaction if the interaction is deferred', async () => {
-		interaction = { ...interaction, deferred: true } as unknown as CommandInteraction;
+		interaction = { ...interaction, deferred: true } as unknown as RepliableInteraction;
 		replyPrivately = factory(interaction);
 
 		await expect(replyPrivately({ content: 'yo object in secret' })).resolves.toBeUndefined();
@@ -127,7 +133,7 @@ describe('ephemeral and DM replies', () => {
 	test('logs an error if the ephemeral follow-up message from text failed', async () => {
 		const testError = new Error('This is a test');
 		mockInteractionFollowUp.mockRejectedValueOnce(testError);
-		interaction = { ...interaction, deferred: true } as unknown as CommandInteraction;
+		interaction = { ...interaction, deferred: true } as unknown as RepliableInteraction;
 		replyPrivately = factory(interaction);
 
 		await expect(replyPrivately('yo in secret')).resolves.toBeUndefined();
@@ -142,7 +148,7 @@ describe('ephemeral and DM replies', () => {
 	test('logs an error if the ephemeral follow-up message from options failed', async () => {
 		const testError = new Error('This is a test');
 		mockInteractionFollowUp.mockRejectedValueOnce(testError);
-		interaction = { ...interaction, deferred: true } as unknown as CommandInteraction;
+		interaction = { ...interaction, deferred: true } as unknown as RepliableInteraction;
 		replyPrivately = factory(interaction);
 
 		await expect(replyPrivately({ content: 'yo object in secret' })).resolves.toBeUndefined();

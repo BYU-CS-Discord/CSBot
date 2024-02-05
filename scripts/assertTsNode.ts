@@ -1,0 +1,29 @@
+/**
+ * Asserts (on import) that the running context is ts-node.
+ *
+ * @throws an {@link EvalError} if the `ts-node` Service instance is not found on the process.
+ *
+ * See https://github.com/TypeStrong/ts-node/issues/846
+ */
+
+import assert from 'node:assert';
+import type { Service } from 'ts-node';
+
+const REGISTER_INSTANCE = Symbol.for('ts-node.register.instance');
+
+declare global {
+	// eslint-disable-next-line @typescript-eslint/no-namespace
+	namespace NodeJS {
+		interface Process {
+			[REGISTER_INSTANCE]?: Service;
+		}
+	}
+}
+
+try {
+	assert.ok(process[REGISTER_INSTANCE]);
+} catch {
+	throw new EvalError(
+		"Couldn't detect the ts-node environment. Did you import this script as a module by mistake?"
+	);
+}

@@ -1,0 +1,1 @@
+export const DISCORD_API_MAX_CHOICES = 25;

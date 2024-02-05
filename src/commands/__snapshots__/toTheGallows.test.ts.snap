@@ -1,0 +1,31 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`toTheGallows > specifying length and number of guesses always puts the game into the same state 1`] = `
+{
+  "fields": [
+    {
+      "inline": true,
+      "name": "_ _",
+      "value": "\`\`\` /---\\
+     |
+     |
+     |
+     |
+    -|-
+\`\`\`",
+    },
+    {
+      "inline": true,
+      "name": "_ _",
+      "value": "Remaining Guesses: 4
+Word: ----
+Letters Guessed: _ _",
+    },
+  ],
+  "footer": {
+    "icon_url": undefined,
+    "text": "vX.X.X",
+  },
+  "title": "Evil Hangman",
+}
+`;

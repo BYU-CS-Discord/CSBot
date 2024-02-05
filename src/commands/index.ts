@@ -29,16 +29,37 @@ export function _add(cmd: Command): void {
 }
 
 /**  Install commands here:  **/
+import { altText } from './contextMenu/altText';
+import { emoji } from './emoji';
+import { findRoom } from './findRoom';
+import { fxtwitter } from './contextMenu/fxtwitter';
 import { help } from './help';
-import { xkcd } from './xkcd';
 import { profile } from './profile';
+import { sendtag } from './sendtag';
+import { stats } from './stats';
+import { talk } from './talk';
+import { talk as talk_context } from './contextMenu/talk';
+import { toTheGallows } from './toTheGallows';
+import { update } from './update';
+import { xkcd } from './xkcd';
+
 // Tag and Read can be combined into one command, but I'm doing it this way at this stage for ease of testing.
 import { tag } from './tag';
 import { read } from './read';
-import { fxtwitter } from './contextMenu/fxtwitter';
+
+_add(altText);
+_add(emoji);
+_add(findRoom);
+_add(fxtwitter);
 _add(help);
-_add(xkcd);
 _add(profile);
+_add(sendtag);
+_add(stats);
+_add(talk);
+_add(talk_context);
+_add(toTheGallows);
+_add(update);
+_add(xkcd);
+
 _add(tag);
 _add(read);
-_add(fxtwitter);

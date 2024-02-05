@@ -1,11 +1,11 @@
 // External dependencies
-import type { CommandInteraction, InteractionReplyOptions } from 'discord.js';
+import type { InteractionReplyOptions, RepliableInteraction } from 'discord.js';
 
 // Internal dependencies
 import * as logger from '../logger';
 import { logUser } from '../helpers/logUser';
 
-export function replyFactory(interaction: CommandInteraction): CommandContext['reply'] {
+export function replyFactory(interaction: RepliableInteraction): CommandContext['reply'] {
 	return async function reply(options) {
 		let didFailToReply = false;
 
@@ -52,7 +52,7 @@ export function replyFactory(interaction: CommandInteraction): CommandContext['r
 		if (
 			typeof options !== 'string' &&
 			'ephemeral' in options &&
-			options?.ephemeral === true &&
+			options.ephemeral === true &&
 			!didFailToReply
 		) {
 			logger.info(
