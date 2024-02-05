@@ -6,6 +6,7 @@
  * See https://github.com/TypeStrong/ts-node/issues/846
  */
 
+import assert from 'node:assert';
 import type { Service } from 'ts-node';
 
 const REGISTER_INSTANCE = Symbol.for('ts-node.register.instance');
@@ -19,15 +20,9 @@ declare global {
 	}
 }
 
-let detectTSNode = false;
-
 try {
-	if (process[REGISTER_INSTANCE]) {
-		detectTSNode = true;
-	}
-} catch {}
-
-if (!detectTSNode) {
+	assert.ok(process[REGISTER_INSTANCE]);
+} catch {
 	throw new EvalError(
 		"Couldn't detect the ts-node environment. Did you import this script as a module by mistake?"
 	);

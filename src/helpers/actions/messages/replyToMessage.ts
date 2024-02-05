@@ -47,7 +47,7 @@ async function sendDMReply(
 ): Promise<Message | null> {
 	const user: User = source.author;
 	try {
-		const content = typeof options !== 'string' ? options.content ?? null : options;
+		const content = typeof options === 'string' ? options : options.content ?? null;
 		const response = replyMessage(source.channel, content);
 		if (typeof options === 'string') {
 			return await sendDM(user, response);

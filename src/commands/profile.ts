@@ -54,8 +54,8 @@ export const profile: GlobalCommand = {
 			target.id === client.user.id
 				? 'My' // bot user
 				: target.id === user.id
-				? 'Your' // caller
-				: `${userMention(target.id)}'s`;
+					? 'Your' // caller
+					: `${userMention(target.id)}'s`;
 
 		const content = `${pronoun} profile:`;
 		const embed = new EmbedBuilder().setTitle(target.username).setImage(url);

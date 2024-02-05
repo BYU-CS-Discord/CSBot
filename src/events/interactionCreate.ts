@@ -89,7 +89,6 @@ async function handleCommandInteraction(
 	// checking the `guild` and `member` fields. See for reference
 	// https://github.com/discordjs/discord.js/blob/14.5.0/packages/discord.js/src/structures/BaseInteraction.js#L176
 
-	/* eslint-disable @typescript-eslint/consistent-type-assertions */
 	if (interaction.inGuild()) {
 		context = {
 			...vagueContext,
@@ -103,7 +102,6 @@ async function handleCommandInteraction(
 			options: interaction.options,
 		} as DMCommandContext;
 	}
-	/* eslint-enable @typescript-eslint/consistent-type-assertions */
 
 	if (interaction.isChatInputCommand()) {
 		context = { ...context, interaction, options: interaction.options };
@@ -129,7 +127,8 @@ async function handleCommandInteraction(
 			};
 
 			try {
-				return await command.execute(messageContextMenuCommandContext);
+				await command.execute(messageContextMenuCommandContext);
+				return;
 			} catch (error) {
 				await sendErrorMessage(interaction, error);
 				return;
@@ -156,7 +155,8 @@ async function handleCommandInteraction(
 			};
 
 			try {
-				return await command.execute(userContextMenuCommandContext);
+				await command.execute(userContextMenuCommandContext);
+				return;
 			} catch (error) {
 				await sendErrorMessage(interaction, error);
 				return;
@@ -164,7 +164,8 @@ async function handleCommandInteraction(
 		}
 
 		try {
-			return await command.execute(context);
+			await command.execute(context);
+			return;
 		} catch (error) {
 			await sendErrorMessage(interaction, error);
 			return;
@@ -174,14 +175,16 @@ async function handleCommandInteraction(
 	if (context.source === 'dm') {
 		// No guild found
 		logger.debug(`Command '${command.info.name}' requires guild information, but none was found.`);
-		return await context.reply({
+		await context.reply({
 			content: "Can't do that here",
 			ephemeral: true,
 		});
+		return;
 	}
 
 	try {
-		return await command.execute(context);
+		await command.execute(context);
+		return;
 	} catch (error) {
 		await sendErrorMessage(interaction, error);
 	}
@@ -204,7 +207,8 @@ async function handleAutocompleteInteraction(interaction: AutocompleteInteractio
 				`Received request to execute autocomplete handler for unknown command named '${interaction.commandName}'`
 			);
 			// Return no results
-			return await interaction.respond([]);
+			await interaction.respond([]);
+			return;
 		}
 
 		// Command must be a chat-input command
@@ -213,7 +217,8 @@ async function handleAutocompleteInteraction(interaction: AutocompleteInteractio
 				`Received an autocomplete request for command '${command.info.name}'. This command must be of type 'ChatInput', but was found instead to be of a different type (${command.type}).`
 			);
 			// Return no results
-			return await interaction.respond([]);
+			await interaction.respond([]);
+			return;
 		}
 
 		// Command must have an autocomplete handler
@@ -222,7 +227,8 @@ async function handleAutocompleteInteraction(interaction: AutocompleteInteractio
 				`Received an autocomplete request for command '${command.info.name}'. This command must have an autocomplete handler method, but none was found.`
 			);
 			// Return no results
-			return await interaction.respond([]);
+			await interaction.respond([]);
+			return;
 		}
 
 		logger.debug(`Calling autocomplete handler for command '${command.info.name}'`);
@@ -328,7 +334,8 @@ async function handleButtonInteraction(
 		channelId: interaction.channelId,
 	};
 	try {
-		return await button.execute(buttonContext);
+		await button.execute(buttonContext);
+		return;
 	} catch (error) {
 		await sendErrorMessage(interaction, error);
 	}

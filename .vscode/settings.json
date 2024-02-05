@@ -6,5 +6,6 @@
 	"todo-tree.filtering.excludeGlobs": ["**/dist/**", "**/node_modules/**", "coverage/**"],
 	"files.eol": "auto",
 	"terminal.integrated.defaultProfile.windows": "Git Bash",
-	"editor.formatOnSave": true
+	"editor.formatOnSave": true,
+	"eslint.experimental.useFlatConfig": true,
 }

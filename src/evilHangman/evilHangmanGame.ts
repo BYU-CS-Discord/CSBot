@@ -30,7 +30,7 @@ export class EvilHangmanGame {
 			guesses = Math.max(13 - Math.round(length / 3), 1); // Numbers arbitrary, for game balance
 		}
 
-		const word = new Array(length).fill('-').join('');
+		const word = Array.from({ length }).fill('-').join('');
 		const guessesRemaining = guesses;
 
 		if (guessesRemaining < 1 || guessesRemaining > 25) {

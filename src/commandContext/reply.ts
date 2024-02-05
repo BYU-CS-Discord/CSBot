@@ -52,7 +52,7 @@ export function replyFactory(interaction: RepliableInteraction): CommandContext[
 		if (
 			typeof options !== 'string' &&
 			'ephemeral' in options &&
-			options?.ephemeral === true &&
+			options.ephemeral === true &&
 			!didFailToReply
 		) {
 			logger.info(

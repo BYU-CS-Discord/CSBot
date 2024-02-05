@@ -402,7 +402,7 @@ export enum HttpStatusCode {
 /**
  * Returns a brief textual description of the status code.
  */
-export function describeCode(code: HttpStatusCode): string {
+export function describeCode(code: HttpStatusCode | number): string {
 	// Since HTTP clients no longer populate the `statusText` field, we must provide our own.
 	// It is taking me every ounce of willpower not to paste in my switch of pony puns here.
 	return HttpStatusCode[code] ?? `HTTP_${code}`;

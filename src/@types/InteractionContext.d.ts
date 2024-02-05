@@ -153,7 +153,7 @@ declare global {
 		readonly options: ChatInputCommandInteraction['options'];
 	}
 
-	/** Information relevant to a command invocation in a guild.*/
+	/** Information relevant to a command invocation in a guild. */
 	interface GuildedCommandContext extends BaseCommandContext {
 		/** Where the command was invoked. */
 		readonly source: 'guild';
@@ -200,7 +200,7 @@ declare global {
 		readonly options: ContextMenuCommandInteraction['options'];
 	}
 
-	/** Information relevant to a user context menu command invocation.*/
+	/** Information relevant to a user context menu command invocation. */
 	interface UserContextMenuCommandContext extends BaseContextMenuCommandContext {
 		/** The command invocation interaction. */
 		readonly interaction: UserContextMenuCommandInteraction;
@@ -212,7 +212,7 @@ declare global {
 		readonly targetMember: GuildMember | null;
 	}
 
-	/** Information relevant to a user context menu command invocation.*/
+	/** Information relevant to a user context menu command invocation. */
 	interface MessageContextMenuCommandContext extends BaseContextMenuCommandContext {
 		/** The command invocation interaction. */
 		readonly interaction: MessageContextMenuCommandInteraction;

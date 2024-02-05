@@ -1,27 +1,20 @@
 {
-	"include": ["src/**/*.ts"],
-	"exclude": ["src/**/*.test.ts", "**/__mocks__/**/*.ts"],
+	"include": ["src"],
+	"exclude": ["**/*.test.*", "**/__mocks__/**"],
 	"compilerOptions": {
-		"target": "ES2022",
+		"target": "ESNext",
 		"module": "CommonJS",
-		"lib": ["ES2022"],
-		"allowSyntheticDefaultImports": true,
-		"moduleResolution": "node",
+		"typeRoots": ["node_modules/@types", "src/@types"],
+		"skipLibCheck": true,
+		"outDir": "dist",
 		"esModuleInterop": true,
-		"declaration": false,
+		"isolatedModules": true,
 		"removeComments": true,
 		"sourceMap": true,
-		"outDir": "./dist",
-		"isolatedModules": true,
 		"strict": true,
-		"useUnknownInCatchVariables": true,
 		"noFallthroughCasesInSwitch": true,
 		"noImplicitReturns": true,
 		"noPropertyAccessFromIndexSignature": true,
 		"noUncheckedIndexedAccess": true,
-		"typeRoots": ["./node_modules/@types", "./src/@types"],
-		"types": ["node"],
-		"skipLibCheck": true, // disable this once our deps get their act together
-		"forceConsistentCasingInFileNames": true
 	}
 }

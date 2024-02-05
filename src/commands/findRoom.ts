@@ -284,13 +284,13 @@ export const findRoom: GlobalCommand = {
 				if (input_bldg !== null && input_room !== null) {
 					const requestedList = await _getWhenRoom(input_bldg, input_room);
 					const busySince =
-						requestedList.busySince !== ''
-							? requestedList.busySince.slice(11, 19)
-							: requestedList.busySince;
+						requestedList.busySince === ''
+							? requestedList.busySince
+							: requestedList.busySince.slice(11, 19);
 					const busyUntil =
-						requestedList.busyUntil !== ''
-							? requestedList.busyUntil.slice(11, 19)
-							: requestedList.busyUntil;
+						requestedList.busyUntil === ''
+							? requestedList.busyUntil
+							: requestedList.busyUntil.slice(11, 19);
 					// FORMAT 2023-02-06T12:15:00-07:00
 					const isInUse = requestedList.isInUse;
 

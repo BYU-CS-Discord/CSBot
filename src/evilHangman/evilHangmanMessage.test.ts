@@ -16,7 +16,7 @@ describe('evilHangmanMessage', () => {
 			expect(message.embeds).toBeDefined();
 			const embed = message.embeds?.[0] as EmbedBuilder | undefined;
 			expect(embed).toBeDefined();
-			expect(embed?.data?.description).toBeUndefined();
+			expect(embed?.data.description).toBeUndefined();
 			expect(message.components).toBeDefined();
 			expect(message.components?.length).toEqual(5);
 		});
