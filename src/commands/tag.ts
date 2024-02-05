@@ -1,20 +1,18 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */ // TODO REMOVE
 import { SlashCommandBuilder } from 'discord.js';
 import { PrismaClient } from '@prisma/client';
 
+import { error, info } from '../logger';
+
 const prisma = new PrismaClient();
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-async function main(name: string, content: string) {
+async function main(name: string, content: string): Promise<string> {
 	const tag = await prisma.tag.create({
 		data: {
 			name: name,
 			content: content,
 		},
 	});
-	console.log(tag);
+	info(tag);
 	return 'tag created';
 }
 
@@ -36,19 +34,18 @@ const builder = new SlashCommandBuilder()
 export const tag: GlobalCommand = {
 	info: builder,
 	requiresGuild: false,
-	async execute({ options, reply }) {
-		const tagname = options[0] ? (options[0].value as string) : 'empty';
-		const embed = options[1] ? (options[1].value as string) : 'empty';
+	execute({ options, reply }) {
+		const tagname = options.getString('tag', true);
+		const embed = options.getString('embed', true);
 
 		main(tagname, embed)
-			// eslint-disable-next-line promise/prefer-await-to-then
 			.then(async () => {
 				await reply({ content: 'Tagged!', ephemeral: true });
 				await prisma.$disconnect();
+				return;
 			})
-			// eslint-disable-next-line promise/prefer-await-to-then
-			.catch(async e => {
-				console.error(e);
+			.catch(async error_ => {
+				error(error_);
 				await reply({ content: 'Something Went Wrong!', ephemeral: true });
 				await prisma.$disconnect();
 				process.exit(1);
