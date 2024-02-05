@@ -4,7 +4,7 @@
 	"compilerOptions": {
 		"target": "ESNext",
 		"module": "ESNext",
-		"moduleResolution": "Node10",
+		"moduleResolution": "Node",
 		"typeRoots": ["./node_modules/@types", "./src/@types"],
 		"types": ["node"],
 		"skipLibCheck": true, // disable this once our deps get their act together

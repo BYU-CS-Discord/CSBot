@@ -1,18 +1,18 @@
-const js = require('@eslint/js');
-const stylistic = require('@stylistic/eslint-plugin');
-const typescriptParser = require('@typescript-eslint/parser');
-const typescriptPlugin = require('@typescript-eslint/eslint-plugin');
-const deprecation = require('eslint-plugin-deprecation');
-const fileProgress = require('eslint-plugin-file-progress');
-const import_ = require('eslint-plugin-import');
-const prettierRecommended = require('eslint-plugin-prettier/recommended');
-const promise = require('eslint-plugin-promise');
-const unicorn = require('eslint-plugin-unicorn');
-const vitest = require('eslint-plugin-vitest');
+import js from '@eslint/js';
+import stylistic from '@stylistic/eslint-plugin';
+import tsParser from '@typescript-eslint/parser';
+import typescript from '@typescript-eslint/eslint-plugin';
+import deprecation from 'eslint-plugin-deprecation';
+import fileProgress from 'eslint-plugin-file-progress';
+import import_ from 'eslint-plugin-import';
+import prettierRecommended from 'eslint-plugin-prettier/recommended';
+import promise from 'eslint-plugin-promise';
+import unicorn from 'eslint-plugin-unicorn';
+import vitest from 'eslint-plugin-vitest';
 
-const globals = require('globals');
+import { nodeBuiltin } from 'globals';
 
-module.exports = [
+export default [
 	{
 		ignores: ['dist', 'coverage', 'src/constants/version.ts'],
 	},
@@ -40,10 +40,7 @@ module.exports = [
 			promise: promise,
 		},
 		languageOptions: {
-			ecmaVersion: 'latest',
-			globals: {
-				...globals.node,
-			},
+			globals: nodeBuiltin,
 		},
 		linterOptions: {
 			reportUnusedDisableDirectives: 'error',
@@ -104,12 +101,12 @@ module.exports = [
 	{
 		files: ['**/*.{m,c,}ts{x,}'],
 		plugins: {
-			'@typescript-eslint': typescriptPlugin,
+			'@typescript-eslint': typescript,
 			deprecation: deprecation,
 		},
 		languageOptions: {
 			sourceType: 'module',
-			parser: typescriptParser,
+			parser: tsParser,
 			parserOptions: {
 				project: './tsconfig.eslint.json',
 				tsconfigRootDir: '.',
@@ -117,8 +114,8 @@ module.exports = [
 		},
 		rules: {
 			// Recommended
-			...typescriptPlugin.configs['strict-type-checked'].rules,
-			...typescriptPlugin.configs['stylistic-type-checked'].rules,
+			...typescript.configs['strict-type-checked'].rules,
+			...typescript.configs['stylistic-type-checked'].rules,
 			...deprecation.configs.recommended.rules,
 
 			// Overrides
