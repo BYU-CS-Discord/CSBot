@@ -1,6 +1,6 @@
 import type { InteractionReplyOptions, RepliableInteraction } from 'discord.js';
 
-import * as logger from '../logger';
+import { error } from '../logger.js';
 import { sendMessageInChannel } from '../helpers/actions/messages/replyToMessage';
 
 export function followUpFactory(interaction: RepliableInteraction): CommandContext['followUp'] {
@@ -22,8 +22,8 @@ export function followUpFactory(interaction: RepliableInteraction): CommandConte
 			const intermediateOptions: InteractionReplyOptions & { reply?: boolean } = { ...options };
 			delete intermediateOptions.reply;
 			return await interaction.followUp(intermediateOptions);
-		} catch (error) {
-			logger.error('Failed to follow up on interaction:', error);
+		} catch (error_) {
+			error('Failed to follow up on interaction:', error_);
 			return false;
 		}
 	};

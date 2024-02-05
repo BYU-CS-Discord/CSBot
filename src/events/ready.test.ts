@@ -50,7 +50,7 @@ import { verifyCommandDeployments } from '../helpers/actions/verifyCommandDeploy
 const mockVerifyCommandDeployments = verifyCommandDeployments as Mock;
 
 // Mock the logger so nothing is printed
-vi.mock('../logger');
+vi.mock('../logger.js');
 
 // Import the code to test
 import { ready } from './ready';

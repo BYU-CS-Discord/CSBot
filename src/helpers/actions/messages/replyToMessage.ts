@@ -9,8 +9,8 @@ import type {
 } from 'discord.js';
 import { ChannelType, channelMention, userMention } from 'discord.js';
 
-import * as logger from '../../../logger';
 import { logUser } from '../../logUser';
+import { error, info } from '../../../logger.js';
 
 /**
  * Attempts to send a direct message to a user.
@@ -24,8 +24,8 @@ import { logUser } from '../../logUser';
 async function sendDM(user: User, content: string | MessageCreateOptions): Promise<Message | null> {
 	try {
 		return await user.send(content);
-	} catch (error) {
-		logger.error(`Failed to send direct message to user ${logUser(user)}:`, error);
+	} catch (error_) {
+		error(`Failed to send direct message to user ${logUser(user)}:`, error_);
 		return null;
 	}
 }
@@ -51,8 +51,8 @@ async function sendDMReply(
 			return await sendDM(user, response);
 		}
 		return await sendDM(user, { ...options, content: response });
-	} catch (error) {
-		logger.error(`Failed to send direct message to user ${logUser(user)}:`, error);
+	} catch (error_) {
+		error(`Failed to send direct message to user ${logUser(user)}:`, error_);
 		return null;
 	}
 }
@@ -68,10 +68,10 @@ async function sendEphemeralReply(
 		} else {
 			await source.reply({ ...options, ephemeral: true });
 		}
-		logger.info(`Sent ephemeral reply to User ${logUser(source.user)}: ${JSON.stringify(options)}`);
+		info(`Sent ephemeral reply to User ${logUser(source.user)}: ${JSON.stringify(options)}`);
 		return true;
-	} catch (error) {
-		logger.error('Failed to send ephemeral message:', error);
+	} catch (error_) {
+		error('Failed to send ephemeral message:', error_);
 		return false;
 	}
 }
@@ -125,8 +125,8 @@ export async function replyWithPrivateMessage(
 			const content = `${authorMention} I tried to DM you just now, but it looks like your DMs are off. :slight_frown:`;
 			try {
 				await source.reply(content);
-			} catch (error) {
-				logger.error(`Failed to reply with message ${JSON.stringify(content)}:`, error);
+			} catch (error_) {
+				error(`Failed to reply with message ${JSON.stringify(content)}:`, error_);
 			}
 		} else if (typeof options === 'string') {
 			return await sendEphemeralReply(source, {
@@ -157,15 +157,15 @@ export async function sendMessageInChannel(
 	content: string | MessageCreateOptions
 ): Promise<Message | null> {
 	if (channel.type === ChannelType.GuildStageVoice) {
-		logger.error(
+		error(
 			`Failed to send message ${JSON.stringify(content)}: Cannot send in GuildStageVoice channels.`
 		);
 		return null;
 	}
 	try {
 		return await channel.send(content);
-	} catch (error) {
-		logger.error(`Failed to send message ${JSON.stringify(content)}:`, error);
+	} catch (error_) {
+		error(`Failed to send message ${JSON.stringify(content)}:`, error_);
 		return null;
 	}
 }

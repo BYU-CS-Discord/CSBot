@@ -20,7 +20,7 @@ import {
 import { say, Speaker } from 'dectalk';
 import { fileSync } from 'tmp';
 
-import * as logger from '../logger';
+import { info } from '../logger.js';
 
 const builder = new SlashCommandBuilder()
 	.setName('talk')
@@ -214,5 +214,5 @@ export async function speak(
  * @param message The message to log
  */
 function log(message: string): void {
-	logger.info(`\t/${builder.name}: ${message}`);
+	info(`\t/${builder.name}: ${message}`);
 }

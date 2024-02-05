@@ -1,7 +1,7 @@
 import type { Client, Guild } from 'discord.js';
 
-import * as logger from '../../logger';
 import { allCommands } from '../../commands';
+import { warn } from '../../logger.js';
 
 /**
  * Verify that the deployed command list is up-to-date, and yell in the console if it's not.
@@ -17,12 +17,12 @@ export async function verifyCommandDeployments(client: Client<true>): Promise<vo
 		const actual = globalDiff.actual;
 		switch (issue) {
 			case 'content':
-				logger.warn(
+				warn(
 					`The deployed commands differ from the expected command list: Expected a command named '${expected}', but found '${actual}'. Please redeploy.`
 				);
 				break;
 			case 'length':
-				logger.warn(
+				warn(
 					`The deployed commands differ from the expected command list: Expected ${expected} global command(s), but Discord returned ${actual}. Please redeploy.`
 				);
 				break;
@@ -40,12 +40,12 @@ export async function verifyCommandDeployments(client: Client<true>): Promise<vo
 		const guildId = guildedDiff.guild.id;
 		switch (issue) {
 			case 'content':
-				logger.warn(
+				warn(
 					`The deployed commands in guild '${guildId}' differ from the expected command list: Expected a command named '${expected}', but found '${actual}'. Please redeploy.`
 				);
 				break;
 			case 'length':
-				logger.warn(
+				warn(
 					`The deployed commands in guild '${guildId}' differ from the expected command list: Expected ${expected} command(s), but Discord returned ${actual}. Please redeploy.`
 				);
 				break;

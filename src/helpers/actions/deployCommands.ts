@@ -1,18 +1,18 @@
 import type { Client, Guild, RESTPostAPIApplicationCommandsJSONBody } from 'discord.js';
 import { ApplicationCommandType } from 'discord.js';
 
-import * as logger from '../../logger';
 import { allCommands } from '../../commands';
 import { isNonEmptyArray } from '../guards/isNonEmptyArray';
 import { revokeCommands } from './revokeCommands';
+import { debug, error, info } from '../../logger.js';
 
 export async function deployCommands(client: Client<true>): Promise<void> {
 	await revokeCommands(client); // fresh start!
 
-	logger.info('Deploying commands...');
+	info('Deploying commands...');
 	const commands: ReadonlyArray<Command> = Array.from(allCommands.values());
 	if (commands.length === 0) return;
-	logger.info(`Syncing ${commands.length} command(s)...`);
+	info(`Syncing ${commands.length} command(s)...`);
 
 	const guildCommands: Array<GuildedCommand> = [];
 	const globalCommands: Array<GlobalCommand | ContextMenuCommand> = [];
@@ -32,7 +32,7 @@ export async function deployCommands(client: Client<true>): Promise<void> {
 		await prepareGuildedCommands(guildCommands, client);
 	}
 
-	logger.info(
+	info(
 		`All ${commands.length} command(s) prepared. Discord may take some time to sync commands to clients.`
 	);
 }
@@ -42,17 +42,17 @@ async function prepareGlobalCommands(
 	client: Client<true>
 ): Promise<void> {
 	const commandBuilders = globalCommands.map(deployableCommand);
-	logger.info(
+	info(
 		`${globalCommands.length} command(s) will be set globally: ${JSON.stringify(
 			commandBuilders.map(cmd => cmd.name)
 		)}`
 	);
-	logger.debug(`Deploying all ${globalCommands.length} global command(s)...`);
+	debug(`Deploying all ${globalCommands.length} global command(s)...`);
 	try {
 		await client.application.commands.set(commandBuilders);
-		logger.info(`Set ${globalCommands.length} global command(s).`);
-	} catch (error) {
-		logger.error('Failed to set global commands:', error);
+		info(`Set ${globalCommands.length} global command(s).`);
+	} catch (error_) {
+		error('Failed to set global commands:', error_);
 	}
 }
 
@@ -61,7 +61,7 @@ async function prepareGuildedCommands(
 	client: Client<true>
 ): Promise<void> {
 	const commandBuilders = guildCommands.map(deployableCommand);
-	logger.info(
+	info(
 		`${guildCommands.length} command(s) require a guild: ${JSON.stringify(
 			commandBuilders.map(cmd => cmd.name)
 		)}`
@@ -76,16 +76,16 @@ async function prepareCommandsForGuild(
 	guildCommands: ReadonlyArray<GuildedCommand>
 ): Promise<void> {
 	const commandBuilders = guildCommands.map(deployableCommand);
-	logger.info(
+	info(
 		`Deploying ${guildCommands.length} guild-bound command(s): ${JSON.stringify(
 			commandBuilders.map(cmd => cmd.name)
 		)}`
 	);
 	try {
 		const result = await guild.commands.set(commandBuilders);
-		logger.info(`Set ${result.size} command(s) on guild ${guild.id}`);
-	} catch (error) {
-		logger.error(`Failed to set commands on guild ${guild.id}:`, error);
+		info(`Set ${result.size} command(s) on guild ${guild.id}`);
+	} catch (error_) {
+		error(`Failed to set commands on guild ${guild.id}:`, error_);
 	}
 }
 

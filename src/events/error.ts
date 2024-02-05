@@ -1,4 +1,4 @@
-import * as logger from '../logger';
+import { error as logErr } from '../logger.js';
 import { onEvent } from '../helpers/onEvent';
 
 /**
@@ -7,6 +7,6 @@ import { onEvent } from '../helpers/onEvent';
 export const error = onEvent('error', {
 	once: false,
 	execute(err) {
-		logger.error('Received client error:', err);
+		logErr('Received client error:', err);
 	},
 });

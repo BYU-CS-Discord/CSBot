@@ -3,7 +3,7 @@ import { fetchJson } from '../helpers/fetch';
 import { number, string, type as schema } from 'superstruct';
 import { URL } from 'node:url';
 
-import * as logger from '../logger';
+import { error } from '../logger.js';
 import { UserMessageError } from '../helpers/UserMessageError';
 
 const getComicResponse = schema({
@@ -43,9 +43,9 @@ async function _getComic(endpoint: string | number): Promise<GetComicResponse> {
 		url.searchParams.set('comic', `${endpoint}`);
 		return await fetchJson(url, getComicResponse);
 	} catch (error_) {
-		logger.error('Error in getting an XKCD comic:');
-		logger.error(error_);
-		const error: GetComicResponse = {
+		error('Error in getting an XKCD comic:');
+		error(error_);
+		const err: GetComicResponse = {
 			month: '',
 			num: -1,
 			link: '',
@@ -58,7 +58,7 @@ async function _getComic(endpoint: string | number): Promise<GetComicResponse> {
 			day: '',
 			img: 'ERR',
 		};
-		return error;
+		return err;
 	}
 }
 

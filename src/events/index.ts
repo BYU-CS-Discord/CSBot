@@ -1,6 +1,6 @@
 import type { Client } from 'discord.js';
 
-import * as logger from '../logger';
+import { info } from '../logger.js';
 
 /**
  * The private list of all event handlers. You can use this to edit the list within this file.
@@ -48,7 +48,7 @@ export function registerEventHandlers(client: Client): void {
 			client.on(eventName, eventHandler.execute);
 		}
 
-		logger.info(`Registered event handler ${eventHandler.once ? 'once' : 'on'}(${eventName})`);
+		info(`Registered event handler ${eventHandler.once ? 'once' : 'on'}(${eventName})`);
 	});
 }
 

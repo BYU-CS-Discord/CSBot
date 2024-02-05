@@ -1,6 +1,6 @@
 import type { InteractionReplyOptions, RepliableInteraction } from 'discord.js';
 
-import * as logger from '../logger';
+import { error, info } from '../logger.js';
 import { logUser } from '../helpers/logUser';
 
 export function replyFactory(interaction: RepliableInteraction): CommandContext['reply'] {
@@ -10,8 +10,8 @@ export function replyFactory(interaction: RepliableInteraction): CommandContext[
 		if (interaction.deferred) {
 			try {
 				await interaction.editReply(options);
-			} catch (error) {
-				logger.error('Failed to edit reply to interaction:', error);
+			} catch (error_) {
+				error('Failed to edit reply to interaction:', error_);
 				await interaction.followUp(options);
 			}
 		} else {
@@ -41,8 +41,8 @@ export function replyFactory(interaction: RepliableInteraction): CommandContext[
 						allowedMentions: { users: [], repliedUser: false },
 					});
 				}
-			} catch (error) {
-				logger.error('Failed to reply to interaction:', error);
+			} catch (error_) {
+				error('Failed to reply to interaction:', error_);
 				didFailToReply = true;
 			}
 		}
@@ -53,7 +53,7 @@ export function replyFactory(interaction: RepliableInteraction): CommandContext[
 			options.ephemeral === true &&
 			!didFailToReply
 		) {
-			logger.info(
+			info(
 				`Sent ephemeral reply to User ${logUser(interaction.user)}: ${JSON.stringify(options)}`
 			);
 		}
