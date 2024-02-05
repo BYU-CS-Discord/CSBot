@@ -9,7 +9,7 @@ import * as logger from '../../logger';
  */
 export async function revokeCommands(client: Client<true>): Promise<void> {
 	logger.info('Revoking global commands...');
-	await client.application?.commands.set([]);
+	await client.application.commands.set([]);
 	logger.info('Revoked global commands');
 
 	const oAuthGuilds = await client.guilds.fetch();

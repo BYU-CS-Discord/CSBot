@@ -8,10 +8,10 @@ vi.mock('node:url', async () => {
 	const nodeURL = await vi.importActual<typeof import('node:url')>('node:url');
 	return {
 		...nodeURL,
-		URL: class {
-			static canParse = canParseMock.mockImplementation((input: string, base?: string) =>
+		URL: {
+			canParse: canParseMock.mockImplementation((input: string, base?: string) =>
 				nodeURL.URL.canParse(input, base)
-			);
+			),
 		},
 	};
 });

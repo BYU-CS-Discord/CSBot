@@ -1,5 +1,5 @@
 import type { MessageReaction, User } from 'discord.js';
-import type { SpyInstance } from 'vitest';
+import type { MockInstance } from 'vitest';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
 import { messageReactionAdd } from './messageReactionAdd';
@@ -9,7 +9,7 @@ vi.mock('../logger');
 describe('Reaction duplication', () => {
 	const mockResendReact = vi.fn<[], Promise<unknown>>();
 
-	let mockRandom: SpyInstance<[], number>;
+	let mockRandom: MockInstance<[], number>;
 	let mockReaction: MessageReaction;
 	let mockSender: User;
 

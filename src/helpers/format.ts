@@ -10,7 +10,7 @@
  * @returns The formatted string.
  */
 export function format(source: string, ...args: ReadonlyArray<string>): string {
-	return source.replace(/\{(\d+)\}/gu, (match, number: number): string => {
-		return args[number] ?? match ?? '';
+	return source.replaceAll(/\{(\d+)\}/gu, (match, number: number): string => {
+		return args[number] ?? match;
 	});
 }

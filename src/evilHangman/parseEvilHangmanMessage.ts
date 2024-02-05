@@ -25,7 +25,7 @@ export function parseEvilHangmanMessage(message: Message): EvilHangmanGame {
 
 	const guessesRemaining = Number.parseInt(guessesRemainingString, 10);
 	const guessedLetters = new Set(
-		guessedLettersString?.split(',').filter(letter => letter.length === 1)
+		guessedLettersString.split(',').filter(letter => letter.length === 1)
 	);
 	return new EvilHangmanGame(word, guessesRemaining, guessedLetters);
 }
