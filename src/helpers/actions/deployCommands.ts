@@ -12,7 +12,7 @@ export async function deployCommands(client: Client<true>): Promise<void> {
 	await revokeCommands(client); // fresh start!
 
 	logger.info('Deploying commands...');
-	const commands: Array<Command> = Array.from(allCommands.values());
+	const commands: ReadonlyArray<Command> = Array.from(allCommands.values());
 	if (commands.length === 0) return;
 	logger.info(`Syncing ${commands.length} command(s)...`);
 
@@ -21,7 +21,8 @@ export async function deployCommands(client: Client<true>): Promise<void> {
 	for (const cmd of commands) {
 		if (isContextMenuCommand(cmd) || !cmd.requiresGuild) {
 			globalCommands.push(cmd);
-		} else if (cmd.requiresGuild) {
+		} else {
+			// else if (cmd.requiresGuild)
 			guildCommands.push(cmd);
 		}
 	}
@@ -45,7 +46,7 @@ async function prepareGlobalCommands(
 	const commandBuilders = globalCommands.map(deployableCommand);
 	logger.info(
 		`${globalCommands.length} command(s) will be set globally: ${JSON.stringify(
-			commandBuilders.map(cmd => `${cmd.name}`)
+			commandBuilders.map(cmd => cmd.name)
 		)}`
 	);
 	logger.debug(`Deploying all ${globalCommands.length} global command(s)...`);
@@ -64,7 +65,7 @@ async function prepareGuildedCommands(
 	const commandBuilders = guildCommands.map(deployableCommand);
 	logger.info(
 		`${guildCommands.length} command(s) require a guild: ${JSON.stringify(
-			commandBuilders.map(cmd => `${cmd.name}`)
+			commandBuilders.map(cmd => cmd.name)
 		)}`
 	);
 	const oAuthGuilds = await client.guilds.fetch();
@@ -74,12 +75,12 @@ async function prepareGuildedCommands(
 
 async function prepareCommandsForGuild(
 	guild: Guild,
-	guildCommands: Array<GuildedCommand>
+	guildCommands: ReadonlyArray<GuildedCommand>
 ): Promise<void> {
 	const commandBuilders = guildCommands.map(deployableCommand);
 	logger.info(
 		`Deploying ${guildCommands.length} guild-bound command(s): ${JSON.stringify(
-			commandBuilders.map(cmd => `${cmd.name}`)
+			commandBuilders.map(cmd => cmd.name)
 		)}`
 	);
 	try {

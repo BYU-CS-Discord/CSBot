@@ -1,32 +1,28 @@
-import { appVersion } from '../constants/meta';
-import { hideBin } from 'yargs/helpers';
-import yargs from 'yargs';
+import { parseArgs as _parseArgs } from 'node:util';
 
-export interface Args {
-	deploy: boolean;
-	revoke: boolean;
-}
+const { values } = _parseArgs({
+	options: {
+		// Upload Discord commands, then exit
+		deploy: { short: 'c', type: 'boolean', default: false },
+
+		// Revoke Discord commands, then exit
+		revoke: { short: 'C', type: 'boolean', default: false },
+	},
+	strict: true,
+});
+
+const args = {
+	// Apply defaults, since the types aren't aware of them yet.
+	// See https://github.com/DefinitelyTyped/DefinitelyTyped/discussions/64868
+	deploy: values.deploy ?? false,
+	revoke: values.revoke ?? false,
+} as const;
+
+export type Args = typeof args;
 
 /**
- * Gets the command-line arguments, if any.
+ * Returns the command-line arguments, or their default values if none were set.
  */
 export function parseArgs(): Args {
-	return yargs(hideBin(process.argv))
-		.option('deploy', {
-			alias: 'c',
-			description: 'Upload Discord commands, then exit',
-			type: 'boolean',
-			default: false,
-		})
-		.option('revoke', {
-			alias: 'C',
-			description: 'Revoke Discord commands, then exit',
-			type: 'boolean',
-			default: false,
-		})
-		.version(appVersion)
-		.help()
-		.alias('h', 'help')
-		.alias('v', 'version')
-		.parseSync();
+	return args;
 }

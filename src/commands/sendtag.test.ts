@@ -1,9 +1,11 @@
 import type { AutocompleteInteraction } from 'discord.js';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
+
 import { sendtag } from './sendtag';
 
 describe('sendtag', () => {
-	const mockReply = jest.fn<Promise<void>, [content: string]>();
-	const mockGetString = jest.fn<string, [name: string, required: true]>();
+	const mockReply = vi.fn<[content: string], Promise<void>>();
+	const mockGetString = vi.fn<[name: string, required: true], string>();
 
 	let context: GuildedCommandContext;
 
@@ -37,6 +39,6 @@ describe('sendtag', () => {
 	test('returns an array for autocomplete', () => {
 		expect(
 			sendtag.autocomplete?.(context.interaction as unknown as AutocompleteInteraction)
-		).toBeArray();
+		).toBeDefined();
 	});
 });

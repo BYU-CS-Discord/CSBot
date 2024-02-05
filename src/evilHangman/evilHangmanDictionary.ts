@@ -1,7 +1,7 @@
-import fs from 'fs';
+import fs from 'node:fs';
 
 const DICTIONARY_PATH = './res/dictionary.txt';
-export const allWords = fs
+export const allWords: ReadonlyArray<string> = fs
 	.readFileSync(DICTIONARY_PATH)
 	.toString()
 	.split('\n')

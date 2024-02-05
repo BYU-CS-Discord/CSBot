@@ -1,3 +1,5 @@
+import type { Console } from 'node:console';
+
 /**
  * The default logger for this application. Set to the console for now.
  * Should not be accessed outside this logger file - instead, use the endpoint methods.
@@ -14,7 +16,7 @@ const logger: Console = console;
  * @param optionalParams any additional messages or objects to print to `debug`
  * @public
  */
-export function debug(message?: unknown, ...optionalParams: Array<unknown>): void {
+export function debug(message?: unknown, ...optionalParams: ReadonlyArray<unknown>): void {
 	logger.debug(message, ...optionalParams);
 }
 
@@ -24,7 +26,7 @@ export function debug(message?: unknown, ...optionalParams: Array<unknown>): voi
  * @param optionalParams any additional messages or objects to print to `info`
  * @public
  */
-export function info(message?: unknown, ...optionalParams: Array<unknown>): void {
+export function info(message?: unknown, ...optionalParams: ReadonlyArray<unknown>): void {
 	logger.info(message, ...optionalParams);
 }
 
@@ -34,7 +36,7 @@ export function info(message?: unknown, ...optionalParams: Array<unknown>): void
  * @param optionalParams any additional messages or objects to print to `warn`
  * @public
  */
-export function warn(message?: unknown, ...optionalParams: Array<unknown>): void {
+export function warn(message?: unknown, ...optionalParams: ReadonlyArray<unknown>): void {
 	logger.warn(message, ...optionalParams);
 }
 
@@ -44,6 +46,6 @@ export function warn(message?: unknown, ...optionalParams: Array<unknown>): void
  * @param optionalParams any additional messages or objects to print to `error`
  * @public
  */
-export function error(message?: unknown, ...optionalParams: Array<unknown>): void {
+export function error(message?: unknown, ...optionalParams: ReadonlyArray<unknown>): void {
 	logger.error(message, ...optionalParams);
 }

@@ -89,15 +89,19 @@ Retrieves the internal picture for a custom emoji. By default responds ephemeral
 
 ### /findroom ( now / at / between / when )
 
-Searches for open rooms on BYU Campus. _'Now'_, _'At'_, and _'Between'_ allow you to filter your search by time. *'When'\_*allows you to see when a specified room is available.
+Searches for open rooms on BYU Campus. _'Now'_, _'At'_, and _'Between'_ allow you to filter your search by time. \_'When'\_ allows you to see when a specified room is available.
+
+### /stats ( track / update / list / leaderboard / untrack )
+
+Tracks a statistic for the issuer. Use the `track` subcommand to begin tracking, `update` to add or subtract to it, `list` to show all the stats being tracked for the issuer, `leaderboard` to show the users with the highest scores for a stat, and `untrack` to stop tracking a stat for you.
 
 ## Context Menu Commands
 
 You can find these in Discord by invoking the context menu (right-clicking) on any message in any channel where you're allowed to run commands.
 
-### Fix Twitter Links
+### Fix Twitter/X Links
 
-Transforms [twitter.com](https://twitter.com/) links in the given message to [FixTweet](https://github.com/FixTweet/FixTweet) links in an ephemeral reply. Please use fxtwitter in your own messages, especially when the tweet is a video. Twitter's default embed stinks on some platforms.
+Transforms [twitter.com](https://twitter.com/) and [x.com](https://x.com/) links in the given message to [FxTweet/FixupX](https://github.com/FixTweet/FxTwitter) links in an ephemeral reply. Please use fxtwitter/fixupx in your own messages, especially when the tweet is a video. The default embed stinks on some platforms.
 
 ### Talk
 
@@ -112,12 +116,12 @@ If you've read this far, and don't plan to run or develop on the bot yourself, o
 
 ### Prerequisites
 
-This project requires [NodeJS](https://nodejs.org/) (version 16.19 or later) and [NPM](https://npmjs.org/). To make sure you have them available on your machine, try running the following command:
+This project requires [NodeJS](https://nodejs.org/) (version 18.17 or later) and [NPM](https://npmjs.org/). To make sure you have them available on your machine, try running the following command:
 
 ```sh
 $ node -v && npm -v
-v16.19.0
-8.19.3
+v18.17.1
+9.6.7
 ```
 
 If you are using Linux, you will also need to install the following package to use the `/talk` command:

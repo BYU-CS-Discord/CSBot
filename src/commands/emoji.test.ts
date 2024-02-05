@@ -1,13 +1,16 @@
-import { EmbedBuilder, GuildEmoji, ImageURLOptions } from 'discord.js';
+import type { GuildEmoji, ImageURLOptions } from 'discord.js';
+import { EmbedBuilder } from 'discord.js';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+
 import { emoji } from './emoji';
 
-jest.mock('../logger');
+vi.mock('../logger');
 
 describe('profile', () => {
-	const mockReply = jest.fn<Promise<void>, [content: unknown]>();
-	const mockEmojiName = jest.fn<string | null, []>();
-	const mockEmojiURL = jest.fn<string | null, [options?: ImageURLOptions | undefined]>();
-	const mockShouldRespondEphemeral = jest.fn<boolean | null, []>();
+	const mockReply = vi.fn<[content: unknown], Promise<void>>();
+	const mockEmojiName = vi.fn<[], string | undefined>();
+	const mockEmojiURL = vi.fn<[options?: ImageURLOptions | undefined], string | null>();
+	const mockShouldRespondEphemeral = vi.fn<[], boolean | null>();
 
 	const testEmojiURL = 'https://example.com/emojis/1234567890/abcdef1234567890.png';
 
@@ -38,6 +41,10 @@ describe('profile', () => {
 		mockShouldRespondEphemeral.mockReturnValue(true);
 	});
 
+	afterEach(() => {
+		vi.resetAllMocks();
+	});
+
 	test('Throws an error when the target emoji does not exist', async () => {
 		mockEmojiName.mockReturnValue('emoji not here');
 		await expect(emoji.execute(context)).rejects.toThrow('Emoji emoji not here was not found');
@@ -48,14 +55,14 @@ describe('profile', () => {
 
 		expect(mockReply).toHaveBeenCalledOnce();
 		expect(mockReply).toHaveBeenCalledWith({
-			content: mockEmojiName() as string,
+			content: mockEmojiName(),
 			embeds: [
 				new EmbedBuilder({
-					title: mockEmojiName() as string,
+					title: mockEmojiName(),
 					image: { url: testEmojiURL },
 				}),
 			],
-			ephemeral: mockShouldRespondEphemeral() as boolean,
+			ephemeral: mockShouldRespondEphemeral(),
 		});
 	});
 
@@ -65,10 +72,10 @@ describe('profile', () => {
 
 		expect(mockReply).toHaveBeenCalledOnce();
 		expect(mockReply).toHaveBeenCalledWith({
-			content: mockEmojiName() as string,
+			content: mockEmojiName(),
 			embeds: [
 				new EmbedBuilder({
-					title: mockEmojiName() as string,
+					title: mockEmojiName(),
 					image: { url: testEmojiURL },
 				}),
 			],
@@ -82,14 +89,14 @@ describe('profile', () => {
 
 		expect(mockReply).toHaveBeenCalledOnce();
 		expect(mockReply).toHaveBeenCalledWith({
-			content: mockEmojiName() as string,
+			content: mockEmojiName(),
 			embeds: [
 				new EmbedBuilder({
-					title: mockEmojiName() as string,
+					title: mockEmojiName(),
 					image: { url: testEmojiURL },
 				}),
 			],
-			ephemeral: mockShouldRespondEphemeral() as boolean,
+			ephemeral: mockShouldRespondEphemeral(),
 		});
 	});
 });

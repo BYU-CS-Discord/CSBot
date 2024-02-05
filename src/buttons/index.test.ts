@@ -1,4 +1,6 @@
-import { allButtons, _add } from '.';
+import { describe, expect, test } from 'vitest';
+
+import { allButtons, _add } from './index';
 
 describe('allButtons', () => {
 	test('index is not empty', () => {

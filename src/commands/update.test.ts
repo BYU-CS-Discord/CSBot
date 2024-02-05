@@ -1,14 +1,18 @@
 import type { User } from 'discord.js';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+
+// Mock the logger to prevent extra output
+vi.mock('../logger');
 
 // Overwrite the exec function
-const mockExec = jest.fn((command: string, callback: () => void) => {
-	callback();
+const mockExec = vi.hoisted(() => vi.fn());
+vi.mock('node:child_process', async () => {
+	const cp = await vi.importActual<typeof import('node:child_process')>('node:child_process');
+	return {
+		...cp,
+		exec: mockExec,
+	};
 });
-const cp = jest.requireActual<typeof import('node:child_process')>('node:child_process');
-jest.mock('node:child_process', () => ({
-	...cp,
-	exec: mockExec,
-}));
 
 import { update } from './update';
 
@@ -22,8 +26,8 @@ describe('update', () => {
 		username: 'TheCitizen',
 		id: '3',
 	} as unknown as User;
-	const mockReplyPrivately = jest.fn<Promise<void>, [content: string]>();
-	const mockEditReply = jest.fn<Promise<void>, [content: string]>();
+	const mockReplyPrivately = vi.fn<[content: string], Promise<void>>();
+	const mockEditReply = vi.fn<[content: string], Promise<void>>();
 
 	let context: TextInputCommandContext;
 	let originalAdministrators: string | undefined;
@@ -41,10 +45,14 @@ describe('update', () => {
 				editReply: mockEditReply,
 			},
 		} as unknown as TextInputCommandContext;
+		mockExec.mockImplementation((command: string, callback: () => void) => {
+			callback();
+		});
 	});
 
 	afterEach(() => {
 		process.env[ADMINISTRATORS_VARIABLE] = originalAdministrators;
+		vi.resetAllMocks();
 	});
 
 	test('can be used by Bot admins', async () => {

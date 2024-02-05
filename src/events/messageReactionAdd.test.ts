@@ -1,15 +1,20 @@
 import type { MessageReaction, User } from 'discord.js';
+import type { MockInstance } from 'vitest';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+
 import { messageReactionAdd } from './messageReactionAdd';
 
-describe('Reaction duplication', () => {
-	const mockResendReact = jest.fn<Promise<unknown>, []>();
+vi.mock('../logger');
 
-	let mockRandom: jest.SpyInstance<number, []>;
+describe('Reaction duplication', () => {
+	const mockResendReact = vi.fn<[], Promise<unknown>>();
+
+	let mockRandom: MockInstance<[], number>;
 	let mockReaction: MessageReaction;
 	let mockSender: User;
 
 	beforeEach(() => {
-		mockRandom = jest.spyOn(global.Math, 'random').mockReturnValue(1);
+		mockRandom = vi.spyOn(global.Math, 'random').mockReturnValue(1);
 
 		mockReaction = {
 			me: false,
@@ -36,7 +41,7 @@ describe('Reaction duplication', () => {
 	});
 
 	afterEach(() => {
-		mockRandom.mockRestore();
+		vi.restoreAllMocks();
 	});
 
 	test("sometimes duplicates a user's react", async () => {

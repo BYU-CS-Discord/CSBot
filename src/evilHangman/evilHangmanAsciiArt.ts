@@ -2,8 +2,9 @@ import fs from 'node:fs/promises';
 
 const ART_PATH = './res/hangmen.txt';
 const FRAME_SEPARATOR = 'æ';
-const framesPromise = (async (): Promise<Array<string>> => {
-	const allFrames = (await fs.readFile(ART_PATH)).toString();
+const framesPromise = (async (): Promise<ReadonlyArray<string>> => {
+	const file = await fs.readFile(ART_PATH);
+	const allFrames = file.toString();
 	return allFrames.split(FRAME_SEPARATOR);
 })();
 

@@ -1,24 +1,28 @@
 // External dependencies
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
-import axios from 'axios';
+import { fetchJson } from '../helpers/fetch';
+import { number, string, type as schema } from 'superstruct';
+import { URL } from 'node:url';
 
 // Internal dependencies
 import * as logger from '../logger';
 import { UserMessageError } from '../helpers/UserMessageError';
 
-interface GetComicResponse {
-	month: string;
-	num: number;
-	link: string;
-	news: string;
-	safe_title: string;
-	transcript: string;
-	alt: string;
-	year: string;
-	title: string;
-	day: string;
-	img: string;
-}
+const getComicResponse = schema({
+	month: string(),
+	num: number(),
+	link: string(),
+	news: string(),
+	safe_title: string(),
+	transcript: string(),
+	alt: string(),
+	year: string(),
+	title: string(),
+	day: string(),
+	img: string(),
+});
+
+type GetComicResponse = typeof getComicResponse.TYPE;
 
 /**
  * a quick call to see the latest comic.
@@ -37,12 +41,9 @@ async function _latestCheck(): Promise<GetComicResponse> {
 
 async function _getComic(endpoint: string | number): Promise<GetComicResponse> {
 	try {
-		const { data, status } = await axios.get<GetComicResponse>(
-			`https://xkcd.now.sh/?comic=${endpoint}`
-		);
-		// TODO: BUILD A TYPE GUARD AROUND THIS
-		if (status !== 200) throw new Error(`${status}`);
-		return data;
+		const url = new URL('https://xkcd.now.sh/');
+		url.searchParams.set('comic', `${endpoint}`);
+		return await fetchJson(url, getComicResponse);
 	} catch (error_) {
 		logger.error('Error in getting an XKCD comic:');
 		logger.error(error_);
@@ -107,7 +108,10 @@ export const xkcd: GlobalCommand = {
 
 		// determining if a number was passed as an argument.
 		const param = options.getInteger(NumberOption);
-		if (param !== null) {
+		if (param === null) {
+			// no number given, just get the latest comic.
+			comic = 'latest';
+		} else {
 			// number was provided in the command
 			comic = `${param}`;
 			if (param < 1 || param > latestComic.num) {
@@ -116,20 +120,17 @@ export const xkcd: GlobalCommand = {
 					`Please insert a valid comic number. The range is 1-${latestComic.num}.`
 				);
 			}
-		} else {
-			// no number given, just get the latest comic.
-			comic = 'latest';
 		}
-		if (comic !== 'latest') {
+		if (comic === 'latest') {
+			// just use the OG call to build the embed, since they want the latest.
+			results = latestComic;
+		} else {
 			// get the comic from the API.
 			const requestedComic = await _getComic(comic);
 			if (requestedComic.num === -1) {
 				throw new Error('XKCD call failed. Please try again later.');
 			}
 			results = requestedComic;
-		} else {
-			// just use the OG call to build the embed, since they want the latest.
-			results = latestComic;
 		}
 
 		// we should have the data in response, build the embed.
@@ -140,7 +141,7 @@ export const xkcd: GlobalCommand = {
 			})
 			.setURL(`https://xkcd.com/${results.num}/`)
 			.setImage(results.img)
-			.setDescription(`${results.alt}`)
+			.setDescription(results.alt)
 			.setTimestamp()
 			.setFooter({ text: `Posted ${results.month}-${results.day}-${results.year}` });
 

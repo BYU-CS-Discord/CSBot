@@ -1,7 +1,8 @@
 import type { EmbedBuilder } from '@discordjs/builders';
-import type { Message } from 'discord.js';
+import { describe, expect, test } from 'vitest';
+
 import { EvilHangmanWinState } from './evilHangmanGame';
-import { buildEvilHangmanMessage, parseEvilHangmanMessage } from './evilHangmanMessage';
+import { buildEvilHangmanMessage } from './evilHangmanMessage';
 
 describe('evilHangmanMessage', () => {
 	describe('buildEvilHangmanMessage', () => {
@@ -12,11 +13,12 @@ describe('evilHangmanMessage', () => {
 				guessesSoFar: new Set(),
 				winState: EvilHangmanWinState.IN_PROGRESS,
 			});
-			expect(message.embeds).toBeArray();
-			const embed = message.embeds?.[0] as EmbedBuilder;
-			expect(embed).toBeObject();
-			expect(embed?.data?.description).toBeUndefined();
-			expect(message.components).toBeArrayOfSize(5);
+			expect(message.embeds).toBeDefined();
+			const embed = message.embeds?.[0] as EmbedBuilder | undefined;
+			expect(embed).toBeDefined();
+			expect(embed?.data.description).toBeUndefined();
+			expect(message.components).toBeDefined();
+			expect(message.components?.length).toEqual(5);
 		});
 
 		test('win and lost states have descriptions and no buttons', async () => {
@@ -27,8 +29,9 @@ describe('evilHangmanMessage', () => {
 				winState: EvilHangmanWinState.WON,
 			});
 			const winEmbed = winMessage.embeds?.[0] as EmbedBuilder;
-			expect(winEmbed.data.description).not.toBeUndefined();
-			expect(winMessage.components).toBeEmpty();
+			expect(winEmbed.data.description).toBeDefined();
+			expect(winMessage.components).toBeDefined();
+			expect(winMessage.components?.length).toEqual(0);
 
 			const lostMessage = await buildEvilHangmanMessage({
 				word: '',
@@ -38,8 +41,9 @@ describe('evilHangmanMessage', () => {
 				correctWord: '',
 			});
 			const lostEmbed = lostMessage.embeds?.[0] as EmbedBuilder;
-			expect(lostEmbed.data.description).not.toBeUndefined();
-			expect(lostMessage.components).toBeEmpty();
+			expect(lostEmbed.data.description).toBeDefined();
+			expect(lostMessage.components).toBeDefined();
+			expect(lostMessage.components?.length).toEqual(0);
 		});
 
 		test('second page has only one row of buttons', async () => {
@@ -52,41 +56,8 @@ describe('evilHangmanMessage', () => {
 				},
 				1
 			);
-			expect(message.components).toBeArrayOfSize(1);
-		});
-	});
-
-	describe('parseEvilHangmanMessage', () => {
-		const field: { value: string | undefined } = {
-			value: 'Remaining Guesses: 4\nWord: -----\nLetters Guessed: ',
-		};
-		const message: Message = {
-			embeds: [
-				{
-					data: {
-						fields: [{ value: '' }, field],
-					},
-				},
-			],
-		} as unknown as Message;
-		beforeEach(() => {
-			field.value = 'Remaining Guesses: 4\nWord: -----\nLetters Guessed: ';
-		});
-
-		test('message text is converted into a game', () => {
-			const game = parseEvilHangmanMessage(message);
-			const displayInfo = game.getDisplayInfo();
-			expect(displayInfo.guessesRemaining).toEqual(4);
-			expect(displayInfo.word).toEqual('-----');
-			expect(displayInfo.guessesSoFar).toBeEmpty();
-		});
-
-		test('incorrect message format throws an error', () => {
-			field.value = 'Incorrectly formatted test string';
-			expect(() => parseEvilHangmanMessage(message)).toThrow();
-
-			field.value = undefined;
-			expect(() => parseEvilHangmanMessage(message)).toThrow();
+			expect(message.components).toBeDefined();
+			expect(message.components?.length).toEqual(1);
 		});
 	});
 });

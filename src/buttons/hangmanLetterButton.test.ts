@@ -1,8 +1,10 @@
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+
 import { letterButtons } from '../evilHangman/hangmanLetterButtons';
 import { UserMessageError } from '../helpers/UserMessageError';
 
 describe('hangmanMoreButton', () => {
-	const mockUpdate = jest.fn();
+	const mockUpdate = vi.fn();
 	const beforeInfo = 'Remaining Guesses: 3\nWord: ---\nLetters Guessed: a';
 	const message = {
 		embeds: [
@@ -24,6 +26,10 @@ describe('hangmanMoreButton', () => {
 		} as unknown as ButtonContext;
 	});
 
+	afterEach(() => {
+		vi.resetAllMocks();
+	});
+
 	test('different letter buttons have unique ids', () => {
 		const aButton = letterButtons[0];
 		const bButton = letterButtons[1];
@@ -37,12 +43,11 @@ describe('hangmanMoreButton', () => {
 
 		expect(mockUpdate).toHaveBeenCalledOnce();
 		const lastCall = mockUpdate.mock.lastCall as unknown as [
-			{ embeds: [{ data: { fields: [unknown, { value: string }] } }] }
+			{ embeds: [{ data: { fields: [unknown, { value: string }] } }] },
 		];
 		const afterInfo = lastCall[0].embeds[0].data.fields[1].value;
-		expect(afterInfo).toBeString();
 		expect(afterInfo).not.toEqual(beforeInfo);
-	}, 15000);
+	}, 15_000);
 
 	test('guessing an already guessed letter shows an error message', async () => {
 		const aButton = letterButtons[0];

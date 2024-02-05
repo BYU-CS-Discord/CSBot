@@ -29,28 +29,32 @@ export function _add(cmd: Command): void {
 }
 
 /**  Install commands here:  **/
-import { help } from './help';
-import { xkcd } from './xkcd';
-import { profile } from './profile';
+import { altText } from './contextMenu/altText';
+import { emoji } from './emoji';
+import { findRoom } from './findRoom';
 import { fxtwitter } from './contextMenu/fxtwitter';
+import { help } from './help';
+import { isCasDown } from './isCasDown';
+import { profile } from './profile';
 import { sendtag } from './sendtag';
+import { stats } from './stats';
 import { talk } from './talk';
 import { talk as talk_context } from './contextMenu/talk';
 import { toTheGallows } from './toTheGallows';
 import { update } from './update';
-import { findRoom } from './findRoom';
-import { isCasDown } from './isCasDown';
-import { emoji } from './emoji';
+import { xkcd } from './xkcd';
 
-_add(help);
-_add(xkcd);
-_add(profile);
+_add(altText);
+_add(emoji);
 _add(findRoom);
 _add(fxtwitter);
+_add(help);
+_add(isCasDown);
+_add(profile);
 _add(sendtag);
+_add(stats);
 _add(talk);
 _add(talk_context);
 _add(toTheGallows);
 _add(update);
-_add(isCasDown);
-_add(emoji);
+_add(xkcd);

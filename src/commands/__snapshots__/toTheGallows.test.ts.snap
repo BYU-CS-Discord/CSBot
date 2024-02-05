@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`toTheGallows specifying length and number of guesses always puts the game into the same state 1`] = `
+exports[`toTheGallows > specifying length and number of guesses always puts the game into the same state 1`] = `
 {
   "fields": [
     {
