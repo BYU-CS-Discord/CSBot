@@ -1,17 +1,19 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 // This is a type-shim because superstruct's types do not work with NodeNext module resolution
 // https://github.com/ianstormtaylor/superstruct/issues/1200
 // Types copied from https://github.com/ianstormtaylor/superstruct/
 declare module 'superstruct' {
-	export type Failure = {
-		value: any
-		key: any
-		type: string
-		refinement: string | undefined
-		message: string
-		explanation?: string
-		branch: Array<any>
-		path: Array<any>
-	};
+	export interface Failure {
+		value: any;
+		key: any;
+		type: string;
+		refinement: string | undefined;
+		message: string;
+		explanation?: string;
+		branch: Array<any>;
+		path: Array<any>;
+	}
 
 	/**
 	 * `StructError` objects are thrown (or returned) when validation fails.
@@ -30,7 +32,7 @@ declare module 'superstruct' {
 		branch!: Array<any>;
 		failures: () => Array<Failure>;
 		[x: string]: any;
-  
+
 		constructor(failure: Failure, failures: () => Generator<Failure>);
 	}
 
@@ -50,37 +52,37 @@ declare module 'superstruct' {
 			value: unknown,
 			context: Context
 		) => Iterable<[string | number, unknown, Struct<any> | Struct<never>]>;
-	  
+
 		constructor(props: {
-			type: string
-			schema: S
-			coercer?: Coercer
-			validator?: Validator
-			refiner?: Refiner<T>
-			entries?: Struct<T, S>['entries']
+			type: string;
+			schema: S;
+			coercer?: Coercer;
+			validator?: Validator;
+			refiner?: Refiner<T>;
+			entries?: Struct<T, S>['entries'];
 		});
-	  
+
 		/**
 		 * Assert that a value passes the struct's validation, throwing if it doesn't.
 		 */
 		assert(value: unknown, message?: string): asserts value is T;
-	  
+
 		/**
 		 * Create a value with the struct's coercion logic, then validate it.
 		 */
 		create(value: unknown, message?: string): T;
-	  
+
 		/**
 		 * Check if a value passes the struct's validation.
 		 */
 		is(value: unknown): value is T;
-	  
+
 		/**
 		 * Mask a value, coercing and validating it, but returning only the subset of
 		 * properties defined by the struct's schema.
 		 */
 		mask(value: unknown, message?: string): T;
-	  
+
 		/**
 		 * Validate a value with the struct's validation logic, returning a tuple
 		 * representing the result.
@@ -92,8 +94,8 @@ declare module 'superstruct' {
 		validate(
 			value: unknown,
 			options: {
-				coerce?: boolean
-				message?: string
+				coerce?: boolean;
+				message?: string;
 			} = {}
 		): [StructError, undefined] | [undefined, T];
 	}
@@ -114,14 +116,23 @@ declare module 'superstruct' {
 	 * iterated at all. This can be helpful for cases where performance is critical,
 	 * and it is preferred to using `array(any())`.
 	 */
-	export function array<T extends Struct<any>>(Element: T): Struct<Infer<T>[], T>
-	export function array(): Struct<unknown[], undefined>
+	export function array<T extends Struct<any>>(Element: T): Struct<Array<Infer<T>>, T>;
+	export function array(): Struct<Array<unknown>, undefined>;
 	export function array<T extends Struct<any>>(Element?: T): any;
 
 	/**
 	 * Ensure that a value is a boolean.
 	 */
-	export function boolean(): Struct<boolean, null>
+	export function boolean(): Struct<boolean, null>;
+
+	/**
+	 * Ensure that a value is an exact value, using `===` for comparison.
+	 */
+	export function literal<T extends boolean>(constant: T): Struct<T, T>;
+	export function literal<T extends number>(constant: T): Struct<T, T>;
+	export function literal<T extends string>(constant: T): Struct<T, T>;
+	export function literal<T>(constant: T): Struct<T, null>;
+	export function literal<T>(constant: T): any;
 
 	/**
 	 * Ensure that a value is a number.
@@ -137,7 +148,7 @@ declare module 'superstruct' {
 	 * Ensure that a value is a tuple of a specific length, and that each of its
 	 * elements is of a specific type.
 	 */
-	export function tuple<A extends Struct<any,any>, B extends Struct<any,any>[]>(
+	export function tuple<A extends Struct<any, any>, B extends Array<Struct<any, any>>>(
 		Structs: [A, ...B]
 	): Struct<[Infer<A>, ...InferStructTuple<B>], null>;
 
@@ -148,9 +159,7 @@ declare module 'superstruct' {
 	 * how TypeScript's structural typing works.
 	 */
 
-	export function type<S extends ObjectSchema>(
-		schema: S
-	): Struct<ObjectType<S>, S>;
+	export function type<S extends ObjectSchema>(schema: S): Struct<ObjectType<S>, S>;
 
 	/**
 	 * Infer a type from an object struct schema.
@@ -162,7 +171,7 @@ declare module 'superstruct' {
 	/**
 	 * Simplifies a type definition to its most basic representation.
 	 */
-	export type Simplify<T> = T extends any[] | Date ? T : { [K in keyof T]: T[K] } & {};
+	export type Simplify<T> = T extends Array<any> | Date ? T : { [K in keyof T]: T[K] } & object;
 
 	/**
 	 * Normalize properties of a type that allow `undefined` to make them optional.
@@ -189,10 +198,10 @@ declare module 'superstruct' {
 	 * A `Context` contains information about the current location of the
 	 * validation inside the initial input value.
 	 */
-	export type Context = {
-		branch: Array<any>
-		path: Array<any>
-	};
+	export interface Context {
+		branch: Array<any>;
+		path: Array<any>;
+	}
 
 	/*
 	 * A `Result` is returned from validation functions.
@@ -207,19 +216,19 @@ declare module 'superstruct' {
 	 */
 
 	export type InferStructTuple<
-		Tuple extends Struct<any,any>[],
-		Length extends number = Tuple['length']
+		Tuple extends Array<Struct<any, any>>,
+		Length extends number = Tuple['length'],
 	> = Length extends Length
 		? number extends Length
-		? Tuple
-		: _InferTuple<Tuple, Length, []>
+			? Tuple
+			: _InferTuple<Tuple, Length, []>
 		: never;
 
 	type _InferTuple<
-		Tuple extends Struct<any,any>[],
+		Tuple extends Array<Struct<any, any>>,
 		Length extends number,
-		Accumulated extends unknown[],
-		Index extends number = Accumulated['length']
+		Accumulated extends Array<unknown>,
+		Index extends number = Accumulated['length'],
 	> = Index extends Length
 		? Accumulated
 		: _InferTuple<Tuple, Length, [...Accumulated, Infer<Tuple[Index]>]>;
@@ -244,4 +253,4 @@ declare module 'superstruct' {
 		T,
 		{ [K in keyof T]: V extends Extract<T[K], V> ? K : never }[keyof T]
 	>;
-};
+}

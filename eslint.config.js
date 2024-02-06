@@ -1,17 +1,18 @@
-const js = require('@eslint/js');
-const stylistic = require('@stylistic/eslint-plugin');
-const typescriptParser = require('@typescript-eslint/parser');
-const typescriptPlugin = require('@typescript-eslint/eslint-plugin');
-const deprecation = require('eslint-plugin-deprecation');
-const fileProgress = require('eslint-plugin-file-progress');
-const import_ = require('eslint-plugin-import');
-const prettierRecommended = require('eslint-plugin-prettier/recommended');
-const promise = require('eslint-plugin-promise');
-const unicorn = require('eslint-plugin-unicorn');
+/* eslint-disable import/no-unresolved */
+import js from '@eslint/js';
+import stylistic from '@stylistic/eslint-plugin';
+import typescriptParser from '@typescript-eslint/parser';
+import typescriptPlugin from '@typescript-eslint/eslint-plugin';
+import deprecation from 'eslint-plugin-deprecation';
+import fileProgress from 'eslint-plugin-file-progress';
+import import_ from 'eslint-plugin-import';
+import prettierRecommended from 'eslint-plugin-prettier/recommended';
+import promise from 'eslint-plugin-promise';
+import unicorn from 'eslint-plugin-unicorn';
 
-const globals = require('globals');
+import globals from 'globals';
 
-module.exports = [
+export default [
 	{
 		ignores: ['dist', 'coverage', 'src/constants/version.ts'],
 	},
