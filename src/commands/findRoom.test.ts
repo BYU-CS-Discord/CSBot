@@ -10,7 +10,7 @@ vi.mock('../constants/meta.js', async () => {
 	};
 });
 
-import { convertTo12Hour } from './findRoom';
+import { convertTo12Hour } from './findRoom.js';
 
 describe('findRoom', () => {
 	test('convertTo12Hour 8AM', () => {

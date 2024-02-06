@@ -16,7 +16,7 @@ vi.mock('dectalk', async () => {
 vi.mock('../logger');
 
 // Import the code to test
-import { talk } from './talk';
+import { talk } from './talk.js';
 
 describe('Talk Slash Command', () => {
 	const message = 'test';

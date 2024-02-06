@@ -47,7 +47,7 @@ const chosen = {
 const badResponse = new NetworkError(HttpStatusCode.BAD_REQUEST);
 
 // Import the code to test
-import { xkcd } from './xkcd';
+import { xkcd } from './xkcd.js';
 
 describe('xkcd', () => {
 	const mockReply = vi.fn();

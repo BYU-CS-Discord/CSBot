@@ -169,7 +169,7 @@ vi.mock('../logger.js');
 import { error as mockLoggerError } from '../logger.js';
 
 // Import the code to test
-import { interactionCreate } from './interactionCreate';
+import { interactionCreate } from './interactionCreate.js';
 
 // Constants for testing
 const interactionError = new Error('Failed to handle interaction. This is a test.');

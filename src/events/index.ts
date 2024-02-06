@@ -53,10 +53,10 @@ export function registerEventHandlers(client: Client): void {
 }
 
 // Install event handlers
-import { error } from './error';
-import { interactionCreate } from './interactionCreate';
-import { messageReactionAdd } from './messageReactionAdd';
-import { ready } from './ready';
+import { error } from './error.js';
+import { interactionCreate } from './interactionCreate.js';
+import { messageReactionAdd } from './messageReactionAdd.js';
+import { ready } from './ready.js';
 
 _add(error as EventHandler);
 _add(interactionCreate as EventHandler);

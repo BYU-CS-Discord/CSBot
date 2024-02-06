@@ -36,7 +36,7 @@ export function hangmanLetterButton(letter: Letter): Button {
 	return {
 		customId,
 		async execute({ interaction, message }): Promise<void> {
-			const { buildEvilHangmanMessage } = await import('../evilHangman/evilHangmanMessage');
+			const { buildEvilHangmanMessage } = await import('../evilHangman/evilHangmanMessage.js');
 			const game = parseEvilHangmanMessage(message);
 
 			const guessErrorMessage = game.checkGuess(letter);
