@@ -8,7 +8,6 @@ import type {
 	RepliableInteraction,
 } from 'discord.js';
 import { EmbedBuilder, Colors, ApplicationCommandType, ChannelType } from 'discord.js';
-import toString from 'lodash/toString';
 
 import { allButtons } from '../buttons/index.js';
 import { allCommands } from '../commands/index.js';
@@ -127,8 +126,8 @@ async function handleCommandInteraction(
 			try {
 				await command.execute(messageContextMenuCommandContext);
 				return;
-			} catch (error) {
-				await sendErrorMessage(interaction, error);
+			} catch (error_) {
+				await sendErrorMessage(interaction, error_);
 				return;
 			}
 		} else if ('type' in command && command.type === ApplicationCommandType.User) {
@@ -155,8 +154,8 @@ async function handleCommandInteraction(
 			try {
 				await command.execute(userContextMenuCommandContext);
 				return;
-			} catch (error) {
-				await sendErrorMessage(interaction, error);
+			} catch (error_) {
+				await sendErrorMessage(interaction, error_);
 				return;
 			}
 		}
@@ -266,7 +265,7 @@ export async function sendErrorMessage(
 	interaction: CommandInteraction | ButtonInteraction,
 	error_: unknown
 ): Promise<void> {
-	const errorMessage = toString(error_);
+	const errorMessage = error_ instanceof Error ? error_.message : String(error_);
 	// for privacy, strip out any mention of the internal directory
 	const privateDir = __dirname.slice(0, __dirname.lastIndexOf('dist'));
 	const safeErrorMessage = errorMessage.replace(privateDir, '...');

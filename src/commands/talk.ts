@@ -16,7 +16,6 @@ import {
 	AudioResource,
 } from '@discordjs/voice';
 import { say, Speaker } from 'dectalk';
-import isNumber from 'lodash/isNumber';
 import { writeFileSync, createReadStream } from 'node:fs';
 import { fileSync } from 'tmp';
 
@@ -31,7 +30,7 @@ const builder = new SlashCommandBuilder()
 	.addIntegerOption(option => {
 		option.setRequired(false).setName('speaker').setDescription('Whose voice to use');
 
-		const elements = Object.values(Speaker).filter(element => isNumber(element)) as Array<number>;
+		const elements = Object.values(Speaker) as Array<number>;
 		elements.forEach(value => {
 			const name = Speaker[value];
 			if (name === undefined) return;
