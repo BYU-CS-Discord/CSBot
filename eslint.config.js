@@ -40,10 +40,7 @@ export default [
 			promise: promise,
 		},
 		languageOptions: {
-			ecmaVersion: 'latest',
-			globals: {
-				...globals.node,
-			},
+			globals: globals.nodeBuiltin,
 		},
 		linterOptions: {
 			reportUnusedDisableDirectives: 'error',
@@ -109,7 +106,6 @@ export default [
 			deprecation: deprecation,
 		},
 		languageOptions: {
-			sourceType: 'module',
 			parser: typescriptParser,
 			parserOptions: {
 				project: './tsconfig.eslint.json',
