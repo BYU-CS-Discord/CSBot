@@ -1,5 +1,6 @@
-import type { Message } from 'discord.js';
 import { beforeEach, describe, expect, test } from 'vitest';
+
+import type { Message } from 'discord.js';
 
 import { parseEvilHangmanMessage } from './parseEvilHangmanMessage.js';
 

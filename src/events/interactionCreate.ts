@@ -1,4 +1,3 @@
-import toString from 'lodash/toString';
 import type {
 	AutocompleteInteraction,
 	ButtonInteraction,
@@ -9,19 +8,20 @@ import type {
 	RepliableInteraction,
 } from 'discord.js';
 import { EmbedBuilder, Colors, ApplicationCommandType, ChannelType } from 'discord.js';
+import toString from 'lodash/toString';
 
-import { debug, error, warn } from '../logger.js';
+import { allButtons } from '../buttons/index.js';
 import { allCommands } from '../commands/index.js';
-import { DISCORD_API_MAX_CHOICES } from '../constants/apiLimitations.js';
 import { followUpFactory } from '../commandContext/followUp.js';
-import { logUser } from '../helpers/logUser.js';
-import { onEvent } from '../helpers/onEvent.js';
 import { prepareForLongRunningTasksFactory } from '../commandContext/prepareForLongRunningTasks.js';
 import { replyFactory } from '../commandContext/reply.js';
 import { replyPrivatelyFactory } from '../commandContext/replyPrivately.js';
 import { sendTypingFactory } from '../commandContext/sendTyping.js';
-import { allButtons } from '../buttons/index.js';
+import { DISCORD_API_MAX_CHOICES } from '../constants/apiLimitations.js';
+import { logUser } from '../helpers/logUser.js';
+import { onEvent } from '../helpers/onEvent.js';
 import { UserMessageError } from '../helpers/UserMessageError.js';
+import { debug, error, warn } from '../logger.js';
 
 /**
  * The event handler for Discord Interactions (usually chat commands)

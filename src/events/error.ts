@@ -1,5 +1,5 @@
-import { error as logErr } from '../logger.js';
 import { onEvent } from '../helpers/onEvent.js';
+import { error as logErr } from '../logger.js';
 
 /**
  * The event handler for Discord Client errors

@@ -1,5 +1,6 @@
 import { SlashCommandBuilder } from 'discord.js';
 import { exec as __unsafeExecuteCommand } from 'node:child_process';
+
 import { UserMessageError } from '../helpers/UserMessageError.js';
 import { debug, error } from '../logger.js';
 

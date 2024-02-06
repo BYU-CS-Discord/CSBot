@@ -1,5 +1,3 @@
-import { writeFileSync, createReadStream } from 'node:fs';
-import isNumber from 'lodash/isNumber';
 import {
 	SlashCommandBuilder,
 	AttachmentPayload,
@@ -18,6 +16,8 @@ import {
 	AudioResource,
 } from '@discordjs/voice';
 import { say, Speaker } from 'dectalk';
+import isNumber from 'lodash/isNumber';
+import { writeFileSync, createReadStream } from 'node:fs';
 import { fileSync } from 'tmp';
 
 import { info } from '../logger.js';

@@ -2,6 +2,7 @@ import { ApplicationCommandType, ContextMenuCommandBuilder } from 'discord.js';
 import { URL } from 'node:url';
 
 import { positionsOfUriInText } from '../../helpers/positionsOfUriInText.js';
+
 const twitter = 'twitter.com';
 const twitterPermutations = new Set([twitter, `www.${twitter}`]);
 

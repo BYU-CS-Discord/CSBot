@@ -1,6 +1,6 @@
-import { allWords } from './evilHangmanDictionary.js';
 import { isNonEmptyArray } from '../helpers/guards/isNonEmptyArray.js';
 import { UserMessageError } from '../helpers/UserMessageError.js';
+import { allWords } from './evilHangmanDictionary.js';
 
 export class EvilHangmanGame {
 	private possibleWords: Array<string>;

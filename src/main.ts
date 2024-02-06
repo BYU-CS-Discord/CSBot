@@ -1,9 +1,10 @@
 import 'source-map-support/register';
 import 'dotenv/config';
+
 import { Client, GatewayIntentBits, Partials } from 'discord.js';
 
-import { error, info } from './logger.js';
 import { registerEventHandlers } from './events/index.js';
+import { error, info } from './logger.js';
 
 // We *could* do all of this at the top level, but then
 // none of this setup would be testable :P

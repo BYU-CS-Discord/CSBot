@@ -1,5 +1,6 @@
-import type { User } from 'discord.js';
 import { beforeEach, describe, expect, test } from 'vitest';
+
+import type { User } from 'discord.js';
 
 import { logUser } from './logUser.js';
 

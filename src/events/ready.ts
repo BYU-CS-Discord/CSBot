@@ -1,13 +1,13 @@
 import type { Client, ClientPresence } from 'discord.js';
 import { ActivityType } from 'discord.js';
 
-import { info } from '../logger.js';
+import { appVersion } from '../constants/meta.js';
 import { deployCommands } from '../helpers/actions/deployCommands.js';
 import { revokeCommands } from '../helpers/actions/revokeCommands.js';
-import { verifyCommandDeployments } from '../helpers/actions/verifyCommandDeployments.js';
-import { appVersion } from '../constants/meta.js';
 import { onEvent } from '../helpers/onEvent.js';
 import { parseArgs } from '../helpers/parseArgs.js';
+import { verifyCommandDeployments } from '../helpers/actions/verifyCommandDeployments.js';
+import { info } from '../logger.js';
 
 /**
  * The event handler for when the Discord Client is ready for action

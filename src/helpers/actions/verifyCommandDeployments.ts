@@ -1,7 +1,7 @@
 import type { Client, Guild } from 'discord.js';
 
-import { warn } from '../../logger.js';
 import { allCommands } from '../../commands/index.js';
+import { warn } from '../../logger.js';
 
 /**
  * Verify that the deployed command list is up-to-date, and yell in the console if it's not.

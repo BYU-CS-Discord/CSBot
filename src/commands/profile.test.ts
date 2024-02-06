@@ -1,6 +1,7 @@
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+
 import type { GuildMember, ImageURLOptions, User, UserResolvable } from 'discord.js';
 import { DiscordAPIError, EmbedBuilder, userMention } from 'discord.js';
-import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
 import { DiscordErrorCode } from '../helpers/DiscordErrorCode.js';
 import { profile } from './profile.js';

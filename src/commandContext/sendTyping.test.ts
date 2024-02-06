@@ -1,7 +1,8 @@
-import type { RepliableInteraction } from 'discord.js';
-import { ChannelType } from 'discord.js';
 import type { Mock } from 'vitest';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
+
+import type { RepliableInteraction } from 'discord.js';
+import { ChannelType } from 'discord.js';
 
 // Mock the logger so nothing is printed
 vi.mock('../logger.js');

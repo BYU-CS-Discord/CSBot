@@ -1,7 +1,7 @@
 import type { InteractionReplyOptions, RepliableInteraction } from 'discord.js';
 
-import { error } from '../logger.js';
 import { sendMessageInChannel } from '../helpers/actions/messages/replyToMessage.js';
+import { error } from '../logger.js';
 
 export function followUpFactory(interaction: RepliableInteraction): CommandContext['followUp'] {
 	return async function followUp(options) {

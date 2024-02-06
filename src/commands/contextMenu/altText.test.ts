@@ -1,6 +1,7 @@
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+
 import type { Attachment } from 'discord.js';
 import { Collection } from 'discord.js';
-import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
 import { altText } from './altText.js';
 

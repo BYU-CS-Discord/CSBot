@@ -1,6 +1,7 @@
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 
 import { appVersion, repo } from '../constants/meta.js';
+
 const builder = new SlashCommandBuilder()
 	.setName('help')
 	.setDescription('Prints useful info about the bot');

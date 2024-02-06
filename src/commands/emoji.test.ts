@@ -1,6 +1,7 @@
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+
 import type { GuildEmoji, ImageURLOptions } from 'discord.js';
 import { EmbedBuilder } from 'discord.js';
-import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
 import { emoji } from './emoji.js';
 

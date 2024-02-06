@@ -1,5 +1,6 @@
-import type { MessageReplyOptions } from 'discord.js';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
+
+import type { MessageReplyOptions } from 'discord.js';
 
 import { hangmanMoreButton } from './hangmanMoreButton.js';
 

@@ -1,6 +1,7 @@
-import type { RepliableInteraction } from 'discord.js';
-import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import type { Mock } from 'vitest';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+
+import type { RepliableInteraction } from 'discord.js';
 
 vi.mock('../helpers/actions/messages/replyToMessage.js');
 import { sendMessageInChannel } from '../helpers/actions/messages/replyToMessage.js';

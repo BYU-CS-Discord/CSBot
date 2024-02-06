@@ -1,6 +1,7 @@
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+
 import type { Message, RepliableInteraction, TextChannel, User } from 'discord.js';
 import { ChannelType } from 'discord.js';
-import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
 // Mock the logger to track output
 vi.mock('../../../logger.js');

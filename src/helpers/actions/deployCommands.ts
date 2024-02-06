@@ -1,8 +1,8 @@
 import type { Client, Guild, RESTPostAPIApplicationCommandsJSONBody } from 'discord.js';
 import { ApplicationCommandType } from 'discord.js';
 
-import { debug, error, info } from '../../logger.js';
 import { allCommands } from '../../commands/index.js';
+import { debug, error, info } from '../../logger.js';
 import { isNonEmptyArray } from '../guards/isNonEmptyArray.js';
 import { revokeCommands } from './revokeCommands.js';
 

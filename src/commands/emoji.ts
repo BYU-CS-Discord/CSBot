@@ -1,4 +1,5 @@
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+
 import { UserMessageError } from '../helpers/UserMessageError.js';
 
 const EmojiName = 'emojiname';

@@ -1,5 +1,6 @@
-import type { AutocompleteInteraction } from 'discord.js';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
+
+import type { AutocompleteInteraction } from 'discord.js';
 
 import { sendtag } from './sendtag.js';
 

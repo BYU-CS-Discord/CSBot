@@ -1,5 +1,6 @@
-import type { RepliableInteraction } from 'discord.js';
 import { afterEach, describe, expect, test, vi } from 'vitest';
+
+import type { RepliableInteraction } from 'discord.js';
 
 // Mock the logger to track output
 vi.mock('../logger.js');

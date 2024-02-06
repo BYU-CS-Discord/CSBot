@@ -1,4 +1,5 @@
-// Dependencies
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+
 import type {
 	ApplicationCommandOptionChoiceData,
 	AutocompleteInteraction,
@@ -19,7 +20,6 @@ import {
 	ContextMenuCommandBuilder,
 	SlashCommandBuilder,
 } from 'discord.js';
-import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
 import { UserMessageError } from '../helpers/UserMessageError.js';
 

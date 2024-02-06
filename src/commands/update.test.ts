@@ -1,5 +1,6 @@
-import type { User } from 'discord.js';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+
+import type { User } from 'discord.js';
 
 // Mock the logger to prevent extra output
 vi.mock('../logger.js');

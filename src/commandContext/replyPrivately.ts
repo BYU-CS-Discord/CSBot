@@ -1,8 +1,8 @@
 import type { RepliableInteraction } from 'discord.js';
 
-import { error, info } from '../logger.js';
-import { logUser } from '../helpers/logUser.js';
 import { replyWithPrivateMessage } from '../helpers/actions/messages/replyToMessage.js';
+import { logUser } from '../helpers/logUser.js';
+import { error, info } from '../logger.js';
 
 export function replyPrivatelyFactory(
 	interaction: RepliableInteraction

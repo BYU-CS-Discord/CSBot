@@ -1,8 +1,8 @@
 import { afterEach, describe, expect, test, vi } from 'vitest';
 
-import type { URL } from 'node:url';
 import { Colors } from 'discord.js';
 import type { EmbedBuilder } from '@discordjs/builders';
+import type { URL } from 'node:url';
 
 const fetchMock = vi.fn<[URL], Promise<Response>>();
 vi.stubGlobal('fetch', fetchMock);

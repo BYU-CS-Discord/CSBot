@@ -1,11 +1,12 @@
 #!/usr/bin/env ts-node
 
 import './assertTsNode.js';
-import { assert, literal, string, type } from 'superstruct';
+
 import { parser as changelogParser } from 'keep-a-changelog';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import * as semver from 'semver';
+import { assert, literal, string, type } from 'superstruct';
 
 const logger = console;
 

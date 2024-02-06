@@ -1,4 +1,5 @@
 import type { Message } from 'discord.js';
+
 import { EvilHangmanGame } from './evilHangmanGame.js';
 import { parser } from './gameInfoParser.js';
 

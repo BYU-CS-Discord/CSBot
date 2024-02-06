@@ -4,8 +4,9 @@ import { mockDeep } from 'vitest-mock-extended';
 
 import type { PrismaClient, Scoreboard } from '@prisma/client';
 
-vi.mock('../constants/meta', async () => {
-	const { repo } = await vi.importActual<typeof import('../constants/meta.js')>('../constants/meta.js');
+vi.mock('../constants/meta.js', async () => {
+	const { repo } =
+		await vi.importActual<typeof import('../constants/meta.js')>('../constants/meta.js');
 	return {
 		// Version changes frequently, so use a consistent version number to test with:
 		appVersion: 'X.X.X',

@@ -1,7 +1,7 @@
 import type { EmbedBuilder } from 'discord.js';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
-vi.mock('../constants/meta', async () => {
+vi.mock('../constants/meta.js', async () => {
 	const { repo } =
 		await vi.importActual<typeof import('../constants/meta.js')>('../constants/meta.js');
 	return {

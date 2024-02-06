@@ -1,6 +1,6 @@
-import { debug } from '../logger.js';
 import { chances, DEFAULT_CHANCE } from '../constants/reactionDuplication.js';
 import { onEvent } from '../helpers/onEvent.js';
+import { debug } from '../logger.js';
 
 /**
  * The event handler for emoji reactions.

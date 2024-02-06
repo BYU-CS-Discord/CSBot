@@ -1,6 +1,7 @@
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+
 import type { Client } from 'discord.js';
 import { Collection, SlashCommandBuilder } from 'discord.js';
-import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
 const mockAllCommands = vi.hoisted(() => new Map<string, Command>());
 vi.mock('../../commands', () => ({ allCommands: mockAllCommands }));
