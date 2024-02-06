@@ -1,7 +1,8 @@
-/* eslint-disable import/no-unresolved */
 import js from '@eslint/js';
 import stylistic from '@stylistic/eslint-plugin';
+// eslint-disable-next-line import/no-unresolved
 import typescriptParser from '@typescript-eslint/parser';
+// eslint-disable-next-line import/no-unresolved
 import typescriptPlugin from '@typescript-eslint/eslint-plugin';
 import deprecation from 'eslint-plugin-deprecation';
 import fileProgress from 'eslint-plugin-file-progress';
@@ -9,7 +10,6 @@ import import_ from 'eslint-plugin-import';
 import prettierRecommended from 'eslint-plugin-prettier/recommended';
 import promise from 'eslint-plugin-promise';
 import unicorn from 'eslint-plugin-unicorn';
-
 import globals from 'globals';
 
 export default [
