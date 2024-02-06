@@ -3,7 +3,7 @@
 	"exclude": ["**/*.test.*", "**/__mocks__/**"],
 	"compilerOptions": {
 		"target": "ESNext",
-		"module": "CommonJS",
+		"module": "NodeNext",
 		"typeRoots": ["node_modules/@types", "src/@types"],
 		"skipLibCheck": true,
 		"outDir": "dist",

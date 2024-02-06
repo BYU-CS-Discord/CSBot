@@ -18,7 +18,7 @@
 	},
 	"license": "Unlicense",
 	"author": "BYU CS",
-	"type": "commonjs",
+	"type": "module",
 	"main": "./dist/main.js",
 	"scripts": {
 		"build": "rm -rf dist && ./node_modules/.bin/tsc",
