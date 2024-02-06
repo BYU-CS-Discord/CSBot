@@ -53,9 +53,7 @@ export function replyFactory(interaction: RepliableInteraction): CommandContext[
 			options.ephemeral === true &&
 			!didFailToReply
 		) {
-			info(
-				`Sent ephemeral reply to User ${logUser(interaction.user)}: ${JSON.stringify(options)}`
-			);
+			info(`Sent ephemeral reply to User ${logUser(interaction.user)}: ${JSON.stringify(options)}`);
 		}
 	};
 }

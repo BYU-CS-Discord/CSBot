@@ -1,9 +1,5 @@
-import {
-	SlashCommandBuilder,
-	AttachmentPayload,
-	ChannelType,
-	PermissionFlagsBits,
-} from 'discord.js';
+import type { AttachmentPayload } from 'discord.js';
+import { SlashCommandBuilder, ChannelType, PermissionFlagsBits } from 'discord.js';
 import {
 	createAudioResource,
 	createAudioPlayer,
