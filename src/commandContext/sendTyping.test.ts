@@ -4,9 +4,9 @@ import type { Mock } from 'vitest';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
 // Mock the logger so nothing is printed
-vi.mock('../logger');
+vi.mock('../logger.js');
 
-import { sendTypingFactory as factory } from './sendTyping';
+import { sendTypingFactory as factory } from './sendTyping.js';
 
 describe('typing indicator', () => {
 	let mockSendTyping: Mock<[], void>;

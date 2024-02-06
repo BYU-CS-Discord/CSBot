@@ -2,9 +2,9 @@ import { string, type as schema, StructError } from 'superstruct';
 import { URL } from 'node:url';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
-import { fetchJson } from './fetch';
-import { HttpStatusCode } from './HttpStatusCode';
-import { NetworkError } from './NetworkError';
+import { fetchJson } from './fetch.js';
+import { HttpStatusCode } from './HttpStatusCode.js';
+import { NetworkError } from './NetworkError.js';
 
 const mockFetch = vi.spyOn(global, 'fetch');
 

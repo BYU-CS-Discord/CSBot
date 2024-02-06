@@ -4,9 +4,9 @@ import {
 	SlashCommandBuilder,
 	userMention,
 } from 'discord.js';
-import { UserMessageError } from '../helpers/UserMessageError';
-import { db } from '../database';
-import { sanitize } from '../helpers/sanitize';
+import { UserMessageError } from '../helpers/UserMessageError.js';
+import { db } from '../database/index.js';
+import { sanitize } from '../helpers/sanitize.js';
 
 const StatNameOption = 'statname';
 const AmountOption = 'amount';

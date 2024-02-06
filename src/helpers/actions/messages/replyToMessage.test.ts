@@ -3,10 +3,10 @@ import { ChannelType } from 'discord.js';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
 // Mock the logger to track output
-vi.mock('../../../logger');
-import { error as mockLoggerError } from '../../../logger';
+vi.mock('../../../logger.js');
+import { error as mockLoggerError } from '../../../logger.js';
 
-import { replyWithPrivateMessage, sendMessageInChannel } from './replyToMessage';
+import { replyWithPrivateMessage, sendMessageInChannel } from './replyToMessage.js';
 
 describe('Replies', () => {
 	const mockUserSend = vi.fn();

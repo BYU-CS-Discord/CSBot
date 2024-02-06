@@ -1,10 +1,10 @@
 import type { Client, Guild, RESTPostAPIApplicationCommandsJSONBody } from 'discord.js';
 import { ApplicationCommandType } from 'discord.js';
 
-import { allCommands } from '../../commands';
-import { isNonEmptyArray } from '../guards/isNonEmptyArray';
-import { revokeCommands } from './revokeCommands';
 import { debug, error, info } from '../../logger.js';
+import { allCommands } from '../../commands/index.js';
+import { isNonEmptyArray } from '../guards/isNonEmptyArray.js';
+import { revokeCommands } from './revokeCommands.js';
 
 export async function deployCommands(client: Client<true>): Promise<void> {
 	await revokeCommands(client); // fresh start!

@@ -2,9 +2,9 @@ import type { Client } from 'discord.js';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
 // Mock the logger so nothing is printed
-vi.mock('../../logger');
+vi.mock('../../logger.js');
 
-import { revokeCommands } from './revokeCommands';
+import { revokeCommands } from './revokeCommands.js';
 
 describe('Command revocations', () => {
 	const mockApplicationCommandsSet = vi.fn();

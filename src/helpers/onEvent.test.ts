@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 
-import { onEvent } from './onEvent';
+import { onEvent } from './onEvent.js';
 
 const executeMock = (): void => undefined;
 

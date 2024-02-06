@@ -11,17 +11,17 @@ import type {
 import { EmbedBuilder, Colors, ApplicationCommandType, ChannelType } from 'discord.js';
 
 import { debug, error, warn } from '../logger.js';
-import { allCommands } from '../commands';
-import { DISCORD_API_MAX_CHOICES } from '../constants/apiLimitations';
-import { followUpFactory } from '../commandContext/followUp';
-import { logUser } from '../helpers/logUser';
-import { onEvent } from '../helpers/onEvent';
-import { prepareForLongRunningTasksFactory } from '../commandContext/prepareForLongRunningTasks';
-import { replyFactory } from '../commandContext/reply';
-import { replyPrivatelyFactory } from '../commandContext/replyPrivately';
-import { sendTypingFactory } from '../commandContext/sendTyping';
-import { allButtons } from '../buttons';
-import { UserMessageError } from '../helpers/UserMessageError';
+import { allCommands } from '../commands/index.js';
+import { DISCORD_API_MAX_CHOICES } from '../constants/apiLimitations.js';
+import { followUpFactory } from '../commandContext/followUp.js';
+import { logUser } from '../helpers/logUser.js';
+import { onEvent } from '../helpers/onEvent.js';
+import { prepareForLongRunningTasksFactory } from '../commandContext/prepareForLongRunningTasks.js';
+import { replyFactory } from '../commandContext/reply.js';
+import { replyPrivatelyFactory } from '../commandContext/replyPrivately.js';
+import { sendTypingFactory } from '../commandContext/sendTyping.js';
+import { allButtons } from '../buttons/index.js';
+import { UserMessageError } from '../helpers/UserMessageError.js';
 
 /**
  * The event handler for Discord Interactions (usually chat commands)

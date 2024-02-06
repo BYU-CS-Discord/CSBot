@@ -1,7 +1,7 @@
 import type { AutocompleteInteraction } from 'discord.js';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
-import { sendtag } from './sendtag';
+import { sendtag } from './sendtag.js';
 
 describe('sendtag', () => {
 	const mockReply = vi.fn<[content: string], Promise<void>>();

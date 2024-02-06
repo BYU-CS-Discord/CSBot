@@ -1,8 +1,8 @@
 import type { Struct, StructError } from 'superstruct'; // eslint-disable-line @typescript-eslint/no-unused-vars
 import type { URL } from 'node:url';
 import { assert } from 'superstruct';
-import { HttpStatusCode } from './HttpStatusCode';
-import { NetworkError } from './NetworkError';
+import { HttpStatusCode } from './HttpStatusCode.js';
+import { NetworkError } from './NetworkError.js';
 
 /**
  * Performs a network request.

@@ -1,7 +1,7 @@
 import { SlashCommandBuilder } from 'discord.js';
 import { exec as __unsafeExecuteCommand } from 'node:child_process';
-import { UserMessageError } from '../helpers/UserMessageError';
-import { debug, error } from '../logger';
+import { UserMessageError } from '../helpers/UserMessageError.js';
+import { debug, error } from '../logger.js';
 
 let numInvocations: number = 0;
 const info = new SlashCommandBuilder()

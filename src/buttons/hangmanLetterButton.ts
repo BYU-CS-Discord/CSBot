@@ -1,6 +1,6 @@
 import { ButtonBuilder, ButtonStyle } from 'discord.js';
-import { parseEvilHangmanMessage } from '../evilHangman/parseEvilHangmanMessage';
-import { UserMessageError } from '../helpers/UserMessageError';
+import { parseEvilHangmanMessage } from '../evilHangman/parseEvilHangmanMessage.js';
+import { UserMessageError } from '../helpers/UserMessageError.js';
 
 export type Letter =
 	| 'a'

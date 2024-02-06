@@ -2,7 +2,7 @@ import type { Attachment } from 'discord.js';
 import { Collection } from 'discord.js';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
-import { altText } from './altText';
+import { altText } from './altText.js';
 
 describe('Get Alt Text', () => {
 	const mockReplyPrivately = vi.fn();

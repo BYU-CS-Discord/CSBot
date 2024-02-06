@@ -1,6 +1,6 @@
 import type { RepliableInteraction } from 'discord.js';
 
-import { error } from '../logger';
+import { error } from '../logger.js';
 
 export function prepareForLongRunningTasksFactory(
 	interaction: RepliableInteraction

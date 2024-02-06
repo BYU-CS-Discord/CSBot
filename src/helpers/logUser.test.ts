@@ -1,7 +1,7 @@
 import type { User } from 'discord.js';
 import { beforeEach, describe, expect, test } from 'vitest';
 
-import { logUser } from './logUser';
+import { logUser } from './logUser.js';
 
 describe('Log user ID', () => {
 	const user = {} as unknown as User;

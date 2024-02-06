@@ -1,8 +1,8 @@
 import type { EmbedBuilder } from '@discordjs/builders';
 import { describe, expect, test } from 'vitest';
 
-import { EvilHangmanWinState } from './evilHangmanGame';
-import { buildEvilHangmanMessage } from './evilHangmanMessage';
+import { EvilHangmanWinState } from './evilHangmanGame.js';
+import { buildEvilHangmanMessage } from './evilHangmanMessage.js';
 
 describe('evilHangmanMessage', () => {
 	describe('buildEvilHangmanMessage', () => {

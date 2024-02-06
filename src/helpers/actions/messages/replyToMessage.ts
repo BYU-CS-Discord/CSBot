@@ -9,8 +9,8 @@ import type {
 } from 'discord.js';
 import { ChannelType, channelMention, userMention } from 'discord.js';
 
-import { logUser } from '../../logUser';
 import { error, info } from '../../../logger.js';
+import { logUser } from '../../logUser.js';
 
 /**
  * Attempts to send a direct message to a user.

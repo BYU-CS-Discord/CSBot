@@ -1,7 +1,7 @@
 import type { Message } from 'discord.js';
 import { beforeEach, describe, expect, test } from 'vitest';
 
-import { parseEvilHangmanMessage } from './parseEvilHangmanMessage';
+import { parseEvilHangmanMessage } from './parseEvilHangmanMessage.js';
 
 describe('parseEvilHangmanMessage', () => {
 	const field: { value: string | undefined } = {

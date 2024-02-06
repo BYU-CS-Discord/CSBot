@@ -1,10 +1,10 @@
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
-import { fetchJson } from '../helpers/fetch';
+import { fetchJson } from '../helpers/fetch.js';
 import { number, string, type as schema } from 'superstruct';
 import { URL } from 'node:url';
 
 import { error } from '../logger.js';
-import { UserMessageError } from '../helpers/UserMessageError';
+import { UserMessageError } from '../helpers/UserMessageError.js';
 
 const getComicResponse = schema({
 	month: string(),

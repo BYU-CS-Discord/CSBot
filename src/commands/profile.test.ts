@@ -2,10 +2,10 @@ import type { GuildMember, ImageURLOptions, User, UserResolvable } from 'discord
 import { DiscordAPIError, EmbedBuilder, userMention } from 'discord.js';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
-import { DiscordErrorCode } from '../helpers/DiscordErrorCode';
-import { profile } from './profile';
+import { DiscordErrorCode } from '../helpers/DiscordErrorCode.js';
+import { profile } from './profile.js';
 
-vi.mock('../logger');
+vi.mock('../logger.js');
 
 describe('profile', () => {
 	const mockReply = vi.fn<[content: unknown], Promise<void>>();

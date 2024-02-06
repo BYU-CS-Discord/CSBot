@@ -1,11 +1,11 @@
 import type { Mock } from 'vitest';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
-import { fetchJson } from '../helpers/fetch';
-import { HttpStatusCode } from '../helpers/HttpStatusCode';
-import { NetworkError } from '../helpers/NetworkError';
+import { fetchJson } from '../helpers/fetch.js';
+import { HttpStatusCode } from '../helpers/HttpStatusCode.js';
+import { NetworkError } from '../helpers/NetworkError.js';
 
-vi.mock('../helpers/fetch', () => ({ fetchJson: vi.fn() }));
+vi.mock('../helpers/fetch.js', () => ({ fetchJson: vi.fn() }));
 
 const mockedFetchJson = fetchJson as Mock<
 	Parameters<typeof fetchJson>,
@@ -13,7 +13,7 @@ const mockedFetchJson = fetchJson as Mock<
 >;
 
 // Mock the logger so nothing is printed
-vi.mock('../logger');
+vi.mock('../logger.js');
 
 const latestGood = {
 	month: '9',
