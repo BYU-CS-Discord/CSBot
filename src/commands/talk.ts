@@ -26,7 +26,7 @@ const builder = new SlashCommandBuilder()
 	.addIntegerOption(option => {
 		option.setRequired(false).setName('speaker').setDescription('Whose voice to use');
 
-		const elements = Object.values(Speaker) as Array<number>;
+		const elements = Object.values(Speaker).filter(Number.isInteger) as Array<number>;
 		elements.forEach(value => {
 			const name = Speaker[value];
 			if (name === undefined) return;
