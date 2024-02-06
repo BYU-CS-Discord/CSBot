@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - `isCasDown` slash command to check if BYU's CAS is working
+- `verbatimModuleSyntax` typescript setting
 
 ### Changed
 
@@ -22,12 +23,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - "Fix Twitter Links" to support alternative x.com links
 - Revamped GitHub workflows
 - Migrated to ESM
+- Sorted `package.json` using `npx sort-package-json`
+- Used `tsx` instead of `ts-node` to resolve ESM problems
 
 ### Fixed
 
 - Release script using ts-node-esm for a non-ESM project
 - Release script URLs not compatible with local dev environments
 - All package vulnerabilities
+- `superstruct` types not working with ESM by adding type-shim
 
 ## [0.12.1] - 2023-10-05
 

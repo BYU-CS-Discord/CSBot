@@ -1,13 +1,15 @@
-#!/usr/bin/env ts-node
+#!/usr/bin/env tsx
 
-import './assertTsNode.js';
+import './assertTsx.js';
 
 import { parser as changelogParser } from 'keep-a-changelog';
 import { readFileSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import * as semver from 'semver';
 import { assert, literal, string, type } from 'superstruct';
 
+const __dirname = dirname(fileURLToPath(import.meta.url));
 const logger = console;
 
 // Fixes the changelog's footer links and bumps the `version` in [package.json](/package.json) and [package-lock.json](/package-lock.json).
