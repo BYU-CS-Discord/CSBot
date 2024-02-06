@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Package lockfile to version 3
 - "Fix Twitter Links" to support alternative x.com links
 - Revamped GitHub workflows
+- Migrated to ESM
 
 ### Fixed
 
