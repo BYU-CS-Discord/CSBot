@@ -265,7 +265,7 @@ export async function sendErrorMessage(
 	interaction: CommandInteraction | ButtonInteraction,
 	error_: unknown
 ): Promise<void> {
-	const errorMessage = error_ instanceof Error ? error_.message : String(error_);
+	const errorMessage = error_ instanceof Error ? error_.message : JSON.stringify(error_);
 	// for privacy, strip out any mention of the internal directory
 	const privateDir = __dirname.slice(0, __dirname.lastIndexOf('dist'));
 	const safeErrorMessage = errorMessage.replace(privateDir, '...');
