@@ -1,9 +1,9 @@
 import js from '@eslint/js';
 import stylistic from '@stylistic/eslint-plugin';
 // eslint-disable-next-line import/no-unresolved
-import typescriptParser from '@typescript-eslint/parser';
+import tsParser from '@typescript-eslint/parser';
 // eslint-disable-next-line import/no-unresolved
-import typescriptPlugin from '@typescript-eslint/eslint-plugin';
+import typescript from '@typescript-eslint/eslint-plugin';
 import deprecation from 'eslint-plugin-deprecation';
 import fileProgress from 'eslint-plugin-file-progress';
 import import_ from 'eslint-plugin-import';
@@ -102,19 +102,19 @@ export default [
 	{
 		files: ['**/*.{m,c,}ts{x,}'],
 		plugins: {
-			'@typescript-eslint': typescriptPlugin,
+			'@typescript-eslint': typescript,
 			deprecation: deprecation,
 		},
 		languageOptions: {
-			parser: typescriptParser,
+			parser: tsParser,
 			parserOptions: {
 				project: './tsconfig.eslint.json',
 			},
 		},
 		rules: {
 			// Recommended
-			...typescriptPlugin.configs['strict-type-checked'].rules,
-			...typescriptPlugin.configs['stylistic-type-checked'].rules,
+			...typescript.configs['strict-type-checked'].rules,
+			...typescript.configs['stylistic-type-checked'].rules,
 			...deprecation.configs.recommended.rules,
 
 			// Overrides
