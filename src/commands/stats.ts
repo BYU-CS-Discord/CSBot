@@ -1,9 +1,5 @@
-import {
-	ChatInputCommandInteraction,
-	EmbedBuilder,
-	SlashCommandBuilder,
-	userMention,
-} from 'discord.js';
+import type { ChatInputCommandInteraction } from 'discord.js';
+import { EmbedBuilder, SlashCommandBuilder, userMention } from 'discord.js';
 
 import { db } from '../database/index.js';
 import { sanitize } from '../helpers/sanitize.js';
