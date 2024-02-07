@@ -1,8 +1,6 @@
-// External dependencies
 import type { RepliableInteraction } from 'discord.js';
 
-// Internal dependencies
-import { error } from '../logger';
+import { error } from '../logger.js';
 
 export function prepareForLongRunningTasksFactory(
 	interaction: RepliableInteraction

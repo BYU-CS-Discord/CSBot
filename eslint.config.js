@@ -1,17 +1,18 @@
-const js = require('@eslint/js');
-const stylistic = require('@stylistic/eslint-plugin');
-const typescriptParser = require('@typescript-eslint/parser');
-const typescriptPlugin = require('@typescript-eslint/eslint-plugin');
-const deprecation = require('eslint-plugin-deprecation');
-const fileProgress = require('eslint-plugin-file-progress');
-const import_ = require('eslint-plugin-import');
-const prettierRecommended = require('eslint-plugin-prettier/recommended');
-const promise = require('eslint-plugin-promise');
-const unicorn = require('eslint-plugin-unicorn');
+import js from '@eslint/js';
+import stylistic from '@stylistic/eslint-plugin';
+// eslint-disable-next-line import/no-unresolved
+import typescriptParser from '@typescript-eslint/parser';
+// eslint-disable-next-line import/no-unresolved
+import typescriptPlugin from '@typescript-eslint/eslint-plugin';
+import deprecation from 'eslint-plugin-deprecation';
+import fileProgress from 'eslint-plugin-file-progress';
+import import_ from 'eslint-plugin-import';
+import prettierRecommended from 'eslint-plugin-prettier/recommended';
+import promise from 'eslint-plugin-promise';
+import unicorn from 'eslint-plugin-unicorn';
+import globals from 'globals';
 
-const globals = require('globals');
-
-module.exports = [
+export default [
 	{
 		ignores: ['dist', 'coverage', 'src/constants/version.ts'],
 	},
@@ -39,10 +40,7 @@ module.exports = [
 			promise: promise,
 		},
 		languageOptions: {
-			ecmaVersion: 'latest',
-			globals: {
-				...globals.node,
-			},
+			globals: globals.nodeBuiltin,
 		},
 		linterOptions: {
 			reportUnusedDisableDirectives: 'error',
@@ -81,6 +79,7 @@ module.exports = [
 			'unicorn/no-null': 0, // we use null
 			'unicorn/no-process-exit': 0, // we are a command-line app that might need to exit early
 			'unicorn/no-useless-undefined': 0,
+			'unicorn/number-literal-case': 0, // clashes with prettier
 			'unicorn/prefer-module': 0, // we are not using ESM yet
 			'unicorn/prefer-spread': 0,
 			'unicorn/prefer-ternary': 0,
@@ -107,7 +106,6 @@ module.exports = [
 			deprecation: deprecation,
 		},
 		languageOptions: {
-			sourceType: 'module',
 			parser: typescriptParser,
 			parserOptions: {
 				project: './tsconfig.eslint.json',

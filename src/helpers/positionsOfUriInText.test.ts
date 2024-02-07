@@ -16,8 +16,8 @@ vi.mock('node:url', async () => {
 	};
 });
 
-import type { Range } from './positionsOfUriInText';
-import { positionsOfUriInText } from './positionsOfUriInText';
+import type { Range } from './positionsOfUriInText.js';
+import { positionsOfUriInText } from './positionsOfUriInText.js';
 
 describe('Identifying URIs in strings', () => {
 	test.each`

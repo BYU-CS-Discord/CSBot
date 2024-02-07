@@ -1,10 +1,8 @@
-// External dependencies
 import type { RepliableInteraction } from 'discord.js';
 
-// Internal dependencies
-import * as logger from '../logger';
-import { logUser } from '../helpers/logUser';
-import { replyWithPrivateMessage } from '../helpers/actions/messages/replyToMessage';
+import { replyWithPrivateMessage } from '../helpers/actions/messages/replyToMessage.js';
+import { logUser } from '../helpers/logUser.js';
+import { error, info } from '../logger.js';
 
 export function replyPrivatelyFactory(
 	interaction: RepliableInteraction
@@ -16,14 +14,14 @@ export function replyPrivatelyFactory(
 			if (interaction.deferred) {
 				try {
 					await interaction.editReply(content);
-				} catch (error) {
-					logger.error('Failed to edit reply to interaction:', error);
+				} catch (error_) {
+					error('Failed to edit reply to interaction:', error_);
 				}
 			} else {
 				try {
 					await interaction.reply({ content, ephemeral: true });
-				} catch (error) {
-					logger.error('Failed to reply to interaction:', error);
+				} catch (error_) {
+					error('Failed to reply to interaction:', error_);
 				}
 			}
 		}
@@ -34,15 +32,15 @@ export function replyPrivatelyFactory(
 				} else {
 					await interaction.followUp({ ...options, ephemeral: true });
 				}
-			} catch (error) {
-				logger.error('Failed to follow up on interaction:', error);
+			} catch (error_) {
+				error('Failed to follow up on interaction:', error_);
 			}
 		} else {
 			const reply = await replyWithPrivateMessage(interaction, options, viaDM);
 			if (reply === false) {
 				// We failed to send the DM, probably because the user has those disabled.
 				// `replyWithPrivateMessage` already handled telling the user this.
-				logger.info(`User ${logUser(interaction.user)} has DMs turned off.`);
+				info(`User ${logUser(interaction.user)} has DMs turned off.`);
 			}
 		}
 	};

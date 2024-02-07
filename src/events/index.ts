@@ -1,8 +1,6 @@
-// External dependencies
 import type { Client } from 'discord.js';
 
-// Internal dependencies
-import * as logger from '../logger';
+import { info } from '../logger.js';
 
 /**
  * The private list of all event handlers. You can use this to edit the list within this file.
@@ -50,16 +48,16 @@ export function registerEventHandlers(client: Client): void {
 			client.on(eventName, eventHandler.execute);
 		}
 
-		logger.info(`Registered event handler ${eventHandler.once ? 'once' : 'on'}(${eventName})`);
+		info(`Registered event handler ${eventHandler.once ? 'once' : 'on'}(${eventName})`);
 	});
 }
 
 // Install event handlers
-import { error } from './error';
-import { interactionCreate } from './interactionCreate';
-import { messageReactionAdd } from './messageReactionAdd';
-import { ready } from './ready';
-import { messageReactionRemove } from './messageReactionRemove';
+import { error } from './error.js';
+import { interactionCreate } from './interactionCreate.js';
+import { messageReactionAdd } from './messageReactionAdd.js';
+import { messageReactionRemove } from './messageReactionRemove.js';
+import { ready } from './ready.js';
 
 _add(error as EventHandler);
 _add(interactionCreate as EventHandler);

@@ -1,6 +1,7 @@
 import type { User } from 'discord.js';
 import { DiscordAPIError, EmbedBuilder, SlashCommandBuilder, userMention } from 'discord.js';
-import { DiscordErrorCode } from '../helpers/DiscordErrorCode';
+
+import { DiscordErrorCode } from '../helpers/DiscordErrorCode.js';
 
 const UserParamName = 'user';
 

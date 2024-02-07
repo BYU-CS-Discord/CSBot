@@ -1,7 +1,8 @@
 import { describe, expect, test, vi } from 'vitest';
 
-vi.mock('../constants/meta', async () => {
-	const { repo } = await vi.importActual<typeof import('../constants/meta')>('../constants/meta');
+vi.mock('../constants/meta.js', async () => {
+	const { repo } =
+		await vi.importActual<typeof import('../constants/meta.js')>('../constants/meta.js');
 	return {
 		// Version changes frequently, so use a consistent version number to test with:
 		appVersion: 'X.X.X',
@@ -9,7 +10,7 @@ vi.mock('../constants/meta', async () => {
 	};
 });
 
-import { convertTo12Hour } from './findRoom';
+import { convertTo12Hour } from './findRoom.js';
 
 describe('findRoom', () => {
 	test('convertTo12Hour 8AM', () => {

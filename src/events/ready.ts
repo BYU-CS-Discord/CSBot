@@ -1,15 +1,13 @@
-// External dependencies
 import type { Client, ClientPresence } from 'discord.js';
 import { ActivityType } from 'discord.js';
 
-// Internal dependencies
-import * as logger from '../logger';
-import { deployCommands } from '../helpers/actions/deployCommands';
-import { revokeCommands } from '../helpers/actions/revokeCommands';
-import { verifyCommandDeployments } from '../helpers/actions/verifyCommandDeployments';
-import { appVersion } from '../constants/meta';
-import { onEvent } from '../helpers/onEvent';
-import { parseArgs } from '../helpers/parseArgs';
+import { appVersion } from '../constants/meta.js';
+import { deployCommands } from '../helpers/actions/deployCommands.js';
+import { revokeCommands } from '../helpers/actions/revokeCommands.js';
+import { onEvent } from '../helpers/onEvent.js';
+import { parseArgs } from '../helpers/parseArgs.js';
+import { verifyCommandDeployments } from '../helpers/actions/verifyCommandDeployments.js';
+import { info } from '../logger.js';
 
 /**
  * The event handler for when the Discord Client is ready for action
@@ -17,7 +15,7 @@ import { parseArgs } from '../helpers/parseArgs';
 export const ready = onEvent('ready', {
 	once: true,
 	async execute(client) {
-		logger.info(`Starting ${client.user.username} v${appVersion}...`);
+		info(`Starting ${client.user.username} v${appVersion}...`);
 
 		const args = parseArgs();
 
@@ -36,14 +34,14 @@ export const ready = onEvent('ready', {
 		}
 
 		// Sanity check for commands
-		logger.info('Verifying command deployments...');
+		info('Verifying command deployments...');
 		await verifyCommandDeployments(client);
 
 		// Set user activity
-		logger.info('Setting user activity');
+		info('Setting user activity');
 		setActivity(client);
 
-		logger.info('Ready!');
+		info('Ready!');
 	},
 });
 
