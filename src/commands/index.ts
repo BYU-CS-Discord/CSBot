@@ -29,21 +29,21 @@ export function _add(cmd: Command): void {
 }
 
 /**  Install commands here:  **/
-import { emoji } from './emoji';
-import { findRoom } from './findRoom';
-import { help } from './help';
-import { isCasDown } from './isCasDown';
-import { profile } from './profile';
-import { sendtag } from './sendtag';
-import { stats } from './stats';
-import { talk } from './talk';
-import { toTheGallows } from './toTheGallows';
-import { update } from './update';
-import { xkcd } from './xkcd';
+import { emoji } from './emoji.js';
+import { findRoom } from './findRoom.js';
+import { help } from './help.js';
+import { isCasDown } from './isCasDown.js';
+import { profile } from './profile.js';
+import { sendtag } from './sendtag.js';
+import { stats } from './stats.js';
+import { talk } from './talk.js';
+import { toTheGallows } from './toTheGallows.js';
+import { update } from './update.js';
+import { xkcd } from './xkcd.js';
 
-import { altText } from './contextMenu/altText';
-import { fxtwitter } from './contextMenu/fxtwitter';
-import { talk as talk_context } from './contextMenu/talk';
+import { altText } from './contextMenu/altText.js';
+import { fxtwitter } from './contextMenu/fxtwitter.js';
+import { talk as talk_context } from './contextMenu/talk.js';
 
 _add(emoji);
 _add(findRoom);

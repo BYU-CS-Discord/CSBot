@@ -1,10 +1,11 @@
-import type { GuildEmoji, ImageURLOptions } from 'discord.js';
-import { EmbedBuilder } from 'discord.js';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
-import { emoji } from './emoji';
+import type { GuildEmoji, ImageURLOptions } from 'discord.js';
+import { EmbedBuilder } from 'discord.js';
 
-vi.mock('../logger');
+import { emoji } from './emoji.js';
+
+vi.mock('../logger.js');
 
 describe('profile', () => {
 	const mockReply = vi.fn<[content: unknown], Promise<void>>();

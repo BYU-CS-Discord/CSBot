@@ -2,15 +2,15 @@ import { beforeEach, describe, expect, test, vi } from 'vitest';
 
 // Mock the talkMessage functionality
 const mockSpeak = vi.hoisted(() => vi.fn());
-vi.mock('../talk', () => ({
+vi.mock('../talk.js', () => ({
 	speak: mockSpeak,
 }));
 
 // Mock the logger so nothing is printed
-vi.mock('../../logger');
+vi.mock('../../logger.js');
 
 // Import the code to test
-import { talk } from './talk';
+import { talk } from './talk.js';
 
 describe('Talk Context Menu Command', () => {
 	let context: MessageContextMenuCommandContext;

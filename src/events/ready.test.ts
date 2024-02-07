@@ -30,30 +30,30 @@ import { Client } from 'discord.js';
 const client = new Client({ intents: [] });
 
 // Mock parseArgs so we can control what the args are
-import type { Args } from '../helpers/parseArgs';
+import type { Args } from '../helpers/parseArgs.js';
 const mockParseArgs = vi.hoisted(() => vi.fn<[], Args>());
 vi.mock('../helpers/parseArgs', () => ({ parseArgs: mockParseArgs }));
 
 // Mock deployCommands so we can track it
-vi.mock('../helpers/actions/deployCommands');
-import { deployCommands } from '../helpers/actions/deployCommands';
+vi.mock('../helpers/actions/deployCommands.js');
+import { deployCommands } from '../helpers/actions/deployCommands.js';
 const mockDeployCommands = deployCommands as Mock;
 
 // Mock revokeCommands so we can track it
-vi.mock('../helpers/actions/revokeCommands');
-import { revokeCommands } from '../helpers/actions/revokeCommands';
+vi.mock('../helpers/actions/revokeCommands.js');
+import { revokeCommands } from '../helpers/actions/revokeCommands.js';
 const mockRevokeCommands = revokeCommands as Mock;
 
 // Mock verifyCommandDeployments so we can track it
-vi.mock('../helpers/actions/verifyCommandDeployments');
-import { verifyCommandDeployments } from '../helpers/actions/verifyCommandDeployments';
+vi.mock('../helpers/actions/verifyCommandDeployments.js');
+import { verifyCommandDeployments } from '../helpers/actions/verifyCommandDeployments.js';
 const mockVerifyCommandDeployments = verifyCommandDeployments as Mock;
 
 // Mock the logger so nothing is printed
-vi.mock('../logger');
+vi.mock('../logger.js');
 
 // Import the code to test
-import { ready } from './ready';
+import { ready } from './ready.js';
 
 describe('once(ready)', () => {
 	beforeEach(() => {

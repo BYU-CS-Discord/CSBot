@@ -1,16 +1,17 @@
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+
 import type { Client } from 'discord.js';
 import { Collection, SlashCommandBuilder } from 'discord.js';
-import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
 const mockAllCommands = vi.hoisted(() => new Map<string, Command>());
 vi.mock('../../commands', () => ({ allCommands: mockAllCommands }));
 
 // Mock the logger to track output
-vi.mock('../../logger');
-import { warn as mockLoggerWarn } from '../../logger';
+vi.mock('../../logger.js');
+import { warn as mockLoggerWarn } from '../../logger.js';
 
-import { deployableCommand } from './deployCommands';
-import { verifyCommandDeployments } from './verifyCommandDeployments';
+import { deployableCommand } from './deployCommands.js';
+import { verifyCommandDeployments } from './verifyCommandDeployments.js';
 
 describe('Verify command deployments', () => {
 	const commands: Array<Command> = [

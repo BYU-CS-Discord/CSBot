@@ -1,6 +1,7 @@
 import type { Attachment } from 'discord.js';
 import { ApplicationCommandType, ContextMenuCommandBuilder } from 'discord.js';
-import { isNonEmptyArray } from '../../helpers/guards/isNonEmptyArray';
+
+import { isNonEmptyArray } from '../../helpers/guards/isNonEmptyArray.js';
 
 export const altText: MessageContextMenuCommand = {
 	info: new ContextMenuCommandBuilder().setName('Get Alt Text'),

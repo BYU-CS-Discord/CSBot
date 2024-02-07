@@ -24,10 +24,10 @@ import { Client } from 'discord.js';
 const client = new Client({ intents: [] });
 
 // Mock the logger so nothing is printed
-vi.mock('../logger');
+vi.mock('../logger.js');
 
 // Import the code to test
-import { _add, allEventHandlers, registerEventHandlers } from './index';
+import { _add, allEventHandlers, registerEventHandlers } from './index.js';
 
 describe('allEvents', () => {
 	test('index is not empty', () => {
