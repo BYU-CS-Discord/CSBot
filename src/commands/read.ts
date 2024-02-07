@@ -1,7 +1,7 @@
 import { SlashCommandBuilder } from 'discord.js';
 import { PrismaClient } from '@prisma/client';
 
-import { error, info } from '../logger';
+import { error, info } from '../logger.js';
 
 const prisma = new PrismaClient();
 
