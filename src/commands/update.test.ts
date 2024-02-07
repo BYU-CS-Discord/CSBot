@@ -1,8 +1,9 @@
-import type { User } from 'discord.js';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
+import type { User } from 'discord.js';
+
 // Mock the logger to prevent extra output
-vi.mock('../logger');
+vi.mock('../logger.js');
 
 // Overwrite the exec function
 const mockExec = vi.hoisted(() => vi.fn());
@@ -14,7 +15,7 @@ vi.mock('node:child_process', async () => {
 	};
 });
 
-import { update } from './update';
+import { update } from './update.js';
 
 describe('update', () => {
 	const ADMINISTRATORS_VARIABLE = 'ADMINISTRATORS';

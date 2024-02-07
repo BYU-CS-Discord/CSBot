@@ -1,6 +1,8 @@
 import js from '@eslint/js';
 import stylistic from '@stylistic/eslint-plugin';
+// eslint-disable-next-line import/no-unresolved
 import tsParser from '@typescript-eslint/parser';
+// eslint-disable-next-line import/no-unresolved
 import typescript from '@typescript-eslint/eslint-plugin';
 import deprecation from 'eslint-plugin-deprecation';
 import fileProgress from 'eslint-plugin-file-progress';
@@ -79,6 +81,7 @@ export default [
 			'unicorn/no-null': 0, // we use null
 			'unicorn/no-process-exit': 0, // we are a command-line app that might need to exit early
 			'unicorn/no-useless-undefined': 0,
+			'unicorn/number-literal-case': 0, // clashes with prettier
 			'unicorn/prefer-module': 0, // we are not using ESM yet
 			'unicorn/prefer-spread': 0,
 			'unicorn/prefer-ternary': 0,
@@ -108,7 +111,6 @@ export default [
 			parser: tsParser,
 			parserOptions: {
 				project: './tsconfig.eslint.json',
-				tsconfigRootDir: '.',
 			},
 		},
 		rules: {

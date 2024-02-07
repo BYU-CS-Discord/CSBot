@@ -1,9 +1,6 @@
-// External dependencies
 import type { AttachmentPayload } from 'discord.js';
-import type { AudioResource } from '@discordjs/voice';
-import { writeFileSync, createReadStream } from 'node:fs';
-import isNumber from 'lodash-es/isNumber';
 import { SlashCommandBuilder, ChannelType, PermissionFlagsBits } from 'discord.js';
+import type { AudioResource } from '@discordjs/voice';
 import {
 	createAudioResource,
 	createAudioPlayer,
@@ -15,10 +12,10 @@ import {
 	entersState,
 } from '@discordjs/voice';
 import { say, Speaker } from 'dectalk';
+import { writeFileSync, createReadStream } from 'node:fs';
 import { fileSync } from 'tmp';
 
-// Internal depedencies
-import * as logger from '../logger';
+import { info } from '../logger.js';
 
 const builder = new SlashCommandBuilder()
 	.setName('talk')
@@ -29,7 +26,7 @@ const builder = new SlashCommandBuilder()
 	.addIntegerOption(option => {
 		option.setRequired(false).setName('speaker').setDescription('Whose voice to use');
 
-		const elements = Object.values(Speaker).filter(element => isNumber(element)) as Array<number>;
+		const elements = Object.values(Speaker).filter(Number.isInteger) as Array<number>;
 		elements.forEach(value => {
 			const name = Speaker[value];
 			if (name === undefined) return;
@@ -212,5 +209,5 @@ export async function speak(
  * @param message The message to log
  */
 function log(message: string): void {
-	logger.info(`\t/${builder.name}: ${message}`);
+	info(`\t/${builder.name}: ${message}`);
 }

@@ -1,6 +1,5 @@
-// Internal dependencies
-import * as logger from '../logger';
-import { onEvent } from '../helpers/onEvent';
+import { onEvent } from '../helpers/onEvent.js';
+import { error as logErr } from '../logger.js';
 
 /**
  * The event handler for Discord Client errors
@@ -8,6 +7,6 @@ import { onEvent } from '../helpers/onEvent';
 export const error = onEvent('error', {
 	once: false,
 	execute(err) {
-		logger.error('Received client error:', err);
+		logErr('Received client error:', err);
 	},
 });

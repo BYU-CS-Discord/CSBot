@@ -1,12 +1,13 @@
-import type { RepliableInteraction } from 'discord.js';
 import type { Mock } from 'vitest';
-import { ChannelType } from 'discord.js';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
-// Mock the logger so nothing is printed
-vi.mock('../logger');
+import type { RepliableInteraction } from 'discord.js';
+import { ChannelType } from 'discord.js';
 
-import { sendTypingFactory as factory } from './sendTyping';
+// Mock the logger so nothing is printed
+vi.mock('../logger.js');
+
+import { sendTypingFactory as factory } from './sendTyping.js';
 
 describe('typing indicator', () => {
 	let mockSendTyping: Mock<[], void>;

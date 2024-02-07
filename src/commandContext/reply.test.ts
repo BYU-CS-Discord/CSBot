@@ -1,11 +1,12 @@
-import type { RepliableInteraction } from 'discord.js';
 import { describe, expect, test, vi } from 'vitest';
 
-// Mock the logger to track output
-vi.mock('../logger');
-import { error as mockLoggerError } from '../logger';
+import type { RepliableInteraction } from 'discord.js';
 
-import { replyFactory as factory } from './reply';
+// Mock the logger to track output
+vi.mock('../logger.js');
+import { error as mockLoggerError } from '../logger.js';
+
+import { replyFactory as factory } from './reply.js';
 
 describe('public reply', () => {
 	const mockInteractionReply = vi.fn();

@@ -1,4 +1,5 @@
-// Dependencies
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+
 import type {
 	ApplicationCommandOptionChoiceData,
 	AutocompleteInteraction,
@@ -19,13 +20,12 @@ import {
 	ContextMenuCommandBuilder,
 	SlashCommandBuilder,
 } from 'discord.js';
-import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
-import { UserMessageError } from '../helpers/UserMessageError';
+import { UserMessageError } from '../helpers/UserMessageError.js';
 
 // Mock allCommands to isolate our test code
 const mockAllCommands = vi.hoisted(() => new Map<string, Command>());
-vi.mock('../commands', () => ({
+vi.mock('../commands/index.js', () => ({
 	allCommands: mockAllCommands,
 }));
 
@@ -144,7 +144,7 @@ mockAllCommands.set(mockUserMessageErrorGlobalCommand.info.name, mockUserMessage
 
 // Mock allButtons to isolate our test code
 const mockAllButtons = vi.hoisted(() => new Map<string, Button>());
-vi.mock('../buttons', () => ({
+vi.mock('../buttons/index.js', () => ({
 	allButtons: mockAllButtons,
 }));
 
@@ -165,11 +165,11 @@ const mockErrorButton: Button = {
 mockAllButtons.set(mockErrorButton.customId, mockErrorButton);
 
 // Mock the logger to track output
-vi.mock('../logger');
-import { error as mockLoggerError } from '../logger';
+vi.mock('../logger.js');
+import { error as mockLoggerError } from '../logger.js';
 
 // Import the code to test
-import { interactionCreate } from './interactionCreate';
+import { interactionCreate } from './interactionCreate.js';
 
 // Constants for testing
 const interactionError = new Error('Failed to handle interaction. This is a test.');

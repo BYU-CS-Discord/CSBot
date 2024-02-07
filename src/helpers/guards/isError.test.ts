@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 
-import { isError } from './isError';
+import { isError } from './isError.js';
 
 class TestError extends Error {
 	constructor() {

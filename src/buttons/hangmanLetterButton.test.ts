@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
-import { letterButtons } from '../evilHangman/hangmanLetterButtons';
-import { UserMessageError } from '../helpers/UserMessageError';
+import { letterButtons } from '../evilHangman/hangmanLetterButtons.js';
+import { UserMessageError } from '../helpers/UserMessageError.js';
 
 describe('hangmanMoreButton', () => {
 	const mockUpdate = vi.fn();

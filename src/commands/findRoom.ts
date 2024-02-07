@@ -1,9 +1,9 @@
 import { array, boolean, string, tuple, type as schema } from 'superstruct';
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
-import { fetchJson } from '../helpers/fetch';
 import { URL } from 'node:url';
 
-import * as logger from '../logger';
+import { fetchJson } from '../helpers/fetch.js';
+import { error } from '../logger.js';
 
 const getRoomInfoResponse = schema({
 	busySince: string(),
@@ -88,12 +88,12 @@ async function _getRoomsFromEndpoint(endpoint: URL): Promise<GetRoomsResponse> {
 	try {
 		return await fetchJson(endpoint, getRoomsResponse);
 	} catch (error_) {
-		logger.error('Error in getting Room Info:');
-		logger.error(error_);
-		const error: GetRoomsResponse = {
+		error('Error in getting Room Info:');
+		error(error_);
+		const err: GetRoomsResponse = {
 			Rooms: [],
 		};
-		return error;
+		return err;
 	}
 }
 
@@ -121,14 +121,14 @@ async function _getWhenRoom(building: string, room: string): Promise<GetRoomInfo
 		const endpoint = new URL(`https://pi.zyancey.com/when/${building}/${room}`);
 		return await fetchJson(endpoint, getRoomInfoResponse);
 	} catch (error_) {
-		logger.error('Error in getting Room Info:');
-		logger.error(error_);
-		const error: GetRoomInfoResponse = {
+		error('Error in getting Room Info:');
+		error(error_);
+		const err: GetRoomInfoResponse = {
 			busySince: 'Error',
 			busyUntil: 'Error',
 			isInUse: false,
 		};
-		return error;
+		return err;
 	}
 }
 

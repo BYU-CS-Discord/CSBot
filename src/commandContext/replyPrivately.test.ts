@@ -1,16 +1,17 @@
-import type { RepliableInteraction } from 'discord.js';
 import type { Mock } from 'vitest';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
-vi.mock('../helpers/actions/messages/replyToMessage');
-import { replyWithPrivateMessage } from '../helpers/actions/messages/replyToMessage';
+import type { RepliableInteraction } from 'discord.js';
+
+vi.mock('../helpers/actions/messages/replyToMessage.js');
+import { replyWithPrivateMessage } from '../helpers/actions/messages/replyToMessage.js';
 const mockSendDM = replyWithPrivateMessage as Mock;
 
 // Mock the logger to track output
-vi.mock('../logger');
-import { info as mockLoggerInfo, error as mockLoggerError } from '../logger';
+vi.mock('../logger.js');
+import { info as mockLoggerInfo, error as mockLoggerError } from '../logger.js';
 
-import { replyPrivatelyFactory as factory } from './replyPrivately';
+import { replyPrivatelyFactory as factory } from './replyPrivately.js';
 
 describe('ephemeral and DM replies', () => {
 	mockSendDM.mockResolvedValue(true);

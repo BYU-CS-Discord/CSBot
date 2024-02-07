@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
-import { fxtwitter } from './fxtwitter';
+import { fxtwitter } from './fxtwitter.js';
 
 describe('Fix Twitter Links', () => {
 	const mockReplyPrivately = vi.fn();

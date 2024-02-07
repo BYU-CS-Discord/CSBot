@@ -1,5 +1,6 @@
-import { ChannelType } from 'discord.js';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+
+import { ChannelType } from 'discord.js';
 
 // Overwrite dectalk say method
 const mockSay = vi.hoisted(() => vi.fn());
@@ -15,7 +16,7 @@ vi.mock('dectalk', async () => {
 vi.mock('../logger');
 
 // Import the code to test
-import { talk } from './talk';
+import { talk } from './talk.js';
 
 describe('Talk Slash Command', () => {
 	const message = 'test';

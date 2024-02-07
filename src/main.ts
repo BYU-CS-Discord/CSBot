@@ -1,18 +1,17 @@
-// External dependencies
-import 'source-map-support/register';
+import 'source-map-support/register.js';
 import 'dotenv/config';
-import './helpers/parseArgs'; // load CLI args
+import './helpers/parseArgs.js'; // load CLI args
+
 import { Client, GatewayIntentBits, Partials } from 'discord.js';
 
-// Internal dependencies
-import * as logger from './logger';
-import { registerEventHandlers } from './events';
+import { registerEventHandlers } from './events/index.js';
+import { error, info } from './logger.js';
 
 // We *could* do all of this at the top level, but then
 // none of this setup would be testable :P
 
 export async function _main(): Promise<void> {
-	logger.info('*Yawn* Good morning!');
+	info('*Yawn* Good morning!');
 
 	// Set up the client
 	const client = new Client({
@@ -37,8 +36,8 @@ export async function _main(): Promise<void> {
 	// Login
 	try {
 		await client.login(process.env['DISCORD_TOKEN']);
-	} catch (error) {
-		logger.error('Failed to log in:', error);
+	} catch (error_) {
+		error('Failed to log in:', error_);
 	}
 }
 

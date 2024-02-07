@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 
-import { getButtonsForAllLettersExcept } from './hangmanLetterButtons';
+import { getButtonsForAllLettersExcept } from './hangmanLetterButtons.js';
 
 describe('getLetterOptions', () => {
 	test('no guesses returns the full alphabet', () => {

@@ -1,11 +1,15 @@
-#!/usr/bin/env ts-node
+#!/usr/bin/env tsx
 
-import './assertTsNode.js';
-import { assert, literal, string, type } from 'superstruct';
+import './assertTsx.js';
+
 import { parser as changelogParser } from 'keep-a-changelog';
 import { readFileSync, writeFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import * as semver from 'semver';
+import { assert, literal, string, type } from 'superstruct';
 
+const __dirname = dirname(fileURLToPath(import.meta.url));
 const logger = console;
 
 // Fixes the changelog's footer links and bumps the `version` in [package.json](/package.json) and [package-lock.json](/package-lock.json).
@@ -21,10 +25,9 @@ function quote(str: string | undefined): string | undefined {
 logger.info('** release.ts **');
 
 // Load the changelog
-const here = import.meta.url;
-const changelogPath = new URL('../CHANGELOG.md', here).pathname;
-const packageJsonPath = new URL('../package.json', here).pathname;
-const packageLockJsonPath = new URL('../package-lock.json', here).pathname;
+const changelogPath = join(__dirname, '../CHANGELOG.md');
+const packageJsonPath = join(__dirname, '../package.json');
+const packageLockJsonPath = join(__dirname, '../package-lock.json');
 logger.info('Loading changelog from', quote(changelogPath));
 
 const rawChangelog = readFileSync(changelogPath, 'utf8');

@@ -1,21 +1,22 @@
-import type { Client } from 'discord.js';
 import type { Mock } from 'vitest';
-import { SlashCommandBuilder } from 'discord.js';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
+import type { Client } from 'discord.js';
+import { SlashCommandBuilder } from 'discord.js';
+
 // Mock the logger so nothing is printed
-vi.mock('../../logger');
+vi.mock('../../logger.js');
 
 const mockAllCommands = vi.hoisted(() => new Map<string, Command>());
-vi.mock('../../commands', () => ({
+vi.mock('../../commands/index.js', () => ({
 	allCommands: mockAllCommands,
 }));
 
-vi.mock('./revokeCommands');
-import { revokeCommands } from './revokeCommands';
+vi.mock('./revokeCommands.js');
+import { revokeCommands } from './revokeCommands.js';
 const mockRevokeCommands = revokeCommands as Mock;
 
-import { deployCommands } from './deployCommands';
+import { deployCommands } from './deployCommands.js';
 
 describe('Command deployments', () => {
 	const mockApplicationCommandsSet = vi.fn();

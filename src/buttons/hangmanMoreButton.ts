@@ -1,12 +1,13 @@
 import { ButtonBuilder } from '@discordjs/builders';
 import { ButtonStyle } from 'discord.js';
-import { parseEvilHangmanMessage } from '../evilHangman/parseEvilHangmanMessage';
+
+import { parseEvilHangmanMessage } from '../evilHangman/parseEvilHangmanMessage.js';
 
 const customId = 'hangmanMoreButton';
 export const hangmanMoreButton: Button = {
 	customId,
 	async execute({ message, interaction }): Promise<void> {
-		const { buildEvilHangmanMessage } = await import('../evilHangman/evilHangmanMessage');
+		const { buildEvilHangmanMessage } = await import('../evilHangman/evilHangmanMessage.js');
 		const game = parseEvilHangmanMessage(message);
 
 		const displayInfo = game.getDisplayInfo();

@@ -1,12 +1,13 @@
-import type { Message, RepliableInteraction, TextChannel, User } from 'discord.js';
-import { ChannelType } from 'discord.js';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
-// Mock the logger to track output
-vi.mock('../../../logger');
-import { error as mockLoggerError } from '../../../logger';
+import type { Message, RepliableInteraction, TextChannel, User } from 'discord.js';
+import { ChannelType } from 'discord.js';
 
-import { replyWithPrivateMessage, sendMessageInChannel } from './replyToMessage';
+// Mock the logger to track output
+vi.mock('../../../logger.js');
+import { error as mockLoggerError } from '../../../logger.js';
+
+import { replyWithPrivateMessage, sendMessageInChannel } from './replyToMessage.js';
 
 describe('Replies', () => {
 	const mockUserSend = vi.fn();
