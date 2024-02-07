@@ -3,10 +3,8 @@
 	"exclude": ["**/*.test.*", "**/__mocks__/**"],
 	"compilerOptions": {
 		"target": "ESNext",
-		"module": "ESNext",
-		"moduleResolution": "Node",
+		"module": "NodeNext",
 		"typeRoots": ["./node_modules/@types", "./src/@types"],
-		"types": ["node"],
 		"skipLibCheck": true, // disable this once our deps get their act together
 		"outDir": "dist",
 		"esModuleInterop": true,
@@ -14,6 +12,7 @@
 		"removeComments": true,
 		"sourceMap": true,
 		"strict": true,
+		"verbatimModuleSyntax": true,
 		"noFallthroughCasesInSwitch": true,
 		"noImplicitReturns": true,
 		"noPropertyAccessFromIndexSignature": true,
