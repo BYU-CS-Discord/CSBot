@@ -45,6 +45,10 @@ import { altText } from './contextMenu/altText.js';
 import { fxtwitter } from './contextMenu/fxtwitter.js';
 import { talk as talk_context } from './contextMenu/talk.js';
 
+// Tag and Read can be combined into one command, but I'm doing it this way at this stage for ease of testing.
+import { tag } from './tag.js';
+import { read } from './read.js';
+
 _add(emoji);
 _add(findRoom);
 _add(help);
@@ -60,3 +64,6 @@ _add(xkcd);
 _add(altText);
 _add(fxtwitter);
 _add(talk_context);
+
+_add(tag);
+_add(read);
