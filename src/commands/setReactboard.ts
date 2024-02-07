@@ -1,6 +1,7 @@
 import { Guild, GuildEmoji, SlashCommandBuilder } from 'discord.js';
-import { UserMessageError } from '../helpers/UserMessageError';
-import { db } from '../database';
+
+import { UserMessageError } from '../helpers/UserMessageError.js';
+import { db } from '../database/index.js';
 
 const channelOption = 'channel';
 const thresholdOption = 'threshold';

@@ -5,9 +5,9 @@ import { mockDeep } from 'vitest-mock-extended';
 import type { PrismaClient } from '@prisma/client';
 import type { TextChannel } from 'discord.js';
 
-import { setReactboard } from './setReactboard';
-import { db } from '../database';
-import { UserMessageError } from '../helpers/UserMessageError';
+import { setReactboard } from './setReactboard.js';
+import { db } from '../database/index.js';
+import { UserMessageError } from '../helpers/UserMessageError.js';
 
 vi.mock('../database', () => ({
 	db: mockDeep<PrismaClient>(),

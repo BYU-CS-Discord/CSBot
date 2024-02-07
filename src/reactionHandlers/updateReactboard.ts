@@ -1,3 +1,4 @@
+import type { PartialDMChannel, PrivateThreadChannel, PublicThreadChannel } from 'discord.js';
 import {
 	Attachment,
 	channelMention,
@@ -7,15 +8,13 @@ import {
 	Message,
 	MessageReaction,
 	NewsChannel,
-	PartialDMChannel,
-	PrivateThreadChannel,
-	PublicThreadChannel,
 	TextChannel,
 	userMention,
 	VoiceChannel,
 } from 'discord.js';
-import { db } from '../database';
-import { appVersion } from '../constants/meta';
+
+import { db } from '../database/index.js';
+import { appVersion } from '../constants/meta.js';
 
 export const updateReactboard: ReactionHandler = {
 	async execute({ reaction, user }) {

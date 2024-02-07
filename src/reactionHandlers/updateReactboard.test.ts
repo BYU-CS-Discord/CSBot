@@ -5,10 +5,10 @@ import type { DeepMockProxy } from 'vitest-mock-extended';
 import type { PrismaClient, Reactboard, ReactboardPost } from '@prisma/client';
 import { ChannelType } from 'discord.js';
 
-import { db } from '../database';
-import { updateReactboard } from './updateReactboard';
+import { db } from '../database/index.js';
+import { updateReactboard } from './updateReactboard.js';
 
-vi.mock('../database', () => ({
+vi.mock('../database/index.js', () => ({
 	db: mockDeep<PrismaClient>(),
 }));
 

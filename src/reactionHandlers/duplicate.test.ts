@@ -2,10 +2,11 @@ import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import type { MockInstance } from 'vitest';
 
 import type { MessageReaction, User } from 'discord.js';
-import { duplicate } from './duplicate';
+
+import { duplicate } from './duplicate.js';
 
 // Mock the logger so nothing is printed
-vi.mock('../logger');
+vi.mock('../logger.js');
 
 describe('Reaction duplication', () => {
 	const mockResendReact = vi.fn<[], Promise<unknown>>();

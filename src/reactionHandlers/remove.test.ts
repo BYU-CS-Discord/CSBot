@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 
-import { _add, allReactionHandlers } from './remove';
+import { _add, allReactionHandlers } from './remove.js';
 
 describe('allReactionHandlers', () => {
 	test('index is not empty', () => {

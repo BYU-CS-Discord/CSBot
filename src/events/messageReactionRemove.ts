@@ -1,6 +1,6 @@
-import { onEvent } from '../helpers/onEvent';
-import { allReactionHandlers } from '../reactionHandlers/remove';
-import { buildExecute } from './messageReaction';
+import { onEvent } from '../helpers/onEvent.js';
+import { allReactionHandlers } from '../reactionHandlers/remove.js';
+import { buildExecute } from './messageReaction.js';
 
 /**
  * The event handler for emoji reactions.

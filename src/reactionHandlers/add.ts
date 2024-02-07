@@ -25,8 +25,8 @@ export function _add(handler: ReactionHandler): void {
 }
 
 /**  Install handlers here:  **/
-import { duplicate } from './duplicate';
-import { updateReactboard } from './updateReactboard';
+import { duplicate } from './duplicate.js';
+import { updateReactboard } from './updateReactboard.js';
 
 _add(duplicate);
 _add(updateReactboard);

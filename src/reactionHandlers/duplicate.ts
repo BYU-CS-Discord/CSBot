@@ -1,5 +1,5 @@
-import { chances, DEFAULT_CHANCE } from '../constants/reactionDuplication';
-import * as logger from '../logger';
+import { chances, DEFAULT_CHANCE } from '../constants/reactionDuplication.js';
+import { debug } from '../logger.js';
 
 export const duplicate: ReactionHandler = {
 	async execute({ reaction }) {
@@ -15,17 +15,17 @@ export const duplicate: ReactionHandler = {
 		const chance = chances[emojiName] ?? DEFAULT_CHANCE;
 
 		if (chance === 0) {
-			logger.debug(`There is no chance I'd react to :${ogEmojiName}:`);
+			debug(`There is no chance I'd react to :${ogEmojiName}:`);
 			return;
 		}
 
-		logger.debug(`There is a 1-in-${chance} chance that I'd react to :${ogEmojiName}:`);
+		debug(`There is a 1-in-${chance} chance that I'd react to :${ogEmojiName}:`);
 		const random = Math.round(Math.random() * 100);
 		if (random % chance === 0) {
-			logger.debug('I did.');
+			debug('I did.');
 			await reaction.react();
 		} else {
-			logger.debug('I did not.');
+			debug('I did not.');
 		}
 	},
 };
