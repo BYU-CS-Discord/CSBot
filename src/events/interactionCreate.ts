@@ -8,6 +8,8 @@ import type {
 	RepliableInteraction,
 } from 'discord.js';
 import { EmbedBuilder, Colors, ApplicationCommandType, ChannelType } from 'discord.js';
+import { dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import { allButtons } from '../buttons/index.js';
 import { allCommands } from '../commands/index.js';
@@ -21,6 +23,8 @@ import { logUser } from '../helpers/logUser.js';
 import { onEvent } from '../helpers/onEvent.js';
 import { UserMessageError } from '../helpers/UserMessageError.js';
 import { debug, error, warn } from '../logger.js';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 /**
  * The event handler for Discord Interactions (usually chat commands)
