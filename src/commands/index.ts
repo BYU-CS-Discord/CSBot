@@ -49,7 +49,6 @@ import { talk as talk_context } from './contextMenu/talk.js';
 import { tag } from './tag.js';
 import { read } from './read.js';
 
-_add(altText);
 _add(emoji);
 _add(findRoom);
 _add(help);
