@@ -29,37 +29,42 @@ export function _add(cmd: Command): void {
 }
 
 /**  Install commands here:  **/
-import { altText } from './contextMenu/altText';
-import { emoji } from './emoji';
-import { findRoom } from './findRoom';
-import { fxtwitter } from './contextMenu/fxtwitter';
-import { help } from './help';
-import { profile } from './profile';
-import { sendtag } from './sendtag';
-import { stats } from './stats';
-import { talk } from './talk';
-import { talk as talk_context } from './contextMenu/talk';
-import { toTheGallows } from './toTheGallows';
-import { update } from './update';
-import { xkcd } from './xkcd';
+import { emoji } from './emoji.js';
+import { findRoom } from './findRoom.js';
+import { help } from './help.js';
+import { isCasDown } from './isCasDown.js';
+import { profile } from './profile.js';
+import { sendtag } from './sendtag.js';
+import { stats } from './stats.js';
+import { talk } from './talk.js';
+import { toTheGallows } from './toTheGallows.js';
+import { update } from './update.js';
+import { xkcd } from './xkcd.js';
+
+import { altText } from './contextMenu/altText.js';
+import { fxtwitter } from './contextMenu/fxtwitter.js';
+import { talk as talk_context } from './contextMenu/talk.js';
 
 // Tag and Read can be combined into one command, but I'm doing it this way at this stage for ease of testing.
-import { tag } from './tag';
-import { read } from './read';
+import { tag } from './tag.js';
+import { read } from './read.js';
 
 _add(altText);
 _add(emoji);
 _add(findRoom);
-_add(fxtwitter);
 _add(help);
+_add(isCasDown);
 _add(profile);
 _add(sendtag);
 _add(stats);
 _add(talk);
-_add(talk_context);
 _add(toTheGallows);
 _add(update);
 _add(xkcd);
+
+_add(altText);
+_add(fxtwitter);
+_add(talk_context);
 
 _add(tag);
 _add(read);

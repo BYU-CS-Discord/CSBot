@@ -4,7 +4,7 @@ import type { Console } from 'node:console';
  * The default logger for this application. Set to the console for now.
  * Should not be accessed outside this logger file - instead, use the endpoint methods.
  * The goal is to define our own interface to separate usage from implementation.
- * To import the entire logger with all endpoints, use `import * as logger from './logger';`
+ * To import the entire logger with all endpoints, use `import * as logger from './logger.js';`
  * If you add any more endpoints to this file, remember to mock them in './\_\_mocks\_\_/logger.ts'
  * @private
  */

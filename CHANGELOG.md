@@ -2,27 +2,33 @@
 
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- `/iscasdown` slash command to check if BYU's CAS is working
+
 ### Changed
 
-- Upgraded to node 20 LTS
-- Use Vitest instead of Jest for forward compatibility with ESM
-- Simplified TypeScript build settings and followed @typescript-eslint standards
-- Moved to new ESLint flat configuration
-- Moved to new ESLint stylistic packages
+- Node version to 20 LTS
+- Tests to use `vitest` instead of `jest`
+- TypeScript build settings to be simplified and and follow `@typescript-eslint` standards
+- ESLint config to use new flat configuration
+- ESLint config to use new stylistic packages
 - Package lockfile to version 3
 - "Fix Twitter Links" to support alternative x.com links
-- Revamped GitHub workflows
+- GitHub workflows to be revamped
+- Project to use ESM instead of CommonJS
+- `package.json` to be sorted using `npx sort-package-json`
+- Release script to use `tsx` instead of `ts-node` to resolve ESM problems
 
 ### Fixed
 
-- Release script using ts-node-esm for a non-ESM project
-- Release script URLs not compatible with local dev environments
 - All package vulnerabilities
+- `superstruct` types not working with ESM by adding a type-shim
 
 ## [0.12.1] - 2023-10-05
 

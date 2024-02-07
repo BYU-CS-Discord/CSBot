@@ -1,53 +1,50 @@
 {
 	"name": "csbot",
 	"version": "0.12.1",
-	"description": "The One beneath the Supreme Overlord's rule. A bot to help manage the BYU CS Discord, successor to Ze Kaiser (https://github.com/arkenstorm/ze-kaiser)",
 	"private": true,
-	"scripts": {
-		"start": "./node_modules/.bin/pm2 start ./dist/main.js --name cs-bot",
-		"stop": "./node_modules/.bin/pm2 delete cs-bot",
-		"restart": "./node_modules/.bin/pm2 restart cs-bot",
-		"update": "git pull && npm run setup",
-		"dev": "NODE_ENV=development ./node_modules/.bin/nodemon --inspect ./dist/main.js",
-		"setup": "npm ci && npm run export-version && npm run build --production && npm run commands:deploy",
-		"commands:deploy": "node . --deploy",
-		"commands:revoke": "node . --revoke",
-		"release": "./node_modules/.bin/ts-node ./scripts/release.ts",
-		"db:init": "./node_modules/.bin/prisma migrate resolve --applied 20220915022732_initial_state  # TODO: Use this to set initial tables on the database",
-		"db:migrate": "./node_modules/.bin/prisma migrate deploy",
-		"db:introspect": "./node_modules/.bin/prisma db pull",
-		"db:generate": "./node_modules/.bin/prisma generate --schema ./prisma/schema.prisma",
-		"db:migrations:generate": "./node_modules/.bin/prisma migrate dev --create-only",
-		"lint": "./node_modules/.bin/eslint .",
-		"lint:fix": "npm run lint -- --fix",
-		"build": "rm -rf dist && ./node_modules/.bin/tsc",
-		"export-version": "./node_modules/.bin/genversion ./src/constants/version.ts -es",
-		"test": "./node_modules/.bin/vitest",
-		"docker": "npm run docker:image && npm run docker:cleanup && npm run docker:container",
-		"docker:image": "docker build --tag cs-bot-image --label cs-bot .",
-		"docker:container": "docker run --tty --interactive --rm --mount type=bind,source=$PWD,destination=/cs-bot cs-bot-image",
-		"docker:cleanup": "docker system prune --force --filter='label=cs-bot'"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/BYU-CS-Discord/CSBot.git"
-	},
+	"description": "The One beneath the Supreme Overlord's rule. A bot to help manage the BYU CS Discord, successor to Ze Kaiser (https://github.com/arkenstorm/ze-kaiser)",
 	"keywords": [
 		"discord",
 		"bot",
 		"BYU"
 	],
-	"author": "BYU CS",
-	"license": "Unlicense",
+	"homepage": "https://github.com/BYU-CS-Discord/CSBot#readme",
 	"bugs": {
 		"url": "https://github.com/BYU-CS-Discord/CSBot/issues"
 	},
-	"homepage": "https://github.com/BYU-CS-Discord/CSBot#readme",
-	"engines": {
-		"node": ">=20"
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/BYU-CS-Discord/CSBot.git"
 	},
+	"license": "Unlicense",
+	"author": "BYU CS",
+	"type": "module",
 	"main": "./dist/main.js",
-	"type": "commonjs",
+	"scripts": {
+		"build": "rm -rf dist && ./node_modules/.bin/tsc",
+		"commands:deploy": "node . --deploy",
+		"commands:revoke": "node . --revoke",
+		"db:generate": "./node_modules/.bin/prisma generate --schema ./prisma/schema.prisma",
+		"db:init": "./node_modules/.bin/prisma migrate resolve --applied 20220915022732_initial_state  # TODO: Use this to set initial tables on the database",
+		"db:introspect": "./node_modules/.bin/prisma db pull",
+		"db:migrate": "./node_modules/.bin/prisma migrate deploy",
+		"db:migrations:generate": "./node_modules/.bin/prisma migrate dev --create-only",
+		"dev": "NODE_ENV=development ./node_modules/.bin/nodemon --inspect ./dist/main.js",
+		"docker": "npm run docker:image && npm run docker:cleanup && npm run docker:container",
+		"docker:cleanup": "docker system prune --force --filter='label=cs-bot'",
+		"docker:container": "docker run --tty --interactive --rm --mount type=bind,source=$PWD,destination=/cs-bot cs-bot-image",
+		"docker:image": "docker build --tag cs-bot-image --label cs-bot .",
+		"export-version": "./node_modules/.bin/genversion ./src/constants/version.ts -es",
+		"lint": "./node_modules/.bin/eslint .",
+		"lint:fix": "npm run lint -- --fix",
+		"release": "./node_modules/.bin/tsx ./scripts/release.ts",
+		"restart": "./node_modules/.bin/pm2 restart cs-bot",
+		"setup": "npm ci && npm run export-version && npm run build --production && npm run commands:deploy",
+		"start": "./node_modules/.bin/pm2 start ./dist/main.js --name cs-bot",
+		"stop": "./node_modules/.bin/pm2 delete cs-bot",
+		"test": "./node_modules/.bin/vitest",
+		"update": "git pull && npm run setup"
+	},
 	"dependencies": {
 		"@discordjs/voice": "0.15.0",
 		"@prisma/client": "4.3.1",
@@ -56,14 +53,12 @@
 		"dotenv": "16.0.3",
 		"ffmpeg-static": "5.1.0",
 		"libsodium-wrappers": "0.7.10",
-		"lodash": "4.17.21",
 		"source-map-support": "0.5.21",
 		"superstruct": "1.0.3",
 		"tmp": "0.2.1"
 	},
 	"devDependencies": {
 		"@stylistic/eslint-plugin": "1.5.4",
-		"@types/lodash": "4.14.191",
 		"@types/node": "20.8.8",
 		"@types/source-map-support": "0.5.6",
 		"@types/tmp": "0.2.3",
@@ -85,10 +80,13 @@
 		"prettier-plugin-prisma": "5.0.0",
 		"prisma": "4.3.1",
 		"semver": "7.5.4",
-		"ts-node": "10.9.1",
-		"typescript": "4.9.5",
+		"tsx": "4.7.0",
+		"typescript": "5.3.3",
 		"vitest": "1.2.1",
 		"vitest-mock-extended": "1.3.1"
+	},
+	"engines": {
+		"node": ">=20"
 	},
 	"overrides": {
 		"axios": "1.6.5",

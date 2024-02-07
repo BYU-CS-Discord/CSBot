@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 
-import { allButtons, _add } from './index';
+import { allButtons, _add } from './index.js';
 
 describe('allButtons', () => {
 	test('index is not empty', () => {

@@ -1,9 +1,7 @@
-// External dependencies
 import type { InteractionReplyOptions, RepliableInteraction } from 'discord.js';
 
-// Internal dependencies
-import * as logger from '../logger';
-import { sendMessageInChannel } from '../helpers/actions/messages/replyToMessage';
+import { sendMessageInChannel } from '../helpers/actions/messages/replyToMessage.js';
+import { error } from '../logger.js';
 
 export function followUpFactory(interaction: RepliableInteraction): CommandContext['followUp'] {
 	return async function followUp(options) {
@@ -24,8 +22,8 @@ export function followUpFactory(interaction: RepliableInteraction): CommandConte
 			const intermediateOptions: InteractionReplyOptions & { reply?: boolean } = { ...options };
 			delete intermediateOptions.reply;
 			return await interaction.followUp(intermediateOptions);
-		} catch (error) {
-			logger.error('Failed to follow up on interaction:', error);
+		} catch (error_) {
+			error('Failed to follow up on interaction:', error_);
 			return false;
 		}
 	};

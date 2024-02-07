@@ -1,5 +1,3 @@
-// External dependencies
-import toString from 'lodash/toString';
 import type {
 	AutocompleteInteraction,
 	ButtonInteraction,
@@ -11,19 +9,18 @@ import type {
 } from 'discord.js';
 import { EmbedBuilder, Colors, ApplicationCommandType, ChannelType } from 'discord.js';
 
-// Internal dependencies
-import * as logger from '../logger';
-import { allCommands } from '../commands';
-import { DISCORD_API_MAX_CHOICES } from '../constants/apiLimitations';
-import { followUpFactory } from '../commandContext/followUp';
-import { logUser } from '../helpers/logUser';
-import { onEvent } from '../helpers/onEvent';
-import { prepareForLongRunningTasksFactory } from '../commandContext/prepareForLongRunningTasks';
-import { replyFactory } from '../commandContext/reply';
-import { replyPrivatelyFactory } from '../commandContext/replyPrivately';
-import { sendTypingFactory } from '../commandContext/sendTyping';
-import { allButtons } from '../buttons';
-import { UserMessageError } from '../helpers/UserMessageError';
+import { allButtons } from '../buttons/index.js';
+import { allCommands } from '../commands/index.js';
+import { followUpFactory } from '../commandContext/followUp.js';
+import { prepareForLongRunningTasksFactory } from '../commandContext/prepareForLongRunningTasks.js';
+import { replyFactory } from '../commandContext/reply.js';
+import { replyPrivatelyFactory } from '../commandContext/replyPrivately.js';
+import { sendTypingFactory } from '../commandContext/sendTyping.js';
+import { DISCORD_API_MAX_CHOICES } from '../constants/apiLimitations.js';
+import { logUser } from '../helpers/logUser.js';
+import { onEvent } from '../helpers/onEvent.js';
+import { UserMessageError } from '../helpers/UserMessageError.js';
+import { debug, error, warn } from '../logger.js';
 
 /**
  * The event handler for Discord Interactions (usually chat commands)
@@ -45,8 +42,8 @@ export const interactionCreate = onEvent('interactionCreate', {
 			} else if (interaction.isAutocomplete()) {
 				await handleAutocompleteInteraction(interaction);
 			}
-		} catch (error) {
-			logger.error('Failed to handle interaction:', error);
+		} catch (error_) {
+			error('Failed to handle interaction:', error_);
 		}
 	},
 });
@@ -68,11 +65,11 @@ async function handleCommandInteraction(
 	vagueContext: InteractionContext,
 	interaction: CommandInteraction
 ): Promise<void> {
-	logger.debug(`User ${logUser(interaction.user)} sent command: '${interaction.commandName}'`);
+	debug(`User ${logUser(interaction.user)} sent command: '${interaction.commandName}'`);
 
 	const command = allCommands.get(interaction.commandName);
 	if (!command) {
-		logger.warn(`Received request to execute unknown command named '${interaction.commandName}'`);
+		warn(`Received request to execute unknown command named '${interaction.commandName}'`);
 		// Fixes weird hangs when the command list is out of date:
 		await sendErrorMessage(
 			interaction,
@@ -81,7 +78,7 @@ async function handleCommandInteraction(
 		return;
 	}
 
-	logger.debug(`Calling command handler '${command.info.name}'`);
+	debug(`Calling command handler '${command.info.name}'`);
 
 	let context: CommandContext;
 
@@ -109,8 +106,8 @@ async function handleCommandInteraction(
 
 	if (!command.requiresGuild) {
 		// No guild required
-		logger.debug(`Command '${command.info.name}' does not require guild information.`);
-		logger.debug('Proceeding...');
+		debug(`Command '${command.info.name}' does not require guild information.`);
+		debug('Proceeding...');
 
 		if ('type' in command && command.type === ApplicationCommandType.Message) {
 			if (!interaction.isMessageContextMenuCommand()) {
@@ -129,8 +126,8 @@ async function handleCommandInteraction(
 			try {
 				await command.execute(messageContextMenuCommandContext);
 				return;
-			} catch (error) {
-				await sendErrorMessage(interaction, error);
+			} catch (error_) {
+				await sendErrorMessage(interaction, error_);
 				return;
 			}
 		} else if ('type' in command && command.type === ApplicationCommandType.User) {
@@ -157,8 +154,8 @@ async function handleCommandInteraction(
 			try {
 				await command.execute(userContextMenuCommandContext);
 				return;
-			} catch (error) {
-				await sendErrorMessage(interaction, error);
+			} catch (error_) {
+				await sendErrorMessage(interaction, error_);
 				return;
 			}
 		}
@@ -166,15 +163,15 @@ async function handleCommandInteraction(
 		try {
 			await command.execute(context);
 			return;
-		} catch (error) {
-			await sendErrorMessage(interaction, error);
+		} catch (error_) {
+			await sendErrorMessage(interaction, error_);
 			return;
 		}
 	}
 
 	if (context.source === 'dm') {
 		// No guild found
-		logger.debug(`Command '${command.info.name}' requires guild information, but none was found.`);
+		debug(`Command '${command.info.name}' requires guild information, but none was found.`);
 		await context.reply({
 			content: "Can't do that here",
 			ephemeral: true,
@@ -185,8 +182,8 @@ async function handleCommandInteraction(
 	try {
 		await command.execute(context);
 		return;
-	} catch (error) {
-		await sendErrorMessage(interaction, error);
+	} catch (error_) {
+		await sendErrorMessage(interaction, error_);
 	}
 }
 
@@ -194,7 +191,7 @@ async function handleCommandInteraction(
  * Finds results for a Discord autocomplete request.
  */
 async function handleAutocompleteInteraction(interaction: AutocompleteInteraction): Promise<void> {
-	logger.debug(
+	debug(
 		`User ${logUser(interaction.user)} requested autocomplete for command: '${
 			interaction.commandName
 		}'`
@@ -203,7 +200,7 @@ async function handleAutocompleteInteraction(interaction: AutocompleteInteractio
 	try {
 		const command = allCommands.get(interaction.commandName);
 		if (!command) {
-			logger.warn(
+			warn(
 				`Received request to execute autocomplete handler for unknown command named '${interaction.commandName}'`
 			);
 			// Return no results
@@ -213,7 +210,7 @@ async function handleAutocompleteInteraction(interaction: AutocompleteInteractio
 
 		// Command must be a chat-input command
 		if (command.type !== ApplicationCommandType.ChatInput && command.type !== undefined) {
-			logger.warn(
+			warn(
 				`Received an autocomplete request for command '${command.info.name}'. This command must be of type 'ChatInput', but was found instead to be of a different type (${command.type}).`
 			);
 			// Return no results
@@ -223,7 +220,7 @@ async function handleAutocompleteInteraction(interaction: AutocompleteInteractio
 
 		// Command must have an autocomplete handler
 		if (!command.autocomplete) {
-			logger.warn(
+			warn(
 				`Received an autocomplete request for command '${command.info.name}'. This command must have an autocomplete handler method, but none was found.`
 			);
 			// Return no results
@@ -231,23 +228,23 @@ async function handleAutocompleteInteraction(interaction: AutocompleteInteractio
 			return;
 		}
 
-		logger.debug(`Calling autocomplete handler for command '${command.info.name}'`);
+		debug(`Calling autocomplete handler for command '${command.info.name}'`);
 		const options = command.autocomplete(interaction);
 
 		// Return results (limited because of API reasons)
 		// Seriously, Discord WILL throw errors and refuse to deliver ANY
 		// options if the list we give them exceeds 25
 		await interaction.respond(options.slice(0, DISCORD_API_MAX_CHOICES));
-	} catch (error) {
+	} catch (error_) {
 		// We cannot directly reply, since this interaction is only for autocomplete.
-		logger.error(error);
+		error(error_);
 
 		// Return no results if we've not yet responded
 		if (!interaction.responded) {
 			try {
 				await interaction.respond([]);
 			} catch (secondError) {
-				logger.error('Failed to return empty result set due to error:', secondError);
+				error('Failed to return empty result set due to error:', secondError);
 			}
 		}
 	}
@@ -266,16 +263,16 @@ async function handleAutocompleteInteraction(interaction: AutocompleteInteractio
  */
 export async function sendErrorMessage(
 	interaction: CommandInteraction | ButtonInteraction,
-	error: unknown
+	error_: unknown
 ): Promise<void> {
-	const errorMessage = toString(error);
+	const errorMessage = error_ instanceof Error ? error_.message : JSON.stringify(error_);
 	// for privacy, strip out any mention of the internal directory
 	const privateDir = __dirname.slice(0, __dirname.lastIndexOf('dist'));
 	const safeErrorMessage = errorMessage.replace(privateDir, '...');
 
 	const embed = new EmbedBuilder().setTitle('Error');
-	if (error instanceof UserMessageError) {
-		embed.setDescription(error.message).setColor(Colors.Yellow);
+	if (error_ instanceof UserMessageError) {
+		embed.setDescription(error_.message).setColor(Colors.Yellow);
 	} else {
 		const interactionDescription = interaction.isButton()
 			? `\`${interaction.customId}\` button`
@@ -286,8 +283,8 @@ export async function sendErrorMessage(
 			)
 			.setColor(Colors.Red);
 
-		logger.error('Sent error message to user:');
-		logger.error(error);
+		error('Sent error message to user:');
+		error(error_);
 	}
 
 	try {
@@ -304,7 +301,7 @@ export async function sendErrorMessage(
 			});
 		}
 	} catch (secondError) {
-		logger.error('Error while sending error response:', secondError);
+		error('Error while sending error response:', secondError);
 	}
 }
 
@@ -312,11 +309,11 @@ async function handleButtonInteraction(
 	context: InteractionContext,
 	interaction: ButtonInteraction
 ): Promise<void> {
-	logger.debug(`User ${logUser(interaction.user)} pressed button: '${interaction.customId}'`);
+	debug(`User ${logUser(interaction.user)} pressed button: '${interaction.customId}'`);
 
 	const button = allButtons.get(interaction.customId);
 	if (!button) {
-		logger.warn(`Received request to execute unknown button with id '${interaction.customId}'`);
+		warn(`Received request to execute unknown button with id '${interaction.customId}'`);
 		await sendErrorMessage(
 			interaction,
 			`Unknown button '${interaction.customId}'. Contact the bot operator and make sure they deployed the latest set of commands.`
@@ -324,7 +321,7 @@ async function handleButtonInteraction(
 		return;
 	}
 
-	logger.debug(`Calling button handler '${button.customId}'`);
+	debug(`Calling button handler '${button.customId}'`);
 
 	const buttonContext = {
 		...context,
@@ -336,8 +333,8 @@ async function handleButtonInteraction(
 	try {
 		await button.execute(buttonContext);
 		return;
-	} catch (error) {
-		await sendErrorMessage(interaction, error);
+	} catch (error_) {
+		await sendErrorMessage(interaction, error_);
 	}
 }
 

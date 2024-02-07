@@ -1,7 +1,8 @@
-import type { MessageReplyOptions } from 'discord.js';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
-import { hangmanLessButton } from './hangmanLessButton';
+import type { MessageReplyOptions } from 'discord.js';
+
+import { hangmanLessButton } from './hangmanLessButton.js';
 
 describe('hangmanLessButton', () => {
 	const mockUpdate = vi.fn<[MessageReplyOptions]>();
