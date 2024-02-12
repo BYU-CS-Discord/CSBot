@@ -3,14 +3,8 @@ import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import { ChannelType } from 'discord.js';
 
 // Overwrite dectalk say method
-const mockSay = vi.hoisted(() => vi.fn());
-vi.mock('dectalk', async () => {
-	const dectalk = await vi.importActual<typeof import('dectalk')>('dectalk');
-	return {
-		...dectalk,
-		say: mockSay,
-	};
-});
+const dectalkMock = vi.hoisted(() => vi.fn());
+vi.mock('dectalk-tts', async () => ({ default: dectalkMock }));
 
 // Mock the logger so nothing is printed
 vi.mock('../logger');
@@ -19,39 +13,36 @@ vi.mock('../logger');
 import { talk } from './talk.js';
 
 describe('Talk Slash Command', () => {
+	const speakerMock = vi.fn();
 	const message = 'test';
 	let context: TextInputCommandContext;
 	const emptyBuffer: Buffer = Buffer.from([]);
-	const mockPrepare = vi.fn();
-	const mockReply = vi.fn();
-	const mockGetString = vi.fn();
-	const mockGetInteger = vi.fn();
+	const prepareForLongRunningTasksMock = vi.fn();
+	const replyMock = vi.fn();
+	const getStringMock = vi.fn();
 
 	beforeEach(() => {
 		context = {
 			options: {
-				getString: mockGetString,
-				getInteger: mockGetInteger,
+				getString: getStringMock,
 			},
 			channel: {
 				type: ChannelType.GuildText,
 			},
-			prepareForLongRunningTasks: mockPrepare,
-			reply: mockReply,
+			prepareForLongRunningTasks: prepareForLongRunningTasksMock,
+			reply: replyMock,
 		} as unknown as TextInputCommandContext;
-		mockSay.mockReturnValue(emptyBuffer);
-		mockGetString.mockReturnValue(message);
-		mockGetInteger.mockReturnValue(null);
+		dectalkMock.mockResolvedValue(emptyBuffer);
+		speakerMock.mockReturnValue(null);
+		getStringMock.mockImplementation((name) => {
+			if (name === 'message') return message;
+			if (name === 'speaker') return speakerMock();
+			return null;
+		});
 	});
 
 	afterEach(() => {
 		vi.resetAllMocks();
-	});
-
-	test('Fails if no options are provided', async () => {
-		mockGetInteger.mockReturnValueOnce(null);
-		mockGetString.mockReturnValueOnce(null);
-		await expect(talk.execute(context)).rejects.toThrow();
 	});
 
 	test('Fails if channel is undefined', async () => {
@@ -61,13 +52,21 @@ describe('Talk Slash Command', () => {
 
 	test('Prepares for long-running tasks and resolves interaction', async () => {
 		await expect(talk.execute(context)).resolves.toBeUndefined();
-		expect(mockPrepare).toHaveBeenCalledOnce();
-		expect(mockReply).toHaveBeenCalledOnce();
+		expect(prepareForLongRunningTasksMock).toHaveBeenCalledOnce();
+		expect(replyMock).toHaveBeenCalledOnce();
 	});
 
-	test('Calls dectalk module to generate wav buffer', async () => {
+	test('Calls dectalk-tts module to generate wav buffer', async () => {
 		await expect(talk.execute(context)).resolves.toBeUndefined();
-		expect(mockSay).toHaveBeenCalledOnce();
+		expect(dectalkMock).toHaveBeenCalledOnce();
+	});
+
+	test('Prepends the speaker name to the message if provided', async () => {
+		const name = 'PAUL';
+		speakerMock.mockReturnValueOnce(name);
+
+		await expect(talk.execute(context)).resolves.toBeUndefined();
+		expect(dectalkMock).toHaveBeenCalledWith(`[:name ${name}] ${message}`);
 	});
 
 	test('Replies with content of the message and the wav buffer in text channels', async () => {
@@ -76,7 +75,7 @@ describe('Talk Slash Command', () => {
 			channel: { type: ChannelType.GuildText },
 		} as unknown as TextInputCommandContext;
 		await expect(talk.execute(context)).resolves.toBeUndefined();
-		expect(mockReply).toHaveBeenCalledWith({
+		expect(replyMock).toHaveBeenCalledWith({
 			files: [
 				{
 					name: `${message}.wav`,

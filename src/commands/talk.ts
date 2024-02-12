@@ -11,11 +11,15 @@ import {
 	NoSubscriberBehavior,
 	entersState,
 } from '@discordjs/voice';
-import { say, Speaker } from 'dectalk';
+import dectalk from 'dectalk-tts';
 import { writeFileSync, createReadStream } from 'node:fs';
 import { fileSync } from 'tmp';
 
 import { info } from '../logger.js';
+
+const SPEAKERS = [
+	"PAUL", "BETTY", "HARRY", "FRANK", "DENNIS", "KIT", "URSULA", "RITA", "WENDY"
+];
 
 const builder = new SlashCommandBuilder()
 	.setName('talk')
@@ -23,16 +27,11 @@ const builder = new SlashCommandBuilder()
 	.addStringOption(option =>
 		option.setRequired(true).setName('message').setDescription('The message to speak')
 	)
-	.addIntegerOption(option => {
+	.addStringOption(option => {
 		option.setRequired(false).setName('speaker').setDescription('Whose voice to use');
-
-		const elements = Object.values(Speaker).filter(Number.isInteger) as Array<number>;
-		elements.forEach(value => {
-			const name = Speaker[value];
-			if (name === undefined) return;
-			option = option.addChoices({ name, value });
+		SPEAKERS.forEach(name => {
+			option = option.addChoices({ name, value: name });
 		});
-
 		return option;
 	});
 
@@ -42,42 +41,40 @@ export const talk: GlobalCommand = {
 	async execute(context) {
 		const options = context.options;
 		const message = options.getString('message', true);
-		const speakerNum = options.getInteger('speaker') ?? undefined;
+		const speaker = options.getString('speaker', false) ?? undefined;
 
-		await speak(message, speakerNum, context);
+		await speak(context, message, speaker);
 	},
 };
 
 /**
  * This method abstracts-out the functionality of the "talk" command, allowing it to be used
  * by either slash commands or context commands
- * @param message The message to speak
- * @param speakerNum Which speaker to use (can be undefined)
  * @param context The context of the interaction (either TextInputCommandContext or MessageContextCommandContext)
+ * @param message The message to speak
+ * @param speaker Which speaker to use (can be undefined)
  */
 export async function speak(
+	{ channel, client, prepareForLongRunningTasks, reply }: BaseCommandContext,
 	message: string,
-	speakerNum: Speaker | undefined,
-	{ channel, client, prepareForLongRunningTasks, reply }: BaseCommandContext
+	speaker?: string,
 ): Promise<void> {
 	// This also shouldn't happen, but better safe than sorry
 	if (!channel) {
 		throw new Error('No channel');
 	}
 
-	// This could happen if the user uses the context menu command on an empty message
-	if (!message || message === '') {
-		throw new Error('Message cannot be empty');
-	}
-
 	// Generating the audio can take a while, so make sure Discord doesn't think we died
 	await prepareForLongRunningTasks(false);
 
+	// If the speaker is defined, prepend the message with the speaker's name
+	if (speaker) {
+		message = `[:name ${speaker}] ` + message;
+	}
+
 	// Generate the audio and store it in a generic buffer
 	log('generating audio');
-	const wavData: Buffer = await say(message, {
-		Speaker: speakerNum,
-	});
+	const wavData = await dectalk(message);
 
 	// If the command was given in a voice chat, speak it
 	if (channel.type === ChannelType.GuildVoice) {

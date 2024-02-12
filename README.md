@@ -89,8 +89,9 @@ Tracks a statistic for the issuer. Use the `track` subcommand to begin tracking,
 
 ### /talk
 
-Uses the [dectalk](https://github.com/babakinha/dectalk) text-to-speech engine to speak the message you give it,
-either sending a .wav file in a text channel or talking out loud in a voice channel. Comes with 9 different voices.
+Uses the [dectalk](https://github.com/JstnMcBrd/dectalk-tts) text-to-speech engine to speak the message you give it, either sending a .wav file in a text channel or talking out loud in a voice channel. Comes with 9 different voices.
+
+By using this command, you are acknowleding that your input will be sent to a third-party web API, which may use your information however it wants. Please see [this disclaimer](https://github.com/JstnMcBrd/dectalk-tts#about).
 
 ### /tothegallows
 
@@ -135,12 +136,6 @@ This project requires [NodeJS](https://nodejs.org/) (version 18.17 or later) and
 $ node -v && npm -v
 v18.17.1
 9.6.7
-```
-
-If you are using Linux, you will also need to install the following package to use the `/talk` command:
-
-```sh
-$ apt install libpulse0
 ```
 
 If you don't want to install Node or any other dependencies on your machine, you may also use [Docker](https://www.docker.com/). Docker runs the project in a lightweight virtual Linux environment will all dependencies pre-installed, so functionality will be identical on any operating system.
