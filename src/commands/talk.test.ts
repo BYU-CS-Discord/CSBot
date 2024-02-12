@@ -4,7 +4,7 @@ import { ChannelType } from 'discord.js';
 
 // Overwrite dectalk say method
 const dectalkMock = vi.hoisted(() => vi.fn());
-vi.mock('dectalk-tts', async () => ({ default: dectalkMock }));
+vi.mock('dectalk-tts', () => ({ default: dectalkMock }));
 
 // Mock the logger so nothing is printed
 vi.mock('../logger');
@@ -13,7 +13,7 @@ vi.mock('../logger');
 import { talk } from './talk.js';
 
 describe('Talk Slash Command', () => {
-	const speakerMock = vi.fn();
+	const speakerMock = vi.fn<[], string | null>();
 	const message = 'test';
 	let context: TextInputCommandContext;
 	const emptyBuffer: Buffer = Buffer.from([]);
@@ -34,7 +34,7 @@ describe('Talk Slash Command', () => {
 		} as unknown as TextInputCommandContext;
 		dectalkMock.mockResolvedValue(emptyBuffer);
 		speakerMock.mockReturnValue(null);
-		getStringMock.mockImplementation((name) => {
+		getStringMock.mockImplementation(name => {
 			if (name === 'message') return message;
 			if (name === 'speaker') return speakerMock();
 			return null;

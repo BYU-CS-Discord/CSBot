@@ -17,9 +17,7 @@ import { fileSync } from 'tmp';
 
 import { info } from '../logger.js';
 
-const SPEAKERS = [
-	"PAUL", "BETTY", "HARRY", "FRANK", "DENNIS", "KIT", "URSULA", "RITA", "WENDY"
-];
+const SPEAKERS = ['PAUL', 'BETTY', 'HARRY', 'FRANK', 'DENNIS', 'KIT', 'URSULA', 'RITA', 'WENDY'];
 
 const builder = new SlashCommandBuilder()
 	.setName('talk')
@@ -57,7 +55,7 @@ export const talk: GlobalCommand = {
 export async function speak(
 	{ channel, client, prepareForLongRunningTasks, reply }: BaseCommandContext,
 	message: string,
-	speaker?: string,
+	speaker?: string
 ): Promise<void> {
 	// This also shouldn't happen, but better safe than sorry
 	if (!channel) {
