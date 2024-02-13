@@ -17,18 +17,30 @@ import { fileSync } from 'tmp';
 
 import { info } from '../logger.js';
 
-const SPEAKERS = ['PAUL', 'BETTY', 'HARRY', 'FRANK', 'DENNIS', 'KIT', 'URSULA', 'RITA', 'WENDY'];
+export enum Speaker {
+	Paul = 'PAUL',
+	Betty = 'BETTY',
+	Harry = 'HARRY',
+	Frank = 'FRANK',
+	Dennis = 'DENNIS',
+	Kit = 'KIT',
+	Ursula = 'URSULA',
+	Rita = 'RITA',
+	Wendy = 'WENDY',
+}
 
 const builder = new SlashCommandBuilder()
 	.setName('talk')
-	.setDescription('Uses Dectalk to speak the given message')
+	.setDescription('Uses Dectalk to speak the given message (via https://tts.cyzon.us/)')
 	.addStringOption(option =>
 		option.setRequired(true).setName('message').setDescription('The message to speak')
 	)
 	.addStringOption(option => {
 		option.setRequired(false).setName('speaker').setDescription('Whose voice to use');
-		SPEAKERS.forEach(name => {
-			option = option.addChoices({ name, value: name });
+		Object.keys(Speaker).forEach(name => {
+			const value = (Speaker as Record<string, string>)[name];
+			if (value === undefined) return;
+			option = option.addChoices({ name, value });
 		});
 		return option;
 	});
@@ -39,7 +51,7 @@ export const talk: GlobalCommand = {
 	async execute(context) {
 		const options = context.options;
 		const message = options.getString('message', true);
-		const speaker = options.getString('speaker', false) ?? undefined;
+		const speaker = options.getString('speaker', false) as Speaker|undefined ?? undefined;
 
 		await speak(context, message, speaker);
 	},
@@ -50,12 +62,12 @@ export const talk: GlobalCommand = {
  * by either slash commands or context commands
  * @param context The context of the interaction (either TextInputCommandContext or MessageContextCommandContext)
  * @param message The message to speak
- * @param speaker Which speaker to use (can be undefined)
+ * @param speaker Which speaker to use
  */
 export async function speak(
 	{ channel, client, prepareForLongRunningTasks, reply }: BaseCommandContext,
 	message: string,
-	speaker?: string
+	speaker?: Speaker
 ): Promise<void> {
 	// This also shouldn't happen, but better safe than sorry
 	if (!channel) {

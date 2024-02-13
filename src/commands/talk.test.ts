@@ -10,10 +10,10 @@ vi.mock('dectalk-tts', () => ({ default: dectalkMock }));
 vi.mock('../logger');
 
 // Import the code to test
-import { talk } from './talk.js';
+import { Speaker, talk } from './talk.js';
 
 describe('Talk Slash Command', () => {
-	const speakerMock = vi.fn<[], string | null>();
+	const speakerMock = vi.fn<[], Speaker | null>();
 	const message = 'test';
 	let context: TextInputCommandContext;
 	const emptyBuffer: Buffer = Buffer.from([]);
@@ -62,7 +62,7 @@ describe('Talk Slash Command', () => {
 	});
 
 	test('Prepends the speaker name to the message if provided', async () => {
-		const name = 'PAUL';
+		const name = Speaker.Paul;
 		speakerMock.mockReturnValueOnce(name);
 
 		await expect(talk.execute(context)).resolves.toBeUndefined();
