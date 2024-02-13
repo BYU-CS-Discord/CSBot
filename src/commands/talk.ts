@@ -51,7 +51,7 @@ export const talk: GlobalCommand = {
 	async execute(context) {
 		const options = context.options;
 		const message = options.getString('message', true);
-		const speaker = options.getString('speaker', false) as Speaker|undefined ?? undefined;
+		const speaker = (options.getString('speaker', false) as Speaker | undefined) ?? undefined;
 
 		await speak(context, message, speaker);
 	},
