@@ -59,6 +59,7 @@ describe('Talk Slash Command', () => {
 	test('Calls dectalk-tts module to generate wav buffer', async () => {
 		await expect(talk.execute(context)).resolves.toBeUndefined();
 		expect(dectalkMock).toHaveBeenCalledOnce();
+		expect(dectalkMock).toHaveBeenCalledWith(message);
 	});
 
 	test('Prepends the speaker name to the message if provided', async () => {

@@ -51,7 +51,7 @@ export const talk: GlobalCommand = {
 	async execute(context) {
 		const options = context.options;
 		const message = options.getString('message', true);
-		const speaker = (options.getString('speaker', false) as Speaker | undefined) ?? undefined;
+		const speaker = (options.getString('speaker', false) as Speaker | null) ?? undefined;
 
 		await speak(context, message, speaker);
 	},
@@ -69,9 +69,14 @@ export async function speak(
 	message: string,
 	speaker?: Speaker
 ): Promise<void> {
-	// This also shouldn't happen, but better safe than sorry
+	// This shouldn't happen, but better safe than sorry
 	if (!channel) {
 		throw new Error('No channel');
+	}
+
+	// This could happen if the user uses the context menu command on an empty message
+	if (!message || message.trim() === '') {
+		throw new Error('Message cannot be empty');
 	}
 
 	// Generating the audio can take a while, so make sure Discord doesn't think we died
