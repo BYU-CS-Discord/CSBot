@@ -25,9 +25,9 @@ describe('parseEvilHangmanMessage', () => {
 	test('message text is converted into a game', () => {
 		const game = parseEvilHangmanMessage(message);
 		const displayInfo = game.getDisplayInfo();
-		expect(displayInfo.guessesRemaining).toEqual(4);
-		expect(displayInfo.word).toEqual('-----');
-		expect(displayInfo.guessesSoFar.size).toEqual(0);
+		expect(displayInfo.guessesRemaining).toBe(4);
+		expect(displayInfo.word).toBe('-----');
+		expect(displayInfo.guessesSoFar.size).toBe(0);
 	});
 
 	test('incorrect message format throws an error', () => {

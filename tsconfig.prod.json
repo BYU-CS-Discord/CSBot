@@ -1,0 +1,21 @@
+{
+	"include": ["src"],
+	"exclude": ["**/*.test.*", "**/__mocks__/**"],
+	"compilerOptions": {
+		"target": "ESNext",
+		"module": "NodeNext",
+		"typeRoots": ["./node_modules/@types", "./src/@types"],
+		"skipLibCheck": true, // disable this once our deps get their act together
+		"outDir": "dist",
+		"esModuleInterop": true,
+		"isolatedModules": true,
+		"removeComments": true,
+		"sourceMap": true,
+		"strict": true,
+		"verbatimModuleSyntax": true,
+		"noFallthroughCasesInSwitch": true,
+		"noImplicitReturns": true,
+		"noPropertyAccessFromIndexSignature": true,
+		"noUncheckedIndexedAccess": true,
+	},
+}

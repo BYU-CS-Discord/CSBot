@@ -19,7 +19,7 @@ describe('evilHangmanMessage', () => {
 			expect(embed).toBeDefined();
 			expect(embed?.data.description).toBeUndefined();
 			expect(message.components).toBeDefined();
-			expect(message.components?.length).toEqual(5);
+			expect(message.components?.length).toBe(5);
 		});
 
 		test('win and lost states have descriptions and no buttons', async () => {
@@ -32,7 +32,7 @@ describe('evilHangmanMessage', () => {
 			const winEmbed = winMessage.embeds?.[0] as EmbedBuilder;
 			expect(winEmbed.data.description).toBeDefined();
 			expect(winMessage.components).toBeDefined();
-			expect(winMessage.components?.length).toEqual(0);
+			expect(winMessage.components?.length).toBe(0);
 
 			const lostMessage = await buildEvilHangmanMessage({
 				word: '',
@@ -44,7 +44,7 @@ describe('evilHangmanMessage', () => {
 			const lostEmbed = lostMessage.embeds?.[0] as EmbedBuilder;
 			expect(lostEmbed.data.description).toBeDefined();
 			expect(lostMessage.components).toBeDefined();
-			expect(lostMessage.components?.length).toEqual(0);
+			expect(lostMessage.components?.length).toBe(0);
 		});
 
 		test('second page has only one row of buttons', async () => {
@@ -58,7 +58,7 @@ describe('evilHangmanMessage', () => {
 				1
 			);
 			expect(message.components).toBeDefined();
-			expect(message.components?.length).toEqual(1);
+			expect(message.components?.length).toBe(1);
 		});
 	});
 });
