@@ -32,7 +32,7 @@ See [CONTRIBUTING.md](/CONTRIBUTING.md) for ways to contribute.
 
 ## License
 
-This project's source is licensed under the [Unlicense](LICENSE) license. All contributions to this project's source are understood to be given to the public domain.
+This project's source is licensed under the [BSD Zero Clause License](LICENSE). All contributions to this project's source may be used, copied, modified, and/or distributed for any purpose.
 
 ## Table of contents
 
