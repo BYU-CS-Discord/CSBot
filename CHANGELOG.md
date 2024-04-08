@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Project to use ESM instead of CommonJS
 - `package.json` to be sorted using `npx sort-package-json`
 - Release script to use `tsx` instead of `ts-node` to resolve ESM problems
+- `/talk` to use `dectalk-tts` package instead of `dectalk`
 
 ### Fixed
 

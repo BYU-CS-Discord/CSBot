@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
 // Mock the talkMessage functionality
-const mockSpeak = vi.hoisted(() => vi.fn());
+const speakMock = vi.hoisted(() => vi.fn());
 vi.mock('../talk.js', () => ({
-	speak: mockSpeak,
+	speak: speakMock,
 }));
 
 // Mock the logger so nothing is printed
@@ -27,6 +27,6 @@ describe('Talk Context Menu Command', () => {
 	// we don't actually have to test much.
 	test('Calls the talkMessage method of the talk slash command', async () => {
 		await expect(talk.execute(context)).resolves.toBeUndefined();
-		expect(mockSpeak).toHaveBeenCalledOnce();
+		expect(speakMock).toHaveBeenCalledOnce();
 	});
 });
