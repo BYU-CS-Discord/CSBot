@@ -13,13 +13,13 @@ describe('EvilHangmanGame', () => {
 		const displayInfo = game.getDisplayInfo();
 		expect(displayInfo.word).toMatch(/-*/u);
 		expect(displayInfo.winState).toBe(EvilHangmanWinState.IN_PROGRESS);
-		expect(displayInfo.guessesSoFar.size).toEqual(0);
+		expect(displayInfo.guessesSoFar.size).toBe(0);
 	});
 
 	test('newGame with specified length uses that length of word', () => {
 		game = EvilHangmanGame.newGame(4, null);
 		const displayInfo = game.getDisplayInfo();
-		expect(displayInfo.word).toEqual('----');
+		expect(displayInfo.word).toBe('----');
 	});
 
 	test('newGame with a specified number of guesses uses that number of guesses', () => {
@@ -74,7 +74,7 @@ describe('EvilHangmanGame', () => {
 	test('A correct guess reveals the least possible letters', () => {
 		const displayInfo = game.makeGuess('y');
 		const numYs = displayInfo.word.split('').filter(letter => letter === 'y').length;
-		expect(numYs).toEqual(1);
+		expect(numYs).toBe(1);
 	});
 
 	test('a full word means the player has won', () => {

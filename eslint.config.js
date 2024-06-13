@@ -10,6 +10,8 @@ import import_ from 'eslint-plugin-import';
 import prettierRecommended from 'eslint-plugin-prettier/recommended';
 import promise from 'eslint-plugin-promise';
 import unicorn from 'eslint-plugin-unicorn';
+import vitest from 'eslint-plugin-vitest';
+
 import globals from 'globals';
 
 export default [
@@ -129,6 +131,14 @@ export default [
 
 			// Overrides
 			'@typescript-eslint/array-type': ['error', { default: 'generic' }],
+			'@typescript-eslint/consistent-type-imports': [
+				'error',
+				{
+					prefer: 'type-imports',
+					fixStyle: 'separate-type-imports',
+					disallowTypeAnnotations: false,
+				},
+			], // Replaces `importsNotUsedAsValues` tsconfig flag
 			'@typescript-eslint/no-confusing-void-expression': 0,
 			'@typescript-eslint/no-inferrable-types': 0, // we like to be extra explicit with types sometimes
 			'@typescript-eslint/no-invalid-void-type': ['error', { allowAsThisParameter: true }],
@@ -148,6 +158,17 @@ export default [
 				{ allowConciseArrowFunctionExpressionsStartingWithVoid: true },
 			],
 			'@typescript-eslint/no-shadow': ['error', { allow: ['err', 'resolve', 'reject', 'client'] }], // https://stackoverflow.com/a/63961972
+		},
+	},
+
+	// Vitest
+	{
+		files: ['**/*.test.{m,c,}{js,ts}{x,}'],
+		plugins: {
+			vitest: vitest,
+		},
+		rules: {
+			...vitest.configs.recommended.rules,
 		},
 	},
 ];
