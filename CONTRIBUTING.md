@@ -49,7 +49,7 @@ the action you have taken to solve it.
 
 The aim of this project is:
 
-- To provide useful and fun functions for the participants of [our Discord server](https://discord.gg/bnV89Cz).
+- To provide useful and fun functions for the participants of [our Discord server](https://discord.gg/CMhcP99p93).
 - To be usable by someone who is familiar with Discord and Discord bots.
 - To foster a culture of respect and gratitude in the open-source space.
 
