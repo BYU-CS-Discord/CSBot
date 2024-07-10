@@ -16,7 +16,7 @@
 		"type": "git",
 		"url": "git+https://github.com/BYU-CS-Discord/CSBot.git"
 	},
-	"license": "Unlicense",
+	"license": "0BSD",
 	"author": "BYU CS",
 	"type": "module",
 	"main": "./dist/main.js",
