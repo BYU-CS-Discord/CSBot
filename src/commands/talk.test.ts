@@ -1,9 +1,11 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
 import { ChannelType } from 'discord.js';
+// eslint-disable-next-line import/default, import/no-named-as-default, import/no-named-as-default-member
+import type dectalk from 'dectalk-tts';
 
 // Overwrite dectalk say method
-const dectalkMock = vi.hoisted(() => vi.fn());
+const dectalkMock = vi.hoisted(() => vi.fn<typeof dectalk>());
 vi.mock('dectalk-tts', () => ({ default: dectalkMock }));
 
 // Mock the logger so nothing is printed
@@ -13,13 +15,14 @@ vi.mock('../logger');
 import { Speaker, talk } from './talk.js';
 
 describe('Talk Slash Command', () => {
-	const speakerMock = vi.fn<[], Speaker | null>();
+	const speakerMock = vi.fn<() => Speaker | null>();
 	const message = 'test';
 	let context: TextInputCommandContext;
 	const emptyBuffer: Buffer = Buffer.from([]);
-	const prepareForLongRunningTasksMock = vi.fn();
-	const replyMock = vi.fn();
-	const getStringMock = vi.fn();
+	const prepareForLongRunningTasksMock =
+		vi.fn<TextInputCommandContext['prepareForLongRunningTasks']>();
+	const replyMock = vi.fn<TextInputCommandContext['reply']>();
+	const getStringMock = vi.fn<TextInputCommandContext['options']['getString']>();
 
 	beforeEach(() => {
 		context = {

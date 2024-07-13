@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, test, vi } from 'vitest';
+import { beforeEach, describe, expect, Mock, test, vi } from 'vitest';
 import type { DeepMockProxy } from 'vitest-mock-extended';
 import { mockDeep } from 'vitest-mock-extended';
 
@@ -23,25 +23,30 @@ import { db } from '../database/index.js';
 
 describe('stats', () => {
 	const dbMock = db as DeepMockProxy<PrismaClient>;
+	// FIXME vitest-mock-extended's types do not match vitest v2's types
+	// https://github.com/eratio08/vitest-mock-extended/issues/508
 	/* eslint-disable @typescript-eslint/unbound-method */
-	const mockCount = dbMock.scoreboard.count;
-	const mockCreate = dbMock.scoreboard.create;
-	const mockDelete = dbMock.scoreboard.delete;
-	const mockFindFirst = dbMock.scoreboard.findFirst;
-	const mockFindMany = dbMock.scoreboard.findMany;
-	const mockUpdate = dbMock.scoreboard.update;
+	const mockCount = dbMock.scoreboard.count as unknown as Mock<typeof db.scoreboard.count>;
+	const mockCreate = dbMock.scoreboard.create as unknown as Mock<typeof db.scoreboard.create>;
+	const mockDelete = dbMock.scoreboard.delete as unknown as Mock<typeof db.scoreboard.delete>;
+	const mockFindFirst = dbMock.scoreboard.findFirst as unknown as Mock<
+		typeof db.scoreboard.findFirst
+	>;
+	const mockFindMany = dbMock.scoreboard.findMany as unknown as Mock<typeof db.scoreboard.findMany>;
+	const mockUpdate = dbMock.scoreboard.update as unknown as Mock<typeof db.scoreboard.update>;
 	/* eslint-enable @typescript-eslint/unbound-method */
 
 	const mockUserId = 'test-user-id';
 	const mockStatName = 'stats-test';
 	const mockGuildId = 'test-guild-id';
 
-	const mockReply = vi.fn();
-	const mockReplyPrivately = vi.fn();
-	const mockGetString = vi.fn<[name: string], string | null>();
-	const mockGetNumber = vi.fn<[name: string], number | null>();
-	const mockGetSubcommand = vi.fn();
-	const mockGetUser = vi.fn();
+	const mockReply = vi.fn<GuildedCommandContext['reply']>();
+	const mockReplyPrivately = vi.fn<GuildedCommandContext['replyPrivately']>();
+	const mockGetString = vi.fn<GuildedCommandContext['interaction']['options']['getString']>();
+	const mockGetNumber = vi.fn<GuildedCommandContext['interaction']['options']['getNumber']>();
+	const mockGetSubcommand =
+		vi.fn<GuildedCommandContext['interaction']['options']['getSubcommand']>();
+	const mockGetUser = vi.fn<GuildedCommandContext['client']['users']['cache']['get']>();
 	let context: GuildedCommandContext;
 
 	beforeEach(() => {

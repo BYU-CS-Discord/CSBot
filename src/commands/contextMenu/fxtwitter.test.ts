@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { fxtwitter } from './fxtwitter.js';
 
 describe('Fix Twitter Links', () => {
-	const mockReplyPrivately = vi.fn();
+	const mockReplyPrivately = vi.fn<MessageContextMenuCommandContext['replyPrivately']>();
 	let context: MessageContextMenuCommandContext;
 
 	beforeEach(() => {

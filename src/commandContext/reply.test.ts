@@ -9,7 +9,7 @@ import { error as mockLoggerError } from '../logger.js';
 import { replyFactory as factory } from './reply.js';
 
 describe('public reply', () => {
-	const mockInteractionReply = vi.fn();
+	const mockInteractionReply = vi.fn<RepliableInteraction['reply']>();
 
 	const interaction = {
 		user: { id: 'user-id-1234' },

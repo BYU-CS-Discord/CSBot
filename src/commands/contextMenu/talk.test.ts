@@ -1,7 +1,9 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
+import type { speak } from '../talk.js';
+
 // Mock the talkMessage functionality
-const speakMock = vi.hoisted(() => vi.fn());
+const speakMock = vi.hoisted(() => vi.fn<typeof speak>());
 vi.mock('../talk.js', () => ({
 	speak: speakMock,
 }));

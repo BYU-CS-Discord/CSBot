@@ -1,12 +1,14 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
+import type { exec } from 'node:child_process';
+
 import type { User } from 'discord.js';
 
 // Mock the logger to prevent extra output
 vi.mock('../logger.js');
 
 // Overwrite the exec function
-const mockExec = vi.hoisted(() => vi.fn());
+const mockExec = vi.hoisted(() => vi.fn<typeof exec>());
 vi.mock('node:child_process', async () => {
 	const cp = await vi.importActual<typeof import('node:child_process')>('node:child_process');
 	return {
@@ -27,8 +29,8 @@ describe('update', () => {
 		username: 'TheCitizen',
 		id: '3',
 	} as unknown as User;
-	const mockReplyPrivately = vi.fn<[content: string], Promise<void>>();
-	const mockEditReply = vi.fn<[content: string], Promise<void>>();
+	const mockReplyPrivately = vi.fn<TextInputCommandContext['replyPrivately']>();
+	const mockEditReply = vi.fn<TextInputCommandContext['editReply']>();
 
 	let context: TextInputCommandContext;
 	let originalAdministrators: string | undefined;

@@ -9,7 +9,7 @@ import { error as mockLoggerError } from '../logger.js';
 import { prepareForLongRunningTasksFactory as factory } from './prepareForLongRunningTasks.js';
 
 describe('prepareForLongRunningTasks', () => {
-	const mockInteractionDeferReply = vi.fn();
+	const mockInteractionDeferReply = vi.fn<RepliableInteraction['deferReply']>();
 
 	const interaction = {
 		deferReply: mockInteractionDeferReply,

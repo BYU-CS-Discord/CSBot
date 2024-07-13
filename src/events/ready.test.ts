@@ -2,7 +2,7 @@ import type { Mock } from 'vitest';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
 // Create a mocked client to track 'setActivity' calls and provide basic info
-const mockSetActivity = vi.fn();
+const mockSetActivity = vi.fn<NonNullable<Client['user']>['setActivity']>();
 const MockClient = vi.hoisted(() => {
 	return class {
 		user = {
@@ -26,12 +26,12 @@ vi.mock('discord.js', async () => {
 });
 
 // Re-import Client (which is now MockedClient) so we can use it
-import { Client } from 'discord.js';
+import { Client, ClientPresence } from 'discord.js';
 const client = new Client({ intents: [] });
 
 // Mock parseArgs so we can control what the args are
-import type { Args } from '../helpers/parseArgs.js';
-const mockParseArgs = vi.hoisted(() => vi.fn<[], Args>());
+import type { parseArgs } from '../helpers/parseArgs.js';
+const mockParseArgs = vi.hoisted(() => vi.fn<typeof parseArgs>());
 vi.mock('../helpers/parseArgs', () => ({ parseArgs: mockParseArgs }));
 
 // Mock deployCommands so we can track it
@@ -64,7 +64,7 @@ describe('once(ready)', () => {
 		});
 		mockDeployCommands.mockResolvedValue(undefined);
 		mockRevokeCommands.mockResolvedValue(undefined);
-		mockSetActivity.mockReturnValue({});
+		mockSetActivity.mockReturnValue({} as ClientPresence);
 	});
 
 	afterEach(() => {

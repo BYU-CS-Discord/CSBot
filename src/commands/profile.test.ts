@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
-import type { GuildMember, ImageURLOptions, User, UserResolvable } from 'discord.js';
+import type { GuildMember, User } from 'discord.js';
 import { DiscordAPIError, EmbedBuilder, userMention } from 'discord.js';
 
 import { DiscordErrorCode } from '../helpers/DiscordErrorCode.js';
@@ -9,14 +9,14 @@ import { profile } from './profile.js';
 vi.mock('../logger.js');
 
 describe('profile', () => {
-	const mockReply = vi.fn<[content: unknown], Promise<void>>();
-	const mockReplyPrivately = vi.fn<[content: string], Promise<void>>();
-	const mockGetUser = vi.fn<[name: string, required?: boolean | undefined], User | null>();
-	const mockGuildMembersFetch = vi.fn<[options: UserResolvable], Promise<GuildMember>>();
-	const mockAvatarURL = vi.fn<[options?: ImageURLOptions | undefined], string | null>();
+	const mockReply = vi.fn<TextInputCommandContext['reply']>();
+	const mockReplyPrivately = vi.fn<TextInputCommandContext['replyPrivately']>();
+	const mockGetUser = vi.fn<TextInputCommandContext['options']['getUser']>();
+	const mockGuildMembersFetch = vi.fn<TextInputCommandContext['guild']['members']['fetch']>();
+	const mockAvatarURL = vi.fn<User['avatarURL']>();
 
 	const testAvatar = 'https://example.com/avatars/1234567890/abcdef1234567890.png';
-	let context: unknown;
+	let context: TextInputCommandContext;
 	let user: User;
 	let otherUser: User;
 	let botUser: User;

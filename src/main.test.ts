@@ -2,8 +2,8 @@ import type { Mock } from 'vitest';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
 // Create a mocked client to track constructor and 'login' calls
-const mockConstructClient = vi.fn();
-const mockLogin = vi.fn();
+const mockConstructClient = vi.fn<(...args: ReadonlyArray<unknown>) => void>();
+const mockLogin = vi.fn<Client['login']>();
 
 const MockClient = vi.hoisted(() => {
 	return class {
@@ -31,10 +31,7 @@ process.env['DISCORD_TOKEN'] = mockToken;
 // Mock the event handler index so we can track it
 vi.mock('./events/index.js');
 import { registerEventHandlers } from './events/index.js';
-const mockRegisterEventHandlers = registerEventHandlers as Mock<
-	Parameters<typeof registerEventHandlers>,
-	ReturnType<typeof registerEventHandlers>
->;
+const mockRegisterEventHandlers = registerEventHandlers as Mock<typeof registerEventHandlers>;
 
 // Mock the logger to track output
 vi.mock('./logger.js');
@@ -42,6 +39,7 @@ import { error as mockLoggerError } from './logger.js';
 
 // Import the code to test
 import { _main } from './main.js';
+import { Client } from 'discord.js';
 
 // A basic error to test with
 const loginError = new Error('Failed to log in. This is a test.');

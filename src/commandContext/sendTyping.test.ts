@@ -10,12 +10,12 @@ vi.mock('../logger.js');
 import { sendTypingFactory as factory } from './sendTyping.js';
 
 describe('typing indicator', () => {
-	let mockSendTyping: Mock<[], void>;
+	let mockSendTyping: Mock<NonNullable<RepliableInteraction['channel']>['sendTyping']>;
 	let interaction: RepliableInteraction;
 	let sendTyping: () => void;
 
 	beforeEach(() => {
-		mockSendTyping = vi.fn<[], undefined>();
+		mockSendTyping = vi.fn<NonNullable<RepliableInteraction['channel']>['sendTyping']>();
 		interaction = {
 			channel: {
 				sendTyping: mockSendTyping,

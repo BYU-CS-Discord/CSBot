@@ -4,7 +4,7 @@ import { letterButtons } from '../evilHangman/hangmanLetterButtons.js';
 import { UserMessageError } from '../helpers/UserMessageError.js';
 
 describe('hangmanMoreButton', () => {
-	const mockUpdate = vi.fn();
+	const mockUpdate = vi.fn<ButtonContext['interaction']['update']>();
 	const beforeInfo = 'Remaining Guesses: 3\nWord: ---\nLetters Guessed: a';
 	const message = {
 		embeds: [

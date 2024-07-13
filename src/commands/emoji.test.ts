@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
-import type { GuildEmoji, ImageURLOptions } from 'discord.js';
+import type { GuildEmoji } from 'discord.js';
 import { EmbedBuilder } from 'discord.js';
 
 import { emoji } from './emoji.js';
@@ -8,10 +8,9 @@ import { emoji } from './emoji.js';
 vi.mock('../logger.js');
 
 describe('profile', () => {
-	const mockReply = vi.fn<[content: unknown], Promise<void>>();
-	const mockEmojiName = vi.fn<[], string | undefined>();
-	const mockEmojiURL = vi.fn<[options?: ImageURLOptions | undefined], string | null>();
-	const mockShouldRespondEphemeral = vi.fn<[], boolean | null>();
+	const mockReply = vi.fn<TextInputCommandContext['reply']>();
+	const mockEmojiName = vi.fn<TextInputCommandContext['options']['getString']>();
+	const mockShouldRespondEphemeral = vi.fn<TextInputCommandContext['options']['getBoolean']>();
 
 	const testEmojiURL = 'https://example.com/emojis/1234567890/abcdef1234567890.png';
 
@@ -38,7 +37,6 @@ describe('profile', () => {
 		} as unknown as TextInputCommandContext;
 
 		mockEmojiName.mockReturnValue('existing emoji');
-		mockEmojiURL.mockReturnValue(testEmojiURL);
 		mockShouldRespondEphemeral.mockReturnValue(true);
 	});
 

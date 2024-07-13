@@ -1,8 +1,8 @@
 import type { Mock } from 'vitest';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
-import type { Client } from 'discord.js';
-import { SlashCommandBuilder } from 'discord.js';
+import type { Client, Guild, OAuth2Guild } from 'discord.js';
+import { Collection, SlashCommandBuilder } from 'discord.js';
 
 // Mock the logger so nothing is printed
 vi.mock('../../logger.js');
@@ -19,9 +19,9 @@ const mockRevokeCommands = revokeCommands as Mock;
 import { deployCommands } from './deployCommands.js';
 
 describe('Command deployments', () => {
-	const mockApplicationCommandsSet = vi.fn();
-	const mockGuildCommandsSet = vi.fn();
-	const mockFetchOauthGuilds = vi.fn();
+	const mockApplicationCommandsSet = vi.fn<NonNullable<Client['application']>['commands']['set']>();
+	const mockGuildCommandsSet = vi.fn<Guild['commands']['set']>();
+	const mockFetchOauthGuilds = vi.fn<Client['guilds']['fetch']>();
 
 	const mockClient = {
 		application: {
@@ -36,19 +36,18 @@ describe('Command deployments', () => {
 
 	beforeEach(() => {
 		mockRevokeCommands.mockResolvedValue(undefined);
-		mockApplicationCommandsSet.mockResolvedValue(undefined);
-		mockGuildCommandsSet.mockImplementation(values => Promise.resolve(values));
-		mockFetchOauthGuilds.mockResolvedValue([
-			{
-				fetch: (): Promise<unknown> =>
+		mockGuildCommandsSet.mockImplementation(() => Promise.resolve(new Collection()));
+		mockFetchOauthGuilds.mockResolvedValue(
+			new Collection<string, OAuth2Guild>().set('test-guild1', {
+				fetch: (): Promise<Guild> =>
 					Promise.resolve({
 						id: 'test-guild1',
 						commands: {
 							set: mockGuildCommandsSet,
 						},
-					}),
-			},
-		]);
+					} as unknown as Guild),
+			} as OAuth2Guild)
+		);
 		const mockCommands: NonEmptyArray<Command> = [
 			{
 				info: new SlashCommandBuilder().setName('test1').setDescription(' '),

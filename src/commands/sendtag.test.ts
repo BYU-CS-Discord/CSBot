@@ -5,8 +5,8 @@ import type { AutocompleteInteraction } from 'discord.js';
 import { sendtag } from './sendtag.js';
 
 describe('sendtag', () => {
-	const mockReply = vi.fn<[content: string], Promise<void>>();
-	const mockGetString = vi.fn<[name: string, required: true], string>();
+	const mockReply = vi.fn<GuildedCommandContext['reply']>();
+	const mockGetString = vi.fn<GuildedCommandContext['options']['getString']>();
 
 	let context: GuildedCommandContext;
 
