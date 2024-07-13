@@ -1,9 +1,7 @@
 import js from '@eslint/js';
 import stylistic from '@stylistic/eslint-plugin';
 // eslint-disable-next-line import/no-unresolved
-import tsParser from '@typescript-eslint/parser';
-// eslint-disable-next-line import/no-unresolved
-import typescript from '@typescript-eslint/eslint-plugin';
+import typescript from 'typescript-eslint';
 import deprecation from 'eslint-plugin-deprecation';
 import fileProgress from 'eslint-plugin-file-progress';
 import import_ from 'eslint-plugin-import';
@@ -112,19 +110,20 @@ export default [
 	{
 		files: ['**/*.{m,c,}ts{x,}'],
 		plugins: {
-			'@typescript-eslint': typescript,
+			'@typescript-eslint': typescript.plugin,
 			deprecation: deprecation,
 		},
 		languageOptions: {
-			parser: tsParser,
+			parser: typescript.parser,
 			parserOptions: {
 				project: './tsconfig.eslint.json',
 			},
 		},
 		rules: {
 			// Recommended
-			...typescript.configs['strict-type-checked'].rules,
-			...typescript.configs['stylistic-type-checked'].rules,
+			...typescript.configs.eslintRecommended.rules,
+			...typescript.configs.strictTypeChecked[2].rules,
+			...typescript.configs.stylisticTypeChecked[2].rules,
 			...deprecation.configs.recommended.rules,
 
 			// Overrides
@@ -132,6 +131,7 @@ export default [
 			'@typescript-eslint/no-confusing-void-expression': 0,
 			'@typescript-eslint/no-inferrable-types': 0, // we like to be extra explicit with types sometimes
 			'@typescript-eslint/no-invalid-void-type': ['error', { allowAsThisParameter: true }],
+			'@typescript-eslint/restrict-template-expressions': 0, // FIXME Lots of errors - fix later
 			'import/namespace': 0, // FIXME false positives in test files
 			'import/no-unresolved': 0, // handled by TypeScript
 			'no-redeclare': 0, // handled by TypeScript

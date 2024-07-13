@@ -15,11 +15,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Node version to 20 LTS
 - Tests to use `vitest` instead of `jest`
-- TypeScript build settings to be simplified and and follow `@typescript-eslint` standards
+- TypeScript build settings to be simplified and and follow `typescript-eslint` standards
 - ESLint config to use new flat configuration
 - ESLint config to use new stylistic packages
 - Package lockfile to version 3
-- "Fix Twitter Links" to support alternative x.com links
+- "Fix Twitter Links" to support alternative [x.com](https://x.com) links
 - GitHub workflows to be revamped
 - Project to use ESM instead of CommonJS
 - `package.json` to be sorted using `npx sort-package-json`
