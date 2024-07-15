@@ -8,9 +8,9 @@ import { messageReactionAdd } from './messageReactionAdd.js';
 vi.mock('../logger.js');
 
 describe('Reaction duplication', () => {
-	const mockResendReact = vi.fn<[], Promise<unknown>>();
+	const mockResendReact = vi.fn<MessageReaction['react']>();
 
-	let mockRandom: MockInstance<[], number>;
+	let mockRandom: MockInstance<typeof Math.random>;
 	let mockReaction: MessageReaction;
 	let mockSender: User;
 

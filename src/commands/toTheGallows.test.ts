@@ -1,6 +1,4 @@
-import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
-
-import type { EmbedBuilder, MessageReplyOptions } from 'discord.js';
+import { afterEach, assert, beforeEach, describe, expect, test, vi } from 'vitest';
 
 import { toTheGallows } from './toTheGallows.js';
 
@@ -15,8 +13,8 @@ vi.mock('../constants/meta.js', async () => {
 });
 
 describe('toTheGallows', () => {
-	const mockReply = vi.fn<[MessageReplyOptions]>();
-	const mockGetInteger = vi.fn<[name: string], number | null>();
+	const mockReply = vi.fn<TextInputCommandContext['reply']>();
+	const mockGetInteger = vi.fn<TextInputCommandContext['options']['getInteger']>();
 	let context: TextInputCommandContext;
 
 	beforeEach(() => {
@@ -38,10 +36,13 @@ describe('toTheGallows', () => {
 		await expect(toTheGallows.execute(context)).resolves.toBeUndefined();
 
 		expect(mockReply).toHaveBeenCalledOnce();
-		const response = mockReply.mock.calls.at(0)?.[0];
-		expect(response?.embeds?.length).toEqual(1);
-		expect(response?.embeds?.at(0)).toBeTypeOf('object');
-		expect(response?.components?.length).toEqual(5);
+		const response = mockReply.mock.calls.at(0)?.at(0);
+		if (!response || typeof response === 'string' || !('embeds' in response)) {
+			assert.fail('Did not reply to interactions with embeds');
+		}
+		expect(response.embeds.length).toEqual(1);
+		expect(response.embeds.at(0)).toBeTypeOf('object');
+		expect(response.components?.length).toEqual(5);
 	});
 
 	test('specifying length and number of guesses always puts the game into the same state', async () => {
@@ -51,9 +52,13 @@ describe('toTheGallows', () => {
 		expect(mockReply).toHaveBeenCalledOnce();
 
 		const response = mockReply.mock.calls.at(0)?.at(0);
-		expect(response?.embeds?.length).toEqual(1);
-		const embed = response?.embeds?.at(0) as EmbedBuilder | undefined;
-		expect(embed?.data).toMatchSnapshot();
-		expect(response?.components?.length).toEqual(5);
+		if (!response || typeof response === 'string' || !('embeds' in response)) {
+			assert.fail('Did not reply to interactions with embeds');
+		}
+		expect(response.embeds.length).toEqual(1);
+		const embed = response.embeds.at(0);
+		const embedData = 'toJSON' in embed ? embed.toJSON() : embed;
+		expect(embedData).toMatchSnapshot();
+		expect(response.components?.length).toEqual(5);
 	});
 });

@@ -14,7 +14,7 @@ vi.mock('../constants/meta.js', async () => {
 import { help } from './help.js';
 
 describe('help', () => {
-	const mockReply = vi.fn();
+	const mockReply = vi.fn<TextInputCommandContext['reply']>();
 	let context: TextInputCommandContext;
 
 	beforeEach(() => {

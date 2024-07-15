@@ -1,8 +1,8 @@
 import { describe, expect, test, vi } from 'vitest';
 
 // Create a mocked client to track 'on' and 'once' calls
-const mockOn = vi.fn();
-const mockOnce = vi.fn();
+const mockOn = vi.fn<Client['on']>();
+const mockOnce = vi.fn<Client['once']>();
 const MockClient = vi.hoisted(() => {
 	return class {
 		on = mockOn;

@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
-import type { Client } from 'discord.js';
+import type { Client, Guild, OAuth2Guild } from 'discord.js';
+import { Collection } from 'discord.js';
 
 // Mock the logger so nothing is printed
 vi.mock('../../logger.js');
@@ -8,9 +9,9 @@ vi.mock('../../logger.js');
 import { revokeCommands } from './revokeCommands.js';
 
 describe('Command revocations', () => {
-	const mockApplicationCommandsSet = vi.fn();
-	const mockGuildCommandsSet = vi.fn();
-	const mockFetchOauthGuilds = vi.fn();
+	const mockApplicationCommandsSet = vi.fn<NonNullable<Client['application']>['commands']['set']>();
+	const mockGuildCommandsSet = vi.fn<Guild['commands']['set']>();
+	const mockFetchOauthGuilds = vi.fn<Client['guilds']['fetch']>();
 
 	const mockClient = {
 		application: {
@@ -24,28 +25,28 @@ describe('Command revocations', () => {
 	} as unknown as Client;
 
 	beforeEach(() => {
-		mockApplicationCommandsSet.mockResolvedValue(undefined);
-		mockGuildCommandsSet.mockImplementation(vals => Promise.resolve(vals));
-		mockFetchOauthGuilds.mockResolvedValue([
-			{
-				fetch: (): Promise<unknown> =>
-					Promise.resolve({
-						id: 'test-guild1',
-						commands: {
-							set: mockGuildCommandsSet,
-						},
-					}),
-			},
-			{
-				fetch: (): Promise<unknown> =>
-					Promise.resolve({
-						id: 'test-guild2',
-						commands: {
-							set: mockGuildCommandsSet,
-						},
-					}),
-			},
-		]);
+		mockGuildCommandsSet.mockImplementation(() => Promise.resolve(new Collection()));
+		mockFetchOauthGuilds.mockResolvedValue(
+			new Collection<string, OAuth2Guild>()
+				.set('test-guild1', {
+					fetch: () =>
+						Promise.resolve({
+							id: 'test-guild1',
+							commands: {
+								set: mockGuildCommandsSet,
+							},
+						} as unknown as Guild),
+				} as OAuth2Guild)
+				.set('test-guild2', {
+					fetch: () =>
+						Promise.resolve({
+							id: 'test-guild2',
+							commands: {
+								set: mockGuildCommandsSet,
+							},
+						} as unknown as Guild),
+				} as OAuth2Guild)
+		);
 	});
 
 	afterEach(() => {

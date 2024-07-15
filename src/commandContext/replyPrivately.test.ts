@@ -15,9 +15,9 @@ import { replyPrivatelyFactory as factory } from './replyPrivately.js';
 
 describe('ephemeral and DM replies', () => {
 	mockSendDM.mockResolvedValue(true);
-	const mockInteractionReply = vi.fn();
-	const mockInteractionEditReply = vi.fn();
-	const mockInteractionFollowUp = vi.fn();
+	const mockInteractionReply = vi.fn<RepliableInteraction['reply']>();
+	const mockInteractionEditReply = vi.fn<RepliableInteraction['editReply']>();
+	const mockInteractionFollowUp = vi.fn<RepliableInteraction['followUp']>();
 
 	let interaction: RepliableInteraction;
 	let replyPrivately: CommandContext['replyPrivately'];

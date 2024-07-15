@@ -1,11 +1,9 @@
-import { beforeEach, describe, expect, test, vi } from 'vitest';
-
-import type { MessageReplyOptions } from 'discord.js';
+import { assert, beforeEach, describe, expect, test, vi } from 'vitest';
 
 import { hangmanLessButton } from './hangmanLessButton.js';
 
 describe('hangmanLessButton', () => {
-	const mockUpdate = vi.fn<[MessageReplyOptions]>();
+	const mockUpdate = vi.fn<ButtonContext['interaction']['update']>();
 	const message = {
 		embeds: [
 			{
@@ -31,8 +29,11 @@ describe('hangmanLessButton', () => {
 
 		expect(mockUpdate).toHaveBeenCalledOnce();
 		const response = mockUpdate.mock.calls.at(0)?.at(0);
-		expect(response?.embeds?.length).toEqual(1);
-		expect(response?.embeds?.at(0)).toBeTypeOf('object');
-		expect(response?.components?.length).toEqual(5);
+		if (!response || typeof response === 'string' || !('embeds' in response)) {
+			assert.fail('Did not update interaction with embeds');
+		}
+		expect(response.embeds.length).toEqual(1);
+		expect(response.embeds.at(0)).toBeTypeOf('object');
+		expect(response.components?.length).toEqual(5);
 	});
 });

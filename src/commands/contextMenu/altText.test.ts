@@ -6,7 +6,7 @@ import { Collection } from 'discord.js';
 import { altText } from './altText.js';
 
 describe('Get Alt Text', () => {
-	const mockReplyPrivately = vi.fn();
+	const mockReplyPrivately = vi.fn<MessageContextMenuCommandContext['replyPrivately']>();
 	let context: MessageContextMenuCommandContext;
 	let mockAttachments: Collection<string, Attachment>;
 

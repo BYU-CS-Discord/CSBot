@@ -1,16 +1,12 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
 import type {
-	ApplicationCommandOptionChoiceData,
 	AutocompleteInteraction,
 	CommandInteraction,
-	GuildMember,
 	Interaction,
-	Message,
 	ButtonInteraction,
 	MessageContextMenuCommandInteraction,
 	TextBasedChannel,
-	User,
 	UserContextMenuCommandInteraction,
 } from 'discord.js';
 import {
@@ -30,7 +26,7 @@ vi.mock('../commands/index.js', () => ({
 }));
 
 // Create two mock commands to track handler behavior
-const mockGlobalExecute = vi.fn();
+const mockGlobalExecute = vi.fn<ChatInputCommand['execute']>();
 const mockGlobalCommand: ChatInputCommand = {
 	info: new SlashCommandBuilder() //
 		.setName('global-test')
@@ -40,7 +36,7 @@ const mockGlobalCommand: ChatInputCommand = {
 };
 mockAllCommands.set(mockGlobalCommand.info.name, mockGlobalCommand);
 
-const mockGlobalAutocomplete = vi.fn();
+const mockGlobalAutocomplete = vi.fn<ChatInputCommand['execute']>();
 const mockGlobalAutocompleteCommand: ChatInputCommand = {
 	info: new SlashCommandBuilder() //
 		.setName('global-autocomplete-test')
@@ -98,7 +94,7 @@ const mockErrorUserContextMenuCommand: UserContextMenuCommand = {
 };
 mockAllCommands.set(mockErrorUserContextMenuCommand.info.name, mockErrorUserContextMenuCommand);
 
-const mockGuildedExecute = vi.fn();
+const mockGuildedExecute = vi.fn<ChatInputCommand['execute']>();
 const mockGuildedCommand: ChatInputCommand = {
 	info: new SlashCommandBuilder() //
 		.setName('guilded-test')
@@ -177,7 +173,7 @@ const selfUid = 'self-1234';
 const otherUid = 'other-1234';
 const channelId = 'the-channel-1234';
 
-const mockGuildMembersFetch = vi.fn();
+const mockGuildMembersFetch = vi.fn<NonNullable<Interaction['guild']>['members']['fetch']>();
 
 // Helper function to create Interactions
 // Reduces code duplication
@@ -228,9 +224,9 @@ describe('on(interactionCreate)', () => {
 	describe('commands', () => {
 		test('logs interaction errors', async () => {
 			const interaction = defaultInteraction();
-			interaction.isCommand = (): boolean => {
+			interaction.isCommand = ((): boolean => {
 				throw interactionError;
-			};
+			}) as Interaction['isCommand'];
 
 			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 			expect(mockLoggerError).toHaveBeenCalledWith(
@@ -241,7 +237,7 @@ describe('on(interactionCreate)', () => {
 
 		test("does nothing if the interaction isn't a supported interaction type", async () => {
 			const interaction = defaultInteraction();
-			interaction.isCommand = (): boolean => false;
+			interaction.isCommand = ((): boolean => false) as Interaction['isCommand'];
 
 			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 			expect(mockGlobalExecute).not.toHaveBeenCalled();
@@ -264,8 +260,8 @@ describe('on(interactionCreate)', () => {
 		});
 
 		test('does nothing if the command is not found', async () => {
-			const interaction = defaultInteraction();
-			(interaction as CommandInteraction).commandName = 'nop';
+			const interaction = defaultInteraction() as CommandInteraction;
+			interaction.commandName = 'nop';
 
 			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 			expect(mockGlobalExecute).not.toHaveBeenCalled();
@@ -279,58 +275,43 @@ describe('on(interactionCreate)', () => {
 		});
 
 		test('calls the `execute` method of a global command from DMs', async () => {
-			let interaction = defaultInteraction();
-			interaction.inCachedGuild = (): boolean => false;
-			interaction.inGuild = (): boolean => false;
-			interaction.member = null;
-
-			const channel = {
-				type: ChannelType.DM,
-			} as unknown as TextBasedChannel;
-
-			const guild = null;
-
-			// Overwrite 'read-only' parameters of Interaction
-			interaction = {
-				...interaction,
-				guild: guild,
-				channel: channel,
-			} as unknown as Interaction;
+			const interaction = {
+				...defaultInteraction(),
+				inCachedGuild: (): boolean => false,
+				inGuild: (): boolean => false,
+				guild: null,
+				channel: {
+					type: ChannelType.DM,
+				},
+				member: null,
+			};
 
 			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 			expect(mockGlobalExecute).toHaveBeenCalledOnce();
 		});
 
 		test('calls the `execute` method of a guilded command from a guild', async () => {
-			const interaction = defaultInteraction();
-			(interaction as CommandInteraction).commandName = mockGuildedCommand.info.name;
+			const interaction = defaultInteraction() as CommandInteraction;
+			interaction.commandName = mockGuildedCommand.info.name;
 
 			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 			expect(mockGuildedExecute).toHaveBeenCalledOnce();
 		});
 
 		test('tells the user off when they try to execute a guilded command from DMs', async () => {
-			let interaction = defaultInteraction();
-			(interaction as CommandInteraction).commandName = mockGuildedCommand.info.name;
-			interaction.inCachedGuild = (): boolean => false;
-			interaction.inGuild = (): boolean => false;
-			interaction.member = null;
-
-			const channel = {
-				type: ChannelType.DM,
-			} as unknown as TextBasedChannel;
-
-			const guild = null;
-
-			// Overwrite 'read-only' parameters of Interaction
-			interaction = {
-				...interaction,
-				guild: guild,
-				channel: channel,
-			} as unknown as Interaction;
-
-			const mockInteractionReply = vi.fn();
-			(interaction as CommandInteraction).reply = mockInteractionReply;
+			const mockInteractionReply = vi.fn<CommandInteraction['reply']>();
+			const interaction = {
+				...defaultInteraction(),
+				commandName: mockGuildedCommand.info.name,
+				inCachedGuild: (): boolean => false,
+				inGuild: (): boolean => false,
+				member: null,
+				guild: null,
+				channel: {
+					type: ChannelType.DM,
+				},
+				reply: mockInteractionReply,
+			};
 
 			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 			expect(mockGuildedExecute).not.toHaveBeenCalled();
@@ -341,33 +322,36 @@ describe('on(interactionCreate)', () => {
 		});
 
 		test('sends an error embed message when global command throws an error', async () => {
-			const interaction = defaultInteraction();
-			(interaction as CommandInteraction).commandName = mockErrorGlobalCommand.info.name;
-
-			const mockInteractionReply = vi.fn();
-			(interaction as CommandInteraction).reply = mockInteractionReply;
+			const mockInteractionReply = vi.fn<CommandInteraction['reply']>();
+			const interaction = {
+				...defaultInteraction(),
+				commandName: mockErrorGlobalCommand.info.name,
+				reply: mockInteractionReply,
+			};
 
 			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 			expect(mockInteractionReply).toHaveBeenCalledOnce();
 		});
 
 		test('sends an error embed message when guilded command throws an error', async () => {
-			const interaction = defaultInteraction();
-			(interaction as CommandInteraction).commandName = mockErrorGuildedCommand.info.name;
-
-			const mockInteractionReply = vi.fn();
-			(interaction as CommandInteraction).reply = mockInteractionReply;
+			const mockInteractionReply = vi.fn<CommandInteraction['reply']>();
+			const interaction = {
+				...defaultInteraction(),
+				commandName: mockErrorGuildedCommand.info.name,
+				reply: mockInteractionReply,
+			};
 
 			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 			expect(mockInteractionReply).toHaveBeenCalledOnce();
 		});
 
 		test('sends an error embed with a specified message when global command throws an error', async () => {
-			const interaction = defaultInteraction();
-			(interaction as CommandInteraction).commandName = mockUserMessageErrorGlobalCommand.info.name;
-
-			const mockInteractionReply = vi.fn();
-			(interaction as CommandInteraction).reply = mockInteractionReply;
+			const mockInteractionReply = vi.fn<CommandInteraction['reply']>();
+			const interaction = {
+				...defaultInteraction(),
+				commandName: mockErrorGlobalCommand.info.name,
+				reply: mockInteractionReply,
+			};
 
 			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 			expect(mockInteractionReply).toHaveBeenCalledOnce();
@@ -380,38 +364,39 @@ describe('on(interactionCreate)', () => {
 		});
 
 		test('sends an error embed message when message context menu command throws an error', async () => {
-			const interaction = defaultInteraction();
-			(interaction as CommandInteraction).commandName =
-				mockErrorMessageContextMenuCommand.info.name;
-
-			const mockInteractionReply = vi.fn();
-			(interaction as CommandInteraction).reply = mockInteractionReply;
-			(interaction as CommandInteraction).isMessageContextMenuCommand = (): boolean => true;
+			const mockInteractionReply = vi.fn<CommandInteraction['reply']>();
+			const interaction = {
+				...defaultInteraction(),
+				commandName: mockErrorMessageContextMenuCommand.info.name,
+				reply: mockInteractionReply,
+				isMessageContextMenuCommand: (): boolean => true,
+			};
 
 			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 			expect(mockInteractionReply).toHaveBeenCalledOnce();
 		});
 
 		test('sends an error embed message when user context menu command throws an error', async () => {
-			const interaction = defaultInteraction();
-			(interaction as CommandInteraction).commandName = mockErrorUserContextMenuCommand.info.name;
-
-			const mockInteractionReply = vi.fn();
-			(interaction as CommandInteraction).reply = mockInteractionReply;
-			(interaction as CommandInteraction).isUserContextMenuCommand = (): boolean => true;
+			const mockInteractionReply = vi.fn<CommandInteraction['reply']>();
+			const interaction = {
+				...defaultInteraction(),
+				commandName: mockErrorUserContextMenuCommand.info.name,
+				reply: mockInteractionReply,
+				isUserContextMenuCommand: (): boolean => true,
+			};
 
 			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 			expect(mockInteractionReply).toHaveBeenCalledOnce();
 		});
 
 		test('edits the reply with an error embed message when a command that has already been replied to throws an error', async () => {
-			const interaction = defaultInteraction();
-			(interaction as CommandInteraction).commandName = mockErrorGlobalCommand.info.name;
-
-			(interaction as CommandInteraction).replied = true;
-
-			const mockInteractionEditReply = vi.fn();
-			(interaction as CommandInteraction).editReply = mockInteractionEditReply;
+			const mockInteractionEditReply = vi.fn<CommandInteraction['editReply']>();
+			const interaction = {
+				...defaultInteraction(),
+				commandName: mockErrorGlobalCommand.info.name,
+				replied: true,
+				editReply: mockInteractionEditReply,
+			};
 
 			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 			expect(mockInteractionEditReply).toHaveBeenCalledOnce();
@@ -419,36 +404,31 @@ describe('on(interactionCreate)', () => {
 
 		// This is for 100% code coverage
 		test('fetches the channel when a command comes from a partial DM channel', async () => {
-			let interaction = defaultInteraction();
-			interaction.inCachedGuild = (): boolean => false;
-			interaction.inGuild = (): boolean => false;
-			interaction.member = null;
-
-			const mockChannelFetch = vi.fn();
-			const channel = {
-				type: ChannelType.DM,
-				partial: true,
-				fetch: mockChannelFetch,
-			} as unknown as TextBasedChannel;
-
-			const guild = null;
-
-			// Overwrite 'read-only' parameters of Interaction
-			interaction = {
-				...interaction,
-				guild: guild,
-				channel: channel,
-			} as unknown as Interaction;
+			const mockChannelFetch = vi.fn<TextBasedChannel['fetch']>();
+			const interaction = {
+				...defaultInteraction(),
+				inCachedGuild: (): boolean => false,
+				inGuild: (): boolean => false,
+				member: null,
+				guild: null,
+				channel: {
+					type: ChannelType.DM,
+					partial: true,
+					fetch: mockChannelFetch,
+				},
+			};
 
 			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 			expect(mockChannelFetch).toHaveBeenCalledOnce();
 		});
 
 		test('throws an error if the command is a context menu user command and the interaction is not', async () => {
-			const interaction = defaultInteraction() as UserContextMenuCommandInteraction;
-			interaction.isUserContextMenuCommand = (): boolean => false;
-			interaction.isMessageContextMenuCommand = (): boolean => false;
-			interaction.commandName = mockUserContextMenuCommand.info.name;
+			const interaction = {
+				...defaultInteraction(),
+				isUserContextMenuCommand: (): boolean => false,
+				isMessageContextMenuCommand: (): boolean => false,
+				commandName: mockUserContextMenuCommand.info.name,
+			} as UserContextMenuCommandInteraction;
 
 			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 			expect(mockGlobalExecute).not.toHaveBeenCalled();
@@ -459,10 +439,12 @@ describe('on(interactionCreate)', () => {
 		});
 
 		test('throws an error if the command is a context menu message command and the interaction is not', async () => {
-			const interaction = defaultInteraction() as UserContextMenuCommandInteraction;
-			interaction.isUserContextMenuCommand = (): boolean => false;
-			interaction.isMessageContextMenuCommand = (): boolean => false;
-			interaction.commandName = mockMessageContextMenuCommand.info.name;
+			const interaction = {
+				...defaultInteraction(),
+				isUserContextMenuCommand: (): boolean => false,
+				isMessageContextMenuCommand: (): boolean => false,
+				commandName: mockMessageContextMenuCommand.info.name,
+			} as UserContextMenuCommandInteraction;
 
 			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 			expect(mockGlobalExecute).not.toHaveBeenCalled();
@@ -473,13 +455,15 @@ describe('on(interactionCreate)', () => {
 		});
 
 		test('fetches the member target from a partial guild member', async () => {
-			const interaction = defaultInteraction() as UserContextMenuCommandInteraction;
-			interaction.isChatInputCommand = (): boolean => false;
-			interaction.isUserContextMenuCommand = (): boolean => true;
-			interaction.inCachedGuild = (): boolean => false;
-			interaction.targetId = 'target-user-1234';
-			(interaction as { targetUser: Pick<User, 'id'> }).targetUser = { id: 'target-user-1234' };
-			interaction.commandName = mockUserContextMenuCommand.info.name;
+			const interaction = {
+				...defaultInteraction(),
+				isChatInputCommand: (): boolean => false,
+				isUserContextMenuCommand: (): boolean => true,
+				inCachedGuild: (): boolean => false,
+				targetId: 'target-user-1234',
+				targetUser: { id: 'target-user-1234' },
+				commandName: mockUserContextMenuCommand.info.name,
+			} as UserContextMenuCommandInteraction;
 
 			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 			expect(mockGuildMembersFetch).toHaveBeenCalledWith(interaction.targetId);
@@ -487,16 +471,16 @@ describe('on(interactionCreate)', () => {
 		});
 
 		test('executes the user context menu command', async () => {
-			const interaction = defaultInteraction() as UserContextMenuCommandInteraction;
-			interaction.isChatInputCommand = (): boolean => false;
-			interaction.isUserContextMenuCommand = (): boolean => true;
-			interaction.isMessageContextMenuCommand = (): boolean => false;
-			interaction.targetId = 'target-user-1234';
-			(interaction as { targetUser: Pick<User, 'id'> }).targetUser = { id: 'target-user-1234' };
-			(interaction as { targetMember: Pick<GuildMember, 'id'> }).targetMember = {
-				id: 'target-member-1234',
-			};
-			interaction.commandName = mockUserContextMenuCommand.info.name;
+			const interaction = {
+				...defaultInteraction(),
+				isChatInputCommand: (): boolean => false,
+				isUserContextMenuCommand: (): boolean => true,
+				isMessageContextMenuCommand: (): boolean => false,
+				targetId: 'target-user-1234',
+				targetUser: { id: 'target-user-1234' },
+				targetMember: { id: 'target-member-1234' },
+				commandName: mockUserContextMenuCommand.info.name,
+			} as UserContextMenuCommandInteraction;
 
 			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 			expect(mockGuildMembersFetch).not.toHaveBeenCalled();
@@ -504,15 +488,15 @@ describe('on(interactionCreate)', () => {
 		});
 
 		test('executes the message context menu command', async () => {
-			const interaction = defaultInteraction() as MessageContextMenuCommandInteraction;
-			interaction.isChatInputCommand = (): boolean => false;
-			interaction.isUserContextMenuCommand = (): boolean => false;
-			interaction.isMessageContextMenuCommand = (): boolean => true;
-			interaction.targetId = 'target-msg-1234';
-			(interaction as { targetMessage: Pick<Message, 'id'> }).targetMessage = {
-				id: interaction.targetId,
-			};
-			interaction.commandName = mockMessageContextMenuCommand.info.name;
+			const interaction = {
+				...defaultInteraction(),
+				isChatInputCommand: (): boolean => false,
+				isUserContextMenuCommand: (): boolean => false,
+				isMessageContextMenuCommand: (): boolean => true,
+				targetId: 'target-msg-1234',
+				targetMessage: { id: 'target-msg-1234' },
+				commandName: mockMessageContextMenuCommand.info.name,
+			} as MessageContextMenuCommandInteraction;
 
 			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 			expect(mockGlobalExecute).toHaveBeenCalledOnce();
@@ -520,21 +504,20 @@ describe('on(interactionCreate)', () => {
 	});
 
 	describe('autocomplete', () => {
-		const mockRespond = vi.fn<
-			[options: Array<ApplicationCommandOptionChoiceData>],
-			Promise<void>
-		>();
+		const mockRespond = vi.fn<AutocompleteInteraction['respond']>();
 
 		let interaction: AutocompleteInteraction;
 
 		beforeEach(() => {
-			interaction = defaultInteraction() as AutocompleteInteraction;
-			interaction.isAutocomplete = (): boolean => true;
-			interaction.isCommand = (): boolean => false;
-			interaction.isButton = (): boolean => false;
-			interaction.isChatInputCommand = (): boolean => false;
-			interaction.respond = mockRespond;
-			interaction.commandName = mockGlobalAutocompleteCommand.info.name;
+			interaction = {
+				...defaultInteraction(),
+				isCommand: (): boolean => false,
+				isButton: (): boolean => false,
+				isChatInputCommand: (): boolean => false,
+				isAutocomplete: (): boolean => true,
+				respond: mockRespond,
+				commandName: mockGlobalAutocompleteCommand.info.name,
+			} as unknown as AutocompleteInteraction;
 		});
 
 		test('returns zero results if the command is not found', async () => {
@@ -621,33 +604,38 @@ describe('on(interactionCreate)', () => {
 	});
 
 	test('does nothing if the button is not found', async () => {
-		const interaction = defaultInteraction() as ButtonInteraction;
-		interaction.customId = 'nop';
-		interaction.isCommand = (): boolean => false;
-		interaction.isButton = (): boolean => true;
+		const interaction = {
+			...defaultInteraction(),
+			customId: 'nop',
+			isCommand: (): boolean => false,
+			isButton: (): boolean => true,
+		} as ButtonInteraction;
 
 		await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 		expect(mockGlobalExecute).not.toHaveBeenCalled();
 	});
 
 	test('executes the button', async () => {
-		const interaction = defaultInteraction() as ButtonInteraction;
-		interaction.isCommand = (): boolean => false;
-		interaction.isButton = (): boolean => true;
-		interaction.customId = mockButton.customId;
+		const interaction = {
+			...defaultInteraction(),
+			customId: mockButton.customId,
+			isCommand: (): boolean => false,
+			isButton: (): boolean => true,
+		} as ButtonInteraction;
 
 		await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 		expect(mockGlobalExecute).toHaveBeenCalledOnce();
 	});
 
 	test('sends an error embed message when button throws an error', async () => {
-		const interaction = defaultInteraction() as ButtonInteraction;
-		interaction.isCommand = (): boolean => false;
-		interaction.isButton = (): boolean => true;
-		interaction.customId = mockErrorButton.customId;
-
-		const mockInteractionReply = vi.fn();
-		interaction.reply = mockInteractionReply;
+		const mockInteractionReply = vi.fn<ButtonInteraction['reply']>();
+		const interaction = {
+			...defaultInteraction(),
+			customId: mockErrorButton.customId,
+			isCommand: (): boolean => false,
+			isButton: (): boolean => true,
+			reply: mockInteractionReply,
+		};
 
 		await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
 		expect(mockInteractionReply).toHaveBeenCalledOnce();
