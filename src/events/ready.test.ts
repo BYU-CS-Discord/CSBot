@@ -26,7 +26,8 @@ vi.mock('discord.js', async () => {
 });
 
 // Re-import Client (which is now MockedClient) so we can use it
-import { Client, ClientPresence } from 'discord.js';
+import type { ClientPresence } from 'discord.js';
+import { Client } from 'discord.js';
 const client = new Client({ intents: [] });
 
 // Mock parseArgs so we can control what the args are

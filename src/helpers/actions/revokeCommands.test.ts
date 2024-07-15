@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
-import { Collection, OAuth2Guild, type Client, type Guild } from 'discord.js';
+import type { Client, Guild, OAuth2Guild } from 'discord.js';
+import { Collection } from 'discord.js';
 
 // Mock the logger so nothing is printed
 vi.mock('../../logger.js');

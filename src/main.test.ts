@@ -1,6 +1,8 @@
 import type { Mock } from 'vitest';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
+import type { Client } from 'discord.js';
+
 // Create a mocked client to track constructor and 'login' calls
 const mockConstructClient = vi.fn<(...args: ReadonlyArray<unknown>) => void>();
 const mockLogin = vi.fn<Client['login']>();
@@ -39,7 +41,6 @@ import { error as mockLoggerError } from './logger.js';
 
 // Import the code to test
 import { _main } from './main.js';
-import { Client } from 'discord.js';
 
 // A basic error to test with
 const loginError = new Error('Failed to log in. This is a test.');
