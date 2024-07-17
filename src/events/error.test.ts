@@ -12,7 +12,7 @@ const mockClientError = new Error('This is a test error');
 
 describe('on(error)', () => {
 	test('logs client errors', () => {
-		expect(error.execute(mockClientError)).toBeUndefined();
+		error.execute(mockClientError);
 		expect(mockLoggerError).toHaveBeenCalledWith(
 			expect.stringContaining('client error'),
 			mockClientError

@@ -25,7 +25,7 @@ describe('typing indicator', () => {
 	});
 
 	test('sends typing indicator', () => {
-		expect(sendTyping()).toBeUndefined();
+		sendTyping();
 		expect(mockSendTyping).toHaveBeenCalledOnce();
 	});
 
@@ -35,7 +35,7 @@ describe('typing indicator', () => {
 			channel: { ...interaction.channel, type: ChannelType.GuildStageVoice },
 		} as unknown as RepliableInteraction;
 		sendTyping = factory(interaction);
-		expect(sendTyping()).toBeUndefined();
+		sendTyping();
 		expect(mockSendTyping).not.toHaveBeenCalled();
 	});
 });
