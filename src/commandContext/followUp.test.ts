@@ -5,7 +5,7 @@ import type { Message, RepliableInteraction } from 'discord.js';
 
 vi.mock('../helpers/actions/messages/replyToMessage.js');
 import { sendMessageInChannel } from '../helpers/actions/messages/replyToMessage.js';
-const mockSendMessageInChannel = sendMessageInChannel as Mock;
+const mockSendMessageInChannel = sendMessageInChannel as Mock<typeof sendMessageInChannel>;
 
 // Mock the logger to track output
 vi.mock('../logger.js');

@@ -1,4 +1,3 @@
-import type { Mock } from 'vitest';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
 import type { RepliableInteraction } from 'discord.js';
@@ -10,12 +9,12 @@ vi.mock('../logger.js');
 import { sendTypingFactory as factory } from './sendTyping.js';
 
 describe('typing indicator', () => {
-	let mockSendTyping: Mock<NonNullable<RepliableInteraction['channel']>['sendTyping']>;
+	const mockSendTyping = vi.fn<NonNullable<RepliableInteraction['channel']>['sendTyping']>();
 	let interaction: RepliableInteraction;
 	let sendTyping: () => void;
 
 	beforeEach(() => {
-		mockSendTyping = vi.fn<NonNullable<RepliableInteraction['channel']>['sendTyping']>();
+		mockSendTyping.mockClear();
 		interaction = {
 			channel: {
 				sendTyping: mockSendTyping,

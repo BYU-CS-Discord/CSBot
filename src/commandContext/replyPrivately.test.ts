@@ -5,7 +5,7 @@ import type { RepliableInteraction } from 'discord.js';
 
 vi.mock('../helpers/actions/messages/replyToMessage.js');
 import { replyWithPrivateMessage } from '../helpers/actions/messages/replyToMessage.js';
-const mockSendDM = replyWithPrivateMessage as Mock;
+const mockSendDM = replyWithPrivateMessage as Mock<typeof replyWithPrivateMessage>;
 
 // Mock the logger to track output
 vi.mock('../logger.js');

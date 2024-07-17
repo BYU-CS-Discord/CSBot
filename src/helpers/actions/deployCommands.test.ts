@@ -14,7 +14,7 @@ vi.mock('../../commands/index.js', () => ({
 
 vi.mock('./revokeCommands.js');
 import { revokeCommands } from './revokeCommands.js';
-const mockRevokeCommands = revokeCommands as Mock;
+const mockRevokeCommands = revokeCommands as Mock<typeof revokeCommands>;
 
 import { deployCommands } from './deployCommands.js';
 
