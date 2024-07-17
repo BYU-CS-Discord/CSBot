@@ -84,7 +84,7 @@ describe('xkcd', () => {
 	test('Returning an embed with the latest comic when no number is given', async () => {
 		mockedFetchJson.mockResolvedValue(latestGood);
 		mockGetInteger.mockReturnValueOnce(null);
-		await expect(xkcd.execute(context)).resolves.toBeUndefined();
+		await xkcd.execute(context);
 		expect(mockSendTyping).toHaveBeenCalledOnce();
 		expect(mockReply).toHaveBeenCalledOnce();
 		expect(mockReply).toHaveBeenCalledWith({
@@ -97,7 +97,7 @@ describe('xkcd', () => {
 		mockedFetchJson.mockResolvedValue(chosen);
 		mockedFetchJson.mockResolvedValueOnce(latestGood);
 		mockGetInteger.mockReturnValueOnce(chosen.num);
-		await expect(xkcd.execute(context)).resolves.toBeUndefined();
+		await xkcd.execute(context);
 		expect(mockSendTyping).toHaveBeenCalledOnce();
 		expect(mockReply).toHaveBeenCalledOnce();
 		expect(mockReply).toHaveBeenCalledWith({

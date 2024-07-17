@@ -50,7 +50,7 @@ describe('profile', () => {
 	});
 
 	test('Returns the url of the target emoji ephemerally', async () => {
-		await expect(emoji.execute(context)).resolves.toBeUndefined();
+		await emoji.execute(context);
 
 		expect(mockReply).toHaveBeenCalledOnce();
 		expect(mockReply).toHaveBeenCalledWith({
@@ -67,7 +67,7 @@ describe('profile', () => {
 
 	test('Returns the url of the target emoji ephemerally with undefined respondEphemeral', async () => {
 		mockShouldRespondEphemeral.mockReturnValue(null);
-		await expect(emoji.execute(context)).resolves.toBeUndefined();
+		await emoji.execute(context);
 
 		expect(mockReply).toHaveBeenCalledOnce();
 		expect(mockReply).toHaveBeenCalledWith({
@@ -84,7 +84,7 @@ describe('profile', () => {
 
 	test('Returns the url of the target emoji non-ephemerally', async () => {
 		mockShouldRespondEphemeral.mockReturnValue(false);
-		await expect(emoji.execute(context)).resolves.toBeUndefined();
+		await emoji.execute(context);
 
 		expect(mockReply).toHaveBeenCalledOnce();
 		expect(mockReply).toHaveBeenCalledWith({

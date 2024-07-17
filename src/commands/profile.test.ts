@@ -129,7 +129,7 @@ describe('profile', () => {
 	});
 
 	test("Returns the url of the supplied user's profile picture", async () => {
-		await expect(profile.execute(context)).resolves.toBeUndefined();
+		await profile.execute(context);
 		expect(mockReplyPrivately).not.toHaveBeenCalled();
 		expect(mockReply).toHaveBeenCalledOnce();
 		expect(mockReply).toHaveBeenCalledWith({
@@ -162,7 +162,7 @@ describe('profile', () => {
 			}
 			mockGuildMembersFetch.mockResolvedValue(user as unknown as GuildMember);
 
-			await expect(profile.execute(context)).resolves.toBeUndefined();
+			await profile.execute(context);
 			expect(mockReplyPrivately).not.toHaveBeenCalled();
 			expect(mockReply).toHaveBeenCalledOnce();
 			expect(mockReply).toHaveBeenCalledWith({
@@ -187,7 +187,7 @@ describe('profile', () => {
 		mockGetUser.mockReturnValue(botUser);
 		mockGuildMembersFetch.mockResolvedValue(botUser as unknown as GuildMember);
 
-		await expect(profile.execute(context)).resolves.toBeUndefined();
+		await profile.execute(context);
 		expect(mockReplyPrivately).not.toHaveBeenCalled();
 		expect(mockReply).toHaveBeenCalledOnce();
 		expect(mockReply).toHaveBeenCalledWith({

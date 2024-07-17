@@ -28,7 +28,7 @@ describe('Talk Context Menu Command', () => {
 	// Because most of the functionality of the talk context menu is actually contained in the talk slash command,
 	// we don't actually have to test much.
 	test('Calls the talkMessage method of the talk slash command', async () => {
-		await expect(talk.execute(context)).resolves.toBeUndefined();
+		await talk.execute(context);
 		expect(speakMock).toHaveBeenCalledOnce();
 	});
 });

@@ -84,7 +84,7 @@ describe('stats', () => {
 		});
 
 		test('begins tracking a stat', async () => {
-			await expect(stats.execute(context)).resolves.toBeUndefined();
+			await stats.execute(context);
 			expect(mockCreate).toHaveBeenCalledOnce();
 			expect(mockCreate).toHaveBeenCalledWith({
 				data: {
@@ -121,7 +121,7 @@ describe('stats', () => {
 		});
 
 		test('score is added', async () => {
-			await expect(stats.execute(context)).resolves.toBeUndefined();
+			await stats.execute(context);
 
 			expect(mockUpdate).toHaveBeenCalledOnce();
 			expect(mockUpdate).toHaveBeenCalledWith({
@@ -153,7 +153,7 @@ describe('stats', () => {
 				} as unknown as Scoreboard,
 			]);
 
-			await expect(stats.execute(context)).resolves.toBeUndefined();
+			await stats.execute(context);
 			expect(mockReplyPrivately).toHaveBeenCalled();
 		});
 	});
@@ -169,7 +169,7 @@ describe('stats', () => {
 		});
 
 		test('stops tracking a stat', async () => {
-			await expect(stats.execute(context)).resolves.toBeUndefined();
+			await stats.execute(context);
 			expect(mockDelete).toHaveBeenCalledOnce();
 			expect(mockDelete).toHaveBeenCalledWith({
 				where: {
@@ -203,7 +203,7 @@ describe('stats', () => {
 		});
 
 		test('replies with a leaderboard', async () => {
-			await expect(stats.execute(context)).resolves.toBeUndefined();
+			await stats.execute(context);
 
 			expect(mockReply).toHaveBeenCalled();
 		});

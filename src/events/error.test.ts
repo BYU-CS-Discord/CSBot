@@ -11,8 +11,8 @@ import { error } from './error.js';
 const mockClientError = new Error('This is a test error');
 
 describe('on(error)', () => {
-	test('logs client errors', () => {
-		error.execute(mockClientError);
+	test('logs client errors', async () => {
+		await error.execute(mockClientError);
 		expect(mockLoggerError).toHaveBeenCalledWith(
 			expect.stringContaining('client error'),
 			mockClientError

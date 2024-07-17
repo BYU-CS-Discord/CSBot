@@ -25,7 +25,7 @@ describe('hangmanMoreButton', () => {
 	});
 
 	test('updates response to have second page of buttons', async () => {
-		await expect(hangmanMoreButton.execute(context)).resolves.toBeUndefined();
+		await hangmanMoreButton.execute(context);
 
 		expect(mockUpdate).toHaveBeenCalledOnce();
 		const response = mockUpdate.mock.calls.at(0)?.at(0);

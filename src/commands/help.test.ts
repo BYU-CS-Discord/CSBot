@@ -26,7 +26,7 @@ describe('help', () => {
 	test('presents an ephemeral embed with general info', async () => {
 		context = { ...context, source: 'dm' } as unknown as TextInputCommandContext;
 
-		await expect(help.execute(context)).resolves.toBeUndefined();
+		await help.execute(context);
 		expect(mockReply).toHaveBeenCalledOnce();
 		expect(mockReply).toHaveBeenCalledWith({
 			embeds: [expect.objectContaining({})],

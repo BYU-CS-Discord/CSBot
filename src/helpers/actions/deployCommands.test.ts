@@ -114,7 +114,7 @@ describe('Command deployments', () => {
 
 	test('does no deployments if there are no commands to deploy', async () => {
 		mockAllCommands.clear();
-		await expect(deployCommands(mockClient)).resolves.toBeUndefined();
+		await deployCommands(mockClient);
 		expect(mockRevokeCommands).toHaveBeenCalledOnce();
 		expect(mockApplicationCommandsSet).not.toHaveBeenCalled();
 		expect(mockGuildCommandsSet).not.toHaveBeenCalled();
@@ -132,14 +132,14 @@ describe('Command deployments', () => {
 
 	test('continues deployments if global commands fail to deploy', async () => {
 		mockApplicationCommandsSet.mockRejectedValueOnce(new Error('This is a test'));
-		await expect(deployCommands(mockClient)).resolves.toBeUndefined();
+		await deployCommands(mockClient);
 		expect(mockApplicationCommandsSet).toHaveBeenCalledOnce();
 		expect(mockGuildCommandsSet).toHaveBeenCalledOnce();
 	});
 
 	test('continues deployments if guild-bound commands fail to deploy', async () => {
 		mockGuildCommandsSet.mockRejectedValueOnce(new Error('This is a test'));
-		await expect(deployCommands(mockClient)).resolves.toBeUndefined();
+		await deployCommands(mockClient);
 		expect(mockApplicationCommandsSet).toHaveBeenCalledOnce();
 		expect(mockGuildCommandsSet).toHaveBeenCalledOnce();
 	});

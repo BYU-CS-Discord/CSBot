@@ -59,7 +59,7 @@ describe('Fix Twitter Links', () => {
 		async ({ content, result }: { content: string; result: string }) => {
 			context.targetMessage.content = content;
 
-			await expect(fxtwitter.execute(context)).resolves.toBeUndefined();
+			await fxtwitter.execute(context);
 			expect(mockReplyPrivately).toHaveBeenCalledOnce();
 			expect(mockReplyPrivately).toHaveBeenCalledWith(expect.stringContaining(result));
 		}

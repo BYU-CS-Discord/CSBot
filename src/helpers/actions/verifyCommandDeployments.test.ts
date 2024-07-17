@@ -100,7 +100,7 @@ describe('Verify command deployments', () => {
 
 	describe('Guild commands', () => {
 		test('does nothing if the actual commands match expectations', async () => {
-			await expect(verifyCommandDeployments(mockClient)).resolves.toBeUndefined();
+			await verifyCommandDeployments(mockClient);
 			expect(mockFetchGuildCommands).toHaveBeenCalledOnce();
 			expect(mockLoggerWarn).not.toHaveBeenCalled();
 		});
@@ -108,7 +108,7 @@ describe('Verify command deployments', () => {
 		test('logs a warning if the number of commands differs', async () => {
 			mockAllCommands.delete('arthur');
 
-			await expect(verifyCommandDeployments(mockClient)).resolves.toBeUndefined();
+			await verifyCommandDeployments(mockClient);
 			expect(mockFetchGuildCommands).toHaveBeenCalledOnce();
 			expect(mockLoggerWarn).toHaveBeenCalledWith(
 				expect.stringContaining("commands in guild 'guild1' differ")
@@ -124,7 +124,7 @@ describe('Verify command deployments', () => {
 				execute: () => undefined,
 			});
 
-			await expect(verifyCommandDeployments(mockClient)).resolves.toBeUndefined();
+			await verifyCommandDeployments(mockClient);
 			expect(mockFetchGuildCommands).toHaveBeenCalledOnce();
 			expect(mockLoggerWarn).toHaveBeenCalledWith(
 				expect.stringContaining("commands in guild 'guild1' differ")
@@ -137,7 +137,7 @@ describe('Verify command deployments', () => {
 
 	describe('Global commands', () => {
 		test('does nothing if the actual commands match expectations', async () => {
-			await expect(verifyCommandDeployments(mockClient)).resolves.toBeUndefined();
+			await verifyCommandDeployments(mockClient);
 			expect(mockFetchApplicationCommands).toHaveBeenCalledOnce();
 			expect(mockLoggerWarn).not.toHaveBeenCalled();
 		});
@@ -145,7 +145,7 @@ describe('Verify command deployments', () => {
 		test('logs a warning if the number of commands differs', async () => {
 			mockAllCommands.delete('zaphod');
 
-			await expect(verifyCommandDeployments(mockClient)).resolves.toBeUndefined();
+			await verifyCommandDeployments(mockClient);
 			expect(mockFetchApplicationCommands).toHaveBeenCalledOnce();
 			expect(mockLoggerWarn).toHaveBeenCalledWith(expect.stringContaining('commands differ'));
 			expect(mockLoggerWarn).toHaveBeenCalledWith(expect.stringContaining('Expected 1'));
@@ -159,7 +159,7 @@ describe('Verify command deployments', () => {
 				execute: () => undefined,
 			});
 
-			await expect(verifyCommandDeployments(mockClient)).resolves.toBeUndefined();
+			await verifyCommandDeployments(mockClient);
 			expect(mockFetchApplicationCommands).toHaveBeenCalledOnce();
 			expect(mockLoggerWarn).toHaveBeenCalledWith(expect.stringContaining('commands differ'));
 			expect(mockLoggerWarn).toHaveBeenCalledWith(

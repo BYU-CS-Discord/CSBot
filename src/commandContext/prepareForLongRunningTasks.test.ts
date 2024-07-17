@@ -22,7 +22,7 @@ describe('prepareForLongRunningTasks', () => {
 	});
 
 	test('requests interaction deferrment', async () => {
-		await expect(prepareForLongRunningTasks()).resolves.toBeUndefined();
+		await prepareForLongRunningTasks();
 
 		expect(mockLoggerError).not.toHaveBeenCalled();
 		expect(mockInteractionDeferReply).toHaveBeenCalledOnce();
@@ -30,7 +30,7 @@ describe('prepareForLongRunningTasks', () => {
 	});
 
 	test('requests ephemeral interaction deferrment', async () => {
-		await expect(prepareForLongRunningTasks(true)).resolves.toBeUndefined();
+		await prepareForLongRunningTasks(true);
 
 		expect(mockLoggerError).not.toHaveBeenCalled();
 		expect(mockInteractionDeferReply).toHaveBeenCalledOnce();
@@ -40,7 +40,7 @@ describe('prepareForLongRunningTasks', () => {
 	test('logs an error if deferrment fails', async () => {
 		const testError = new Error('this is a test');
 		mockInteractionDeferReply.mockRejectedValueOnce(testError);
-		await expect(prepareForLongRunningTasks()).resolves.toBeUndefined();
+		await prepareForLongRunningTasks();
 
 		expect(mockInteractionDeferReply).toHaveBeenCalledOnce();
 		expect(mockLoggerError).toHaveBeenCalledOnce();

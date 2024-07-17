@@ -19,12 +19,12 @@ describe('public reply', () => {
 	const reply = factory(interaction);
 
 	test('sends public reply to interaction with text', async () => {
-		await expect(reply('yo')).resolves.toBeUndefined();
+		await reply('yo');
 		expect(mockInteractionReply).toHaveBeenCalledWith('yo');
 	});
 
 	test('sends an ephemeral reply to the interaction', async () => {
-		await expect(reply({ content: 'yo in secret', ephemeral: true })).resolves.toBeUndefined();
+		await reply({ content: 'yo in secret', ephemeral: true });
 		expect(mockLoggerError).not.toHaveBeenCalled();
 		expect(mockInteractionReply).toHaveBeenCalledWith({
 			content: 'yo in secret',
@@ -33,13 +33,13 @@ describe('public reply', () => {
 	});
 
 	test('trusts that discord.js defaults to mentioning the other user', async () => {
-		await expect(reply({ content: 'yo', shouldMention: true })).resolves.toBeUndefined();
+		await reply({ content: 'yo', shouldMention: true });
 		expect(mockLoggerError).not.toHaveBeenCalled();
 		expect(mockInteractionReply).toHaveBeenCalledWith({ content: 'yo' });
 	});
 
 	test('requests that the other user not be mentioned', async () => {
-		await expect(reply({ content: 'yo', shouldMention: false })).resolves.toBeUndefined();
+		await reply({ content: 'yo', shouldMention: false });
 		expect(mockLoggerError).not.toHaveBeenCalled();
 		expect(mockInteractionReply).toHaveBeenCalledWith({
 			content: 'yo',
@@ -50,7 +50,7 @@ describe('public reply', () => {
 	test('logs an error if the interaction fails', async () => {
 		const testError = new Error('This is a test');
 		mockInteractionReply.mockRejectedValueOnce(testError);
-		await expect(reply('yo')).resolves.toBeUndefined();
+		await reply('yo');
 		expect(mockLoggerError).toHaveBeenCalledOnce();
 		expect(mockLoggerError).toHaveBeenCalledWith(
 			expect.stringContaining('reply to interaction'),

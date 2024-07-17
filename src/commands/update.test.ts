@@ -59,7 +59,7 @@ describe('update', () => {
 	});
 
 	test('can be used by Bot admins', async () => {
-		await expect(update.execute(context)).resolves.toBeUndefined();
+		await update.execute(context);
 		expect(mockExec).toHaveBeenCalledTimes(2);
 		expect(mockReplyPrivately).toHaveBeenCalledOnce();
 		expect(mockEditReply).toHaveBeenCalledOnce();

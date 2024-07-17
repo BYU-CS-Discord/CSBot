@@ -24,7 +24,7 @@ describe('isCasDown', () => {
 
 	test('Returns the success embed when CAS returns a good response', async () => {
 		fetchMock.mockResolvedValueOnce(goodResponse);
-		await expect(isCasDown.execute({ reply: mockReply })).resolves.toBeUndefined();
+		await isCasDown.execute({ reply: mockReply });
 		expect(mockReply).toHaveBeenCalledOnce();
 		const response = mockReply.mock.calls.at(0)?.at(0);
 		if (!response || typeof response === 'string' || !response.embeds) {
@@ -38,7 +38,7 @@ describe('isCasDown', () => {
 
 	test('Returns the failure embed when CAS returns a bad response', async () => {
 		fetchMock.mockResolvedValueOnce(badResponse);
-		await expect(isCasDown.execute({ reply: mockReply })).resolves.toBeUndefined();
+		await isCasDown.execute({ reply: mockReply });
 		expect(mockReply).toHaveBeenCalledOnce();
 		const response = mockReply.mock.calls.at(0)?.at(0);
 		if (!response || typeof response === 'string' || !response.embeds) {
