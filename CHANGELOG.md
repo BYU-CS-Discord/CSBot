@@ -29,7 +29,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - All package vulnerabilities
-- `superstruct` types not working with ESM by adding a type-shim
 
 ## [0.12.1] - 2023-10-05
 
