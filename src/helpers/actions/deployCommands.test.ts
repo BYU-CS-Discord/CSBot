@@ -35,7 +35,6 @@ describe('Command deployments', () => {
 	} as unknown as Client;
 
 	beforeEach(() => {
-		mockRevokeCommands.mockResolvedValue(undefined);
 		mockGuildCommandsSet.mockImplementation(() => Promise.resolve(new Collection()));
 		mockFetchOauthGuilds.mockResolvedValue(
 			new Collection<string, OAuth2Guild>().set('test-guild1', {

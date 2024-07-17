@@ -47,7 +47,6 @@ const loginError = new Error('Failed to log in. This is a test.');
 
 describe('main', () => {
 	beforeEach(() => {
-		mockConstructClient.mockReturnValue(undefined);
 		mockLogin.mockResolvedValue(mockToken);
 	});
 

@@ -25,7 +25,6 @@ describe('sendtag', () => {
 			},
 		} as unknown as GuildedCommandContext;
 
-		mockReply.mockResolvedValue(undefined);
 		mockGetString.mockReturnValue('');
 	});
 

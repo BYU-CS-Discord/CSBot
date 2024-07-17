@@ -48,7 +48,9 @@ const mockRevokeCommands = revokeCommands as Mock<typeof revokeCommands>;
 // Mock verifyCommandDeployments so we can track it
 vi.mock('../helpers/actions/verifyCommandDeployments.js');
 import { verifyCommandDeployments } from '../helpers/actions/verifyCommandDeployments.js';
-const mockVerifyCommandDeployments = verifyCommandDeployments as Mock<typeof verifyCommandDeployments>;
+const mockVerifyCommandDeployments = verifyCommandDeployments as Mock<
+	typeof verifyCommandDeployments
+>;
 
 // Mock the logger so nothing is printed
 vi.mock('../logger.js');
@@ -63,8 +65,6 @@ describe('once(ready)', () => {
 			deploy: false,
 			revoke: false,
 		});
-		mockDeployCommands.mockResolvedValue(undefined);
-		mockRevokeCommands.mockResolvedValue(undefined);
 		mockSetActivity.mockReturnValue({} as ClientPresence);
 	});
 
