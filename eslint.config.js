@@ -1,10 +1,12 @@
+// @ts-check
+
 import js from '@eslint/js';
 import stylistic from '@stylistic/eslint-plugin';
 // eslint-disable-next-line import/no-unresolved
 import typescript from 'typescript-eslint';
 import deprecation from 'eslint-plugin-deprecation';
 import fileProgress from 'eslint-plugin-file-progress';
-import import_ from 'eslint-plugin-import';
+import * as import_ from 'eslint-plugin-import';
 import prettierRecommended from 'eslint-plugin-prettier/recommended';
 import promise from 'eslint-plugin-promise';
 import unicorn from 'eslint-plugin-unicorn';
