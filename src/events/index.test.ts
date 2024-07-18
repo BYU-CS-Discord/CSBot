@@ -5,8 +5,8 @@ const mockOn = vi.fn<Client['on']>();
 const mockOnce = vi.fn<Client['once']>();
 const MockClient = vi.hoisted(() => {
 	return class {
-		on = mockOn;
-		once = mockOnce;
+		public on = mockOn;
+		public once = mockOnce;
 	};
 });
 

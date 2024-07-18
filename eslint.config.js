@@ -129,10 +129,7 @@ export default [
 			'no-undef': 0, // handled by TypeScript
 
 			// Additions
-			'@typescript-eslint/explicit-member-accessibility': [
-				'error',
-				{ accessibility: 'no-public', overrides: { properties: 'off' } },
-			],
+			'@typescript-eslint/explicit-member-accessibility': 'error',
 			'@typescript-eslint/explicit-function-return-type': [
 				'error',
 				{ allowConciseArrowFunctionExpressionsStartingWithVoid: true },

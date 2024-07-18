@@ -8,7 +8,7 @@ export class EvilHangmanGame {
 	private guessesRemaining: number;
 	private readonly guessesSoFar: Set<string>;
 
-	constructor(word: string, guessesRemaining: number, guessesSoFar: Set<string>) {
+	public constructor(word: string, guessesRemaining: number, guessesSoFar: Set<string>) {
 		this.word = word;
 		this.guessesRemaining = guessesRemaining;
 		this.guessesSoFar = guessesSoFar;
@@ -22,7 +22,7 @@ export class EvilHangmanGame {
 		this.removePossibleWords(Array.from(guessesSoFar));
 	}
 
-	static newGame(length: number | null, guesses: number | null): EvilHangmanGame {
+	public static newGame(length: number | null, guesses: number | null): EvilHangmanGame {
 		if (length === null) {
 			length = this.getRandomWordFromDictionary()?.length ?? 1;
 		}
@@ -44,7 +44,7 @@ export class EvilHangmanGame {
 		return allWords[Math.floor(Math.random() * allWords.length)];
 	}
 
-	checkGuess(guess: string): string | null {
+	public checkGuess(guess: string): string | null {
 		if (!isAlpha(guess)) {
 			return 'That guess is not a letter';
 		}
@@ -56,7 +56,7 @@ export class EvilHangmanGame {
 		return null;
 	}
 
-	makeGuess(guess: string): EvilHangmanDisplayInfo {
+	public makeGuess(guess: string): EvilHangmanDisplayInfo {
 		this.guessesSoFar.add(guess);
 		const bestForm = this.getBestForm(guess);
 		this.updateWord(bestForm);
@@ -64,7 +64,7 @@ export class EvilHangmanGame {
 		return this.getDisplayInfo();
 	}
 
-	getDisplayInfo(): EvilHangmanDisplayInfo {
+	public getDisplayInfo(): EvilHangmanDisplayInfo {
 		const winState = this.getWinState();
 		return {
 			word: this.word,
