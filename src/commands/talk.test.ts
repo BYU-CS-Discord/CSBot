@@ -54,13 +54,13 @@ describe('Talk Slash Command', () => {
 	});
 
 	test('Prepares for long-running tasks and resolves interaction', async () => {
-		await expect(talk.execute(context)).resolves.toBeUndefined();
+		await talk.execute(context);
 		expect(prepareForLongRunningTasksMock).toHaveBeenCalledOnce();
 		expect(replyMock).toHaveBeenCalledOnce();
 	});
 
 	test('Calls dectalk-tts module to generate wav buffer', async () => {
-		await expect(talk.execute(context)).resolves.toBeUndefined();
+		await talk.execute(context);
 		expect(dectalkMock).toHaveBeenCalledOnce();
 		expect(dectalkMock).toHaveBeenCalledWith(message);
 	});
@@ -69,7 +69,7 @@ describe('Talk Slash Command', () => {
 		const name = Speaker.Paul;
 		speakerMock.mockReturnValueOnce(name);
 
-		await expect(talk.execute(context)).resolves.toBeUndefined();
+		await talk.execute(context);
 		expect(dectalkMock).toHaveBeenCalledWith(`[:name ${name}] ${message}`);
 	});
 
@@ -78,7 +78,7 @@ describe('Talk Slash Command', () => {
 			...context,
 			channel: { type: ChannelType.GuildText },
 		} as unknown as TextInputCommandContext;
-		await expect(talk.execute(context)).resolves.toBeUndefined();
+		await talk.execute(context);
 		expect(replyMock).toHaveBeenCalledWith({
 			files: [
 				{
@@ -107,7 +107,7 @@ describe('Talk Slash Command', () => {
 	// 		...context,
 	// 		channel: { type: ChannelType.GuildVoice },
 	// 	} as unknown as TextInputCommandContext;
-	// 	await expect(talk.execute(context)).resolves.toBeUndefined();
+	// 	await talk.execute(context);
 	// 	expect(mockReply).toHaveBeenCalledWith({
 	// 		content: message,
 	// 	});

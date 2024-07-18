@@ -60,10 +60,9 @@ describe('allEvents', () => {
 			once: false,
 			execute: () => undefined,
 		};
-		expect(_add(fakeReadyEvent)).toBeUndefined();
-		expect(_add(fakeMessageEvent)).toBeUndefined();
-
-		expect(registerEventHandlers(client)).toBeUndefined();
+		_add(fakeReadyEvent);
+		_add(fakeMessageEvent);
+		registerEventHandlers(client);
 
 		expect(mockOnce).toHaveBeenCalledWith(fakeReadyEvent.name, fakeReadyEvent.execute);
 		expect(mockOn).toHaveBeenCalledWith(fakeMessageEvent.name, fakeMessageEvent.execute);

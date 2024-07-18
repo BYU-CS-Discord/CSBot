@@ -5,7 +5,7 @@ import type { RepliableInteraction } from 'discord.js';
 
 vi.mock('../helpers/actions/messages/replyToMessage.js');
 import { replyWithPrivateMessage } from '../helpers/actions/messages/replyToMessage.js';
-const mockSendDM = replyWithPrivateMessage as Mock;
+const mockSendDM = replyWithPrivateMessage as Mock<typeof replyWithPrivateMessage>;
 
 // Mock the logger to track output
 vi.mock('../logger.js');
@@ -39,7 +39,7 @@ describe('ephemeral and DM replies', () => {
 	});
 
 	test('sends an ephemeral reply to check DMs', async () => {
-		await expect(replyPrivately('yo DMs', true)).resolves.toBeUndefined();
+		await replyPrivately('yo DMs', true);
 		expect(mockInteractionReply).toHaveBeenCalledWith({
 			content: expect.stringContaining('Check your DMs') as string,
 			ephemeral: true,
@@ -50,7 +50,7 @@ describe('ephemeral and DM replies', () => {
 	test('logs an error if the initial ephemeral reply fails', async () => {
 		const testError = new Error('This is a test');
 		mockInteractionReply.mockRejectedValueOnce(testError);
-		await expect(replyPrivately('yo DMs', true)).resolves.toBeUndefined();
+		await replyPrivately('yo DMs', true);
 		expect(mockInteractionReply).toHaveBeenCalledWith({
 			content: expect.stringContaining('Check your DMs') as string,
 			ephemeral: true,
@@ -62,7 +62,7 @@ describe('ephemeral and DM replies', () => {
 
 	test('logs a notice if the user has DMs turned off', async () => {
 		mockSendDM.mockResolvedValueOnce(false);
-		await expect(replyPrivately('yo DMs', true)).resolves.toBeUndefined();
+		await replyPrivately('yo DMs', true);
 		expect(mockInteractionReply).toHaveBeenCalledWith({
 			content: expect.stringContaining('Check your DMs') as string,
 			ephemeral: true,
@@ -76,7 +76,7 @@ describe('ephemeral and DM replies', () => {
 		interaction = { ...interaction, deferred: true } as unknown as RepliableInteraction;
 		replyPrivately = factory(interaction);
 
-		await expect(replyPrivately('yo DMs', true)).resolves.toBeUndefined();
+		await replyPrivately('yo DMs', true);
 		expect(mockInteractionEditReply).toHaveBeenCalledWith(
 			expect.stringContaining('Check your DMs')
 		);
@@ -87,7 +87,7 @@ describe('ephemeral and DM replies', () => {
 		interaction = { ...interaction, deferred: true } as unknown as RepliableInteraction;
 		replyPrivately = factory(interaction);
 
-		await expect(replyPrivately({ content: 'yo DMs' }, true)).resolves.toBeUndefined();
+		await replyPrivately({ content: 'yo DMs' }, true);
 		expect(mockInteractionEditReply).toHaveBeenCalledWith(
 			expect.stringContaining('Check your DMs')
 		);
@@ -100,7 +100,7 @@ describe('ephemeral and DM replies', () => {
 		interaction = { ...interaction, deferred: true } as unknown as RepliableInteraction;
 		replyPrivately = factory(interaction);
 
-		await expect(replyPrivately({ content: 'yo' }, true)).resolves.toBeUndefined();
+		await replyPrivately({ content: 'yo' }, true);
 		expect(mockInteractionEditReply).toHaveBeenCalledWith(
 			expect.stringContaining('Check your DMs')
 		);
@@ -113,7 +113,7 @@ describe('ephemeral and DM replies', () => {
 		interaction = { ...interaction, deferred: true } as unknown as RepliableInteraction;
 		replyPrivately = factory(interaction);
 
-		await expect(replyPrivately('yo in secret')).resolves.toBeUndefined();
+		await replyPrivately('yo in secret');
 		expect(mockInteractionFollowUp).toHaveBeenCalledWith({
 			content: 'yo in secret',
 			ephemeral: true,
@@ -124,7 +124,7 @@ describe('ephemeral and DM replies', () => {
 		interaction = { ...interaction, deferred: true } as unknown as RepliableInteraction;
 		replyPrivately = factory(interaction);
 
-		await expect(replyPrivately({ content: 'yo object in secret' })).resolves.toBeUndefined();
+		await replyPrivately({ content: 'yo object in secret' });
 		expect(mockInteractionFollowUp).toHaveBeenCalledWith({
 			content: 'yo object in secret',
 			ephemeral: true,
@@ -137,7 +137,7 @@ describe('ephemeral and DM replies', () => {
 		interaction = { ...interaction, deferred: true } as unknown as RepliableInteraction;
 		replyPrivately = factory(interaction);
 
-		await expect(replyPrivately('yo in secret')).resolves.toBeUndefined();
+		await replyPrivately('yo in secret');
 		expect(mockInteractionFollowUp).toHaveBeenCalledWith({
 			content: 'yo in secret',
 			ephemeral: true,
@@ -152,7 +152,7 @@ describe('ephemeral and DM replies', () => {
 		interaction = { ...interaction, deferred: true } as unknown as RepliableInteraction;
 		replyPrivately = factory(interaction);
 
-		await expect(replyPrivately({ content: 'yo object in secret' })).resolves.toBeUndefined();
+		await replyPrivately({ content: 'yo object in secret' });
 		expect(mockInteractionFollowUp).toHaveBeenCalledWith({
 			content: 'yo object in secret',
 			ephemeral: true,

@@ -228,7 +228,7 @@ describe('on(interactionCreate)', () => {
 				throw interactionError;
 			}) as Interaction['isCommand'];
 
-			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+			await interactionCreate.execute(interaction);
 			expect(mockLoggerError).toHaveBeenCalledWith(
 				expect.stringContaining('handle interaction'),
 				interactionError
@@ -239,7 +239,7 @@ describe('on(interactionCreate)', () => {
 			const interaction = defaultInteraction();
 			interaction.isCommand = ((): boolean => false) as Interaction['isCommand'];
 
-			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+			await interactionCreate.execute(interaction);
 			expect(mockGlobalExecute).not.toHaveBeenCalled();
 		});
 
@@ -247,7 +247,7 @@ describe('on(interactionCreate)', () => {
 			const interaction = defaultInteraction();
 			interaction.user.bot = true;
 
-			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+			await interactionCreate.execute(interaction);
 			expect(mockGlobalExecute).not.toHaveBeenCalled();
 		});
 
@@ -255,7 +255,7 @@ describe('on(interactionCreate)', () => {
 			const interaction = defaultInteraction();
 			interaction.user.id = selfUid;
 
-			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+			await interactionCreate.execute(interaction);
 			expect(mockGlobalExecute).not.toHaveBeenCalled();
 		});
 
@@ -263,14 +263,14 @@ describe('on(interactionCreate)', () => {
 			const interaction = defaultInteraction() as CommandInteraction;
 			interaction.commandName = 'nop';
 
-			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+			await interactionCreate.execute(interaction);
 			expect(mockGlobalExecute).not.toHaveBeenCalled();
 		});
 
 		test('calls the `execute` method of a global command from a guild', async () => {
 			const interaction = defaultInteraction();
 
-			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+			await interactionCreate.execute(interaction);
 			expect(mockGlobalExecute).toHaveBeenCalledOnce();
 		});
 
@@ -286,7 +286,7 @@ describe('on(interactionCreate)', () => {
 				member: null,
 			};
 
-			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+			await interactionCreate.execute(interaction);
 			expect(mockGlobalExecute).toHaveBeenCalledOnce();
 		});
 
@@ -294,7 +294,7 @@ describe('on(interactionCreate)', () => {
 			const interaction = defaultInteraction() as CommandInteraction;
 			interaction.commandName = mockGuildedCommand.info.name;
 
-			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+			await interactionCreate.execute(interaction);
 			expect(mockGuildedExecute).toHaveBeenCalledOnce();
 		});
 
@@ -313,7 +313,7 @@ describe('on(interactionCreate)', () => {
 				reply: mockInteractionReply,
 			};
 
-			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+			await interactionCreate.execute(interaction);
 			expect(mockGuildedExecute).not.toHaveBeenCalled();
 			expect(mockInteractionReply).toHaveBeenCalledWith({
 				content: "Can't do that here",
@@ -329,7 +329,7 @@ describe('on(interactionCreate)', () => {
 				reply: mockInteractionReply,
 			};
 
-			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+			await interactionCreate.execute(interaction);
 			expect(mockInteractionReply).toHaveBeenCalledOnce();
 		});
 
@@ -341,7 +341,7 @@ describe('on(interactionCreate)', () => {
 				reply: mockInteractionReply,
 			};
 
-			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+			await interactionCreate.execute(interaction);
 			expect(mockInteractionReply).toHaveBeenCalledOnce();
 		});
 
@@ -353,7 +353,7 @@ describe('on(interactionCreate)', () => {
 				reply: mockInteractionReply,
 			};
 
-			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+			await interactionCreate.execute(interaction);
 			expect(mockInteractionReply).toHaveBeenCalledOnce();
 
 			const lastCall = mockInteractionReply.mock.lastCall as unknown as [
@@ -372,7 +372,7 @@ describe('on(interactionCreate)', () => {
 				isMessageContextMenuCommand: (): boolean => true,
 			};
 
-			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+			await interactionCreate.execute(interaction);
 			expect(mockInteractionReply).toHaveBeenCalledOnce();
 		});
 
@@ -385,7 +385,7 @@ describe('on(interactionCreate)', () => {
 				isUserContextMenuCommand: (): boolean => true,
 			};
 
-			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+			await interactionCreate.execute(interaction);
 			expect(mockInteractionReply).toHaveBeenCalledOnce();
 		});
 
@@ -398,7 +398,7 @@ describe('on(interactionCreate)', () => {
 				editReply: mockInteractionEditReply,
 			};
 
-			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+			await interactionCreate.execute(interaction);
 			expect(mockInteractionEditReply).toHaveBeenCalledOnce();
 		});
 
@@ -418,7 +418,7 @@ describe('on(interactionCreate)', () => {
 				},
 			};
 
-			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+			await interactionCreate.execute(interaction);
 			expect(mockChannelFetch).toHaveBeenCalledOnce();
 		});
 
@@ -430,7 +430,7 @@ describe('on(interactionCreate)', () => {
 				commandName: mockUserContextMenuCommand.info.name,
 			} as UserContextMenuCommandInteraction;
 
-			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+			await interactionCreate.execute(interaction);
 			expect(mockGlobalExecute).not.toHaveBeenCalled();
 			expect(mockLoggerError).toHaveBeenCalledWith(
 				expect.stringContaining('handle interaction'),
@@ -446,7 +446,7 @@ describe('on(interactionCreate)', () => {
 				commandName: mockMessageContextMenuCommand.info.name,
 			} as UserContextMenuCommandInteraction;
 
-			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+			await interactionCreate.execute(interaction);
 			expect(mockGlobalExecute).not.toHaveBeenCalled();
 			expect(mockLoggerError).toHaveBeenCalledWith(
 				expect.stringContaining('handle interaction'),
@@ -465,7 +465,7 @@ describe('on(interactionCreate)', () => {
 				commandName: mockUserContextMenuCommand.info.name,
 			} as UserContextMenuCommandInteraction;
 
-			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+			await interactionCreate.execute(interaction);
 			expect(mockGuildMembersFetch).toHaveBeenCalledWith(interaction.targetId);
 			expect(mockGlobalExecute).toHaveBeenCalledOnce();
 		});
@@ -482,7 +482,7 @@ describe('on(interactionCreate)', () => {
 				commandName: mockUserContextMenuCommand.info.name,
 			} as UserContextMenuCommandInteraction;
 
-			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+			await interactionCreate.execute(interaction);
 			expect(mockGuildMembersFetch).not.toHaveBeenCalled();
 			expect(mockGlobalExecute).toHaveBeenCalledOnce();
 		});
@@ -498,7 +498,7 @@ describe('on(interactionCreate)', () => {
 				commandName: mockMessageContextMenuCommand.info.name,
 			} as MessageContextMenuCommandInteraction;
 
-			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+			await interactionCreate.execute(interaction);
 			expect(mockGlobalExecute).toHaveBeenCalledOnce();
 		});
 	});
@@ -523,7 +523,7 @@ describe('on(interactionCreate)', () => {
 		test('returns zero results if the command is not found', async () => {
 			interaction.commandName = 'nop';
 
-			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+			await interactionCreate.execute(interaction);
 			expect(mockGlobalExecute).not.toHaveBeenCalled();
 			expect(mockGuildedExecute).not.toHaveBeenCalled();
 			expect(mockRespond).toHaveBeenCalledOnce();
@@ -534,7 +534,7 @@ describe('on(interactionCreate)', () => {
 		test('returns zero results if the command is a message context menu command', async () => {
 			interaction.commandName = mockMessageContextMenuCommand.info.name;
 
-			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+			await interactionCreate.execute(interaction);
 			expect(mockGlobalExecute).not.toHaveBeenCalled();
 			expect(mockGuildedExecute).not.toHaveBeenCalled();
 			expect(mockRespond).toHaveBeenCalledOnce();
@@ -545,7 +545,7 @@ describe('on(interactionCreate)', () => {
 		test('returns zero results if the command is a user context menu command', async () => {
 			interaction.commandName = mockUserContextMenuCommand.info.name;
 
-			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+			await interactionCreate.execute(interaction);
 			expect(mockGlobalExecute).not.toHaveBeenCalled();
 			expect(mockGuildedExecute).not.toHaveBeenCalled();
 			expect(mockRespond).toHaveBeenCalledOnce();
@@ -556,7 +556,7 @@ describe('on(interactionCreate)', () => {
 		test('returns zero results if the command has no autocomplete handler', async () => {
 			interaction.commandName = mockGlobalCommand.info.name;
 
-			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+			await interactionCreate.execute(interaction);
 			expect(mockGlobalExecute).not.toHaveBeenCalled();
 			expect(mockGuildedExecute).not.toHaveBeenCalled();
 			expect(mockRespond).toHaveBeenCalledOnce();
@@ -565,7 +565,7 @@ describe('on(interactionCreate)', () => {
 		});
 
 		test("responds with the command's autocomplete values", async () => {
-			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+			await interactionCreate.execute(interaction);
 			expect(mockGlobalExecute).not.toHaveBeenCalled();
 			expect(mockGuildedExecute).not.toHaveBeenCalled();
 			expect(mockRespond).toHaveBeenCalledOnce();
@@ -578,7 +578,7 @@ describe('on(interactionCreate)', () => {
 				throw new Error('test error');
 			});
 
-			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+			await interactionCreate.execute(interaction);
 			expect(mockGlobalExecute).not.toHaveBeenCalled();
 			expect(mockGuildedExecute).not.toHaveBeenCalled();
 			expect(mockRespond).toHaveBeenCalledOnce();
@@ -593,7 +593,7 @@ describe('on(interactionCreate)', () => {
 			});
 			mockRespond.mockRejectedValueOnce(new Error('test error about the error'));
 
-			await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+			await interactionCreate.execute(interaction);
 			expect(mockGlobalExecute).not.toHaveBeenCalled();
 			expect(mockGuildedExecute).not.toHaveBeenCalled();
 			expect(mockRespond).toHaveBeenCalledOnce();
@@ -611,7 +611,7 @@ describe('on(interactionCreate)', () => {
 			isButton: (): boolean => true,
 		} as ButtonInteraction;
 
-		await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+		await interactionCreate.execute(interaction);
 		expect(mockGlobalExecute).not.toHaveBeenCalled();
 	});
 
@@ -623,7 +623,7 @@ describe('on(interactionCreate)', () => {
 			isButton: (): boolean => true,
 		} as ButtonInteraction;
 
-		await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+		await interactionCreate.execute(interaction);
 		expect(mockGlobalExecute).toHaveBeenCalledOnce();
 	});
 
@@ -637,7 +637,7 @@ describe('on(interactionCreate)', () => {
 			reply: mockInteractionReply,
 		};
 
-		await expect(interactionCreate.execute(interaction)).resolves.toBeUndefined();
+		await interactionCreate.execute(interaction);
 		expect(mockInteractionReply).toHaveBeenCalledOnce();
 	});
 });

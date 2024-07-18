@@ -38,17 +38,19 @@ vi.mock('../helpers/parseArgs', () => ({ parseArgs: mockParseArgs }));
 // Mock deployCommands so we can track it
 vi.mock('../helpers/actions/deployCommands.js');
 import { deployCommands } from '../helpers/actions/deployCommands.js';
-const mockDeployCommands = deployCommands as Mock;
+const mockDeployCommands = deployCommands as Mock<typeof deployCommands>;
 
 // Mock revokeCommands so we can track it
 vi.mock('../helpers/actions/revokeCommands.js');
 import { revokeCommands } from '../helpers/actions/revokeCommands.js';
-const mockRevokeCommands = revokeCommands as Mock;
+const mockRevokeCommands = revokeCommands as Mock<typeof revokeCommands>;
 
 // Mock verifyCommandDeployments so we can track it
 vi.mock('../helpers/actions/verifyCommandDeployments.js');
 import { verifyCommandDeployments } from '../helpers/actions/verifyCommandDeployments.js';
-const mockVerifyCommandDeployments = verifyCommandDeployments as Mock;
+const mockVerifyCommandDeployments = verifyCommandDeployments as Mock<
+	typeof verifyCommandDeployments
+>;
 
 // Mock the logger so nothing is printed
 vi.mock('../logger.js');
@@ -63,8 +65,6 @@ describe('once(ready)', () => {
 			deploy: false,
 			revoke: false,
 		});
-		mockDeployCommands.mockResolvedValue(undefined);
-		mockRevokeCommands.mockResolvedValue(undefined);
 		mockSetActivity.mockReturnValue({} as ClientPresence);
 	});
 
@@ -77,7 +77,7 @@ describe('once(ready)', () => {
 			deploy: false,
 			revoke: false,
 		});
-		await expect(ready.execute(client)).resolves.toBeUndefined();
+		await ready.execute(client);
 		expect(mockDeployCommands).not.toHaveBeenCalled();
 		expect(mockRevokeCommands).not.toHaveBeenCalled();
 	});
@@ -87,7 +87,7 @@ describe('once(ready)', () => {
 			deploy: true,
 			revoke: false,
 		});
-		await expect(ready.execute(client)).resolves.toBeUndefined();
+		await ready.execute(client);
 		expect(mockDeployCommands).toHaveBeenCalledWith(client);
 		expect(mockRevokeCommands).not.toHaveBeenCalled();
 	});
@@ -97,7 +97,7 @@ describe('once(ready)', () => {
 			deploy: false,
 			revoke: true,
 		});
-		await expect(ready.execute(client)).resolves.toBeUndefined();
+		await ready.execute(client);
 		expect(mockDeployCommands).not.toHaveBeenCalled();
 		expect(mockRevokeCommands).toHaveBeenCalledWith(client);
 	});
@@ -107,18 +107,18 @@ describe('once(ready)', () => {
 			deploy: true,
 			revoke: true,
 		});
-		await expect(ready.execute(client)).resolves.toBeUndefined();
+		await ready.execute(client);
 		expect(mockDeployCommands).toHaveBeenCalledWith(client);
 		expect(mockRevokeCommands).not.toHaveBeenCalled();
 	});
 
 	test('verifies command deployments', async () => {
-		await expect(ready.execute(client)).resolves.toBeUndefined();
+		await ready.execute(client);
 		expect(mockVerifyCommandDeployments).toHaveBeenCalledWith(client);
 	});
 
 	test('sets user activity', async () => {
-		await expect(ready.execute(client)).resolves.toBeUndefined();
+		await ready.execute(client);
 		expect(mockSetActivity).toHaveBeenCalledOnce();
 	});
 });

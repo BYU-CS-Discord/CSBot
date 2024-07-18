@@ -54,12 +54,12 @@ describe('Command revocations', () => {
 	});
 
 	test('clears global commands', async () => {
-		await expect(revokeCommands(mockClient)).resolves.toBeUndefined();
+		await revokeCommands(mockClient);
 		expect(mockApplicationCommandsSet).toHaveBeenCalledOnce();
 	});
 
 	test('clears commands for each guild', async () => {
-		await expect(revokeCommands(mockClient)).resolves.toBeUndefined();
+		await revokeCommands(mockClient);
 		expect(mockGuildCommandsSet).toHaveBeenCalledTimes(2);
 	});
 });

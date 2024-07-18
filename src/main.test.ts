@@ -47,7 +47,6 @@ const loginError = new Error('Failed to log in. This is a test.');
 
 describe('main', () => {
 	beforeEach(() => {
-		mockConstructClient.mockReturnValue(undefined);
 		mockLogin.mockResolvedValue(mockToken);
 	});
 
@@ -56,7 +55,7 @@ describe('main', () => {
 	});
 
 	test('disables @everyone pings', async () => {
-		await expect(_main()).resolves.toBeUndefined();
+		await _main();
 		expect(mockConstructClient).toHaveBeenCalledWith(
 			expect.objectContaining({
 				allowedMentions: {
@@ -68,18 +67,18 @@ describe('main', () => {
 	});
 
 	test('calls registerEventHandlers', async () => {
-		await expect(_main()).resolves.toBeUndefined();
+		await _main();
 		expect(mockRegisterEventHandlers).toHaveBeenCalledWith(new MockClient());
 	});
 
 	test('calls login', async () => {
-		await expect(_main()).resolves.toBeUndefined();
+		await _main();
 		expect(mockLogin).toHaveBeenCalledWith(mockToken);
 	});
 
 	test('reports login errors', async () => {
 		mockLogin.mockRejectedValueOnce(loginError);
-		await expect(_main()).resolves.toBeUndefined();
+		await _main();
 		expect(mockLoggerError).toHaveBeenCalledWith(expect.stringContaining('log in'), loginError);
 	});
 });

@@ -23,8 +23,8 @@ describe('Replies', () => {
 		let interaction: RepliableInteraction;
 
 		beforeEach(() => {
-			mockReply.mockResolvedValue({});
-			mockUserSend.mockResolvedValue({});
+			mockReply.mockResolvedValue({} as InteractionResponse);
+			mockUserSend.mockResolvedValue({} as Message<false>);
 			interaction = {
 				user: {
 					id: 'user-1234',

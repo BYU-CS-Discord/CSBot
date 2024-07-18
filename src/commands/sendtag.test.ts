@@ -25,14 +25,13 @@ describe('sendtag', () => {
 			},
 		} as unknown as GuildedCommandContext;
 
-		mockReply.mockResolvedValue(undefined);
 		mockGetString.mockReturnValue('');
 	});
 
 	test('presents an response with the given option string', async () => {
 		const value = 'lorem ipsum';
 		mockGetString.mockReturnValue(value);
-		await expect(sendtag.execute(context)).resolves.toBeUndefined();
+		await sendtag.execute(context);
 		expect(mockReply).toHaveBeenCalledOnce();
 		expect(mockReply).toHaveBeenCalledWith(`You requested the '${value}' tag!`);
 	});

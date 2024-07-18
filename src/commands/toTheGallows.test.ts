@@ -33,7 +33,7 @@ describe('toTheGallows', () => {
 	});
 
 	test('begins a game of evil hangman', async () => {
-		await expect(toTheGallows.execute(context)).resolves.toBeUndefined();
+		await toTheGallows.execute(context);
 
 		expect(mockReply).toHaveBeenCalledOnce();
 		const response = mockReply.mock.calls.at(0)?.at(0);
@@ -47,7 +47,7 @@ describe('toTheGallows', () => {
 
 	test('specifying length and number of guesses always puts the game into the same state', async () => {
 		mockGetInteger.mockReturnValue(4);
-		await expect(toTheGallows.execute(context)).resolves.toBeUndefined();
+		await toTheGallows.execute(context);
 
 		expect(mockReply).toHaveBeenCalledOnce();
 

@@ -14,7 +14,7 @@ vi.mock('../../commands/index.js', () => ({
 
 vi.mock('./revokeCommands.js');
 import { revokeCommands } from './revokeCommands.js';
-const mockRevokeCommands = revokeCommands as Mock;
+const mockRevokeCommands = revokeCommands as Mock<typeof revokeCommands>;
 
 import { deployCommands } from './deployCommands.js';
 
@@ -35,7 +35,6 @@ describe('Command deployments', () => {
 	} as unknown as Client;
 
 	beforeEach(() => {
-		mockRevokeCommands.mockResolvedValue(undefined);
 		mockGuildCommandsSet.mockImplementation(() => Promise.resolve(new Collection()));
 		mockFetchOauthGuilds.mockResolvedValue(
 			new Collection<string, OAuth2Guild>().set('test-guild1', {
@@ -115,7 +114,7 @@ describe('Command deployments', () => {
 
 	test('does no deployments if there are no commands to deploy', async () => {
 		mockAllCommands.clear();
-		await expect(deployCommands(mockClient)).resolves.toBeUndefined();
+		await deployCommands(mockClient);
 		expect(mockRevokeCommands).toHaveBeenCalledOnce();
 		expect(mockApplicationCommandsSet).not.toHaveBeenCalled();
 		expect(mockGuildCommandsSet).not.toHaveBeenCalled();
@@ -133,14 +132,14 @@ describe('Command deployments', () => {
 
 	test('continues deployments if global commands fail to deploy', async () => {
 		mockApplicationCommandsSet.mockRejectedValueOnce(new Error('This is a test'));
-		await expect(deployCommands(mockClient)).resolves.toBeUndefined();
+		await deployCommands(mockClient);
 		expect(mockApplicationCommandsSet).toHaveBeenCalledOnce();
 		expect(mockGuildCommandsSet).toHaveBeenCalledOnce();
 	});
 
 	test('continues deployments if guild-bound commands fail to deploy', async () => {
 		mockGuildCommandsSet.mockRejectedValueOnce(new Error('This is a test'));
-		await expect(deployCommands(mockClient)).resolves.toBeUndefined();
+		await deployCommands(mockClient);
 		expect(mockApplicationCommandsSet).toHaveBeenCalledOnce();
 		expect(mockGuildCommandsSet).toHaveBeenCalledOnce();
 	});
