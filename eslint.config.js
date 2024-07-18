@@ -96,16 +96,6 @@ export default [
 		},
 	},
 
-	// Import has problems with dectalk-tts package
-	{
-		files: ['**/commands/talk.ts'],
-		rules: {
-			'import/default': 0,
-			'import/no-named-as-default': 0,
-			'import/no-named-as-default-member': 0,
-		},
-	},
-
 	// TypeScript
 	{
 		files: ['**/*.{m,c,}ts{x,}'],
