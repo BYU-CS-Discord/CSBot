@@ -7,6 +7,7 @@
  */
 
 import assert from 'node:assert';
+import process from 'node:process';
 
 declare global {
 	// eslint-disable-next-line @typescript-eslint/no-namespace
