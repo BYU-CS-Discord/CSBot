@@ -109,7 +109,7 @@ export default [
 			// Additions
 			'@typescript-eslint/explicit-function-return-type': 'error',
 			'@typescript-eslint/explicit-member-accessibility': 'error',
-			'@typescript-eslint/no-shadow': ['error', { allow: ['err', 'resolve', 'reject', 'client'] }], // https://stackoverflow.com/a/63961972
+			'@typescript-eslint/no-shadow': 'error',
 			curly: ['error', 'multi-line', 'consistent'],
 			'max-nested-callbacks': ['error', { max: 4 }],
 			'no-console': 'warn',
