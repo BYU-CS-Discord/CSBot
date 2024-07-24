@@ -15,9 +15,8 @@ import unicorn from 'eslint-plugin-unicorn';
 import globals from 'globals';
 
 export default [
-	{
-		ignores: ['dist', 'coverage', 'src/constants/version.ts'],
-	},
+	{ ignores: ['dist', 'coverage', 'src/constants/version.ts'] },
+	{ files: ['**/*.{m,c,}{js,ts}{x,}'] },
 
 	// File progress
 	{
@@ -35,7 +34,6 @@ export default [
 
 	// Main config
 	{
-		files: ['**/*.{m,c,}{js,ts}{x,}'],
 		plugins: {
 			'@stylistic': stylistic,
 			import: import_,
