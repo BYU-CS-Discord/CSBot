@@ -99,7 +99,6 @@ export default [
 			'unicorn/no-array-callback-reference': 0,
 			'unicorn/no-array-for-each': 0,
 			'unicorn/no-null': 0, // we use null
-			'unicorn/no-process-exit': 0, // we are a command-line app that might need to exit early
 			'unicorn/no-useless-undefined': 0,
 			'unicorn/prefer-module': 0, // we are not using ESM yet
 			'unicorn/prefer-spread': 0,
