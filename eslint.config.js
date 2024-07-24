@@ -98,6 +98,14 @@ export default [
 		},
 	},
 
+	// Scoped overrides
+	{
+		files: ['**/*.test.{m,c,}{js,ts}{x,}', '**/__mocks__/**'],
+		rules: {
+			'import/namespace': 0, // FIXME False positives in test files
+		},
+	},
+
 	// TypeScript
 	{
 		files: ['**/*.{m,c,}ts{x,}'],
@@ -124,7 +132,6 @@ export default [
 			'@typescript-eslint/no-inferrable-types': 0, // we like to be extra explicit with types sometimes
 			'@typescript-eslint/no-invalid-void-type': ['error', { allowAsThisParameter: true }],
 			'@typescript-eslint/restrict-template-expressions': 0, // FIXME Lots of errors - fix later
-			'import/namespace': 0, // FIXME false positives in test files
 			'import/no-unresolved': 0, // handled by TypeScript
 			'no-redeclare': 0, // handled by TypeScript
 			'no-shadow': 0, // handled by TypeScript

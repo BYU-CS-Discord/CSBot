@@ -2,6 +2,7 @@
 
 import './assertTsx.js';
 
+// eslint-disable-next-line import/namespace
 import { parser as changelogParser } from 'keep-a-changelog';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
