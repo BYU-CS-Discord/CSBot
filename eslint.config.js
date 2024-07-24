@@ -107,11 +107,8 @@ export default [
 			'unicorn/switch-case-braces': 0,
 
 			// Additions
+			'@typescript-eslint/explicit-function-return-type': 'error',
 			'@typescript-eslint/explicit-member-accessibility': 'error',
-			'@typescript-eslint/explicit-function-return-type': [
-				'error',
-				{ allowConciseArrowFunctionExpressionsStartingWithVoid: true },
-			],
 			'@typescript-eslint/no-shadow': ['error', { allow: ['err', 'resolve', 'reject', 'client'] }], // https://stackoverflow.com/a/63961972
 			curly: ['error', 'multi-line', 'consistent'],
 			'max-nested-callbacks': ['error', { max: 4 }],
