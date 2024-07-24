@@ -99,7 +99,6 @@ export default [
 			'no-shadow': 0, // handled by TypeScript
 			'no-undef': 0, // handled by TypeScript
 			'unicorn/filename-case': 0, // we use camelCase
-			'unicorn/import-index': ['error', { ignoreImports: true }],
 			'unicorn/no-array-callback-reference': 0,
 			'unicorn/no-array-for-each': 0,
 			'unicorn/no-null': 0, // we use null
