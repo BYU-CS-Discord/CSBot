@@ -103,7 +103,6 @@ export default [
 			'unicorn/prefer-module': 0, // we are not using ESM yet
 			'unicorn/prefer-spread': 0,
 			'unicorn/prefer-ternary': 0,
-			'unicorn/prefer-top-level-await': 0, // we are not using ESM yet
 			'unicorn/prevent-abbreviations': 0,
 			'unicorn/switch-case-braces': 0,
 
