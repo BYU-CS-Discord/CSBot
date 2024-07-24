@@ -18,16 +18,6 @@ export default [
 	{ ignores: ['dist', 'coverage', 'src/constants/version.ts'] },
 	{ files: ['**/*.{m,c,}{js,ts}{x,}'] },
 
-	// File progress
-	{
-		plugins: {
-			'file-progress': fileProgress,
-		},
-		rules: {
-			'file-progress/activate': 1,
-		},
-	},
-
 	// Flat configs
 	js.configs.recommended,
 	...typescript.configs.strictTypeChecked,
@@ -41,13 +31,42 @@ export default [
 	prettierRecommended,
 	unicorn.configs['flat/recommended'],
 
+	// Legacy configs
+	{
+		plugins: { 'file-progress': fileProgress },
+		rules: {
+			'file-progress/activate': 1,
+		},
+	},
+	{
+		// FIXME eslint-plugin-import does not support flat config, so every time it throws a lint error, the error description
+		// in the console will say "parserPath or languageOptions.parser is required! (undefined:undefined)".
+		// Weird, but still useable.
+		plugins: { import: import_ },
+		rules: {
+			...import_.configs.recommended.rules,
+			...import_.configs.typescript.rules,
+		},
+	},
+	{
+		plugins: { promise },
+		rules: promise.configs.recommended.rules,
+	},
+	{
+		plugins: { deprecation },
+		rules: deprecation.configs.recommended.rules,
+	},
+
+	// Scoped overrides
+	{
+		files: ['**/*.test.{m,c,}{js,ts}{x,}', '**/__mocks__/**'],
+		rules: {
+			'import/namespace': 0, // FIXME False positives in test files
+		},
+	},
+
 	// Main config
 	{
-		plugins: {
-			import: import_,
-			promise: promise,
-			deprecation: deprecation,
-		},
 		languageOptions: {
 			globals: globals.nodeBuiltin,
 			parserOptions: {
@@ -58,11 +77,17 @@ export default [
 			reportUnusedDisableDirectives: 'error',
 		},
 		rules: {
-			// Recommended
-			...import_.configs.recommended.rules,
-			...import_.configs.typescript.rules,
-			...promise.configs.recommended.rules,
-			...deprecation.configs.recommended.rules,
+			// Handled by Prettier
+			'@stylistic/arrow-parens': 0,
+			'@stylistic/comma-dangle': 0,
+			'@stylistic/indent': 0,
+			'@stylistic/indent-binary-ops': 0,
+			'@stylistic/no-mixed-spaces-and-tabs': 0,
+			'@stylistic/quotes': 0,
+			'@stylistic/operator-linebreak': 0,
+			'@stylistic/quote-props': 0,
+			'unicorn/no-nested-ternary': 0,
+			'unicorn/number-literal-case': 0,
 
 			// Overrides
 			'@typescript-eslint/array-type': ['error', { default: 'generic' }],
@@ -88,18 +113,6 @@ export default [
 			'unicorn/prevent-abbreviations': 0,
 			'unicorn/switch-case-braces': 0,
 
-			// Handled by Prettier
-			'@stylistic/arrow-parens': 0,
-			'@stylistic/comma-dangle': 0,
-			'@stylistic/indent': 0,
-			'@stylistic/indent-binary-ops': 0,
-			'@stylistic/no-mixed-spaces-and-tabs': 0,
-			'@stylistic/operator-linebreak': 0,
-			'@stylistic/quotes': 0,
-			'@stylistic/quote-props': 0,
-			'unicorn/no-nested-ternary': 0,
-			'unicorn/number-literal-case': 0,
-
 			// Additions
 			'@typescript-eslint/explicit-member-accessibility': 'error',
 			'@typescript-eslint/explicit-function-return-type': [
@@ -113,14 +126,6 @@ export default [
 			'no-empty-function': 'error',
 			'no-lonely-if': 'error',
 			yoda: 'error',
-		},
-	},
-
-	// Scoped overrides
-	{
-		files: ['**/*.test.{m,c,}{js,ts}{x,}', '**/__mocks__/**'],
-		rules: {
-			'import/namespace': 0, // FIXME False positives in test files
 		},
 	},
 ];
