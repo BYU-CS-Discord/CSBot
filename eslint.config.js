@@ -92,14 +92,14 @@ export default [
 			// Overrides
 			'@typescript-eslint/array-type': ['error', { default: 'generic' }],
 			'@typescript-eslint/no-confusing-void-expression': 0,
-			'@typescript-eslint/no-inferrable-types': 0, // we like to be extra explicit with types sometimes
-			'@typescript-eslint/restrict-template-expressions': 0, // FIXME Lots of errors - fix later
-			'import/no-unresolved': 0, // handled by TypeScript
-			'unicorn/filename-case': 0, // we use camelCase
+			'@typescript-eslint/no-inferrable-types': 0, // We like to be extra explicit with types sometimes
+			'@typescript-eslint/restrict-template-expressions': 0, // FIXME Lots of errors
+			'import/no-unresolved': 0, // Handled by TypeScript
+			'unicorn/filename-case': 0, // We use camelCase
 			'unicorn/no-array-callback-reference': 0,
 			'unicorn/no-array-for-each': 0,
-			'unicorn/no-null': 0, // we use null
 			'unicorn/no-useless-undefined': 0,
+			'unicorn/no-null': 0, // We use null
 			'unicorn/prefer-spread': 0,
 			'unicorn/prefer-ternary': 0,
 			'unicorn/prevent-abbreviations': 0,
