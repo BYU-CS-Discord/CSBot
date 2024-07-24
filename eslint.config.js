@@ -28,22 +28,28 @@ export default [
 		},
 	},
 
-	// Pre-built configs
+	// Flat configs
+	js.configs.recommended,
+	...typescript.configs.strictTypeChecked,
+	...typescript.configs.stylisticTypeChecked,
+	stylistic.configs['disable-legacy'],
+	stylistic.configs.customize({
+		braceStyle: '1tbs',
+		indent: 'tab',
+		semi: true,
+	}),
 	prettierRecommended,
 	unicorn.configs['flat/recommended'],
 
 	// Main config
 	{
 		plugins: {
-			'@stylistic': stylistic,
 			import: import_,
 			promise: promise,
-			'@typescript-eslint': typescript.plugin,
 			deprecation: deprecation,
 		},
 		languageOptions: {
 			globals: globals.nodeBuiltin,
-			parser: typescript.parser,
 			parserOptions: {
 				project: './tsconfig.eslint.json',
 			},
@@ -53,22 +59,12 @@ export default [
 		},
 		rules: {
 			// Recommended
-			...js.configs.recommended.rules,
 			...import_.configs.recommended.rules,
 			...import_.configs.typescript.rules,
 			...promise.configs.recommended.rules,
-			...typescript.configs.eslintRecommended.rules,
-			...typescript.configs.strictTypeChecked[2].rules,
-			...typescript.configs.stylisticTypeChecked[2].rules,
 			...deprecation.configs.recommended.rules,
 
 			// Overrides
-			...stylistic.configs['disable-legacy'].rules,
-			...stylistic.configs.customize({
-				braceStyle: '1tbs',
-				indent: 'tab',
-				semi: true,
-			}).rules,
 			'@typescript-eslint/array-type': ['error', { default: 'generic' }],
 			'@typescript-eslint/no-confusing-void-expression': 0,
 			'@typescript-eslint/no-inferrable-types': 0, // we like to be extra explicit with types sometimes
