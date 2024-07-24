@@ -1,8 +1,10 @@
 // @ts-check
 
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+
 import js from '@eslint/js';
 import stylistic from '@stylistic/eslint-plugin';
-// eslint-disable-next-line import/no-unresolved
 import typescript from 'typescript-eslint';
 import deprecation from 'eslint-plugin-deprecation';
 import fileProgress from 'eslint-plugin-file-progress';
@@ -38,9 +40,15 @@ export default [
 			'@stylistic': stylistic,
 			import: import_,
 			promise: promise,
+			'@typescript-eslint': typescript.plugin,
+			deprecation: deprecation,
 		},
 		languageOptions: {
 			globals: globals.nodeBuiltin,
+			parser: typescript.parser,
+			parserOptions: {
+				project: './tsconfig.eslint.json',
+			},
 		},
 		linterOptions: {
 			reportUnusedDisableDirectives: 'error',
@@ -52,6 +60,10 @@ export default [
 			...import_.configs.recommended.rules,
 			...import_.configs.typescript.rules,
 			...promise.configs.recommended.rules,
+			...typescript.configs.eslintRecommended.rules,
+			...typescript.configs.strictTypeChecked[2].rules,
+			...typescript.configs.stylisticTypeChecked[2].rules,
+			...deprecation.configs.recommended.rules,
 
 			// Handled by Prettier
 			'@stylistic/arrow-parens': 0,
@@ -71,6 +83,15 @@ export default [
 			'@stylistic/quote-props': 0, // clashes with prettier
 			'@stylistic/semi': ['error', 'always'],
 			'@stylistic/member-delimiter-style': 'error',
+			'@typescript-eslint/array-type': ['error', { default: 'generic' }],
+			'@typescript-eslint/no-confusing-void-expression': 0,
+			'@typescript-eslint/no-inferrable-types': 0, // we like to be extra explicit with types sometimes
+			'@typescript-eslint/no-invalid-void-type': ['error', { allowAsThisParameter: true }],
+			'@typescript-eslint/restrict-template-expressions': 0, // FIXME Lots of errors - fix later
+			'import/no-unresolved': 0, // handled by TypeScript
+			'no-redeclare': 0, // handled by TypeScript
+			'no-shadow': 0, // handled by TypeScript
+			'no-undef': 0, // handled by TypeScript
 			'unicorn/filename-case': 0, // we use camelCase
 			'unicorn/import-index': ['error', { ignoreImports: true }],
 			'unicorn/no-array-callback-reference': 0,
@@ -88,12 +109,17 @@ export default [
 			'unicorn/switch-case-braces': 0,
 
 			// Additions
+			'@typescript-eslint/explicit-member-accessibility': 'error',
+			'@typescript-eslint/explicit-function-return-type': [
+				'error',
+				{ allowConciseArrowFunctionExpressionsStartingWithVoid: true },
+			],
+			'@typescript-eslint/no-shadow': ['error', { allow: ['err', 'resolve', 'reject', 'client'] }], // https://stackoverflow.com/a/63961972
 			curly: ['error', 'multi-line', 'consistent'],
 			'max-nested-callbacks': ['error', { max: 4 }],
 			'no-console': 'warn',
 			'no-empty-function': 'error',
 			'no-lonely-if': 'error',
-			'no-shadow': 'error',
 			yoda: 'error',
 		},
 	},
@@ -103,47 +129,6 @@ export default [
 		files: ['**/*.test.{m,c,}{js,ts}{x,}', '**/__mocks__/**'],
 		rules: {
 			'import/namespace': 0, // FIXME False positives in test files
-		},
-	},
-
-	// TypeScript
-	{
-		files: ['**/*.{m,c,}ts{x,}'],
-		plugins: {
-			'@typescript-eslint': typescript.plugin,
-			deprecation: deprecation,
-		},
-		languageOptions: {
-			parser: typescript.parser,
-			parserOptions: {
-				project: './tsconfig.eslint.json',
-			},
-		},
-		rules: {
-			// Recommended
-			...typescript.configs.eslintRecommended.rules,
-			...typescript.configs.strictTypeChecked[2].rules,
-			...typescript.configs.stylisticTypeChecked[2].rules,
-			...deprecation.configs.recommended.rules,
-
-			// Overrides
-			'@typescript-eslint/array-type': ['error', { default: 'generic' }],
-			'@typescript-eslint/no-confusing-void-expression': 0,
-			'@typescript-eslint/no-inferrable-types': 0, // we like to be extra explicit with types sometimes
-			'@typescript-eslint/no-invalid-void-type': ['error', { allowAsThisParameter: true }],
-			'@typescript-eslint/restrict-template-expressions': 0, // FIXME Lots of errors - fix later
-			'import/no-unresolved': 0, // handled by TypeScript
-			'no-redeclare': 0, // handled by TypeScript
-			'no-shadow': 0, // handled by TypeScript
-			'no-undef': 0, // handled by TypeScript
-
-			// Additions
-			'@typescript-eslint/explicit-member-accessibility': 'error',
-			'@typescript-eslint/explicit-function-return-type': [
-				'error',
-				{ allowConciseArrowFunctionExpressionsStartingWithVoid: true },
-			],
-			'@typescript-eslint/no-shadow': ['error', { allow: ['err', 'resolve', 'reject', 'client'] }], // https://stackoverflow.com/a/63961972
 		},
 	},
 ];
