@@ -54,7 +54,6 @@ export default [
 		rules: {
 			// Recommended
 			...js.configs.recommended.rules,
-			...stylistic.configs['recommended-flat'].rules,
 			...import_.configs.recommended.rules,
 			...import_.configs.typescript.rules,
 			...promise.configs.recommended.rules,
@@ -64,12 +63,12 @@ export default [
 			...deprecation.configs.recommended.rules,
 
 			// Overrides
-			'@stylistic/brace-style': 'error',
-			'@stylistic/jsx-indent': ['error', 'tab'],
-			'@stylistic/jsx-indent-props': ['error', 'tab'],
-			'@stylistic/no-tabs': 0,
-			'@stylistic/semi': ['error', 'always'],
-			'@stylistic/member-delimiter-style': 'error',
+			...stylistic.configs['disable-legacy'].rules,
+			...stylistic.configs.customize({
+				braceStyle: '1tbs',
+				indent: 'tab',
+				semi: true,
+			}).rules,
 			'@typescript-eslint/array-type': ['error', { default: 'generic' }],
 			'@typescript-eslint/no-confusing-void-expression': 0,
 			'@typescript-eslint/no-inferrable-types': 0, // we like to be extra explicit with types sometimes
