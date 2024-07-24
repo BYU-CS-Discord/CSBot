@@ -63,22 +63,11 @@ export default [
 			...typescript.configs.stylisticTypeChecked[2].rules,
 			...deprecation.configs.recommended.rules,
 
-			// Handled by Prettier
-			'@stylistic/arrow-parens': 0,
-			'@stylistic/comma-dangle': 0,
-			'@stylistic/indent': 0,
-			'@stylistic/indent-binary-ops': 0,
-			'@stylistic/no-mixed-spaces-and-tabs': 0,
-			'@stylistic/quotes': 0,
-			'no-mixed-spaces-and-tabs': 0,
-
 			// Overrides
 			'@stylistic/brace-style': 'error',
 			'@stylistic/jsx-indent': ['error', 'tab'],
 			'@stylistic/jsx-indent-props': ['error', 'tab'],
 			'@stylistic/no-tabs': 0,
-			'@stylistic/operator-linebreak': 0, // clashes with prettier
-			'@stylistic/quote-props': 0, // clashes with prettier
 			'@stylistic/semi': ['error', 'always'],
 			'@stylistic/member-delimiter-style': 'error',
 			'@typescript-eslint/array-type': ['error', { default: 'generic' }],
@@ -94,17 +83,27 @@ export default [
 			'unicorn/import-index': ['error', { ignoreImports: true }],
 			'unicorn/no-array-callback-reference': 0,
 			'unicorn/no-array-for-each': 0,
-			'unicorn/no-nested-ternary': 0, // clashes with prettier
 			'unicorn/no-null': 0, // we use null
 			'unicorn/no-process-exit': 0, // we are a command-line app that might need to exit early
 			'unicorn/no-useless-undefined': 0,
-			'unicorn/number-literal-case': 0, // clashes with prettier
 			'unicorn/prefer-module': 0, // we are not using ESM yet
 			'unicorn/prefer-spread': 0,
 			'unicorn/prefer-ternary': 0,
 			'unicorn/prefer-top-level-await': 0, // we are not using ESM yet
 			'unicorn/prevent-abbreviations': 0,
 			'unicorn/switch-case-braces': 0,
+
+			// Handled by Prettier
+			'@stylistic/arrow-parens': 0,
+			'@stylistic/comma-dangle': 0,
+			'@stylistic/indent': 0,
+			'@stylistic/indent-binary-ops': 0,
+			'@stylistic/no-mixed-spaces-and-tabs': 0,
+			'@stylistic/operator-linebreak': 0,
+			'@stylistic/quotes': 0,
+			'@stylistic/quote-props': 0,
+			'unicorn/no-nested-ternary': 0,
+			'unicorn/number-literal-case': 0,
 
 			// Additions
 			'@typescript-eslint/explicit-member-accessibility': 'error',
