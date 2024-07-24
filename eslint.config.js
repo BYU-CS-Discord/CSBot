@@ -95,9 +95,6 @@ export default [
 			'@typescript-eslint/no-inferrable-types': 0, // we like to be extra explicit with types sometimes
 			'@typescript-eslint/restrict-template-expressions': 0, // FIXME Lots of errors - fix later
 			'import/no-unresolved': 0, // handled by TypeScript
-			'no-redeclare': 0, // handled by TypeScript
-			'no-shadow': 0, // handled by TypeScript
-			'no-undef': 0, // handled by TypeScript
 			'unicorn/filename-case': 0, // we use camelCase
 			'unicorn/no-array-callback-reference': 0,
 			'unicorn/no-array-for-each': 0,
