@@ -100,7 +100,6 @@ export default [
 			'unicorn/no-array-for-each': 0,
 			'unicorn/no-null': 0, // we use null
 			'unicorn/no-useless-undefined': 0,
-			'unicorn/prefer-module': 0, // we are not using ESM yet
 			'unicorn/prefer-spread': 0,
 			'unicorn/prefer-ternary': 0,
 			'unicorn/prevent-abbreviations': 0,
