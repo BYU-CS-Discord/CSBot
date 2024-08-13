@@ -91,7 +91,6 @@ export default [
 
 			// Overrides
 			'@typescript-eslint/array-type': ['error', { default: 'generic' }],
-			'@typescript-eslint/no-confusing-void-expression': 0,
 			'@typescript-eslint/no-inferrable-types': 0, // We like to be extra explicit with types sometimes
 			'@typescript-eslint/restrict-template-expressions': 0, // FIXME Lots of errors
 			'import/no-unresolved': 0, // Handled by TypeScript

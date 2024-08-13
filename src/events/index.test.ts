@@ -36,7 +36,9 @@ describe('allEvents', () => {
 
 	test('fails to install another event handler with the same name', () => {
 		const mockErrorHandler = { name: 'error' } as unknown as EventHandler;
-		expect(() => _add(mockErrorHandler)).toThrow(TypeError);
+		expect(() => {
+			_add(mockErrorHandler);
+		}).toThrow(TypeError);
 	});
 
 	test('properly registers events', () => {

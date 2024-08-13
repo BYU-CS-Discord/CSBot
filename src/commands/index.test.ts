@@ -8,6 +8,8 @@ describe('allCommands', () => {
 	});
 
 	test('fails to install another command with the same name', () => {
-		expect(() => _add({ name: 'help' } as unknown as Command)).toThrow(TypeError);
+		expect(() => {
+			_add({ name: 'help' } as unknown as Command);
+		}).toThrow(TypeError);
 	});
 });
