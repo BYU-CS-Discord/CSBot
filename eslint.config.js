@@ -101,7 +101,6 @@ export default [
 			'unicorn/prefer-spread': 0,
 			'unicorn/prefer-ternary': 0,
 			'unicorn/prevent-abbreviations': 0,
-			'unicorn/switch-case-braces': 0,
 
 			// Additions
 			'@typescript-eslint/explicit-function-return-type': 'error',

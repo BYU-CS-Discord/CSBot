@@ -226,7 +226,7 @@ export const findRoom: GlobalCommand = {
 		let embedThumbnail = 'https://pi.zyancey.com/img/room-finder-logo.png'; // not currently used, placeholder so that it doesn't show
 
 		switch (type) {
-			case 'now':
+			case 'now': {
 				if (input_bldg !== null) {
 					const requestedList = await _getRoomsNow(input_bldg);
 					if (requestedList.Rooms.length === 0) {
@@ -241,8 +241,9 @@ export const findRoom: GlobalCommand = {
 					}
 				}
 				break;
+			}
 
-			case 'at':
+			case 'at': {
 				if (input_bldg !== null && input_timeA !== null) {
 					const requestedList = await _getRoomsAt(input_bldg, input_timeA);
 					if (requestedList.Rooms.length === 0) {
@@ -259,8 +260,9 @@ export const findRoom: GlobalCommand = {
 					}
 				}
 				break;
+			}
 
-			case 'between':
+			case 'between': {
 				if (input_bldg !== null && input_timeA !== null && input_timeB !== null) {
 					const requestedList = await _getRoomsBetween(input_bldg, input_timeA, input_timeB);
 					if (requestedList.Rooms.length === 0) {
@@ -279,8 +281,9 @@ export const findRoom: GlobalCommand = {
 					}
 				}
 				break;
+			}
 
-			case 'when':
+			case 'when': {
 				if (input_bldg !== null && input_room !== null) {
 					const requestedList = await _getWhenRoom(input_bldg, input_room);
 					const busySince =
@@ -313,6 +316,7 @@ export const findRoom: GlobalCommand = {
 					embedDescription = roomString;
 				}
 				break;
+			}
 		}
 
 		// we should have the data in response, build the embed.
