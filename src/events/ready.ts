@@ -22,14 +22,14 @@ export const ready = onEvent('ready', {
 		// If we're only here to deploy commands, do that and then exit
 		if (args.deploy) {
 			await deployCommands(client);
-			client.destroy();
+			await client.destroy();
 			return;
 		}
 
 		// If we're only here to revoke commands, do that and then exit
 		if (args.revoke) {
 			await revokeCommands(client);
-			client.destroy();
+			await client.destroy();
 			return;
 		}
 
