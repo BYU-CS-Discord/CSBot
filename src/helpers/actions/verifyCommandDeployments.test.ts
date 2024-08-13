@@ -19,24 +19,24 @@ describe('Verify command deployments', () => {
 		{
 			info: new SlashCommandBuilder().setName('zaphod').setDescription(' '),
 			requiresGuild: false,
-			execute: () => undefined,
+			execute: vi.fn(),
 		},
 		{
 			info: new SlashCommandBuilder().setName('beeblebrox').setDescription(' '),
 			requiresGuild: false,
-			execute: () => undefined,
+			execute: vi.fn(),
 		},
 
 		// Guild-bound Commands
 		{
 			info: new SlashCommandBuilder().setName('arthur').setDescription(' '),
 			requiresGuild: true,
-			execute: () => undefined,
+			execute: vi.fn(),
 		},
 		{
 			info: new SlashCommandBuilder().setName('dent').setDescription(' '),
 			requiresGuild: true,
-			execute: () => undefined,
+			execute: vi.fn(),
 		},
 	];
 
@@ -121,7 +121,7 @@ describe('Verify command deployments', () => {
 			mockAllCommands.set('ford', {
 				info: new SlashCommandBuilder().setName('ford').setDescription(' '),
 				requiresGuild: true,
-				execute: () => undefined,
+				execute: vi.fn(),
 			});
 
 			await verifyCommandDeployments(mockClient);
@@ -156,7 +156,7 @@ describe('Verify command deployments', () => {
 			mockAllCommands.set('marvin', {
 				info: new SlashCommandBuilder().setName('marvin').setDescription(' '),
 				requiresGuild: false,
-				execute: () => undefined,
+				execute: vi.fn(),
 			});
 
 			await verifyCommandDeployments(mockClient);

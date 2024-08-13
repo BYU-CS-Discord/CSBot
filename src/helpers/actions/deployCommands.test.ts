@@ -51,7 +51,7 @@ describe('Command deployments', () => {
 			{
 				info: new SlashCommandBuilder().setName('test1').setDescription(' '),
 				requiresGuild: false,
-				execute: () => undefined,
+				execute: vi.fn(),
 			},
 			{
 				info: new SlashCommandBuilder()
@@ -59,7 +59,7 @@ describe('Command deployments', () => {
 					.setDescription(' ')
 					.setNameLocalizations({}),
 				requiresGuild: true,
-				execute: () => undefined,
+				execute: vi.fn(),
 			},
 			{
 				info: new SlashCommandBuilder()
@@ -68,7 +68,7 @@ describe('Command deployments', () => {
 					.setNameLocalizations({})
 					.setDescriptionLocalizations({}),
 				requiresGuild: true,
-				execute: () => undefined,
+				execute: vi.fn(),
 			},
 			{
 				info: new SlashCommandBuilder()
@@ -78,7 +78,7 @@ describe('Command deployments', () => {
 					.setDescriptionLocalizations({})
 					.addStringOption(option => option.setName('c').setDescription(' ')),
 				requiresGuild: true,
-				execute: () => undefined,
+				execute: vi.fn(),
 			},
 			{
 				info: new SlashCommandBuilder()
@@ -89,7 +89,7 @@ describe('Command deployments', () => {
 					.setDefaultMemberPermissions(null)
 					.addStringOption(option => option.setName('c').setDescription(' ')),
 				requiresGuild: true,
-				execute: () => undefined,
+				execute: vi.fn(),
 			},
 			{
 				info: new SlashCommandBuilder()
@@ -100,7 +100,7 @@ describe('Command deployments', () => {
 					.setDMPermission(false)
 					.addStringOption(option => option.setName('c').setDescription(' ')),
 				requiresGuild: true,
-				execute: () => undefined,
+				execute: vi.fn(),
 			},
 		];
 		for (const cmd of mockCommands) {

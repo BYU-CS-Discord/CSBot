@@ -98,7 +98,6 @@ export default [
 			'unicorn/filename-case': 0, // We use camelCase
 			'unicorn/no-array-callback-reference': 0,
 			'unicorn/no-array-for-each': 0,
-			'unicorn/no-useless-undefined': 0,
 			'unicorn/no-null': 0, // We use null
 			'unicorn/prefer-spread': 0,
 			'unicorn/prefer-ternary': 0,
@@ -112,7 +111,6 @@ export default [
 			curly: ['error', 'multi-line', 'consistent'],
 			'max-nested-callbacks': ['error', { max: 4 }],
 			'no-console': 'warn',
-			'no-empty-function': 'error',
 			'no-lonely-if': 'error',
 			yoda: 'error',
 		},
