@@ -85,8 +85,5 @@
 	},
 	"engines": {
 		"node": ">=20.6.0"
-	},
-	"overrides": {
-		"uuid": "9.0.1"
 	}
 }
