@@ -46,7 +46,7 @@
 		"update": "git pull && npm run setup"
 	},
 	"dependencies": {
-		"@discordjs/voice": "0.15.0",
+		"@discordjs/voice": "0.17.0",
 		"@prisma/client": "4.16.2",
 		"dectalk-tts": "1.0.1",
 		"discord.js": "14.15.3",

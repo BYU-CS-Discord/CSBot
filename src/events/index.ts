@@ -43,9 +43,9 @@ export function registerEventHandlers(client: Client): void {
 		// Register the event handler with the correct endpoint
 		const eventName = eventHandler.name;
 		if (eventHandler.once) {
-			client.once(eventName, eventHandler.execute);
+			client.once(eventName, (...args) => void eventHandler.execute(...args));
 		} else {
-			client.on(eventName, eventHandler.execute);
+			client.on(eventName, (...args) => void eventHandler.execute(...args));
 		}
 
 		info(`Registered event handler ${eventHandler.once ? 'once' : 'on'}(${eventName})`);

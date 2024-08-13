@@ -53,18 +53,23 @@ describe('allEvents', () => {
 		const fakeReadyEvent: EventHandler = {
 			name: 'ready',
 			once: true,
-			execute: () => undefined,
+			execute: vi.fn(),
 		};
 		const fakeMessageEvent: EventHandler = {
 			name: 'messageCreate',
 			once: false,
-			execute: () => undefined,
+			execute: vi.fn(),
 		};
 		_add(fakeReadyEvent);
 		_add(fakeMessageEvent);
 		registerEventHandlers(client);
 
-		expect(mockOnce).toHaveBeenCalledWith(fakeReadyEvent.name, fakeReadyEvent.execute);
-		expect(mockOn).toHaveBeenCalledWith(fakeMessageEvent.name, fakeMessageEvent.execute);
+		// Anonymous functions were registered, but we can still check if they were the same function by calling them
+		expect(mockOnce).toHaveBeenCalledOnce();
+		mockOnce.mock.calls.at(0)?.[1]?.();
+		expect(fakeReadyEvent.execute).toHaveBeenCalledOnce();
+		expect(mockOn).toHaveBeenCalledOnce();
+		mockOn.mock.calls.at(0)?.[1]?.();
+		expect(fakeMessageEvent.execute).toHaveBeenCalledOnce();
 	});
 });
