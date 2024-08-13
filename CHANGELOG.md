@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - `/iscasdown` slash command to check if BYU's CAS is working
+- Node built-in `.env` file support
 
 ### Changed
 
