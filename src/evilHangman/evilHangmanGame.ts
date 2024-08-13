@@ -88,7 +88,7 @@ export class EvilHangmanGame {
 	}
 
 	private updateWord(form: RegExp): void {
-		const newWord = form.source.replaceAll('\\w', '-');
+		const newWord = form.source.replaceAll(String.raw`\w`, '-');
 		if (newWord === this.word) {
 			this.guessesRemaining -= 1;
 		}
@@ -138,7 +138,7 @@ export class EvilHangmanGame {
 			if (guessesSoFar.has(letter) || guess === letter) {
 				return letter;
 			}
-			return '\\w';
+			return String.raw`\w`;
 		});
 		return formArray.join('');
 	}
