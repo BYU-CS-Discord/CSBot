@@ -1,0 +1,22 @@
+name: Code Mirror
+# Pushes new code to external mirrors
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Push to Codeberg
+        uses: yesolutions/mirror-action@v0.7.0
+        with:
+          REMOTE: 'https://codeberg.org/BYU-CS-Discord/CSBot.git'
+          GIT_USERNAME: byu-cs-discord-mirror-bot
+          GIT_PASSWORD: ${{ secrets.CODEBERG_PUSH_KEY }}
