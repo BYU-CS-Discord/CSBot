@@ -11,6 +11,8 @@ This project is meant as a successor to [Ze-Kaiser](https://github.com/ArkenStor
 - [**EmmaChase**](https://github.com/EmmaChase)
 - [**TheZealotAlmighty**](https://github.com/TheZealotAlmighty)
 
+A read-only code mirror for this project exists [on Codeberg](https://codeberg.org/BYU-CS-Discord/CSBot/).
+
 ## Authors & Contributors
 
 These users contributed various things over time directly to this codebase. This list is ordered roughly by when users first contributed code. We add to this list as people contribute.
@@ -29,8 +31,6 @@ These users contributed various things over time directly to this codebase. This
 This project is entirely open-source. Do with it what you will. If you're willing to help us improve this project, consider [filing an issue](https://github.com/BYU-CS-Discord/CSBot/issues/new/choose).
 
 See [CONTRIBUTING.md](/CONTRIBUTING.md) for ways to contribute.
-
-A read-only code mirror also exists [on Codeberg](https://codeberg.org/BYU-CS-Discord/CSBot/).
 
 ## License
 
