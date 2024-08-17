@@ -5,8 +5,8 @@ const mockOn = vi.fn<Client['on']>();
 const mockOnce = vi.fn<Client['once']>();
 const MockClient = vi.hoisted(() => {
 	return class {
-		on = mockOn;
-		once = mockOnce;
+		public on = mockOn;
+		public once = mockOnce;
 	};
 });
 
@@ -36,7 +36,9 @@ describe('allEvents', () => {
 
 	test('fails to install another event handler with the same name', () => {
 		const mockErrorHandler = { name: 'error' } as unknown as EventHandler;
-		expect(() => _add(mockErrorHandler)).toThrow(TypeError);
+		expect(() => {
+			_add(mockErrorHandler);
+		}).toThrow(TypeError);
 	});
 
 	test('properly registers events', () => {

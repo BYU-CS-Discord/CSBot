@@ -16,19 +16,22 @@ export async function verifyCommandDeployments(client: Client<true>): Promise<vo
 		const expected = globalDiff.expected;
 		const actual = globalDiff.actual;
 		switch (issue) {
-			case 'content':
+			case 'content': {
 				warn(
 					`The deployed commands differ from the expected command list: Expected a command named '${expected}', but found '${actual}'. Please redeploy.`
 				);
 				break;
-			case 'length':
+			}
+			case 'length': {
 				warn(
 					`The deployed commands differ from the expected command list: Expected ${expected} global command(s), but Discord returned ${actual}. Please redeploy.`
 				);
 				break;
-			default:
+			}
+			default: {
 				/* istanbul ignore next */
 				assertUnreachable(issue);
+			}
 		}
 	}
 
@@ -39,19 +42,22 @@ export async function verifyCommandDeployments(client: Client<true>): Promise<vo
 		const actual = guildedDiff.actual;
 		const guildId = guildedDiff.guild.id;
 		switch (issue) {
-			case 'content':
+			case 'content': {
 				warn(
 					`The deployed commands in guild '${guildId}' differ from the expected command list: Expected a command named '${expected}', but found '${actual}'. Please redeploy.`
 				);
 				break;
-			case 'length':
+			}
+			case 'length': {
 				warn(
 					`The deployed commands in guild '${guildId}' differ from the expected command list: Expected ${expected} command(s), but Discord returned ${actual}. Please redeploy.`
 				);
 				break;
-			default:
+			}
+			default: {
 				/* istanbul ignore next */
 				assertUnreachable(issue);
+			}
 		}
 	}
 }

@@ -9,9 +9,9 @@ const mockLogin = vi.fn<Client['login']>();
 
 const MockClient = vi.hoisted(() => {
 	return class {
-		login = mockLogin;
+		public login = mockLogin;
 
-		constructor(...args: ReadonlyArray<unknown>) {
+		public constructor(...args: ReadonlyArray<unknown>) {
 			mockConstructClient(...args);
 		}
 	};

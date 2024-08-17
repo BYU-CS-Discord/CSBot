@@ -2,14 +2,15 @@
 
 import './assertTsx.js';
 
+// eslint-disable-next-line import/namespace
 import { parser as changelogParser } from 'keep-a-changelog';
 import { readFileSync, writeFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import * as semver from 'semver';
 import { assert, literal, string, type } from 'superstruct';
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const logger = console;
 
 // Fixes the changelog's footer links and bumps the `version` in [package.json](/package.json) and [package-lock.json](/package-lock.json).
@@ -25,9 +26,9 @@ function quote(str: string | undefined): string | undefined {
 logger.info('** release.ts **');
 
 // Load the changelog
-const changelogPath = join(__dirname, '../CHANGELOG.md');
-const packageJsonPath = join(__dirname, '../package.json');
-const packageLockJsonPath = join(__dirname, '../package-lock.json');
+const changelogPath = path.join(__dirname, '../CHANGELOG.md');
+const packageJsonPath = path.join(__dirname, '../package.json');
+const packageLockJsonPath = path.join(__dirname, '../package-lock.json');
 logger.info('Loading changelog from', quote(changelogPath));
 
 const rawChangelog = readFileSync(changelogPath, 'utf8');

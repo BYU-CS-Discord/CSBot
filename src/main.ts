@@ -43,5 +43,5 @@ export async function _main(): Promise<void> {
 // Not Constantinople
 if (process.env['NODE_ENV'] !== 'test') {
 	// Vitest will never hit this without hax:
-	void _main();
+	await _main();
 }

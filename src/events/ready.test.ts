@@ -5,12 +5,12 @@ import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 const mockSetActivity = vi.fn<NonNullable<Client['user']>['setActivity']>();
 const MockClient = vi.hoisted(() => {
 	return class {
-		user = {
+		public user = {
 			username: 'Ze Kaiser Jr.',
 			setActivity: mockSetActivity,
 		};
 
-		destroy(): void {
+		public destroy(): void {
 			// nop
 		}
 	};
