@@ -30,6 +30,8 @@ This project is entirely open-source. Do with it what you will. If you're willin
 
 See [CONTRIBUTING.md](/CONTRIBUTING.md) for ways to contribute.
 
+A read-only code mirror also exists [on Codeberg](https://codeberg.org/BYU-CS-Discord/CSBot/).
+
 ## License
 
 This project's source is licensed under the [BSD Zero Clause License](LICENSE). All contributions to this project's source may be used, copied, modified, and/or distributed for any purpose.
