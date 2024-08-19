@@ -181,7 +181,7 @@ const builder = new SlashCommandBuilder()
 				option
 					.setName('end_time')
 					.setDescription('What time would you like to search for?')
-					.addChoices(...bldgChoices)
+					.addChoices(...timeChoices)
 					.setRequired(true)
 			)
 			.addStringOption(option =>

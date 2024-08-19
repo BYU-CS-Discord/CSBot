@@ -32,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - All package vulnerabilities
+- Buildings being used as choices for `end_time` option of `/findroom between` command
 
 ## [0.12.1] - 2023-10-05
 
