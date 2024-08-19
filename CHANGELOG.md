@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `/iscasdown` slash command to check if BYU's CAS is working
 - Node built-in `.env` file support
+- Automatic updates for dependencies with Dependabot
 
 ### Changed
 
@@ -69,7 +70,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Bug where /stats list would throw an error if the user wasn't tracking anything
+- Bug where `/stats list` would throw an error if the user wasn't tracking anything
 
 ## [0.10.0] - 2023-04-06
 
@@ -144,7 +145,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Bug where replied interactions couldn't report errors.
-- Missing "git" dependency for /update command in Docker container.
+- Missing "git" dependency for `/update` command in Docker container.
 
 ## [0.7.0] - 2023-01-07
 
