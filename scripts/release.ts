@@ -42,10 +42,10 @@ const thisRelease = releases[thisReleaseIdx];
 if (!thisRelease?.version) throw new TypeError('No versioned release was found.');
 
 // Handy info
-logger.info('latest release:', thisRelease.version.toString());
+logger.info('latest release:', thisRelease.version);
 
 const prevRelease = releases[thisReleaseIdx + 1];
-logger.info('previous release:', prevRelease?.version?.toString());
+logger.info('previous release:', prevRelease?.version);
 
 // Fix the changelog's format (new compare links, etc.), and print the diff of our changes
 logger.info('\n** Spec compliance **');
@@ -108,7 +108,7 @@ if (packageVersion.version !== packageLockVersion.version) {
 
 // Update package.json
 const oldPackageJson = `${JSON.stringify(packageJson, undefined, '\t')}\n`;
-packageJson.version = thisRelease.version.version;
+packageJson.version = thisRelease.version;
 const newPackageJson = `${JSON.stringify(packageJson, undefined, '\t')}\n`;
 writeFileSync(packageJsonPath, newPackageJson);
 
@@ -122,8 +122,8 @@ if (didFixPackageJson) {
 // Update package-lock.json
 const oldPackageLockJson = `${JSON.stringify(packageLockJson, undefined, '\t')}\n`;
 // Maybe we should just run `npm i` instead?
-packageLockJson.version = thisRelease.version.version;
-packageLockJson.packages[''].version = thisRelease.version.version;
+packageLockJson.version = thisRelease.version;
+packageLockJson.packages[''].version = thisRelease.version;
 const newPackageLockJson = `${JSON.stringify(packageLockJson, undefined, '\t')}\n`;
 writeFileSync(packageLockJsonPath, newPackageLockJson);
 
