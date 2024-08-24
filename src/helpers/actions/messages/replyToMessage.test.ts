@@ -1,6 +1,12 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
-import type { Message, RepliableInteraction, TextChannel, User } from 'discord.js';
+import type {
+	InteractionResponse,
+	Message,
+	RepliableInteraction,
+	TextChannel,
+	User,
+} from 'discord.js';
 import { ChannelType } from 'discord.js';
 
 // Mock the logger to track output
@@ -10,15 +16,15 @@ import { error as mockLoggerError } from '../../../logger.js';
 import { replyWithPrivateMessage, sendMessageInChannel } from './replyToMessage.js';
 
 describe('Replies', () => {
-	const mockUserSend = vi.fn();
+	const mockUserSend = vi.fn<RepliableInteraction['user']['send']>();
 
 	describe('to interactions', () => {
-		const mockReply = vi.fn();
+		const mockReply = vi.fn<RepliableInteraction['reply']>();
 		let interaction: RepliableInteraction;
 
 		beforeEach(() => {
-			mockReply.mockResolvedValue({});
-			mockUserSend.mockResolvedValue({});
+			mockReply.mockResolvedValue({} as InteractionResponse);
+			mockUserSend.mockResolvedValue({} as Message<false>);
 			interaction = {
 				user: {
 					id: 'user-1234',
@@ -128,15 +134,15 @@ describe('Replies', () => {
 	});
 
 	describe('to messages', () => {
-		const mockReply = vi.fn();
-		const mockChannelSend = vi.fn();
+		const mockReply = vi.fn<RepliableInteraction['reply']>();
+		const mockChannelSend = vi.fn<Message['channel']['send']>();
 		let author: User;
 		let message: Message;
 
 		beforeEach(() => {
-			mockReply.mockResolvedValue({});
-			mockChannelSend.mockResolvedValue({});
-			mockUserSend.mockResolvedValue({});
+			mockReply.mockResolvedValue({} as InteractionResponse);
+			mockChannelSend.mockResolvedValue({} as Message<false>);
+			mockUserSend.mockResolvedValue({} as Message<false>);
 			author = {
 				id: 'user-1234',
 				send: mockUserSend,
@@ -232,11 +238,11 @@ describe('Replies', () => {
 });
 
 describe('Cold calls', () => {
-	const mockChannelSend = vi.fn();
+	const mockChannelSend = vi.fn<TextChannel['send']>();
 	let mockChannel: TextChannel;
 
 	beforeEach(() => {
-		mockChannelSend.mockResolvedValue({ id: 'the-message' });
+		mockChannelSend.mockResolvedValue({ id: 'the-message' } as Message<true>);
 		mockChannel = {
 			send: mockChannelSend,
 			type: ChannelType.GuildText,

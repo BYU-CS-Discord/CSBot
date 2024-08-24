@@ -8,9 +8,9 @@ import { messageReactionAdd } from './messageReactionAdd.js';
 vi.mock('../logger.js');
 
 describe('Reaction duplication', () => {
-	const mockResendReact = vi.fn<[], Promise<unknown>>();
+	const mockResendReact = vi.fn<MessageReaction['react']>();
 
-	let mockRandom: MockInstance<[], number>;
+	let mockRandom: MockInstance<typeof Math.random>;
 	let mockReaction: MessageReaction;
 	let mockSender: User;
 
@@ -46,43 +46,43 @@ describe('Reaction duplication', () => {
 	});
 
 	test("sometimes duplicates a user's react", async () => {
-		await expect(messageReactionAdd.execute(mockReaction, mockSender)).resolves.toBeUndefined();
+		await messageReactionAdd.execute(mockReaction, mockSender);
 		expect(mockResendReact).toHaveBeenCalledOnce();
 	});
 
 	test("sometimes ignores a user's react", async () => {
 		mockRandom.mockReturnValue(0.5);
-		await expect(messageReactionAdd.execute(mockReaction, mockSender)).resolves.toBeUndefined();
+		await messageReactionAdd.execute(mockReaction, mockSender);
 		expect(mockResendReact).not.toHaveBeenCalled();
 	});
 
 	test('ignores emoji with an empty name', async () => {
 		mockReaction.emoji.name = '';
-		await expect(messageReactionAdd.execute(mockReaction, mockSender)).resolves.toBeUndefined();
+		await messageReactionAdd.execute(mockReaction, mockSender);
 		expect(mockResendReact).not.toHaveBeenCalled();
 	});
 
 	test('ignores emoji with a null name', async () => {
 		mockReaction.emoji.name = null;
-		await expect(messageReactionAdd.execute(mockReaction, mockSender)).resolves.toBeUndefined();
+		await messageReactionAdd.execute(mockReaction, mockSender);
 		expect(mockResendReact).not.toHaveBeenCalled();
 	});
 
 	test('ignores bot reacts', async () => {
 		mockSender.bot = true;
-		await expect(messageReactionAdd.execute(mockReaction, mockSender)).resolves.toBeUndefined();
+		await messageReactionAdd.execute(mockReaction, mockSender);
 		expect(mockResendReact).not.toHaveBeenCalled();
 	});
 
 	test("ignores the bot's own reacts", async () => {
 		mockReaction.me = true;
-		await expect(messageReactionAdd.execute(mockReaction, mockSender)).resolves.toBeUndefined();
+		await messageReactionAdd.execute(mockReaction, mockSender);
 		expect(mockResendReact).not.toHaveBeenCalled();
 	});
 
 	test('ignores :star:', async () => {
 		mockReaction.emoji.name = '⭐';
-		await expect(messageReactionAdd.execute(mockReaction, mockSender)).resolves.toBeUndefined();
+		await messageReactionAdd.execute(mockReaction, mockSender);
 		expect(mockResendReact).not.toHaveBeenCalled();
 	});
 });

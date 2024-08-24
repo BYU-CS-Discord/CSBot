@@ -60,7 +60,7 @@ further defined and clarified by project maintainers.
 ## Enforcement
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may
-be reported by contacting the project team [via Discord](https://discord.gg/bnV89Cz).
+be reported by contacting the project team [via Discord](https://discord.gg/CMhcP99p93).
 All complaints will be reviewed and investigated and will result in a
 response that is deemed necessary and appropriate to the circumstances.
 The project team is obligated to maintain confidentiality with regard to

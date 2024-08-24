@@ -1,15 +1,17 @@
 import type { Mock } from 'vitest';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
+import type { Client } from 'discord.js';
+
 // Create a mocked client to track constructor and 'login' calls
-const mockConstructClient = vi.fn();
-const mockLogin = vi.fn();
+const mockConstructClient = vi.fn<(...args: ReadonlyArray<unknown>) => void>();
+const mockLogin = vi.fn<Client['login']>();
 
 const MockClient = vi.hoisted(() => {
 	return class {
-		login = mockLogin;
+		public login = mockLogin;
 
-		constructor(...args: ReadonlyArray<unknown>) {
+		public constructor(...args: ReadonlyArray<unknown>) {
 			mockConstructClient(...args);
 		}
 	};
@@ -31,10 +33,7 @@ process.env['DISCORD_TOKEN'] = mockToken;
 // Mock the event handler index so we can track it
 vi.mock('./events/index.js');
 import { registerEventHandlers } from './events/index.js';
-const mockRegisterEventHandlers = registerEventHandlers as Mock<
-	Parameters<typeof registerEventHandlers>,
-	ReturnType<typeof registerEventHandlers>
->;
+const mockRegisterEventHandlers = registerEventHandlers as Mock<typeof registerEventHandlers>;
 
 // Mock the logger to track output
 vi.mock('./logger.js');
@@ -48,7 +47,6 @@ const loginError = new Error('Failed to log in. This is a test.');
 
 describe('main', () => {
 	beforeEach(() => {
-		mockConstructClient.mockReturnValue(undefined);
 		mockLogin.mockResolvedValue(mockToken);
 	});
 
@@ -57,7 +55,7 @@ describe('main', () => {
 	});
 
 	test('disables @everyone pings', async () => {
-		await expect(_main()).resolves.toBeUndefined();
+		await _main();
 		expect(mockConstructClient).toHaveBeenCalledWith(
 			expect.objectContaining({
 				allowedMentions: {
@@ -69,18 +67,18 @@ describe('main', () => {
 	});
 
 	test('calls registerEventHandlers', async () => {
-		await expect(_main()).resolves.toBeUndefined();
+		await _main();
 		expect(mockRegisterEventHandlers).toHaveBeenCalledWith(new MockClient());
 	});
 
 	test('calls login', async () => {
-		await expect(_main()).resolves.toBeUndefined();
+		await _main();
 		expect(mockLogin).toHaveBeenCalledWith(mockToken);
 	});
 
 	test('reports login errors', async () => {
 		mockLogin.mockRejectedValueOnce(loginError);
-		await expect(_main()).resolves.toBeUndefined();
+		await _main();
 		expect(mockLoggerError).toHaveBeenCalledWith(expect.stringContaining('log in'), loginError);
 	});
 });

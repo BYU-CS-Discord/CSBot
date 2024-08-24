@@ -11,6 +11,8 @@ This project is meant as a successor to [Ze-Kaiser](https://github.com/ArkenStor
 - [**EmmaChase**](https://github.com/EmmaChase)
 - [**TheZealotAlmighty**](https://github.com/TheZealotAlmighty)
 
+A read-only code mirror for this project exists [on Codeberg](https://codeberg.org/BYU-CS-Discord/CSBot/).
+
 ## Authors & Contributors
 
 These users contributed various things over time directly to this codebase. This list is ordered roughly by when users first contributed code. We add to this list as people contribute.
@@ -32,7 +34,7 @@ See [CONTRIBUTING.md](/CONTRIBUTING.md) for ways to contribute.
 
 ## License
 
-This project's source is licensed under the [Unlicense](LICENSE) license. All contributions to this project's source are understood to be given to the public domain.
+This project's source is licensed under the [BSD Zero Clause License](LICENSE). All contributions to this project's source may be used, copied, modified, and/or distributed for any purpose.
 
 ## Table of contents
 
@@ -89,8 +91,9 @@ Tracks a statistic for the issuer. Use the `track` subcommand to begin tracking,
 
 ### /talk
 
-Uses the [dectalk](https://github.com/babakinha/dectalk) text-to-speech engine to speak the message you give it,
-either sending a .wav file in a text channel or talking out loud in a voice channel. Comes with 9 different voices.
+Uses the [dectalk](https://github.com/JstnMcBrd/dectalk-tts) text-to-speech engine to speak the message you give it, either sending a .wav file in a text channel or talking out loud in a voice channel. Comes with 9 different voices.
+
+By using this command, you are acknowleding that your input will be sent to a third-party web API, which may use your information however it wants. Please see [this disclaimer](https://github.com/JstnMcBrd/dectalk-tts#about).
 
 ### /tothegallows
 
@@ -137,12 +140,6 @@ v18.17.1
 9.6.7
 ```
 
-If you are using Linux, you will also need to install the following package to use the `/talk` command:
-
-```sh
-$ apt install libpulse0
-```
-
 If you don't want to install Node or any other dependencies on your machine, you may also use [Docker](https://www.docker.com/). Docker runs the project in a lightweight virtual Linux environment will all dependencies pre-installed, so functionality will be identical on any operating system.
 
 All Docker management (like building, running, and cleaning up images and containers) has been automated, so you only have to follow a few simple steps.
@@ -174,10 +171,10 @@ Create a file called `.env` in the root of this project folder. Paste your token
 # .env
 
 DISCORD_TOKEN=YOUR_TOKEN_GOES_HERE
-# required, token for your Discord bot
+# Required, token for your Discord bot
 
 DATABASE_URL=YOUR_DATABASE_URL_GOES_HERE
-# required for any DB functionality, we will get this URL in a later section
+# Required for any DB functionality, we will get this URL in a later section
 
 ADMINISTRATORS=COMMA,SEPARATED,ID,LIST
 # Required for the update command. WARNING: The users whose ids are listed here will be able to pull, build, and run code from this repository on the machine the bot is running on. Do not include any users you do not trust.

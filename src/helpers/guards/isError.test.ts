@@ -3,16 +3,16 @@ import { describe, expect, test } from 'vitest';
 import { isError } from './isError.js';
 
 class TestError extends Error {
-	constructor() {
+	public constructor() {
 		super('This is an error');
 		this.name = 'TestError';
 	}
 }
 
 class TestNonError {
-	readonly name: string;
+	public readonly name: string;
 
-	constructor() {
+	public constructor() {
 		this.name = 'TestNonError';
 	}
 }

@@ -1,3 +1,7 @@
+// FIXME Figure out why import linter is unhappy with most of these imports
+
+/* eslint-disable import/namespace, import/default, import/no-named-as-default, import/no-named-as-default-member */
+
 import { defineConfig } from 'rollup';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import { visualizer } from 'rollup-plugin-visualizer';

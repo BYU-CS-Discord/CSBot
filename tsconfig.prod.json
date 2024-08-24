@@ -5,7 +5,6 @@
 		"target": "ESNext",
 		"module": "NodeNext",
 		"typeRoots": ["./node_modules/@types", "./src/@types"],
-		"skipLibCheck": true, // disable this once our deps get their act together
 		"outDir": "dist",
 		"esModuleInterop": true,
 		"isolatedModules": true,

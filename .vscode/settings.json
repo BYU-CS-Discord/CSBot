@@ -15,5 +15,5 @@
 		"jacoco.xml",
 		"coverage.cobertura.xml"
 	],
-	"eslint.experimental.useFlatConfig": true,
+	"eslint.useFlatConfig": true,
 }

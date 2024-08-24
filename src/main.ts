@@ -1,6 +1,5 @@
 import 'source-map-support/register.js';
-import 'dotenv/config';
-import './helpers/parseArgs.js'; // load CLI args
+import './helpers/parseArgs.js'; // Load CLI args
 
 import { Client, GatewayIntentBits, Partials } from 'discord.js';
 
@@ -45,5 +44,5 @@ export async function _main(): Promise<void> {
 // Not Constantinople
 if (process.env['NODE_ENV'] !== 'test') {
 	// Vitest will never hit this without hax:
-	void _main();
+	await _main();
 }

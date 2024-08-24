@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { fxtwitter } from './fxtwitter.js';
 
 describe('Fix Twitter Links', () => {
-	const mockReplyPrivately = vi.fn();
+	const mockReplyPrivately = vi.fn<MessageContextMenuCommandContext['replyPrivately']>();
 	let context: MessageContextMenuCommandContext;
 
 	beforeEach(() => {
@@ -59,7 +59,7 @@ describe('Fix Twitter Links', () => {
 		async ({ content, result }: { content: string; result: string }) => {
 			context.targetMessage.content = content;
 
-			await expect(fxtwitter.execute(context)).resolves.toBeUndefined();
+			await fxtwitter.execute(context);
 			expect(mockReplyPrivately).toHaveBeenCalledOnce();
 			expect(mockReplyPrivately).toHaveBeenCalledWith(expect.stringContaining(result));
 		}
