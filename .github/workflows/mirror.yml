@@ -19,6 +19,6 @@ jobs:
       - name: Push to Codeberg
         uses: yesolutions/mirror-action@v0.7.0
         with:
-          REMOTE: 'ssh://git@codeberg.org:BYU-CS-Discord/CSBot.git'
+          REMOTE: 'ssh://git@codeberg.org/BYU-CS-Discord/CSBot.git'
           GIT_SSH_PRIVATE_KEY: ${{ secrets.CODEBERG_PUSH_KEY }}
           GIT_SSH_KNOWN_HOSTS: ${{ secrets.CODEBERG_SSH_KNOWN_HOSTS }}
