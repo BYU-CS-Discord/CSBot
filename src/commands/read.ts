@@ -37,11 +37,10 @@ export const read: GlobalCommand = {
 				await prisma.$disconnect();
 				return;
 			})
-			.catch(async error_ => {
+			.catch(async (error_: unknown) => {
 				error(error_);
 				await reply({ content: 'Something Went Wrong!', ephemeral: true });
 				await prisma.$disconnect();
-				process.exit(1);
 			});
 	},
 };
