@@ -36,12 +36,13 @@ describe('stats', () => {
 	const mockStatName = 'stats-test';
 	const mockGuildId = 'test-guild-id';
 
-	const mockReply = vi.fn();
-	const mockReplyPrivately = vi.fn();
-	const mockGetString = vi.fn<[name: string], string | null>();
-	const mockGetNumber = vi.fn<[name: string], number | null>();
-	const mockGetSubcommand = vi.fn();
-	const mockGetUser = vi.fn();
+	const mockReply = vi.fn<GuildedCommandContext['reply']>();
+	const mockReplyPrivately = vi.fn<GuildedCommandContext['replyPrivately']>();
+	const mockGetString = vi.fn<GuildedCommandContext['interaction']['options']['getString']>();
+	const mockGetNumber = vi.fn<GuildedCommandContext['interaction']['options']['getNumber']>();
+	const mockGetSubcommand =
+		vi.fn<GuildedCommandContext['interaction']['options']['getSubcommand']>();
+	const mockGetUser = vi.fn<GuildedCommandContext['client']['users']['cache']['get']>();
 	let context: GuildedCommandContext;
 
 	beforeEach(() => {
@@ -79,7 +80,7 @@ describe('stats', () => {
 		});
 
 		test('begins tracking a stat', async () => {
-			await expect(stats.execute(context)).resolves.toBeUndefined();
+			await stats.execute(context);
 			expect(mockCreate).toHaveBeenCalledOnce();
 			expect(mockCreate).toHaveBeenCalledWith({
 				data: {
@@ -116,7 +117,7 @@ describe('stats', () => {
 		});
 
 		test('score is added', async () => {
-			await expect(stats.execute(context)).resolves.toBeUndefined();
+			await stats.execute(context);
 
 			expect(mockUpdate).toHaveBeenCalledOnce();
 			expect(mockUpdate).toHaveBeenCalledWith({
@@ -148,7 +149,7 @@ describe('stats', () => {
 				} as unknown as Scoreboard,
 			]);
 
-			await expect(stats.execute(context)).resolves.toBeUndefined();
+			await stats.execute(context);
 			expect(mockReplyPrivately).toHaveBeenCalled();
 		});
 	});
@@ -164,7 +165,7 @@ describe('stats', () => {
 		});
 
 		test('stops tracking a stat', async () => {
-			await expect(stats.execute(context)).resolves.toBeUndefined();
+			await stats.execute(context);
 			expect(mockDelete).toHaveBeenCalledOnce();
 			expect(mockDelete).toHaveBeenCalledWith({
 				where: {
@@ -198,7 +199,7 @@ describe('stats', () => {
 		});
 
 		test('replies with a leaderboard', async () => {
-			await expect(stats.execute(context)).resolves.toBeUndefined();
+			await stats.execute(context);
 
 			expect(mockReply).toHaveBeenCalled();
 		});

@@ -8,6 +8,8 @@ describe('allButtons', () => {
 	});
 
 	test('fails to install another command with the same name', () => {
-		expect(() => _add({ customId: 'hangmanMoreButton' } as unknown as Button)).toThrow(TypeError);
+		expect(() => {
+			_add({ customId: 'hangmanMoreButton' } as unknown as Button);
+		}).toThrow(TypeError);
 	});
 });

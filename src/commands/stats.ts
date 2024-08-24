@@ -79,23 +79,29 @@ export const stats: GuildedCommand = {
 		const subcommand = interaction.options.getSubcommand();
 
 		switch (subcommand) {
-			case TrackSubcommand:
+			case TrackSubcommand: {
 				await track(reply, interaction, guild.id);
 				break;
-			case UpdateSubcommand:
+			}
+			case UpdateSubcommand: {
 				await update(reply, interaction, guild.id);
 				break;
-			case ListSubcommand:
+			}
+			case ListSubcommand: {
 				await list(replyPrivately, interaction, guild.id);
 				break;
-			case UntrackSubcommand:
+			}
+			case UntrackSubcommand: {
 				await untrack(reply, interaction, guild.id);
 				break;
-			case LeaderboardSubcommand:
+			}
+			case LeaderboardSubcommand: {
 				await leaderboard(reply, interaction, guild.id);
 				break;
-			default:
+			}
+			default: {
 				throw new Error('Invalid subcommand');
+			}
 		}
 	},
 };

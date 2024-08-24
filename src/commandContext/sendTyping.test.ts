@@ -1,4 +1,3 @@
-import type { Mock } from 'vitest';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
 import type { RepliableInteraction } from 'discord.js';
@@ -10,12 +9,12 @@ vi.mock('../logger.js');
 import { sendTypingFactory as factory } from './sendTyping.js';
 
 describe('typing indicator', () => {
-	let mockSendTyping: Mock<[], void>;
+	const mockSendTyping = vi.fn<NonNullable<RepliableInteraction['channel']>['sendTyping']>();
 	let interaction: RepliableInteraction;
 	let sendTyping: () => void;
 
 	beforeEach(() => {
-		mockSendTyping = vi.fn<[], undefined>();
+		mockSendTyping.mockClear();
 		interaction = {
 			channel: {
 				sendTyping: mockSendTyping,
@@ -26,7 +25,7 @@ describe('typing indicator', () => {
 	});
 
 	test('sends typing indicator', () => {
-		expect(sendTyping()).toBeUndefined();
+		sendTyping();
 		expect(mockSendTyping).toHaveBeenCalledOnce();
 	});
 
@@ -36,7 +35,7 @@ describe('typing indicator', () => {
 			channel: { ...interaction.channel, type: ChannelType.GuildStageVoice },
 		} as unknown as RepliableInteraction;
 		sendTyping = factory(interaction);
-		expect(sendTyping()).toBeUndefined();
+		sendTyping();
 		expect(mockSendTyping).not.toHaveBeenCalled();
 	});
 });

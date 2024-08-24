@@ -9,6 +9,6 @@ export const talk: MessageContextMenuCommand = {
 	type: ApplicationCommandType.Message,
 	requiresGuild: false,
 	async execute(context) {
-		await speak(context.targetMessage.content, undefined, context);
+		await speak(context, context.targetMessage.content);
 	},
 };

@@ -5,8 +5,8 @@ import type { AutocompleteInteraction } from 'discord.js';
 import { sendtag } from './sendtag.js';
 
 describe('sendtag', () => {
-	const mockReply = vi.fn<[content: string], Promise<void>>();
-	const mockGetString = vi.fn<[name: string, required: true], string>();
+	const mockReply = vi.fn<GuildedCommandContext['reply']>();
+	const mockGetString = vi.fn<GuildedCommandContext['options']['getString']>();
 
 	let context: GuildedCommandContext;
 
@@ -25,14 +25,13 @@ describe('sendtag', () => {
 			},
 		} as unknown as GuildedCommandContext;
 
-		mockReply.mockResolvedValue(undefined);
 		mockGetString.mockReturnValue('');
 	});
 
 	test('presents an response with the given option string', async () => {
 		const value = 'lorem ipsum';
 		mockGetString.mockReturnValue(value);
-		await expect(sendtag.execute(context)).resolves.toBeUndefined();
+		await sendtag.execute(context);
 		expect(mockReply).toHaveBeenCalledOnce();
 		expect(mockReply).toHaveBeenCalledWith(`You requested the '${value}' tag!`);
 	});
