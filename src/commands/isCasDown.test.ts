@@ -30,7 +30,7 @@ describe('isCasDown', () => {
 		if (!response || typeof response === 'string' || !response.embeds) {
 			assert.fail('Did not reply to interaction with embeds');
 		}
-		expect(response.embeds.length).toEqual(1);
+		expect(response.embeds.length).toBe(1);
 		const embed = response.embeds.at(0);
 		const embedData = 'toJSON' in embed ? embed.toJSON() : embed;
 		expect(embedData.color).toBe(Colors.Green);
@@ -44,7 +44,7 @@ describe('isCasDown', () => {
 		if (!response || typeof response === 'string' || !response.embeds) {
 			assert.fail('Did not reply to interaction with embeds');
 		}
-		expect(response.embeds.length).toEqual(1);
+		expect(response.embeds.length).toBe(1);
 		const embed = response.embeds.at(0);
 		const embedData = 'toJSON' in embed ? embed.toJSON() : embed;
 		expect(embedData.color).toBe(Colors.Red);

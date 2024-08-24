@@ -7,5 +7,13 @@
 	"files.eol": "auto",
 	"terminal.integrated.defaultProfile.windows": "Git Bash",
 	"editor.formatOnSave": true,
+	"coverage-gutters.coverageFileNames": [
+		"clover.xml",
+		"lcov.info",
+		"cov.xml",
+		"coverage.xml",
+		"jacoco.xml",
+		"coverage.cobertura.xml"
+	],
 	"eslint.useFlatConfig": true,
 }

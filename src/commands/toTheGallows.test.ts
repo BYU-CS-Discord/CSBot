@@ -40,9 +40,9 @@ describe('toTheGallows', () => {
 		if (!response || typeof response === 'string' || !('embeds' in response)) {
 			assert.fail('Did not reply to interactions with embeds');
 		}
-		expect(response.embeds.length).toEqual(1);
+		expect(response.embeds.length).toBe(1);
 		expect(response.embeds.at(0)).toBeTypeOf('object');
-		expect(response.components?.length).toEqual(5);
+		expect(response.components?.length).toBe(5);
 	});
 
 	test('specifying length and number of guesses always puts the game into the same state', async () => {
@@ -55,10 +55,10 @@ describe('toTheGallows', () => {
 		if (!response || typeof response === 'string' || !('embeds' in response)) {
 			assert.fail('Did not reply to interactions with embeds');
 		}
-		expect(response.embeds.length).toEqual(1);
+		expect(response.embeds.length).toBe(1);
 		const embed = response.embeds.at(0);
 		const embedData = 'toJSON' in embed ? embed.toJSON() : embed;
 		expect(embedData).toMatchSnapshot();
-		expect(response.components?.length).toEqual(5);
+		expect(response.components?.length).toBe(5);
 	});
 });

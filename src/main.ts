@@ -1,4 +1,5 @@
 import 'source-map-support/register.js';
+import './helpers/parseArgs.js'; // Load CLI args
 
 import { Client, GatewayIntentBits, Partials } from 'discord.js';
 
