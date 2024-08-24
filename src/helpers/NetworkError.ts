@@ -5,10 +5,10 @@ import { describeCode } from './HttpStatusCode.js';
  * An object that represents an HTTP status returned from an API request.
  */
 export class NetworkError extends Error {
-	readonly code: HttpStatusCode;
-	readonly statusText: string;
+	public readonly code: HttpStatusCode;
+	public readonly statusText: string;
 
-	constructor(code: HttpStatusCode) {
+	public constructor(code: HttpStatusCode) {
 		const statusText = describeCode(code);
 		super(`HTTP ${code}: ${statusText}`);
 		this.code = code;

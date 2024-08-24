@@ -10,17 +10,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - `/iscasdown` slash command to check if BYU's CAS is working
+- Node built-in `.env` file support
+- Automatic updates for dependencies with Dependabot
+- A read-only code mirror on [Codeberg](https://codeberg.org/BYU-CS-Discord/CSBot/)
 - Starboard, and associated commands
 
 ### Changed
 
 - Node version to 20 LTS
 - Tests to use `vitest` instead of `jest`
-- TypeScript build settings to be simplified and and follow `@typescript-eslint` standards
+- TypeScript build settings to be simplified and and follow `typescript-eslint` standards
 - ESLint config to use new flat configuration
 - ESLint config to use new stylistic packages
 - Package lockfile to version 3
-- "Fix Twitter Links" to support alternative x.com links
+- "Fix Twitter Links" to support alternative [x.com](https://x.com) links
 - GitHub workflows to be revamped
 - Project to use ESM instead of CommonJS
 - `package.json` to be sorted using `npx sort-package-json`
@@ -30,7 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - All package vulnerabilities
-- `superstruct` types not working with ESM by adding a type-shim
+- Buildings being used as choices for `end_time` option of `/findroom between` command
 
 ## [0.12.1] - 2023-10-05
 
@@ -70,7 +73,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Bug where /stats list would throw an error if the user wasn't tracking anything
+- Bug where `/stats list` would throw an error if the user wasn't tracking anything
 
 ## [0.10.0] - 2023-04-06
 
@@ -145,7 +148,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Bug where replied interactions couldn't report errors.
-- Missing "git" dependency for /update command in Docker container.
+- Missing "git" dependency for `/update` command in Docker container.
 
 ## [0.7.0] - 2023-01-07
 

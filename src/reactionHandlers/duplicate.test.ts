@@ -1,5 +1,5 @@
-import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import type { MockInstance } from 'vitest';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
 import type { MessageReaction, User } from 'discord.js';
 
@@ -9,9 +9,9 @@ import { duplicate } from './duplicate.js';
 vi.mock('../logger.js');
 
 describe('Reaction duplication', () => {
-	const mockResendReact = vi.fn<[], Promise<unknown>>();
+	const mockResendReact = vi.fn<MessageReaction['react']>();
 
-	let mockRandom: MockInstance<[], number>;
+	let mockRandom: MockInstance<typeof Math.random>;
 	let mockReaction: MessageReaction;
 	let mockSender: User;
 	let mockContext: ReactionHandlerContext;
@@ -46,28 +46,26 @@ describe('Reaction duplication', () => {
 			reaction: mockReaction,
 			user: mockSender,
 		};
-
-		vi.clearAllMocks();
 	});
 
 	afterEach(() => {
-		mockRandom.mockRestore();
+		vi.restoreAllMocks();
 	});
 
 	test("sometimes duplicates a user's react", async () => {
-		await expect(duplicate.execute(mockContext)).resolves.toBeUndefined();
+		await duplicate.execute(mockContext);
 		expect(mockResendReact).toHaveBeenCalledOnce();
 	});
 
 	test("sometimes ignores a user's react", async () => {
 		mockRandom.mockReturnValue(0.5);
-		await expect(duplicate.execute(mockContext)).resolves.toBeUndefined();
+		await duplicate.execute(mockContext);
 		expect(mockResendReact).not.toHaveBeenCalled();
 	});
 
 	test('ignores :star:', async () => {
 		mockReaction.emoji.name = '⭐';
-		await expect(duplicate.execute(mockContext)).resolves.toBeUndefined();
+		await duplicate.execute(mockContext);
 		expect(mockResendReact).not.toHaveBeenCalled();
 	});
 });

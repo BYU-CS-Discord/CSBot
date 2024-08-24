@@ -2,14 +2,15 @@
 
 import './assertTsx.js';
 
+// eslint-disable-next-line import/namespace
 import { parser as changelogParser } from 'keep-a-changelog';
 import { readFileSync, writeFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import * as semver from 'semver';
 import { assert, literal, string, type } from 'superstruct';
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const logger = console;
 
 // Fixes the changelog's footer links and bumps the `version` in [package.json](/package.json) and [package-lock.json](/package-lock.json).
@@ -25,9 +26,9 @@ function quote(str: string | undefined): string | undefined {
 logger.info('** release.ts **');
 
 // Load the changelog
-const changelogPath = join(__dirname, '../CHANGELOG.md');
-const packageJsonPath = join(__dirname, '../package.json');
-const packageLockJsonPath = join(__dirname, '../package-lock.json');
+const changelogPath = path.join(__dirname, '../CHANGELOG.md');
+const packageJsonPath = path.join(__dirname, '../package.json');
+const packageLockJsonPath = path.join(__dirname, '../package-lock.json');
 logger.info('Loading changelog from', quote(changelogPath));
 
 const rawChangelog = readFileSync(changelogPath, 'utf8');
@@ -41,10 +42,10 @@ const thisRelease = releases[thisReleaseIdx];
 if (!thisRelease?.version) throw new TypeError('No versioned release was found.');
 
 // Handy info
-logger.info('latest release:', thisRelease.version.toString());
+logger.info('latest release:', thisRelease.version);
 
 const prevRelease = releases[thisReleaseIdx + 1];
-logger.info('previous release:', prevRelease?.version?.toString());
+logger.info('previous release:', prevRelease?.version);
 
 // Fix the changelog's format (new compare links, etc.), and print the diff of our changes
 logger.info('\n** Spec compliance **');
@@ -107,7 +108,7 @@ if (packageVersion.version !== packageLockVersion.version) {
 
 // Update package.json
 const oldPackageJson = `${JSON.stringify(packageJson, undefined, '\t')}\n`;
-packageJson.version = thisRelease.version.version;
+packageJson.version = thisRelease.version;
 const newPackageJson = `${JSON.stringify(packageJson, undefined, '\t')}\n`;
 writeFileSync(packageJsonPath, newPackageJson);
 
@@ -121,8 +122,8 @@ if (didFixPackageJson) {
 // Update package-lock.json
 const oldPackageLockJson = `${JSON.stringify(packageLockJson, undefined, '\t')}\n`;
 // Maybe we should just run `npm i` instead?
-packageLockJson.version = thisRelease.version.version;
-packageLockJson.packages[''].version = thisRelease.version.version;
+packageLockJson.version = thisRelease.version;
+packageLockJson.packages[''].version = thisRelease.version;
 const newPackageLockJson = `${JSON.stringify(packageLockJson, undefined, '\t')}\n`;
 writeFileSync(packageLockJsonPath, newPackageLockJson);
 

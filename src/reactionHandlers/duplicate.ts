@@ -6,7 +6,7 @@ export const duplicate: ReactionHandler = {
 		const ogEmojiName = reaction.emoji.name ?? '';
 		const emojiName = ogEmojiName.toLowerCase();
 
-		// never join the bandwagon
+		// Never join the bandwagon
 		if ((reaction.count ?? 0) > 1) {
 			return;
 		}

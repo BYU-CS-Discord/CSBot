@@ -1,23 +1,20 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
-import type { MockInstance } from 'vitest';
 
 import type { MessageReaction, User } from 'discord.js';
+
 import { buildExecute } from './messageReaction.js';
 
-const mockHandlerExecute = vi.fn<[], Promise<void>>();
+const mockHandlerExecute = vi.fn<ReactionHandler['execute']>();
 const mockReactionHandler = {
 	execute: mockHandlerExecute,
 };
 const testExecute = buildExecute(new Set([mockReactionHandler]));
 
 describe('Reaction duplication', () => {
-	let mockRandom: MockInstance<[], number>;
 	let mockReaction: MessageReaction;
 	let mockSender: User;
 
 	beforeEach(() => {
-		mockRandom = vi.spyOn(global.Math, 'random').mockReturnValue(1);
-
 		mockReaction = {
 			me: false,
 			client: {
@@ -42,30 +39,30 @@ describe('Reaction duplication', () => {
 	});
 
 	afterEach(() => {
-		mockRandom.mockRestore();
+		vi.restoreAllMocks();
 	});
 
 	test('ignores emoji with an empty name', async () => {
 		mockReaction.emoji.name = '';
-		await expect(testExecute(mockReaction, mockSender)).resolves.toBeUndefined();
+		await testExecute(mockReaction, mockSender);
 		expect(mockHandlerExecute).not.toHaveBeenCalled();
 	});
 
 	test('ignores emoji with a null name', async () => {
 		mockReaction.emoji.name = null;
-		await expect(testExecute(mockReaction, mockSender)).resolves.toBeUndefined();
+		await testExecute(mockReaction, mockSender);
 		expect(mockHandlerExecute).not.toHaveBeenCalled();
 	});
 
 	test('ignores bot reacts', async () => {
 		mockSender.bot = true;
-		await expect(testExecute(mockReaction, mockSender)).resolves.toBeUndefined();
+		await testExecute(mockReaction, mockSender);
 		expect(mockHandlerExecute).not.toHaveBeenCalled();
 	});
 
 	test("ignores the bot's own reacts", async () => {
 		mockReaction.me = true;
-		await expect(testExecute(mockReaction, mockSender)).resolves.toBeUndefined();
+		await testExecute(mockReaction, mockSender);
 		expect(mockHandlerExecute).not.toHaveBeenCalled();
 	});
 });

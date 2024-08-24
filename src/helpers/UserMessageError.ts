@@ -5,7 +5,7 @@
  * UserMessageErrors simply show the message argument to the user.
  */
 export class UserMessageError extends Error {
-	constructor(message: string) {
+	public constructor(message: string) {
 		super(message);
 		this.name = 'UserMessageError';
 	}

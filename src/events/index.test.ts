@@ -1,12 +1,12 @@
 import { describe, expect, test, vi } from 'vitest';
 
 // Create a mocked client to track 'on' and 'once' calls
-const mockOn = vi.fn();
-const mockOnce = vi.fn();
+const mockOn = vi.fn<Client['on']>();
+const mockOnce = vi.fn<Client['once']>();
 const MockClient = vi.hoisted(() => {
 	return class {
-		on = mockOn;
-		once = mockOnce;
+		public on = mockOn;
+		public once = mockOnce;
 	};
 });
 
@@ -36,7 +36,9 @@ describe('allEvents', () => {
 
 	test('fails to install another event handler with the same name', () => {
 		const mockErrorHandler = { name: 'error' } as unknown as EventHandler;
-		expect(() => _add(mockErrorHandler)).toThrow(TypeError);
+		expect(() => {
+			_add(mockErrorHandler);
+		}).toThrow(TypeError);
 	});
 
 	test('properly registers events', () => {
@@ -53,19 +55,23 @@ describe('allEvents', () => {
 		const fakeReadyEvent: EventHandler = {
 			name: 'ready',
 			once: true,
-			execute: () => undefined,
+			execute: vi.fn(),
 		};
 		const fakeMessageEvent: EventHandler = {
 			name: 'messageCreate',
 			once: false,
-			execute: () => undefined,
+			execute: vi.fn(),
 		};
-		expect(_add(fakeReadyEvent)).toBeUndefined();
-		expect(_add(fakeMessageEvent)).toBeUndefined();
+		_add(fakeReadyEvent);
+		_add(fakeMessageEvent);
+		registerEventHandlers(client);
 
-		expect(registerEventHandlers(client)).toBeUndefined();
-
-		expect(mockOnce).toHaveBeenCalledWith(fakeReadyEvent.name, fakeReadyEvent.execute);
-		expect(mockOn).toHaveBeenCalledWith(fakeMessageEvent.name, fakeMessageEvent.execute);
+		// Anonymous functions were registered, but we can still check if they were the same function by calling them
+		expect(mockOnce).toHaveBeenCalledOnce();
+		mockOnce.mock.calls.at(0)?.[1]?.();
+		expect(fakeReadyEvent.execute).toHaveBeenCalledOnce();
+		expect(mockOn).toHaveBeenCalledOnce();
+		mockOn.mock.calls.at(0)?.[1]?.();
+		expect(fakeMessageEvent.execute).toHaveBeenCalledOnce();
 	});
 });

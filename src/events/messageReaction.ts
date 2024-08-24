@@ -9,20 +9,19 @@ export function buildExecute(allReactionHandlers: ReadonlySet<ReactionHandler>) 
 		if (!reaction.emoji.name) return;
 
 		if (
-			user.bot || // ignore bots
-			reaction.me || // ignore own reacts
-			reaction.message.author?.id === reaction.client.user.id // never self-react
+			user.bot || // Ignore bots
+			reaction.me || // Ignore own reacts
+			reaction.message.author?.id === reaction.client.user.id // Never self-react
 		) {
 			return;
 		}
 
-		const handlerPromises = [...allReactionHandlers].map(
-			async handler =>
-				await handler.execute({
-					reaction,
-					user,
-				})
-		);
+		const handlerPromises = [...allReactionHandlers].map(async handler => {
+			await handler.execute({
+				reaction,
+				user,
+			});
+		});
 		await Promise.all(handlerPromises);
 	};
 }

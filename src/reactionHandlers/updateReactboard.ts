@@ -23,7 +23,7 @@ export const updateReactboard: ReactionHandler = {
 			? await reaction.message.fetch()
 			: reaction.message;
 		const fullUser = user.partial ? await user.fetch() : user;
-		if (fullMessage.guildId === null) return; // ignore guildless messages
+		if (fullMessage.guildId === null) return; // Ignore guildless messages
 
 		const reactboardExists =
 			(await db.reactboard.count({
@@ -32,7 +32,7 @@ export const updateReactboard: ReactionHandler = {
 					react: getDbReactName(fullReaction),
 				},
 			})) > 0;
-		if (!reactboardExists) return; // abort if no reactboard
+		if (!reactboardExists) return; // Abort if no reactboard
 
 		if (fullMessage.author.bot) {
 			await fullMessage.channel.send(
@@ -81,7 +81,7 @@ async function updateExistingPosts(reaction: MessageReaction, message: Message):
 }
 
 async function addNewPosts(reaction: MessageReaction, message: Message): Promise<void> {
-	if (reaction.message.guildId === null) return; // ignore guildless messages
+	if (reaction.message.guildId === null) return; // Ignore guildless messages
 
 	const reactboardsToPostTo = await db.reactboard.findMany({
 		where: {

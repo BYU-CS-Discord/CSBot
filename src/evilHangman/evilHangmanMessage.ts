@@ -37,12 +37,14 @@ export async function buildEvilHangmanMessage(
 			{ name: '_ _', value: mainDescription, inline: true }
 		);
 	switch (gameInfo.winState) {
-		case EvilHangmanWinState.WON:
+		case EvilHangmanWinState.WON: {
 			embed.setDescription('You win!');
 			break;
-		case EvilHangmanWinState.LOST:
+		}
+		case EvilHangmanWinState.LOST: {
 			embed.setDescription(`You Lose! The correct word was ${gameInfo.correctWord}.`);
 			break;
+		}
 	}
 
 	const components =

@@ -25,11 +25,11 @@ describe('setReactboard', () => {
 	const mockThreshold = 5;
 	const mockReact = '⭐';
 
-	const mockReplyPrivately = vi.fn();
-	const mockGetString = vi.fn<[name: string], string | null>();
-	const mockGetInteger = vi.fn<[name: string], number>();
-	const mockGetChannel = vi.fn<[name: string], TextChannel | null>();
-	const mockGetEmoji = vi.fn();
+	const mockReplyPrivately = vi.fn<GuildedCommandContext['replyPrivately']>();
+	const mockGetString = vi.fn<GuildedCommandContext['options']['getString']>();
+	const mockGetInteger = vi.fn<GuildedCommandContext['options']['getInteger']>();
+	const mockGetChannel = vi.fn<GuildedCommandContext['options']['getChannel']>();
+	const mockGetEmoji = vi.fn<GuildedCommandContext['guild']['emojis']['fetch']>();
 	let context: GuildedCommandContext;
 
 	beforeEach(() => {
@@ -56,7 +56,7 @@ describe('setReactboard', () => {
 	});
 
 	test('upserts a reactboard', async () => {
-		await expect(setReactboard.execute(context)).resolves.toBeUndefined();
+		await setReactboard.execute(context);
 		expect(mockUpsert).toHaveBeenCalledTimes(1);
 		expect(mockUpsert).toHaveBeenCalledWith({
 			where: {
@@ -88,7 +88,7 @@ describe('setReactboard', () => {
 			id: customEmojiId,
 		});
 
-		await expect(setReactboard.execute(context)).resolves.toBeUndefined();
+		await setReactboard.execute(context);
 		expect(mockUpsert).toHaveBeenCalledTimes(1);
 		expect(mockUpsert).toHaveBeenCalledWith({
 			where: {

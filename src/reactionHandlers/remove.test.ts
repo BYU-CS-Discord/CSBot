@@ -8,6 +8,8 @@ describe('allReactionHandlers', () => {
 	});
 
 	test('commands can be added', () => {
-		expect(() => _add({ execute: () => undefined })).not.toThrow(TypeError);
+		expect(() => {
+			_add({ execute: () => void 0 });
+		}).not.toThrow(TypeError);
 	});
 });

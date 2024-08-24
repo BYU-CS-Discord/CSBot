@@ -11,6 +11,8 @@ This project is meant as a successor to [Ze-Kaiser](https://github.com/ArkenStor
 - [**EmmaChase**](https://github.com/EmmaChase)
 - [**TheZealotAlmighty**](https://github.com/TheZealotAlmighty)
 
+A read-only code mirror for this project exists [on Codeberg](https://codeberg.org/BYU-CS-Discord/CSBot/).
+
 ## Authors & Contributors
 
 These users contributed various things over time directly to this codebase. This list is ordered roughly by when users first contributed code. We add to this list as people contribute.
@@ -32,7 +34,7 @@ See [CONTRIBUTING.md](/CONTRIBUTING.md) for ways to contribute.
 
 ## License
 
-This project's source is licensed under the [Unlicense](LICENSE) license. All contributions to this project's source are understood to be given to the public domain.
+This project's source is licensed under the [BSD Zero Clause License](LICENSE). All contributions to this project's source may be used, copied, modified, and/or distributed for any purpose.
 
 ## Table of contents
 
@@ -173,10 +175,10 @@ Create a file called `.env` in the root of this project folder. Paste your token
 # .env
 
 DISCORD_TOKEN=YOUR_TOKEN_GOES_HERE
-# required, token for your Discord bot
+# Required, token for your Discord bot
 
 DATABASE_URL=YOUR_DATABASE_URL_GOES_HERE
-# required for any DB functionality, we will get this URL in a later section
+# Required for any DB functionality, we will get this URL in a later section
 
 ADMINISTRATORS=COMMA,SEPARATED,ID,LIST
 # Required for the update command. WARNING: The users whose ids are listed here will be able to pull, build, and run code from this repository on the machine the bot is running on. Do not include any users you do not trust.

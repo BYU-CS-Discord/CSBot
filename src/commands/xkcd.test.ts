@@ -5,12 +5,9 @@ import { fetchJson } from '../helpers/fetch.js';
 import { HttpStatusCode } from '../helpers/HttpStatusCode.js';
 import { NetworkError } from '../helpers/NetworkError.js';
 
-vi.mock('../helpers/fetch.js', () => ({ fetchJson: vi.fn() }));
+vi.mock('../helpers/fetch.js', () => ({ fetchJson: vi.fn<typeof fetchJson>() }));
 
-const mockedFetchJson = fetchJson as Mock<
-	Parameters<typeof fetchJson>,
-	ReturnType<typeof fetchJson>
->;
+const mockedFetchJson = fetchJson as Mock<typeof fetchJson>;
 
 // Mock the logger so nothing is printed
 vi.mock('../logger.js');
@@ -50,9 +47,9 @@ const badResponse = new NetworkError(HttpStatusCode.BAD_REQUEST);
 import { xkcd } from './xkcd.js';
 
 describe('xkcd', () => {
-	const mockReply = vi.fn();
-	const mockSendTyping = vi.fn();
-	const mockGetInteger = vi.fn();
+	const mockReply = vi.fn<TextInputCommandContext['reply']>();
+	const mockSendTyping = vi.fn<TextInputCommandContext['sendTyping']>();
+	const mockGetInteger = vi.fn<TextInputCommandContext['options']['getInteger']>();
 	let context: TextInputCommandContext;
 
 	beforeEach(() => {
@@ -87,7 +84,7 @@ describe('xkcd', () => {
 	test('Returning an embed with the latest comic when no number is given', async () => {
 		mockedFetchJson.mockResolvedValue(latestGood);
 		mockGetInteger.mockReturnValueOnce(null);
-		await expect(xkcd.execute(context)).resolves.toBeUndefined();
+		await xkcd.execute(context);
 		expect(mockSendTyping).toHaveBeenCalledOnce();
 		expect(mockReply).toHaveBeenCalledOnce();
 		expect(mockReply).toHaveBeenCalledWith({
@@ -100,7 +97,7 @@ describe('xkcd', () => {
 		mockedFetchJson.mockResolvedValue(chosen);
 		mockedFetchJson.mockResolvedValueOnce(latestGood);
 		mockGetInteger.mockReturnValueOnce(chosen.num);
-		await expect(xkcd.execute(context)).resolves.toBeUndefined();
+		await xkcd.execute(context);
 		expect(mockSendTyping).toHaveBeenCalledOnce();
 		expect(mockReply).toHaveBeenCalledOnce();
 		expect(mockReply).toHaveBeenCalledWith({

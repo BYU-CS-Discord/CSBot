@@ -1,9 +1,9 @@
-import { beforeEach, describe, expect, test, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import { mockDeep } from 'vitest-mock-extended';
 import type { DeepMockProxy } from 'vitest-mock-extended';
 
 import type { PrismaClient, Reactboard, ReactboardPost } from '@prisma/client';
-import { ChannelType } from 'discord.js';
+import { ChannelType, Client, Message, TextChannel, User } from 'discord.js';
 
 import { db } from '../database/index.js';
 import { updateReactboard } from './updateReactboard.js';
@@ -32,16 +32,16 @@ describe('updateReactboard', () => {
 	const mockReactboardId = 0;
 	const mockReact = '⭐';
 
-	const mockReactionFetch = vi.fn();
-	const mockMessageFetch = vi.fn();
-	const mockUserFetch = vi.fn();
-	const mockChannelFetch = vi.fn();
-	const mockMessageFetchById = vi.fn();
-	const mockSend = vi.fn();
-	const mockEdit = vi.fn();
-	const mockChannelIsTextBased = vi.fn();
-	const mockRemoveReact = vi.fn();
-	const mockAvatarUrl = vi.fn();
+	const mockReactionFetch = vi.fn<ReactionHandlerContext['reaction']['fetch']>();
+	const mockMessageFetch = vi.fn<ReactionHandlerContext['reaction']['message']['fetch']>();
+	const mockUserFetch = vi.fn<ReactionHandlerContext['user']['fetch']>();
+	const mockChannelFetch = vi.fn<Client['channels']['fetch']>();
+	const mockMessageFetchById = vi.fn<TextChannel['messages']['fetch']>();
+	const mockSend = vi.fn<TextChannel['send']>();
+	const mockEdit = vi.fn<Message['edit']>();
+	const mockChannelIsTextBased = vi.fn<TextChannel['isTextBased']>();
+	const mockRemoveReact = vi.fn<ReactionHandlerContext['reaction']['users']['remove']>();
+	const mockAvatarUrl = vi.fn<User['displayAvatarURL']>();
 	let context: ReactionHandlerContext;
 
 	const baseAuthor = {
@@ -129,8 +129,10 @@ describe('updateReactboard', () => {
 		mockSend.mockResolvedValue({
 			id: mockReactboardPostId,
 		});
+	});
 
-		vi.clearAllMocks();
+	afterEach(() => {
+		vi.resetAllMocks();
 	});
 
 	test('does nothing if the react isnt in a guild', async () => {
@@ -139,7 +141,7 @@ describe('updateReactboard', () => {
 			guildId: null,
 		});
 
-		await expect(updateReactboard.execute(context)).resolves.toBeUndefined();
+		await updateReactboard.execute(context);
 		expect(mockReactboardPostCreate).not.toHaveBeenCalled();
 		expect(mockSend).not.toHaveBeenCalled();
 		expect(mockEdit).not.toHaveBeenCalled();
@@ -149,7 +151,7 @@ describe('updateReactboard', () => {
 	test('does nothing if the react isnt part of a reactboard', async () => {
 		mockReactboardCount.mockResolvedValue(0);
 
-		await expect(updateReactboard.execute(context)).resolves.toBeUndefined();
+		await updateReactboard.execute(context);
 		expect(mockReactboardPostCreate).not.toHaveBeenCalled();
 		expect(mockSend).not.toHaveBeenCalled();
 		expect(mockEdit).not.toHaveBeenCalled();
@@ -165,7 +167,7 @@ describe('updateReactboard', () => {
 			},
 		});
 
-		await expect(updateReactboard.execute(context)).resolves.toBeUndefined();
+		await updateReactboard.execute(context);
 		expect(mockSend).toHaveBeenCalledTimes(1);
 		expect(mockRemoveReact).toHaveBeenCalledTimes(1);
 	});
@@ -179,7 +181,7 @@ describe('updateReactboard', () => {
 			},
 		});
 
-		await expect(updateReactboard.execute(context)).resolves.toBeUndefined();
+		await updateReactboard.execute(context);
 		expect(mockSend).toHaveBeenCalledTimes(1);
 		expect(mockRemoveReact).toHaveBeenCalledTimes(1);
 	});
@@ -194,7 +196,7 @@ describe('updateReactboard', () => {
 			} as unknown as ReactboardPost,
 		]);
 
-		await expect(updateReactboard.execute(context)).resolves.toBeUndefined();
+		await updateReactboard.execute(context);
 		expect(mockEdit).toHaveBeenCalledTimes(1);
 		expect(mockSend).not.toHaveBeenCalled();
 		expect(mockReactboardPostCreate).not.toHaveBeenCalled();
@@ -208,7 +210,7 @@ describe('updateReactboard', () => {
 			} as unknown as Reactboard,
 		]);
 
-		await expect(updateReactboard.execute(context)).resolves.toBeUndefined();
+		await updateReactboard.execute(context);
 		expect(mockSend).toHaveBeenCalledTimes(1);
 		expect(mockReactboardPostCreate).toHaveBeenCalledTimes(1);
 		expect(mockReactboardPostCreate).toHaveBeenCalledWith({
