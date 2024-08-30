@@ -99,10 +99,6 @@ By using this command, you are acknowleding that your input will be sent to a th
 
 Begins a new game of Evil Hangman.
 
-### /update
-
-Pulls the latest changes from the repository and restarts the bot.
-
 ### /xkcd
 
 Retrieves the most recent [xkcd](https://xkcd.com/) comic, or the given one.
@@ -175,9 +171,6 @@ DISCORD_TOKEN=YOUR_TOKEN_GOES_HERE
 
 DATABASE_URL=YOUR_DATABASE_URL_GOES_HERE
 # Required for any DB functionality, we will get this URL in a later section
-
-ADMINISTRATORS=COMMA,SEPARATED,ID,LIST
-# Required for the update command. WARNING: The users whose ids are listed here will be able to pull, build, and run code from this repository on the machine the bot is running on. Do not include any users you do not trust.
 ```
 
 **Do not commit this file to git** or your bot _will_ get "hacked".
@@ -271,7 +264,7 @@ If you have added new code, you should write new unit tests to cover all the cod
 
 ### Run the bot
 
-For development purposes (the update command will not work properly, but logs are outputed to the console):
+For development purposes:
 
 ```sh
 $ node .

@@ -38,7 +38,6 @@ import { sendtag } from './sendtag.js';
 import { stats } from './stats.js';
 import { talk } from './talk.js';
 import { toTheGallows } from './toTheGallows.js';
-import { update } from './update.js';
 import { xkcd } from './xkcd.js';
 
 import { altText } from './contextMenu/altText.js';
@@ -54,7 +53,6 @@ _add(sendtag);
 _add(stats);
 _add(talk);
 _add(toTheGallows);
-_add(update);
 _add(xkcd);
 
 _add(altText);

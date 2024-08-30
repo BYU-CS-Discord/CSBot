@@ -16,7 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Node version to 20 LTS
+- BREAKING: Node version to 20 LTS
+- BREAKING: Remove `/update`. Use Docker instead for easy upgrades.
 - Tests to use `vitest` instead of `jest`
 - TypeScript build settings to be simplified and and follow `typescript-eslint` standards
 - ESLint config to use new flat configuration

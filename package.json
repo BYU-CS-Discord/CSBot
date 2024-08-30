@@ -42,8 +42,7 @@
 		"setup": "npm ci && npm run export-version && npm run build --production && npm run commands:deploy",
 		"start": "./node_modules/.bin/pm2 start ./dist/main.js --name cs-bot --node-args=\"--env-file=.env\"",
 		"stop": "./node_modules/.bin/pm2 delete cs-bot",
-		"test": "./node_modules/.bin/vitest",
-		"update": "git pull && npm run setup"
+		"test": "./node_modules/.bin/vitest"
 	},
 	"dependencies": {
 		"@discordjs/voice": "0.17.0",
