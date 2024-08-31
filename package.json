@@ -81,7 +81,7 @@
 		"typescript": "5.3.3",
 		"typescript-eslint": "7.18.0",
 		"vitest": "2.0.5",
-		"vitest-mock-extended": "2.0.0"
+		"vitest-mock-extended": "2.0.2"
 	},
 	"engines": {
 		"node": ">=20.6.0"
