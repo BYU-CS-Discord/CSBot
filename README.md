@@ -228,6 +228,12 @@ Edit this line in your `.env` file:
 DATABASE_URL=file:/path/to/your/database.db
 ```
 
+The first time you run this project, you should run the following command to initialize the database:
+
+```
+$ npm run db:init
+```
+
 Migrations can be run on the database with the following command:
 
 ```
