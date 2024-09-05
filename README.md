@@ -222,13 +222,13 @@ _As we use Prisma for managing our database, it is up to you what relational dat
 
 By default, CSBot uses SQLite. All persistent data is stored in a single file.
 
-Edit this line in your `.env` file:
+First decide where you want your database file to go, then edit this line in your `.env` file:
 
 ```
 DATABASE_URL=file:/path/to/your/database.db
 ```
 
-The first time you run this project, you should run the following command to initialize the database:
+The first time you run this project, you should run the following command to initialize the database at the configured path:
 
 ```
 $ npm run db:init
