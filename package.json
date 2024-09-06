@@ -58,7 +58,7 @@
 	},
 	"devDependencies": {
 		"@stylistic/eslint-plugin": "1.8.1",
-		"@types/node": "20.16.3",
+		"@types/node": "20.16.5",
 		"@types/source-map-support": "0.5.10",
 		"@types/tmp": "0.2.6",
 		"@vitest/coverage-istanbul": "2.0.5",
