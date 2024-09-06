@@ -50,7 +50,7 @@
 		"@discordjs/voice": "0.17.0",
 		"@prisma/client": "5.19.1",
 		"dectalk-tts": "1.0.1",
-		"discord.js": "14.15.3",
+		"discord.js": "14.16.1",
 		"ffmpeg-static": "5.2.0",
 		"libsodium-wrappers": "0.7.15",
 		"source-map-support": "0.5.21",
@@ -59,7 +59,7 @@
 	},
 	"devDependencies": {
 		"@stylistic/eslint-plugin": "1.8.1",
-		"@types/node": "20.16.3",
+		"@types/node": "20.16.5",
 		"@types/source-map-support": "0.5.10",
 		"@types/tmp": "0.2.6",
 		"@vitest/coverage-istanbul": "2.0.5",
@@ -79,7 +79,7 @@
 		"prisma": "5.19.1",
 		"semver": "7.6.3",
 		"tsx": "4.19.0",
-		"typescript": "5.3.3",
+		"typescript": "5.5.4",
 		"typescript-eslint": "7.18.0",
 		"vitest": "2.0.5",
 		"vitest-mock-extended": "2.0.2"
