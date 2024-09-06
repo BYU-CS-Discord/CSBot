@@ -1,12 +1,30 @@
-FROM node:20-slim
-RUN apt update
-RUN apt upgrade --yes
+FROM node:alpine as builder
 
-# Necessary for /update
-RUN apt install git --yes
+WORKDIR /app
 
-# Necessary to install devDependencies
-ENV NODE_ENV=development
+COPY . .
 
-WORKDIR /cs-bot
-ENTRYPOINT [ "bash" ]
+RUN npm ci
+RUN npm run export-version
+RUN npm run build --omit=dev
+
+ENV DATABASE_URL="file:/db/db.sqlite"
+RUN npm run db:init
+
+FROM node:alpine as runner
+
+WORKDIR /app
+
+COPY --from=builder /app/dist/ ./dist/
+COPY --from=builder /db/ ./db/
+COPY package*.json ./
+COPY prisma prisma/
+COPY scripts/launch_in_docker.sh .
+
+RUN npm ci --omit=dev
+
+ENV DATABASE_URL="file:/db/db.sqlite"
+
+RUN npm run db:migrate
+
+CMD ["sh", "/app/launch_in_docker.sh"]

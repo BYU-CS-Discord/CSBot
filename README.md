@@ -161,6 +161,8 @@ Note that, by running this bot, you agree to be bound by the Discord's [Develope
 
 ### Configure the bot
 
+This section only applies if running directly from source. See [Run the bot](#run-the-bot) for how to configure for running in [Podman](https://podman.io/) or [Docker](https://www.docker.com/).
+
 Create a file called `.env` in the root of this project folder. Paste your token into that file, and fill in other config items as desired:
 
 ```sh
@@ -263,10 +265,22 @@ $ node --env-file=.env .
 $ npm run dev
 ```
 
-For production purposes (this will spawn a separate thread using [PM2](https://pm2.io/) that will run in the background):
+For production purposes, consider using [Podman](https://podman.io/) or [Docker](https://www.docker.com/) Compose. Copy the example [docker-compose.yml](docker-compose.yml) file to your system, and configure it accoring to your setup. Pay special attention to:
+
+- Use the `build` field if you've cloned this repo directly to build the image from source. Use the `image` field instead if you wish to use our published image.
+- Configure the `volumes` secion appropriately. By default, the SQLite database will go in an adjacent directory to your compose file. If you want the data to live somewhere else on your system, change the configuration accordingly.
+- Create a `.env` file adjacent to your compose file and populate it with your Discord bot token, like so:
+
+```sh
+DISCORD_TOKEN=YOUR_TOKEN_HERE
+```
+
+Alternatively, you can run directly like so:
 
 ```sh
 $ npm start
 $ npm run stop
 $ npm run restart
 ```
+
+This will spawn a separate thread using [PM2](https://pm2.io/) that will run in the background.

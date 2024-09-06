@@ -22,7 +22,7 @@
 	"main": "./dist/main.js",
 	"scripts": {
 		"build": "rm -rf dist && ./node_modules/.bin/tsc && npm run db:generate",
-		"commands:deploy": "node --env-file=.env . --deploy",
+		"commands:deploy": "node --env-file=.env . --deploy # TODO: Replace these with automatic command deployment",
 		"commands:revoke": "node --env-file=.env . --revoke",
 		"db:generate": "./node_modules/.bin/prisma generate --no-hints --schema ./prisma/schema.prisma",
 		"db:init": "npm run db:migrate:initial || ./node_modules/.bin/prisma db push && npm run db:migrate:initial",
