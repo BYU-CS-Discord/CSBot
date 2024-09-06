@@ -7,7 +7,7 @@ import type {
 	TextBasedChannel,
 	User,
 } from 'discord.js';
-import { ChannelType, channelMention, userMention } from 'discord.js';
+import { ChannelType, PartialGroupDMChannel, channelMention, userMention } from 'discord.js';
 
 import { error, info } from '../../../logger.js';
 import { logUser } from '../../logUser.js';
@@ -156,9 +156,9 @@ export async function sendMessageInChannel(
 	channel: TextBasedChannel,
 	content: string | MessageCreateOptions
 ): Promise<Message | null> {
-	if (channel.type === ChannelType.GuildStageVoice) {
+	if (channel instanceof PartialGroupDMChannel) {
 		error(
-			`Failed to send message ${JSON.stringify(content)}: Cannot send in GuildStageVoice channels.`
+			`Failed to send message ${JSON.stringify(content)}: Cannot send in PartialGroupDMChannels.`
 		);
 		return null;
 	}

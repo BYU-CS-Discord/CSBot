@@ -15,6 +15,7 @@ import type {
 	Message,
 	MessageContextMenuCommandInteraction,
 	MessageReplyOptions,
+	PartialGroupDMChannel,
 	Snowflake,
 	User,
 	UserContextMenuCommandInteraction,
@@ -38,7 +39,7 @@ declare global {
 		readonly channelId: Snowflake | null;
 
 		/** The channel in which the interaction was invoked. */
-		readonly channel: GuildTextBasedChannel | DMChannel | null;
+		readonly channel: GuildTextBasedChannel | DMChannel | PartialGroupDMChannel | null;
 
 		/** The user who invoked the interaction. */
 		readonly user: User;

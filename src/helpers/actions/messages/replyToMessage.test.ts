@@ -269,17 +269,4 @@ describe('Cold calls', () => {
 		expect(mockLoggerError).toHaveBeenCalledOnce();
 		expect(mockLoggerError).toHaveBeenCalledWith(expect.stringContaining('send message'), error);
 	});
-
-	test('logs an error and returns null if the send was to a stage channel', async () => {
-		mockChannel = { ...mockChannel, type: ChannelType.GuildStageVoice } as unknown as TextChannel;
-		const error = new Error('This is a test');
-		mockChannelSend.mockRejectedValueOnce(error);
-
-		await expect(sendMessageInChannel(mockChannel, 'yo')).resolves.toBeNull();
-		expect(mockChannelSend).not.toHaveBeenCalled();
-		expect(mockLoggerError).toHaveBeenCalledOnce();
-		expect(mockLoggerError).toHaveBeenCalledWith(
-			expect.stringContaining('Cannot send in GuildStageVoice channels')
-		);
-	});
 });
