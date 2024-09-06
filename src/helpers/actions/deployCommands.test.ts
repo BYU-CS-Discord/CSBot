@@ -2,7 +2,7 @@ import type { Mock } from 'vitest';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
 import type { Client, Guild, OAuth2Guild } from 'discord.js';
-import { Collection, SlashCommandBuilder } from 'discord.js';
+import { Collection, InteractionContextType, SlashCommandBuilder } from 'discord.js';
 
 // Mock the logger so nothing is printed
 vi.mock('../../logger.js');
@@ -97,7 +97,7 @@ describe('Command deployments', () => {
 					.setDescription(' ')
 					.setNameLocalizations({})
 					.setDescriptionLocalizations({})
-					.setDMPermission(false)
+					.setContexts(InteractionContextType.Guild)
 					.addStringOption(option => option.setName('c').setDescription(' ')),
 				requiresGuild: true,
 				execute: vi.fn(),
