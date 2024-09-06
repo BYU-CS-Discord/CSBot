@@ -19,8 +19,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - BREAKING: Node version to 20 LTS
 - BREAKING: Use SQLite instead of PostgreSQL for simplicity and ease of transferring data between hosts.
-- BREAKING: All previous automatic database migrations were removed, because Prisma cannot automatically migrate between database providers. Be sure to upgrade to v0.12.1 before using this version, as any data you might have had won't be migrated for you. See [this migration guide](https://web.archive.org/web/20231216021706/https://serverfault.com/questions/274355/how-to-convert-a-postgres-database-to-sqlite/276213#276213) for help migrating your existing database.
-- BREAKING: Remove `/update`. Use Docker instead for easy upgrades.
 - Tests to use `vitest` instead of `jest`
 - TypeScript build settings to be simplified and and follow `typescript-eslint` standards
 - ESLint config to use new flat configuration
@@ -32,6 +30,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `package.json` to be sorted using `npx sort-package-json`
 - Release script to use `tsx` instead of `ts-node` to resolve ESM problems
 - `/talk` to use `dectalk-tts` package instead of `dectalk`
+
+### Removed
+
+- BREAKING: All previous automatic database migrations were removed, because Prisma cannot automatically migrate between database providers. Be sure to upgrade to v0.12.1 before using this version, as any data you might have had won't be migrated for you. See [this migration guide](https://web.archive.org/web/20231216021706/https://serverfault.com/questions/274355/how-to-convert-a-postgres-database-to-sqlite/276213#276213) for help migrating your existing database.
+- BREAKING: Remove `/update`. Use Docker instead for easy upgrades.
 
 ### Fixed
 
