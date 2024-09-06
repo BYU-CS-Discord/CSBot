@@ -5,6 +5,9 @@ RUN apt upgrade --yes
 # Necessary for /update
 RUN apt install git --yes
 
+# Necessary for tags
+RUN apt install openssl --yes
+
 # Necessary to install devDependencies
 ENV NODE_ENV=development
 
