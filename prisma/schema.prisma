@@ -6,16 +6,16 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
 model Scoreboard {
-	id Int @id @default(autoincrement())
-	userId String
-	guildId String
-	name String
-	score Float
+  id      Int    @id @default(autoincrement())
+  userId  String
+  guildId String
+  name    String
+  score   Float
 }
 
 // All our Models will be defined here
