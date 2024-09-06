@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Node built-in `.env` file support
 - Automatic updates for dependencies with Dependabot
 - A read-only code mirror on [Codeberg](https://codeberg.org/BYU-CS-Discord/CSBot/)
+- Docker support in production!
 
 ### Changed
 
