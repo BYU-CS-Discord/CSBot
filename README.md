@@ -258,7 +258,7 @@ If you have added new code, you should write new unit tests to cover all the cod
 For development purposes:
 
 ```sh
-$ node .
+$ node --env-file=.env .
 # or
 $ npm run dev
 ```
