@@ -2,9 +2,7 @@ import type {
 	AutocompleteInteraction,
 	ButtonInteraction,
 	CommandInteraction,
-	DMChannel,
 	GuildMember,
-	GuildTextBasedChannel,
 	RepliableInteraction,
 } from 'discord.js';
 import { EmbedBuilder, Colors, ApplicationCommandType, ChannelType } from 'discord.js';
@@ -352,7 +350,7 @@ async function generateContext(interaction: RepliableInteraction): Promise<Inter
 		member = (await guild?.members.fetch(interaction.user)) ?? null;
 	}
 
-	let channel: GuildTextBasedChannel | DMChannel | null;
+	let channel: InteractionContext['channel'];
 	if (interaction.channel?.type === ChannelType.DM && interaction.channel.partial) {
 		channel = await interaction.channel.fetch();
 	} else {
