@@ -1,0 +1,25 @@
+# Comments are provided throughout this file to help you get started.
+# If you need more help, visit the Docker compose reference guide at
+# https://docs.docker.com/compose/compose-file/
+
+# Here the instructions define your application as a service called
+# "csbot". This service is built from the Dockerfile in
+# the current directory.
+services:
+  csbot:
+    build:
+      context: .
+    # Comment out the "build" section above and uncomment "image" below
+    # to pull from the published container repository instead of building
+    # from the local Dockerfile:
+    # image: ghcr.io/byu-cs-discord/csbot:latest
+    container_name: csbot
+    restart: unless-stopped
+    environment:
+      # Create a .env file and set DISCORD_TOKEN there:
+      DISCORD_TOKEN: ${DISCORD_TOKEN}
+    env_file:
+      - .env
+    volumes:
+      # Stores DB at ./db/db.sqlite, by default. Be sure to point the volume instead where your data should go:
+      - './db/:/db/'

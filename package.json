@@ -22,7 +22,7 @@
 	"main": "./dist/main.js",
 	"scripts": {
 		"build": "rm -rf dist && ./node_modules/.bin/tsc && npm run db:generate",
-		"commands:deploy": "node --env-file=.env . --deploy",
+		"commands:deploy": "node --env-file=.env . --deploy # TODO: Replace these with automatic command deployment",
 		"commands:revoke": "node --env-file=.env . --revoke",
 		"db:generate": "./node_modules/.bin/prisma generate --no-hints --schema ./prisma/schema.prisma",
 		"db:init": "npm run db:migrate:initial || ./node_modules/.bin/prisma db push && npm run db:migrate:initial",
@@ -43,8 +43,7 @@
 		"setup": "npm ci && npm run export-version && npm run build --production && npm run commands:deploy",
 		"start": "./node_modules/.bin/pm2 start ./dist/main.js --name cs-bot --node-args=\"--env-file=.env\"",
 		"stop": "./node_modules/.bin/pm2 delete cs-bot",
-		"test": "./node_modules/.bin/vitest",
-		"update": "git pull && npm run setup"
+		"test": "./node_modules/.bin/vitest"
 	},
 	"dependencies": {
 		"@discordjs/voice": "0.17.0",
