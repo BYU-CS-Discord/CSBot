@@ -72,7 +72,7 @@
 		"eslint-plugin-unicorn": "55.0.0",
 		"genversion": "3.2.0",
 		"keep-a-changelog": "2.5.3",
-		"nodemon": "3.1.4",
+		"nodemon": "3.1.7",
 		"pm2": "5.4.2",
 		"prettier": "3.3.3",
 		"prettier-plugin-prisma": "5.0.0",
