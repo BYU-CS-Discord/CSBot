@@ -1,5 +1,8 @@
 FROM node:20-slim as builder
 
+RUN apt-get update -y
+RUN apt-get install -y openssl
+
 WORKDIR /app
 
 COPY . .
@@ -9,6 +12,9 @@ RUN npm run export-version
 RUN npm run build --omit=dev
 
 FROM node:20-slim as runner
+
+RUN apt-get update -y
+RUN apt-get install -y openssl
 
 WORKDIR /app
 
