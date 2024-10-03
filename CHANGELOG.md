@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.13.2] - 2024-10-03
+
+### Changed
+
+- Nothing. Just triggering a CI run for science.
+
 ## [0.13.1] - 2024-10-03
 
 ### Added
@@ -263,6 +269,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Development Environment for needed dependencies.
 
+[0.13.2]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.13.1...v0.13.2
 [0.13.1]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.13.0...v0.13.1
 [0.13.0]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.12.1...v0.13.0
 [0.12.1]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.12.0...v0.12.1
