@@ -215,7 +215,7 @@ $ npm run setup
 
 CSBot uses SQLite. All persistent data is stored in a single file.
 
-If you're running in Docker, the database file will be created for you, at the path specified in your volume config. (See [docker-compose.yml](docker-compose.yml).) Otherwise, you'll need to configure the database URL and initialize it yourself, as described below.
+If you're running in Docker, the database file will be created for you, at the path specified in your volume config. If the database is found, any pending database migrations will be run on startup. (See [docker-compose.yml](docker-compose.yml).) Otherwise, you'll need to configure the database URL and initialize it yourself, as described below.
 
 First decide where you want your database file to go, then edit this line in your `.env` file:
 
