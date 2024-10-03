@@ -99,10 +99,6 @@ By using this command, you are acknowleding that your input will be sent to a th
 
 Begins a new game of Evil Hangman.
 
-### /update
-
-Pulls the latest changes from the repository and restarts the bot.
-
 ### /xkcd
 
 Retrieves the most recent [xkcd](https://xkcd.com/) comic, or the given one.
@@ -165,6 +161,8 @@ Note that, by running this bot, you agree to be bound by the Discord's [Develope
 
 ### Configure the bot
 
+This section only applies if running directly from source. See [Run the bot](#run-the-bot) for how to configure for running in [Podman](https://podman.io/) or [Docker](https://www.docker.com/).
+
 Create a file called `.env` in the root of this project folder. Paste your token into that file, and fill in other config items as desired:
 
 ```sh
@@ -175,9 +173,6 @@ DISCORD_TOKEN=YOUR_TOKEN_GOES_HERE
 
 DATABASE_URL=YOUR_DATABASE_URL_GOES_HERE
 # Required for any DB functionality, we will get this URL in a later section
-
-ADMINISTRATORS=COMMA,SEPARATED,ID,LIST
-# Required for the update command. WARNING: The users whose ids are listed here will be able to pull, build, and run code from this repository on the machine the bot is running on. Do not include any users you do not trust.
 ```
 
 **Do not commit this file to git** or your bot _will_ get "hacked".
@@ -218,9 +213,9 @@ $ npm run setup
 
 ### Build the bot database
 
-_As we use Prisma for managing our database, it is up to you what relational database framework to use._
+CSBot uses SQLite. All persistent data is stored in a single file.
 
-By default, CSBot uses SQLite. All persistent data is stored in a single file.
+If you're running in Docker, the database file will be created for you, at the path specified in your volume config. If the database is found, any pending database migrations will be run on startup. (See [docker-compose.yml](docker-compose.yml).) Otherwise, you'll need to configure the database URL and initialize it yourself, as described below.
 
 First decide where you want your database file to go, then edit this line in your `.env` file:
 
@@ -262,18 +257,30 @@ If you have added new code, you should write new unit tests to cover all the cod
 
 ### Run the bot
 
-For development purposes (the update command will not work properly, but logs are outputed to the console):
+For development purposes:
 
 ```sh
-$ node .
+$ node --env-file=.env .
 # or
 $ npm run dev
 ```
 
-For production purposes (this will spawn a separate thread using [PM2](https://pm2.io/) that will run in the background):
+For production purposes, consider using [Podman](https://podman.io/) or [Docker](https://www.docker.com/) Compose. Copy the example [docker-compose.yml](docker-compose.yml) file to your system, and configure it accoring to your setup. Pay special attention to:
+
+- Use the `build` field if you've cloned this repo directly to build the image from source. Use the `image` field instead if you wish to use our published image.
+- Configure the `volumes` secion appropriately. By default, the SQLite database will go in an adjacent directory to your compose file. If you want the data to live somewhere else on your system, change the configuration accordingly.
+- Create a `.env` file adjacent to your compose file and populate it with your Discord bot token, like so:
+
+```sh
+DISCORD_TOKEN=YOUR_TOKEN_HERE
+```
+
+Alternatively, you can run directly like so:
 
 ```sh
 $ npm start
 $ npm run stop
 $ npm run restart
 ```
+
+This will spawn a separate thread using [PM2](https://pm2.io/) that will run in the background.

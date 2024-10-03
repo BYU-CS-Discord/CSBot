@@ -11,7 +11,6 @@ import {
 	NoSubscriberBehavior,
 	entersState,
 } from '@discordjs/voice';
-// eslint-disable-next-line import/default, import/namespace, import/no-named-as-default, import/no-named-as-default-member
 import dectalk from 'dectalk-tts';
 import { writeFileSync, createReadStream } from 'node:fs';
 import { fileSync } from 'tmp';

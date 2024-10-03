@@ -1,7 +1,16 @@
+# https://EditorConfig.org
+
+# top-most EditorConfig file
 root = true
 
+# Unix-style newlines and file endings, with tab indentation for accessibility (no size specified)
 [*]
 charset = utf-8
 end_of_line = lf
 insert_final_newline = true
 trim_trailing_whitespace = true
+indent_style = tab
+
+# YAML doesn't support tab indentation
+[*.{yml,yaml}]
+indent_style = space
