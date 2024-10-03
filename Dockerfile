@@ -29,4 +29,5 @@ RUN npm ci --omit=dev
 # Path internal to container; use `volumes` config to specify real system path of `/db/`
 ENV DATABASE_URL="file:/db/db.sqlite"
 
-CMD ["sh", "/app/launch_in_docker.sh"]
+# Using bash here to get consistent behavior and configurations
+CMD ["bash", "/app/launch_in_docker.sh"]
