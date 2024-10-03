@@ -1,4 +1,4 @@
-FROM node:alpine as builder
+FROM node:20-slim as builder
 
 WORKDIR /app
 
@@ -8,7 +8,7 @@ RUN npm ci
 RUN npm run export-version
 RUN npm run build --omit=dev
 
-FROM node:alpine as runner
+FROM node:20-slim as runner
 
 WORKDIR /app
 
