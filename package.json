@@ -68,7 +68,7 @@
 		"eslint-plugin-import": "2.31.0",
 		"eslint-plugin-prettier": "5.2.1",
 		"eslint-plugin-promise": "7.1.0",
-		"eslint-plugin-unicorn": "55.0.0",
+		"eslint-plugin-unicorn": "56.0.1",
 		"genversion": "3.2.0",
 		"keep-a-changelog": "2.5.3",
 		"nodemon": "3.1.7",
