@@ -5,7 +5,6 @@
 		"mikestead.dotenv",
 		"prisma.prisma",
 		"gruntfuggly.todo-tree",
-		"ms-vscode-remote.remote-containers",
-		"firsttris.vscode-jest-runner"
+		"ms-vscode-remote.remote-containers"
 	]
 }

@@ -7,7 +7,7 @@ import { fetchJson } from './fetch.js';
 import { HttpStatusCode } from './HttpStatusCode.js';
 import { NetworkError } from './NetworkError.js';
 
-const mockFetch = vi.spyOn(global, 'fetch');
+const mockFetch = vi.spyOn(globalThis, 'fetch');
 
 describe('fetchJson', () => {
 	const url = new URL('https://example.com');
