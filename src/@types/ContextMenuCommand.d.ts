@@ -1,4 +1,5 @@
 import type { ApplicationCommandType, ContextMenuCommandBuilder } from 'discord.js';
+import type { ContextMenuCommandType } from '@discordjs/builders';
 
 declare global {
 	interface BaseContextMenuCommand {
@@ -6,7 +7,7 @@ declare global {
 		info: ContextMenuCommandBuilder;
 
 		/** The type of context menu command. */
-		type: ApplicationCommandType.User | ApplicationCommandType.Message;
+		type: ContextMenuCommandType;
 
 		/** Whether the subcommand requires a guild present to execute. */
 		requiresGuild: false; // included here to better fit with `ChatInputCommand` objects. We'll make a guild-bound version later if we need it
