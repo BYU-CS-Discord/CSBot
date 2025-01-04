@@ -46,7 +46,7 @@
 		"test": "./node_modules/.bin/vitest"
 	},
 	"dependencies": {
-		"@discordjs/voice": "0.17.0",
+		"@discordjs/voice": "0.18.0",
 		"@prisma/client": "5.20.0",
 		"dectalk-tts": "1.0.1",
 		"discord.js": "14.16.1",
