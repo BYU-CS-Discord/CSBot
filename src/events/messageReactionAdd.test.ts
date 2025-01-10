@@ -15,7 +15,7 @@ describe('Reaction duplication', () => {
 	let mockSender: User;
 
 	beforeEach(() => {
-		mockRandom = vi.spyOn(global.Math, 'random').mockReturnValue(1);
+		mockRandom = vi.spyOn(globalThis.Math, 'random').mockReturnValue(1);
 
 		mockReaction = {
 			me: false,
