@@ -77,8 +77,8 @@
 		"prettier-plugin-prisma": "5.0.0",
 		"prisma": "6.1.0",
 		"semver": "7.6.3",
+		"typescript": "5.7.2",
 		"tsx": "4.19.2",
-		"typescript": "5.5.4",
 		"typescript-eslint": "7.18.0",
 		"vitest": "2.1.8",
 		"vitest-mock-extended": "2.0.2"
