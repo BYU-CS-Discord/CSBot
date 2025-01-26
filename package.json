@@ -49,7 +49,7 @@
 		"@discordjs/voice": "0.18.0",
 		"@prisma/client": "6.1.0",
 		"dectalk-tts": "1.0.1",
-		"discord.js": "14.17.2",
+		"discord.js": "14.17.3",
 		"ffmpeg-static": "5.2.0",
 		"libsodium-wrappers": "0.7.15",
 		"source-map-support": "0.5.21",
