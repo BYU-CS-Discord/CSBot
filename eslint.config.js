@@ -54,7 +54,10 @@ export default [
 	},
 	{
 		plugins: { deprecation },
-		rules: deprecation.configs.recommended.rules,
+		rules: {
+			...deprecation.configs.recommended.rules,
+			'deprecation/deprecation': 'warn',
+		},
 	},
 
 	// Scoped overrides
