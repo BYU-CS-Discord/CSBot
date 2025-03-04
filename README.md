@@ -235,16 +235,6 @@ Migrations can be run on the database with the following command:
 $ npm run db:migrate
 ```
 
-### Register Slash Commands
-
-If you want support for Discord [Slash Commands](https://support.discord.com/hc/en-us/articles/1500000368501-Slash-Commands-FAQ), you'll need to deploy the commands directly. To avoid rate limits, use a command-line tool, rather than deploying on startup.
-
-Once you have your bot's account token in the .env file, run the following command to tell Discord about our commands:
-
-```sh
-$ npm run commands:deploy
-```
-
 ### Test the bot
 
 Whenever you make changes, you should make sure to run all unit tests before submitting.

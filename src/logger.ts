@@ -1,4 +1,6 @@
-import type { Console } from 'node:console';
+export type { Console } from 'node:console';
+
+export type Logger = Console;
 
 /**
  * The default logger for this application. Set to the console for now.

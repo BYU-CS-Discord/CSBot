@@ -22,6 +22,7 @@ jobs:
 
       - name: Parse changelog
         id: changelog
+        # FIXME: This uses lots of depracated thingstuffs. Best replace it with something else soon:
         uses: coditory/changelog-parser@v1.0.2
 
       - name: Publish release

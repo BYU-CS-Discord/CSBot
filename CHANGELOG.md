@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Removed
+
+- NPM scripts `commands:deploy` and `commands:revoke`, and command-line arguments, were removed. We no longer need these since CSBot now handles command deployments automatically.
+
 ### Fixed
 
 - Automatic deployment of SemVer tags for our Docker image should now work.

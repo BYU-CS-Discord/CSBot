@@ -2,11 +2,8 @@ import type { Client, ClientPresence } from 'discord.js';
 import { ActivityType } from 'discord.js';
 
 import { appVersion } from '../constants/meta.js';
-import { deployCommands } from '../helpers/actions/deployCommands.js';
-import { revokeCommands } from '../helpers/actions/revokeCommands.js';
+import { ensureCommandDeployments } from '../helpers/actions/ensureCommandDeployments.js';
 import { onEvent } from '../helpers/onEvent.js';
-import { parseArgs } from '../helpers/parseArgs.js';
-import { verifyCommandDeployments } from '../helpers/actions/verifyCommandDeployments.js';
 import { info } from '../logger.js';
 
 /**
@@ -17,25 +14,9 @@ export const ready = onEvent('ready', {
 	async execute(client) {
 		info(`Starting ${client.user.username} v${appVersion}...`);
 
-		const args = parseArgs();
-
-		// If we're only here to deploy commands, do that and then exit
-		if (args.deploy) {
-			await deployCommands(client);
-			await client.destroy();
-			return;
-		}
-
-		// If we're only here to revoke commands, do that and then exit
-		if (args.revoke) {
-			await revokeCommands(client);
-			await client.destroy();
-			return;
-		}
-
 		// Sanity check for commands
 		info('Verifying command deployments...');
-		await verifyCommandDeployments(client);
+		await ensureCommandDeployments(client);
 
 		// Set user activity
 		info('Setting user activity');
