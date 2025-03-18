@@ -80,7 +80,7 @@
 		"tsx": "4.19.3",
 		"typescript": "5.5.4",
 		"typescript-eslint": "7.18.0",
-		"vitest": "3.0.8",
+		"vitest": "3.0.9",
 		"vitest-mock-extended": "3.0.1"
 	},
 	"engines": {
