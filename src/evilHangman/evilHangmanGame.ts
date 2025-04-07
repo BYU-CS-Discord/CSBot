@@ -23,12 +23,8 @@ export class EvilHangmanGame {
 	}
 
 	public static newGame(length: number | null, guesses: number | null): EvilHangmanGame {
-		if (length === null) {
-			length = this.getRandomWordFromDictionary()?.length ?? 1;
-		}
-		if (guesses === null) {
-			guesses = Math.max(13 - Math.round(length / 3), 1); // Numbers arbitrary, for game balance
-		}
+		length ??= this.getRandomWordFromDictionary()?.length ?? 1;
+		guesses ??= Math.max(13 - Math.round(length / 3), 1); // Numbers arbitrary, for game balance
 
 		const word = Array.from({ length }).fill('-').join('');
 		const guessesRemaining = guesses;

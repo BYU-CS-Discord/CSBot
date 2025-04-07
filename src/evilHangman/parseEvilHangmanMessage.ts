@@ -6,7 +6,7 @@ import { parser } from './gameInfoParser.js';
 const FORMAT_ERROR_MESSAGE = 'Incorrect message format for Evil Hangman';
 
 export function parseEvilHangmanMessage(message: Message): EvilHangmanGame {
-	const gameStateString = message.embeds[0]?.data?.fields?.[1]?.value;
+	const gameStateString = message.embeds[0]?.data.fields?.[1]?.value;
 	if (gameStateString === undefined) {
 		throw new Error(FORMAT_ERROR_MESSAGE);
 	}

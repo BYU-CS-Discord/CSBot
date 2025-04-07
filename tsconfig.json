@@ -12,9 +12,10 @@
 		"sourceMap": true,
 		"strict": true,
 		"verbatimModuleSyntax": true,
+		"skipLibCheck": true, // until our deps get their act together
 		"noFallthroughCasesInSwitch": true,
 		"noImplicitReturns": true,
 		"noPropertyAccessFromIndexSignature": true,
-		"noUncheckedIndexedAccess": true,
+		"noUncheckedIndexedAccess": true
 	}
 }
