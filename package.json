@@ -47,7 +47,7 @@
 	},
 	"dependencies": {
 		"@discordjs/voice": "0.18.0",
-		"@prisma/client": "6.5.0",
+		"@prisma/client": "6.6.0",
 		"dectalk-tts": "1.0.1",
 		"discord.js": "14.18.0",
 		"ffmpeg-static": "5.2.0",
@@ -75,7 +75,7 @@
 		"pm2": "6.0.5",
 		"prettier": "3.5.3",
 		"prettier-plugin-prisma": "5.0.0",
-		"prisma": "6.5.0",
+		"prisma": "6.6.0",
 		"semver": "7.7.1",
 		"tsx": "4.19.3",
 		"typescript": "5.5.4",
