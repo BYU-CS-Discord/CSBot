@@ -6,7 +6,7 @@ import { parser as changelogParser } from 'keep-a-changelog';
 import { readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import * as semver from 'semver';
+import { parse as parseSemVer } from 'semver';
 import { assert, literal, string, type } from 'superstruct';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -14,8 +14,6 @@ const logger = console;
 
 // Fixes the changelog's footer links and bumps the `version` in [package.json](/package.json) and [package-lock.json](/package-lock.json).
 // This script may be run repeatedly on the same project.
-
-const { parse: parseSemVer } = semver;
 
 function quote(str: string | undefined): string | undefined {
 	if (str === undefined) return str;
