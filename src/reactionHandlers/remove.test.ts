@@ -1,10 +1,10 @@
 import { describe, expect, test } from 'vitest';
 
-import { _add, allReactionHandlers } from './remove.js';
+import { _add, removeReactionHandlers } from './remove.js';
 
 describe('allReactionHandlers', () => {
 	test('index is not empty', () => {
-		expect(allReactionHandlers.size).toBeGreaterThan(0);
+		expect(removeReactionHandlers.size).toBeGreaterThan(0);
 	});
 
 	test('commands can be added', () => {
