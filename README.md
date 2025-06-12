@@ -85,6 +85,10 @@ Retrieves the profile picture of the given user.
 
 Not complete. For now, this command simply auto-completes the tag the user types, but it does not send the tag.
 
+### /setreactboard
+
+Creates a new reactboard or updates an existing one. A reactboard is a channel where the bot will repost messages that recieve a specified number of a specified reaction. The primary use is for a starboard where messages that receive the right number of stars will be added, along with how many stars they received.
+
 ### /stats ( track / update / list / leaderboard / untrack )
 
 Tracks a statistic for the issuer. Use the `track` subcommand to begin tracking, `update` to add or subtract to it, `list` to show all the stats being tracked for the issuer, `leaderboard` to show the users with the highest scores for a stat, and `untrack` to stop tracking a stat for you.
@@ -179,7 +183,7 @@ DATABASE_URL=YOUR_DATABASE_URL_GOES_HERE
 
 ### Invite your bot to your server
 
-Go to https://discordapi.com/permissions.html#378091424832 and paste in your bot's client ID to get an invite link.
+Go to https://discordapi.com/permissions.html#379165174848 and paste in your bot's client ID to get an invite link.
 
 ### Setting up Docker
 

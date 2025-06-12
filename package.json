@@ -1,6 +1,6 @@
 {
 	"name": "csbot",
-	"version": "0.13.2",
+	"version": "0.14.0",
 	"private": true,
 	"description": "The One beneath the Supreme Overlord's rule. A bot to help manage the BYU CS Discord, successor to Ze Kaiser (https://github.com/arkenstorm/ze-kaiser)",
 	"keywords": [
@@ -40,7 +40,7 @@
 		"lint:fix": "npm run lint -- --fix",
 		"release": "./node_modules/.bin/tsx ./scripts/release.ts",
 		"restart": "./node_modules/.bin/pm2 restart cs-bot",
-		"setup": "npm ci && npm run export-version && npm run build --production && npm run commands:deploy",
+		"setup": "npm ci && npm run export-version && npm run db:migrate && npm run build --production && npm run commands:deploy",
 		"start": "./node_modules/.bin/pm2 start ./dist/main.js --name cs-bot --node-args=\"--env-file=.env\"",
 		"stop": "./node_modules/.bin/pm2 delete cs-bot",
 		"test": "./node_modules/.bin/vitest"
