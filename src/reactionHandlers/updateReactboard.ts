@@ -23,7 +23,7 @@ export const updateReactboard: ReactionHandler = {
 			? await reaction.message.fetch()
 			: reaction.message;
 		const fullUser = user.partial ? await user.fetch() : user;
-		if (fullMessage.guildId === null) return; // Ignore guildless messages
+		if (!fullMessage.inGuild()) return; // Ignore guildless messages
 
 		const reactboardExists =
 			(await db.reactboard.count({
@@ -36,7 +36,7 @@ export const updateReactboard: ReactionHandler = {
 
 		if (fullMessage.author.bot) {
 			const message = `${userMention(user.id)}, you can't use that react on bot messages!`;
-			if (fullMessage.channel.isTextBased() && !fullMessage.channel.isDMBased()) {
+			if (fullMessage.channel.isTextBased()) {
 				await fullMessage.channel.send(message);
 			} else {
 				await fullUser.send(message);
@@ -47,7 +47,7 @@ export const updateReactboard: ReactionHandler = {
 
 		if (fullMessage.author.id === user.id) {
 			const message = `${userMention(user.id)}, you can't use that react on your own messages!`;
-			if (fullMessage.channel.isTextBased() && !fullMessage.channel.isDMBased()) {
+			if (fullMessage.channel.isTextBased()) {
 				await fullMessage.channel.send(message);
 			} else {
 				await fullUser.send(message);
