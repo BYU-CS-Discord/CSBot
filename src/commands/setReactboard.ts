@@ -1,4 +1,11 @@
-import { Guild, GuildEmoji, SlashCommandBuilder, ApplicationCommandOptionType, SlashCommandChannelOption, SlashCommandIntegerOption, SlashCommandStringOption } from 'discord.js';
+import {
+	Guild,
+	GuildEmoji,
+	SlashCommandBuilder,
+	SlashCommandChannelOption,
+	SlashCommandIntegerOption,
+	SlashCommandStringOption,
+} from 'discord.js';
 
 import { UserMessageError } from '../helpers/UserMessageError.js';
 import { db } from '../database/index.js';
@@ -92,7 +99,7 @@ function isUnicodeEmoji(str: string): boolean {
 }
 
 async function getCustomReact(guild: Guild, str: string): Promise<GuildEmoji | undefined> {
-	const reactId = str.match(/^<a?:.+?:(\d+?)>$/u)?.[1];
+	const reactId = /^<a?:.+?:(\d+?)>$/u.exec(str)?.[1];
 	if (reactId === undefined) {
 		return undefined;
 	}
