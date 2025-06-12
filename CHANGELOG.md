@@ -281,7 +281,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Development Environment for needed dependencies.
 
-[Unreleased]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.13.2...HEAD
+[Unreleased]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.14.0...HEAD
+[0.14.0]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.13.2...v0.14.0
 [0.13.2]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.13.1...v0.13.2
 [0.13.1]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.13.0...v0.13.1
 [0.13.0]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.12.1...v0.13.0
