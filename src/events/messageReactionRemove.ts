@@ -1,5 +1,5 @@
 import { onEvent } from '../helpers/onEvent.js';
-import { removeReactionHandlers } from '../reactionHandlers/index.js';
+import { removeReactionHandlers } from '../reactionHandlers/remove.js';
 import { buildExecute } from './messageReaction.js';
 
 /**

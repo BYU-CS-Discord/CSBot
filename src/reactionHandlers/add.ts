@@ -8,7 +8,7 @@ const _allHandlers = new Set<ReactionHandler>();
  * A read-only list of all reaction handlers.
  * @public
  */
-export const allReactionHandlers: ReadonlySet<ReactionHandler> = _allHandlers;
+export const addReactionHandlers: ReadonlySet<ReactionHandler> = _allHandlers;
 
 /**
  * Adds a handler to the list of all reaction handlers.
