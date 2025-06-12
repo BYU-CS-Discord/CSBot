@@ -1,4 +1,4 @@
-import { Guild, GuildEmoji, SlashCommandBuilder } from 'discord.js';
+import { Guild, GuildEmoji, SlashCommandBuilder, ApplicationCommandOptionType, SlashCommandChannelOption, SlashCommandIntegerOption, SlashCommandStringOption } from 'discord.js';
 
 import { UserMessageError } from '../helpers/UserMessageError.js';
 import { db } from '../database/index.js';
@@ -11,13 +11,13 @@ const builder = new SlashCommandBuilder()
 	.setDefaultMemberPermissions('0')
 	.setName('setreactboard')
 	.setDescription('Creates or modifies reaction board in this server')
-	.addChannelOption(option =>
+	.addChannelOption((option: SlashCommandChannelOption) =>
 		option
 			.setName(channelOption)
 			.setDescription('The channel where reactboard posts will be posted')
 			.setRequired(true)
 	)
-	.addIntegerOption(option =>
+	.addIntegerOption((option: SlashCommandIntegerOption) =>
 		option
 			.setName(thresholdOption)
 			.setDescription(
@@ -26,7 +26,7 @@ const builder = new SlashCommandBuilder()
 			.setMinValue(1)
 			.setRequired(true)
 	)
-	.addStringOption(option =>
+	.addStringOption((option: SlashCommandStringOption) =>
 		option.setName(reactOption).setDescription('The react to be tracked (defaults to ⭐)')
 	);
 
@@ -56,7 +56,7 @@ export const setReactboard: GuildedCommand = {
 		} else {
 			const customReact = await getCustomReact(guild, react);
 			if (customReact === undefined) {
-				throw new UserMessageError('React option must be a valid reaction');
+				throw new UserMessageError('React option must be a valid emoji');
 			}
 			reactboardInfo = {
 				react: customReact.id,
@@ -83,7 +83,7 @@ export const setReactboard: GuildedCommand = {
 			},
 		});
 
-		await replyPrivately('Reactboard created!');
+		await replyPrivately('Reactboard set!');
 	},
 };
 

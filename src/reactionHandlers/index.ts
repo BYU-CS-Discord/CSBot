@@ -5,10 +5,10 @@
 const _allHandlers = new Set<ReactionHandler>();
 
 /**
- * A read-only list of all reaction handlers.
+ * A read-only list of all reaction removal handlers.
  * @public
  */
-export const allReactionHandlers: ReadonlySet<ReactionHandler> = _allHandlers;
+export const removeReactionHandlers: ReadonlySet<ReactionHandler> = _allHandlers;
 
 /**
  * Adds a handler to the list of all reaction handlers.
@@ -27,4 +27,4 @@ export function _add(handler: ReactionHandler): void {
 /**  Install handlers here:  **/
 import { updateReactboard } from './updateReactboard.js';
 
-_add(updateReactboard);
+_add(updateReactboard); 
