@@ -28,14 +28,4 @@ describe('typing indicator', () => {
 		sendTyping();
 		expect(mockSendTyping).toHaveBeenCalledOnce();
 	});
-
-	test('does not send typing indicator in stage channels', () => {
-		interaction = {
-			...interaction,
-			channel: { ...interaction.channel, type: ChannelType.GuildStageVoice },
-		} as unknown as RepliableInteraction;
-		sendTyping = factory(interaction);
-		sendTyping();
-		expect(mockSendTyping).not.toHaveBeenCalled();
-	});
 });

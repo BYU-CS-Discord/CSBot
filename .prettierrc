@@ -1,11 +1,8 @@
 {
 	"arrowParens": "avoid",
 	"htmlWhitespaceSensitivity": "strict",
-	"printWidth": 100,
 	"proseWrap": "preserve",
 	"semi": true,
 	"singleQuote": true,
-	"trailingComma": "es5",
-	"useTabs": true,
-	"endOfLine": "auto"
+	"trailingComma": "es5"
 }

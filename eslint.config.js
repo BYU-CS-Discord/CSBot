@@ -5,10 +5,9 @@
 
 import js from '@eslint/js';
 import stylistic from '@stylistic/eslint-plugin';
-import typescript from 'typescript-eslint';
-import deprecation from 'eslint-plugin-deprecation';
+import { configs as typescriptConfigs } from 'typescript-eslint';
 import fileProgress from 'eslint-plugin-file-progress';
-import * as import_ from 'eslint-plugin-import';
+import * as importPlugin from 'eslint-plugin-import';
 import prettierRecommended from 'eslint-plugin-prettier/recommended';
 import promise from 'eslint-plugin-promise';
 import unicorn from 'eslint-plugin-unicorn';
@@ -20,8 +19,8 @@ export default [
 
 	// Flat configs
 	js.configs.recommended,
-	...typescript.configs.strictTypeChecked,
-	...typescript.configs.stylisticTypeChecked,
+	...typescriptConfigs.strictTypeChecked,
+	...typescriptConfigs.stylisticTypeChecked,
 	stylistic.configs['disable-legacy'],
 	stylistic.configs.customize({
 		braceStyle: '1tbs',
@@ -29,7 +28,19 @@ export default [
 		semi: true,
 	}),
 	prettierRecommended,
-	unicorn.configs['flat/recommended'],
+	unicorn.configs.recommended,
+	importPlugin.flatConfigs?.recommended,
+	importPlugin.flatConfigs?.typescript,
+	{
+		settings: {
+			'import/resolver': {
+				typescript: {
+					alwaysTryTypes: true,
+					project: ['./tsconfig.eslint.json'],
+				},
+			},
+		},
+	},
 
 	// Legacy configs
 	{
@@ -39,29 +50,15 @@ export default [
 		},
 	},
 	{
-		// FIXME eslint-plugin-import does not support flat config, so every time it throws a lint error, the error description
-		// in the console will say "parserPath or languageOptions.parser is required! (undefined:undefined)".
-		// Weird, but still useable.
-		plugins: { import: import_ },
-		rules: {
-			...import_.configs.recommended.rules,
-			...import_.configs.typescript.rules,
-		},
-	},
-	{
 		plugins: { promise },
 		rules: promise.configs.recommended.rules,
-	},
-	{
-		plugins: { deprecation },
-		rules: deprecation.configs.recommended.rules,
 	},
 
 	// Scoped overrides
 	{
 		files: ['**/*.test.{m,c,}{js,ts}{x,}', '**/__mocks__/**'],
 		rules: {
-			'import/namespace': 0, // FIXME False positives in test files
+			'import/namespace': 'off', // FIXME False positives in test files
 		},
 	},
 
@@ -78,29 +75,31 @@ export default [
 		},
 		rules: {
 			// Handled by Prettier
-			'@stylistic/arrow-parens': 0,
-			'@stylistic/comma-dangle': 0,
-			'@stylistic/indent': 0,
-			'@stylistic/indent-binary-ops': 0,
-			'@stylistic/no-mixed-spaces-and-tabs': 0,
-			'@stylistic/quotes': 0,
-			'@stylistic/operator-linebreak': 0,
-			'@stylistic/quote-props': 0,
-			'unicorn/no-nested-ternary': 0,
-			'unicorn/number-literal-case': 0,
+			'@stylistic/arrow-parens': 'off',
+			'@stylistic/comma-dangle': 'off',
+			'@stylistic/indent': 'off',
+			'@stylistic/indent-binary-ops': 'off',
+			'@stylistic/no-mixed-spaces-and-tabs': 'off',
+			'@stylistic/quotes': 'off',
+			'@stylistic/operator-linebreak': 'off',
+			'@stylistic/quote-props': 'off',
+			'unicorn/no-nested-ternary': 'off',
+			'unicorn/number-literal-case': 'off',
 
 			// Overrides
 			'@typescript-eslint/array-type': ['error', { default: 'generic' }],
-			'@typescript-eslint/no-inferrable-types': 0, // We like to be extra explicit with types sometimes
-			'@typescript-eslint/restrict-template-expressions': 0, // FIXME Lots of errors
-			'import/no-unresolved': 0, // Handled by TypeScript
-			'unicorn/filename-case': 0, // We use camelCase
-			'unicorn/no-array-callback-reference': 0,
-			'unicorn/no-array-for-each': 0,
-			'unicorn/no-null': 0, // We use null
-			'unicorn/prefer-spread': 0,
-			'unicorn/prefer-ternary': 0,
-			'unicorn/prevent-abbreviations': 0,
+			'@typescript-eslint/no-inferrable-types': 'off', // We like to be extra explicit with types sometimes
+			'@typescript-eslint/restrict-template-expressions': 'off', // FIXME Lots of errors
+			'@typescript-eslint/no-deprecated': 'warn', // Formerly handled by eslint-plugin-deprecation
+			'@typescript-eslint/no-misused-spread': 'off', // Lots of things are spreadable in discord.js that eslint can't see well
+			'import/no-unresolved': 'off', // Handled by TypeScript
+			'unicorn/filename-case': 'off', // We use camelCase
+			'unicorn/no-array-callback-reference': 'off',
+			'unicorn/no-array-for-each': 'off',
+			'unicorn/no-null': 'off', // We use null
+			'unicorn/prefer-spread': 'off',
+			'unicorn/prefer-ternary': 'off',
+			'unicorn/prevent-abbreviations': 'off',
 
 			// Additions
 			'@typescript-eslint/explicit-function-return-type': 'error',

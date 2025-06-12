@@ -7,17 +7,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Automatic deployment of SemVer tags for our Docker image should now work.
+
+## [0.14.0] - 2025-06-12
+
+### Added
+
+- Starboard, and associated commands
+
+## [0.13.2] - 2024-10-03
+
+### Changed
+
+- Nothing. Just triggering a CI run for science.
+
+## [0.13.1] - 2024-10-03
+
+### Added
+
+- Deploy Docker image tags for specific SHA hashes.
+
+## [0.13.0] - 2024-10-03
+
 ### Added
 
 - `/iscasdown` slash command to check if BYU's CAS is working
 - Node built-in `.env` file support
 - Automatic updates for dependencies with Dependabot
 - A read-only code mirror on [Codeberg](https://codeberg.org/BYU-CS-Discord/CSBot/)
-- Starboard, and associated commands
+- Docker support in production!
 
 ### Changed
 
-- Node version to 20 LTS
+- BREAKING: Node version to 20 LTS
+- BREAKING: Use SQLite instead of PostgreSQL for simplicity and ease of transferring data between hosts.
 - Tests to use `vitest` instead of `jest`
 - TypeScript build settings to be simplified and and follow `typescript-eslint` standards
 - ESLint config to use new flat configuration
@@ -29,6 +54,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `package.json` to be sorted using `npx sort-package-json`
 - Release script to use `tsx` instead of `ts-node` to resolve ESM problems
 - `/talk` to use `dectalk-tts` package instead of `dectalk`
+
+### Removed
+
+- BREAKING: All previous automatic database migrations were removed, because Prisma cannot automatically migrate between database providers. Be sure to upgrade to v0.12.1 before using this version, as any data you might have had won't be migrated for you. See [this migration guide](https://web.archive.org/web/20231216021706/https://serverfault.com/questions/274355/how-to-convert-a-postgres-database-to-sqlite/276213#276213) for help migrating your existing database. Future migrations in SQLite will happen on startup.
+- BREAKING: Removed `/update`. Use Docker instead for easy upgrades.
 
 ### Fixed
 
@@ -251,7 +281,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Development Environment for needed dependencies.
 
-[Unreleased]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.12.1...HEAD
+[Unreleased]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.13.2...HEAD
+[0.13.2]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.13.1...v0.13.2
+[0.13.1]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.13.0...v0.13.1
+[0.13.0]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.12.1...v0.13.0
 [0.12.1]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.12.0...v0.12.1
 [0.12.0]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.11.2...v0.12.0
 [0.11.2]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.11.1...v0.11.2

@@ -8,4 +8,7 @@
 	"terminal.integrated.defaultProfile.windows": "Git Bash",
 	"editor.formatOnSave": true,
 	"eslint.useFlatConfig": true,
+	"yaml.schemas": {
+		"https://json.schemastore.org/github-workflow.json": "**/workflows/*.yml"
+	}
 }

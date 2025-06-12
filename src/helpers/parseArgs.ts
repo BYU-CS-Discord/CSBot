@@ -11,18 +11,11 @@ const { values } = _parseArgs({
 	strict: true,
 });
 
-const args = {
-	// Apply defaults, since the types aren't aware of them yet.
-	// See https://github.com/DefinitelyTyped/DefinitelyTyped/discussions/64868
-	deploy: values.deploy ?? false,
-	revoke: values.revoke ?? false,
-} as const;
-
-export type Args = typeof args;
+export type Args = typeof values;
 
 /**
  * Returns the command-line arguments, or their default values if none were set.
  */
 export function parseArgs(): Args {
-	return args;
+	return values;
 }
