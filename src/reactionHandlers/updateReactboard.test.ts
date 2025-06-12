@@ -54,7 +54,7 @@ describe('updateReactboard', () => {
 	const baseFullMessage = {
 		id: mockMessageId,
 		guildId: mockGuildId,
-		inGuild: () => true,
+		inGuild: (): boolean => true,
 		author: baseAuthor,
 		channel: {
 			id: mockChannelId,
