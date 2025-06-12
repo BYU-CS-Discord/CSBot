@@ -36,6 +36,7 @@ describe('updateReactboard', () => {
 	const mockMessageFetch = vi.fn<ReactionHandlerContext['reaction']['message']['fetch']>();
 	const mockUserFetch = vi.fn<ReactionHandlerContext['user']['fetch']>();
 	const mockChannelFetch = vi.fn<Client['channels']['fetch']>();
+	const mockChannelIsDMBased = vi.fn<TextChannel['isDMBased']>();
 	const mockMessageFetchById = vi.fn<TextChannel['messages']['fetch']>();
 	const mockSend = vi.fn<TextChannel['send']>();
 	const mockEdit = vi.fn<Message['edit']>();
@@ -53,10 +54,12 @@ describe('updateReactboard', () => {
 	const baseFullMessage = {
 		id: mockMessageId,
 		guildId: mockGuildId,
+		inGuild: () => true,
 		author: baseAuthor,
 		channel: {
 			id: mockChannelId,
 			send: mockSend,
+			isTextBased: mockChannelIsTextBased,
 		},
 		cleanContent: 'something funny',
 		attachments: {
@@ -113,6 +116,7 @@ describe('updateReactboard', () => {
 
 		mockChannelFetch.mockResolvedValue({
 			isTextBased: mockChannelIsTextBased,
+			isDMBased: mockChannelIsDMBased,
 			type: ChannelType.GuildText,
 			messages: {
 				fetch: mockMessageFetchById,
@@ -121,7 +125,7 @@ describe('updateReactboard', () => {
 		});
 
 		mockChannelIsTextBased.mockReturnValue(true);
-
+		mockChannelIsDMBased.mockReturnValue(false);
 		mockMessageFetchById.mockResolvedValue({
 			edit: mockEdit,
 		});
@@ -139,6 +143,7 @@ describe('updateReactboard', () => {
 		mockMessageFetch.mockResolvedValue({
 			...baseFullMessage,
 			guildId: null,
+			inGuild: () => false,
 		});
 
 		await updateReactboard.execute(context);
