@@ -76,7 +76,7 @@
 		"pm2": "6.0.6",
 		"prettier": "3.5.3",
 		"prettier-plugin-prisma": "5.0.0",
-		"prisma": "6.6.0",
+		"prisma": "6.9.0",
 		"semver": "7.7.2",
 		"tsx": "4.19.4",
 		"typescript": "5.8.3",
