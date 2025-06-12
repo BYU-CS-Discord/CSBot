@@ -35,17 +35,23 @@ export const updateReactboard: ReactionHandler = {
 		if (!reactboardExists) return; // Abort if no reactboard
 
 		if (fullMessage.author.bot) {
-			await fullMessage.channel.send(
-				`${userMention(user.id)}, you can't use that react on bot messages!`
-			);
+			const message = `${userMention(user.id)}, you can't use that react on bot messages!`;
+			if (fullMessage.channel.isTextBased() && !fullMessage.channel.isDMBased()) {
+				await fullMessage.channel.send(message);
+			} else {
+				await fullUser.send(message);
+			}
 			await reaction.users.remove(fullUser);
 			return;
 		}
 
 		if (fullMessage.author.id === user.id) {
-			await fullMessage.channel.send(
-				`${userMention(user.id)}, you can't use that react on your own messages!`
-			);
+			const message = `${userMention(user.id)}, you can't use that react on your own messages!`;
+			if (fullMessage.channel.isTextBased() && !fullMessage.channel.isDMBased()) {
+				await fullMessage.channel.send(message);
+			} else {
+				await fullUser.send(message);
+			}
 			await reaction.users.remove(fullUser);
 			return;
 		}
@@ -128,7 +134,12 @@ async function getChannel(
 	| VoiceChannel
 > {
 	const channel = await reaction.client.channels.fetch(channelId);
-	if (channel === null || !channel.isTextBased() || channel.type === ChannelType.GuildStageVoice) {
+	if (
+		channel === null ||
+		!channel.isTextBased() ||
+		channel.isDMBased() ||
+		channel.type === ChannelType.GuildStageVoice
+	) {
 		throw new Error('Could not find channel');
 	}
 	return channel;
