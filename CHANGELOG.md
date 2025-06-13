@@ -295,6 +295,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Development Environment for needed dependencies.
 
+[0.14.3]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.14.2...v0.14.3
 [0.14.2]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.14.1...v0.14.2
 [0.14.1]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.14.0...v0.14.1
 [0.14.0]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.13.2...v0.14.0
