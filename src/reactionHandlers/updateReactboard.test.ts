@@ -13,7 +13,7 @@ vi.mock('../database/index.js', () => ({
 }));
 
 describe('updateReactboard', () => {
-	const updateReactboard = buildUpdateReactboard('messageReactionAdd')
+	const updateReactboard = buildUpdateReactboard('messageReactionAdd');
 
 	const dbMock = db as unknown as DeepMockProxy<PrismaClient>;
 	/* eslint-disable @typescript-eslint/unbound-method */

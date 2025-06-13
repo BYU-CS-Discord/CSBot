@@ -16,7 +16,9 @@ import {
 import { db } from '../database/index.js';
 import { appVersion } from '../constants/meta.js';
 
-export function buildUpdateReactboard(eventType: 'messageReactionAdd' | 'messageReactionRemove') {
+export function buildUpdateReactboard(
+	eventType: 'messageReactionAdd' | 'messageReactionRemove'
+): ReactionHandler {
 	const updateReactboard: ReactionHandler = {
 		async execute({ reaction, user }) {
 			const fullReaction = reaction.partial ? await reaction.fetch() : reaction;
