@@ -11,6 +11,11 @@ export const duplicate: ReactionHandler = {
 			return;
 		}
 
+		// Never self-react
+		if (reaction.message.author?.id === reaction.client.user.id) {
+			return;
+		}
+
 		// The chances, where 1 is always, 100 is once every 100 times, and 0 is never
 		const chance = chances[emojiName] ?? DEFAULT_CHANCE;
 

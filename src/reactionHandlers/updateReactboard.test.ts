@@ -6,13 +6,15 @@ import type { PrismaClient, Reactboard, ReactboardPost } from '@prisma/client';
 import { ChannelType, Client, Message, TextChannel, User } from 'discord.js';
 
 import { db } from '../database/index.js';
-import { updateReactboard } from './updateReactboard.js';
+import { buildUpdateReactboard } from './updateReactboard.js';
 
 vi.mock('../database/index.js', () => ({
 	db: mockDeep<PrismaClient>(),
 }));
 
 describe('updateReactboard', () => {
+	const updateReactboard = buildUpdateReactboard('messageReactionAdd');
+
 	const dbMock = db as unknown as DeepMockProxy<PrismaClient>;
 	/* eslint-disable @typescript-eslint/unbound-method */
 	const mockReactboardCount = dbMock.reactboard.count;
