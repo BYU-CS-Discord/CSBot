@@ -73,7 +73,7 @@
 		"genversion": "3.2.0",
 		"keep-a-changelog": "2.6.2",
 		"nodemon": "3.1.10",
-		"pm2": "6.0.6",
+		"pm2": "6.0.8",
 		"prettier": "3.5.3",
 		"prettier-plugin-prisma": "5.0.0",
 		"prisma": "6.9.0",
