@@ -10,8 +10,7 @@ export function buildExecute(allReactionHandlers: ReadonlySet<ReactionHandler>) 
 
 		if (
 			user.bot || // Ignore bots
-			reaction.me || // Ignore own reacts
-			reaction.message.author?.id === reaction.client.user.id // Never self-react
+			reaction.me // Ignore own reacts
 		) {
 			return;
 		}
