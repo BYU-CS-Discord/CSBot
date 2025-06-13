@@ -16,50 +16,55 @@ import {
 import { db } from '../database/index.js';
 import { appVersion } from '../constants/meta.js';
 
-export const updateReactboard: ReactionHandler = {
-	async execute({ reaction, user }) {
-		const fullReaction = reaction.partial ? await reaction.fetch() : reaction;
-		const fullMessage = reaction.message.partial
-			? await reaction.message.fetch()
-			: reaction.message;
-		const fullUser = user.partial ? await user.fetch() : user;
-		if (!fullMessage.inGuild()) return; // Ignore guildless messages
+export function buildUpdateReactboard(eventType: 'messageReactionAdd' | 'messageReactionRemove') {
+	const updateReactboard: ReactionHandler = {
+		async execute({ reaction, user }) {
+			const fullReaction = reaction.partial ? await reaction.fetch() : reaction;
+			const fullMessage = reaction.message.partial
+				? await reaction.message.fetch()
+				: reaction.message;
+			const fullUser = user.partial ? await user.fetch() : user;
+			if (!fullMessage.inGuild()) return; // Ignore guildless messages
 
-		const reactboardExists =
-			(await db.reactboard.count({
-				where: {
-					guildId: fullMessage.guildId,
-					react: getDbReactName(fullReaction),
-				},
-			})) > 0;
-		if (!reactboardExists) return; // Abort if no reactboard
+			const reactboardExists =
+				(await db.reactboard.count({
+					where: {
+						guildId: fullMessage.guildId,
+						react: getDbReactName(fullReaction),
+					},
+				})) > 0;
+			if (!reactboardExists) return; // Abort if no reactboard
 
-		if (fullMessage.author.bot) {
-			const message = `${userMention(user.id)}, you can't use that react on bot messages!`;
-			if (fullMessage.channel.isTextBased()) {
-				await fullMessage.channel.send(message);
-			} else {
-				await fullUser.send(message);
+			if (eventType === 'messageReactionAdd') {
+				if (fullMessage.author.bot) {
+					const message = `${userMention(user.id)}, you can't use that react on bot messages!`;
+					if (fullMessage.channel.isTextBased()) {
+						await fullMessage.channel.send(message);
+					} else {
+						await fullUser.send(message);
+					}
+					await reaction.users.remove(fullUser);
+					return;
+				}
+
+				if (fullMessage.author.id === user.id) {
+					const message = `${userMention(user.id)}, you can't use that react on your own messages!`;
+					if (fullMessage.channel.isTextBased()) {
+						await fullMessage.channel.send(message);
+					} else {
+						await fullUser.send(message);
+					}
+					await reaction.users.remove(fullUser);
+					return;
+				}
 			}
-			await reaction.users.remove(fullUser);
-			return;
-		}
 
-		if (fullMessage.author.id === user.id) {
-			const message = `${userMention(user.id)}, you can't use that react on your own messages!`;
-			if (fullMessage.channel.isTextBased()) {
-				await fullMessage.channel.send(message);
-			} else {
-				await fullUser.send(message);
-			}
-			await reaction.users.remove(fullUser);
-			return;
-		}
-
-		await updateExistingPosts(fullReaction, fullMessage);
-		await addNewPosts(fullReaction, fullMessage);
-	},
-};
+			await updateExistingPosts(fullReaction, fullMessage);
+			await addNewPosts(fullReaction, fullMessage);
+		},
+	};
+	return updateReactboard;
+}
 
 async function updateExistingPosts(reaction: MessageReaction, message: Message): Promise<void> {
 	const reactboardPosts = await db.reactboardPost.findMany({
