@@ -5,11 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.14.3] - 2025-06-12
 
 ### Fixed
 
+- Don't allow reactboard reactions on the bot's own messages.
+- Only send one error message if someone sends a bad reactboard react.
+
+## [0.14.2] - 2025-06-12
+
+### Fixed
+
+- Removed Postgres migrations to fix reboot loop against the SQLite database.
+
+## [0.14.1] - 2025-06-12
+
+### Fixed
+
+- Export the `setReactboard` command
 - Automatic deployment of SemVer tags for our Docker image should now work.
+
+## [0.14.0] - 2025-06-12
+
+### Added
+
+- Starboard, and associated commands
 
 ## [0.13.2] - 2024-10-03
 
@@ -275,7 +295,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Development Environment for needed dependencies.
 
-[Unreleased]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.13.2...HEAD
+[0.14.3]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.14.2...v0.14.3
+[0.14.2]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.14.1...v0.14.2
+[0.14.1]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.14.0...v0.14.1
+[0.14.0]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.13.2...v0.14.0
 [0.13.2]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.13.1...v0.13.2
 [0.13.1]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.13.0...v0.13.1
 [0.13.0]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.12.1...v0.13.0

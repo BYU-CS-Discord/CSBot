@@ -3,8 +3,9 @@ import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
 import type { MessageReaction, User } from 'discord.js';
 
-import { messageReactionAdd } from './messageReactionAdd.js';
+import { duplicate } from './duplicate.js';
 
+// Mock the logger so nothing is printed
 vi.mock('../logger.js');
 
 describe('Reaction duplication', () => {
@@ -13,6 +14,7 @@ describe('Reaction duplication', () => {
 	let mockRandom: MockInstance<typeof Math.random>;
 	let mockReaction: MessageReaction;
 	let mockSender: User;
+	let mockContext: ReactionHandlerContext;
 
 	beforeEach(() => {
 		mockRandom = vi.spyOn(globalThis.Math, 'random').mockReturnValue(1);
@@ -39,6 +41,11 @@ describe('Reaction duplication', () => {
 		mockSender = {
 			bot: false,
 		} as unknown as User;
+
+		mockContext = {
+			reaction: mockReaction,
+			user: mockSender,
+		};
 	});
 
 	afterEach(() => {
@@ -46,43 +53,19 @@ describe('Reaction duplication', () => {
 	});
 
 	test("sometimes duplicates a user's react", async () => {
-		await messageReactionAdd.execute(mockReaction, mockSender);
+		await duplicate.execute(mockContext);
 		expect(mockResendReact).toHaveBeenCalledOnce();
 	});
 
 	test("sometimes ignores a user's react", async () => {
 		mockRandom.mockReturnValue(0.5);
-		await messageReactionAdd.execute(mockReaction, mockSender);
-		expect(mockResendReact).not.toHaveBeenCalled();
-	});
-
-	test('ignores emoji with an empty name', async () => {
-		mockReaction.emoji.name = '';
-		await messageReactionAdd.execute(mockReaction, mockSender);
-		expect(mockResendReact).not.toHaveBeenCalled();
-	});
-
-	test('ignores emoji with a null name', async () => {
-		mockReaction.emoji.name = null;
-		await messageReactionAdd.execute(mockReaction, mockSender);
-		expect(mockResendReact).not.toHaveBeenCalled();
-	});
-
-	test('ignores bot reacts', async () => {
-		mockSender.bot = true;
-		await messageReactionAdd.execute(mockReaction, mockSender);
-		expect(mockResendReact).not.toHaveBeenCalled();
-	});
-
-	test("ignores the bot's own reacts", async () => {
-		mockReaction.me = true;
-		await messageReactionAdd.execute(mockReaction, mockSender);
+		await duplicate.execute(mockContext);
 		expect(mockResendReact).not.toHaveBeenCalled();
 	});
 
 	test('ignores :star:', async () => {
 		mockReaction.emoji.name = '⭐';
-		await messageReactionAdd.execute(mockReaction, mockSender);
+		await duplicate.execute(mockContext);
 		expect(mockResendReact).not.toHaveBeenCalled();
 	});
 });
