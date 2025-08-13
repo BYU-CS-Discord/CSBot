@@ -2,8 +2,14 @@
 
 version: 2
 updates:
-  - package-ecosystem: "npm"
-    directory: "/"
+  - package-ecosystem: npm
+    directory: /
     schedule:
-      interval: "weekly"
+      interval: weekly
+    versioning-strategy: increase
     open-pull-requests-limit: 1000
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
