@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- New `UPTIME_URL` and `UPTIME_INTERVAL_SECONDS` env vars to configure a regular ping to an uptime-notifier service such as [uptime-kuma](https://github.com/louislam/uptime-kuma).
+
 ## [0.14.3] - 2025-06-13
 
 ### Fixed

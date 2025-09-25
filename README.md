@@ -172,11 +172,17 @@ Create a file called `.env` in the root of this project folder. Paste your token
 ```sh
 # .env
 
-DISCORD_TOKEN=YOUR_TOKEN_GOES_HERE
-# Required, token for your Discord bot
+# Required; token for your Discord bot
+DISCORD_TOKEN='xxx'
 
-DATABASE_URL=YOUR_DATABASE_URL_GOES_HERE
-# Required for any DB functionality, we will get this URL in a later section
+# Required; facilitates DB functionality, we will get this URL in a later section
+DATABASE_URL='file:/path/to/your/database.db'
+
+# Optional; a URL to GET periodically, e.g. an uptime-kuma Push Monitor
+UPTIME_URL='https://status.example.com/api/push/xxx?status=up'
+
+# Optional; the number of seconds between calls to `UPTIME_URL` Must be at least 15. Defaults to `300`
+UPTIME_INTERVAL_SECONDS=300
 ```
 
 **Do not commit this file to git** or your bot _will_ get "hacked".
