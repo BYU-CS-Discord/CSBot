@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.15.0] - 2025-09-25
+
+### Added
+
+- New `UPTIME_URL` and `UPTIME_INTERVAL_SECONDS` env vars to configure a regular ping to an uptime-notifier service such as [uptime-kuma](https://github.com/louislam/uptime-kuma).
+
 ## [0.14.3] - 2025-06-13
 
 ### Fixed
@@ -297,7 +303,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Development Environment for needed dependencies.
 
-[Unreleased]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.14.3...HEAD
+[Unreleased]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.15.0...HEAD
+[0.15.0]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.14.3...v0.15.0
 [0.14.3]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.14.2...v0.14.3
 [0.14.2]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.14.1...v0.14.2
 [0.14.1]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.14.0...v0.14.1
