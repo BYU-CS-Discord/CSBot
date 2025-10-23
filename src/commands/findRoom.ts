@@ -1,23 +1,6 @@
-import { array, boolean, string, tuple, type as schema } from 'superstruct';
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
-import { URL } from 'node:url';
-
-import { fetchJson } from '../helpers/fetch.js';
+import { searchNow, searchAt, searchBetween, searchWhen, type RoomsResponse, type WhenResponse } from '../roomFinder/api.js';
 import { error } from '../logger.js';
-
-const getRoomInfoResponse = schema({
-	busySince: string(),
-	busyUntil: string(),
-	isInUse: boolean(),
-});
-
-type GetRoomInfoResponse = typeof getRoomInfoResponse.TYPE;
-
-const getRoomsResponse = schema({
-	Rooms: array(tuple([string(), string()])),
-});
-
-type GetRoomsResponse = typeof getRoomsResponse.TYPE;
 
 const timeChoices = [
 	{ name: '8:00 AM', value: '08:00:00' },
@@ -74,6 +57,16 @@ const bldgChoices = [
 	{ name: 'WVB', value: 'WVB' },
 ] as const;
 
+const dayChoices = [
+	{ name: 'Monday', value: 'Mon' },
+	{ name: 'Tuesday', value: 'Tue' },
+	{ name: 'Wednesday', value: 'Wed' },
+	{ name: 'Thursday', value: 'Thu' },
+	{ name: 'Friday', value: 'Fri' },
+	{ name: 'Saturday', value: 'Sat' },
+	{ name: 'Sunday', value: 'Sun' },
+] as const;
+
 export function convertTo12Hour(time: string): string {
 	const [hours, minutes, seconds] = time.split(':').map(Number);
 	if (hours !== undefined && minutes !== undefined && seconds !== undefined) {
@@ -84,57 +77,9 @@ export function convertTo12Hour(time: string): string {
 	return 'ERR';
 }
 
-async function _getRoomsFromEndpoint(endpoint: URL): Promise<GetRoomsResponse> {
-	try {
-		return await fetchJson(endpoint, getRoomsResponse);
-	} catch (error_) {
-		error('Error in getting Room Info:');
-		error(error_);
-		const err: GetRoomsResponse = {
-			Rooms: [],
-		};
-		return err;
-	}
-}
-
-async function _getRoomsNow(building: string): Promise<GetRoomsResponse> {
-	const url = new URL(`https://pi.zyancey.com/now/${building}`);
-	return await _getRoomsFromEndpoint(url);
-}
-
-async function _getRoomsAt(building: string, timeA: string): Promise<GetRoomsResponse> {
-	const url = new URL(`https://pi.zyancey.com/at/${building}/${timeA}`);
-	return await _getRoomsFromEndpoint(url);
-}
-
-async function _getRoomsBetween(
-	building: string,
-	timeA: string,
-	timeB: string
-): Promise<GetRoomsResponse> {
-	const url = new URL(`https://pi.zyancey.com/between/${building}/${timeA}/${timeB}`);
-	return await _getRoomsFromEndpoint(url);
-}
-
-async function _getWhenRoom(building: string, room: string): Promise<GetRoomInfoResponse> {
-	try {
-		const endpoint = new URL(`https://pi.zyancey.com/when/${building}/${room}`);
-		return await fetchJson(endpoint, getRoomInfoResponse);
-	} catch (error_) {
-		error('Error in getting Room Info:');
-		error(error_);
-		const err: GetRoomInfoResponse = {
-			busySince: 'Error',
-			busyUntil: 'Error',
-			isInUse: false,
-		};
-		return err;
-	}
-}
-
 const builder = new SlashCommandBuilder()
 	.setName('findroom')
-	.setDescription('Finds you a room to study in on campus!')
+	.setDescription('Finds rooms available at a given time')
 	.addSubcommand(subcommand =>
 		subcommand
 			.setName('now')
@@ -142,7 +87,7 @@ const builder = new SlashCommandBuilder()
 			.addStringOption(option =>
 				option
 					.setName('building')
-					.setDescription('The building acronym to search in, type any to see all options')
+					.setDescription('The building acronym to search in')
 					.addChoices(...bldgChoices)
 					.setRequired(true)
 			)
@@ -161,35 +106,63 @@ const builder = new SlashCommandBuilder()
 			.addStringOption(option =>
 				option
 					.setName('building')
-					.setDescription('The building acronym to search in, type any to see all options')
+					.setDescription('The building acronym to search in')
 					.addChoices(...bldgChoices)
 					.setRequired(true)
+			)
+			.addStringOption(option =>
+				option
+					.setName('day1')
+					.setDescription('First day to search (optional)')
+					.addChoices(...dayChoices)
+					.setRequired(false)
+			)
+			.addStringOption(option =>
+				option
+					.setName('day2')
+					.setDescription('Second day to search (optional)')
+					.addChoices(...dayChoices)
+					.setRequired(false)
 			)
 	)
 	.addSubcommand(subcommand =>
 		subcommand
 			.setName('between')
-			.setDescription('Finds you an available room on campus at a given time!')
+			.setDescription('Finds you an available room on campus during a time range!')
 			.addStringOption(option =>
 				option
 					.setName('start_time')
-					.setDescription('What time would you like to search for?')
+					.setDescription('Start time')
 					.addChoices(...timeChoices)
 					.setRequired(true)
 			)
 			.addStringOption(option =>
 				option
 					.setName('end_time')
-					.setDescription('What time would you like to search for?')
+					.setDescription('End time')
 					.addChoices(...timeChoices)
 					.setRequired(true)
 			)
 			.addStringOption(option =>
 				option
 					.setName('building')
-					.setDescription('The building acronym to search in, type any to see all options')
+					.setDescription('The building acronym to search in')
 					.addChoices(...bldgChoices)
 					.setRequired(true)
+			)
+			.addStringOption(option =>
+				option
+					.setName('day1')
+					.setDescription('First day to search (optional)')
+					.addChoices(...dayChoices)
+					.setRequired(false)
+			)
+			.addStringOption(option =>
+				option
+					.setName('day2')
+					.setDescription('Second day to search (optional)')
+					.addChoices(...dayChoices)
+					.setRequired(false)
 			)
 	)
 	.addSubcommand(subcommand =>
@@ -199,7 +172,7 @@ const builder = new SlashCommandBuilder()
 			.addStringOption(option =>
 				option
 					.setName('building')
-					.setDescription('The building acronym to search in, type any to see all options')
+					.setDescription('The building acronym to search in')
 					.addChoices(...bldgChoices)
 					.setRequired(true)
 			)
@@ -214,126 +187,154 @@ const builder = new SlashCommandBuilder()
 export const findRoom: GlobalCommand = {
 	info: builder,
 	requiresGuild: false,
-	async execute({ replyPrivately, options }): Promise<void> {
+	async execute({ reply, options }): Promise<void> {
 		const input_bldg = options.getString('building');
 		const input_room = options.getString('room');
 		const input_timeA = options.getString('start_time');
 		const input_timeB = options.getString('end_time');
+		const day1 = options.getString('day1');
+		const day2 = options.getString('day2');
 		const type = options.getSubcommand();
 
 		let embedTitle = '';
 		let embedDescription = '';
-		let embedThumbnail = 'https://pi.zyancey.com/img/room-finder-logo.png'; // not currently used, placeholder so that it doesn't show
+		let embedThumbnail = 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Brigham_Young_University_medallion.svg/240px-Brigham_Young_University_medallion.svg.png';
+		let embedColor = 0x0066cc;
 
-		switch (type) {
-			case 'now': {
-				if (input_bldg !== null) {
-					const requestedList = await _getRoomsNow(input_bldg);
-					if (requestedList.Rooms.length === 0) {
-						embedTitle = `No rooms available now in the ${input_bldg}`;
-						embedDescription = 'Try again later!';
-					} else {
-						const roomString = requestedList.Rooms.map(room => room.reverse().join(', ')).join(
-							'\n'
-						);
-						embedTitle = `Rooms available now in the ${input_bldg}`;
+		try {
+			switch (type) {
+				case 'now': {
+					if (input_bldg !== null) {
+						const requestedList = await searchNow(input_bldg);
+						const locationText = input_bldg === 'ANY' ? 'anywhere on campus' : `in the ${input_bldg}`;
+						if (requestedList.Rooms.length === 0) {
+							embedTitle = `No rooms available now ${locationText}`;
+							embedDescription = 'Try again later!';
+							embedColor = 0xff0000; // Red
+						} else {
+							const roomString = requestedList.Rooms.map(room =>
+								`${room[1]}, ${room[0]}`
+							).join('\n');
+							embedTitle = `Rooms available now ${locationText}`;
+							embedDescription = roomString;
+						}
+					}
+					break;
+				}
+
+				case 'at': {
+					if (input_bldg !== null && input_timeA !== null) {
+						const days = [day1, day2].filter(d => d !== null) as string[];
+						const requestedList = await searchAt(input_bldg, input_timeA, days);
+						const locationText = input_bldg === 'ANY' ? 'anywhere on campus' : `in the ${input_bldg}`;
+						if (requestedList.Rooms.length === 0) {
+							embedTitle = `No rooms available at ${convertTo12Hour(
+								input_timeA
+							)} ${locationText}`;
+							embedDescription = days.length > 0
+								? `Days: ${days.join(', ')}\nTry again later!`
+								: 'Try again later!';
+							embedColor = 0xff0000;
+						} else {
+							const roomString = requestedList.Rooms.map(room =>
+								`${room[1]}, ${room[0]}`
+							).join('\n');
+							embedTitle = `Rooms available ${locationText} at ${convertTo12Hour(input_timeA)}`;
+							embedDescription = days.length > 0
+								? `Days: ${days.join(', ')}\n\n${roomString}`
+								: roomString;
+						}
+					}
+					break;
+				}
+
+				case 'between': {
+					if (input_bldg !== null && input_timeA !== null && input_timeB !== null) {
+						const days = [day1, day2].filter(d => d !== null) as string[];
+						const requestedList = await searchBetween(input_bldg, input_timeA, input_timeB, days);
+						const locationText = input_bldg === 'ANY' ? 'anywhere on campus' : `in the ${input_bldg}`;
+						if (requestedList.Rooms.length === 0) {
+							embedTitle = `No rooms available between ${convertTo12Hour(
+								input_timeA
+							)} and ${convertTo12Hour(input_timeB)}`;
+							embedDescription = days.length > 0
+								? `Days: ${days.join(', ')}\nTry again later!`
+								: 'Try again later!';
+							embedColor = 0xff0000;
+						} else {
+							const roomString = requestedList.Rooms.map(room =>
+								`${room[1]}, ${room[0]}`
+							).join('\n');
+							embedTitle = `Rooms available ${locationText} between ${convertTo12Hour(
+								input_timeA
+							)} and ${convertTo12Hour(input_timeB)}`;
+							embedDescription = days.length > 0
+								? `Days: ${days.join(', ')}\n\n${roomString}`
+								: roomString;
+						}
+					}
+					break;
+				}
+
+				case 'when': {
+					if (input_bldg !== null && input_room !== null) {
+						const requestedList = await searchWhen(input_bldg, input_room);
+						const busySince =
+							requestedList.busySince === ''
+								? requestedList.busySince
+								: requestedList.busySince.slice(11, 19);
+						const busyUntil =
+							requestedList.busyUntil === ''
+								? requestedList.busyUntil
+								: requestedList.busyUntil.slice(11, 19);
+						const isInUse = requestedList.isInUse;
+
+						let roomString = '';
+
+						if (busySince === '' || busyUntil === '') {
+							roomString = `I couldn't find any information today for room ${input_room} in the ${input_bldg}, either it doesn't exist or it has no scheduled events for the remainder of the day.`;
+						} else if (isInUse) {
+							roomString = `This room is currently busy from ${convertTo12Hour(
+								busySince
+							)} to ${convertTo12Hour(busyUntil)}`;
+							embedColor = 0xff0000;
+						} else {
+							roomString = `Room ${input_room} is currently free, with its next event scheduled from ${convertTo12Hour(
+								busySince
+							)} to ${convertTo12Hour(busyUntil)}`;
+							embedColor = 0x00ff00; // Green
+						}
+
+						embedTitle = `Room ${input_room} in the ${input_bldg}`;
+						embedThumbnail = `https://aim-classroom-img-prd.byu-oit-sis-prd.amazon.byu.edu/?id=${input_bldg}/${input_room}f.jpg`;
 						embedDescription = roomString;
 					}
+					break;
 				}
-				break;
 			}
-
-			case 'at': {
-				if (input_bldg !== null && input_timeA !== null) {
-					const requestedList = await _getRoomsAt(input_bldg, input_timeA);
-					if (requestedList.Rooms.length === 0) {
-						embedTitle = `No rooms available at ${convertTo12Hour(
-							input_timeA
-						)} in the ${input_bldg}`;
-						embedDescription = 'Try again later!';
-					} else {
-						const roomString = requestedList.Rooms.map(room => room.reverse().join(', ')).join(
-							'\n'
-						);
-						embedTitle = `Rooms available in the ${input_bldg} at ${convertTo12Hour(input_timeA)}`;
-						embedDescription = roomString;
-					}
-				}
-				break;
-			}
-
-			case 'between': {
-				if (input_bldg !== null && input_timeA !== null && input_timeB !== null) {
-					const requestedList = await _getRoomsBetween(input_bldg, input_timeA, input_timeB);
-					if (requestedList.Rooms.length === 0) {
-						embedTitle = `No rooms available between ${convertTo12Hour(
-							input_timeA
-						)} and ${convertTo12Hour(input_timeB)}`;
-						embedDescription = 'Try again later!';
-					} else {
-						const roomString = requestedList.Rooms.map(room => room.reverse().join(', ')).join(
-							'\n'
-						);
-						embedTitle = `Rooms available in the ${input_bldg} between ${convertTo12Hour(
-							input_timeA
-						)} and ${convertTo12Hour(input_timeB)}`;
-						embedDescription = roomString;
-					}
-				}
-				break;
-			}
-
-			case 'when': {
-				if (input_bldg !== null && input_room !== null) {
-					const requestedList = await _getWhenRoom(input_bldg, input_room);
-					const busySince =
-						requestedList.busySince === ''
-							? requestedList.busySince
-							: requestedList.busySince.slice(11, 19);
-					const busyUntil =
-						requestedList.busyUntil === ''
-							? requestedList.busyUntil
-							: requestedList.busyUntil.slice(11, 19);
-					// FORMAT 2023-02-06T12:15:00-07:00
-					const isInUse = requestedList.isInUse;
-
-					let roomString = '';
-
-					if (busySince === '' || busyUntil === '') {
-						roomString = `I couldn't find any information today for room ${input_room} in the ${input_bldg}, either it doesn't exist or it has no scheduled events for the remainder of the day.`;
-					} else if (isInUse) {
-						roomString = `This room is currently busy from ${convertTo12Hour(
-							busySince
-						)} to ${convertTo12Hour(busyUntil)}`;
-					} else {
-						roomString = `Room ${input_room} is currently free, with its next event scheduled from ${convertTo12Hour(
-							busySince
-						)} to ${convertTo12Hour(busyUntil)}`;
-					}
-
-					embedTitle = `Room ${input_room} in the ${input_bldg}`;
-					embedThumbnail = `https://aim-classroom-img-prd.byu-oit-sis-prd.amazon.byu.edu/?id=${input_bldg}/${input_room}f.jpg`;
-					embedDescription = roomString;
-				}
-				break;
-			}
+		} catch (error_) {
+			error('Error in room finder:');
+			error(error_);
+			embedTitle = 'Error';
+			embedDescription = `An error occurred: ${error_ instanceof Error ? error_.message : 'Unknown error'}`;
+			embedColor = 0xff0000;
 		}
 
-		// we should have the data in response, build the embed.
+		// Build the embed
 		const embed = new EmbedBuilder()
 			.setTitle(embedTitle)
 			.setThumbnail(embedThumbnail)
 			.setDescription(embedDescription)
+			.setColor(embedColor)
 			.setTimestamp()
 			.setFooter({
-				text: 'BYU Room Finder',
-				// Going to locally host this on my server soon, I'll make that change when I come back and add thumbnails for the building searches
+				text: 'BYU Room Finder (Native)',
 				iconURL:
 					'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Brigham_Young_University_medallion.svg/240px-Brigham_Young_University_medallion.svg.png',
 			});
 
-		// send the embed back to the client.
-		await replyPrivately({
+		// Send the embed back to the client
+		await reply({
 			embeds: [embed],
 		});
 	},
