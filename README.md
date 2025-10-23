@@ -100,6 +100,10 @@ Not complete. For now, this command simply auto-completes the tag the user types
 
 Creates a new reactboard or updates an existing one. A reactboard is a channel where the bot will repost messages that recieve a specified number of a specified reaction. The primary use is for a starboard where messages that receive the right number of stars will be added, along with how many stars they received.
 
+### /smite
+
+Temporarily prevents a user from using bot commands for one hour. Only administrators can successfully use this command - non-admins who attempt to use it will be smitten for 60 seconds. Administrators cannot be smitten, and attempting to smite the bot will result in the executor being smitten instead. Users who smite themselves receive a special response.
+
 ### /stats ( track / update / list / leaderboard / untrack )
 
 Tracks a statistic for the issuer. Use the `track` subcommand to begin tracking, `update` to add or subtract to it, `list` to show all the stats being tracked for the issuer, `leaderboard` to show the users with the highest scores for a stat, and `untrack` to stop tracking a stat for you.
@@ -113,6 +117,10 @@ By using this command, you are acknowleding that your input will be sent to a th
 ### /tothegallows
 
 Begins a new game of Evil Hangman.
+
+### /unsmite
+
+**[Admin Only]** Removes the smite status from a user, restoring their ability to use bot commands immediately.
 
 ### /xkcd
 
@@ -183,11 +191,17 @@ Create a file called `.env` in the root of this project folder. Paste your token
 ```sh
 # .env
 
-DISCORD_TOKEN=YOUR_TOKEN_GOES_HERE
-# Required, token for your Discord bot
+# Required; token for your Discord bot
+DISCORD_TOKEN='xxx'
 
-DATABASE_URL=YOUR_DATABASE_URL_GOES_HERE
-# Required for any DB functionality, we will get this URL in a later section
+# Required; facilitates DB functionality, we will get this URL in a later section
+DATABASE_URL='file:/path/to/your/database.db'
+
+# Optional; a URL to GET periodically, e.g. an uptime-kuma Push Monitor
+UPTIME_URL='https://status.example.com/api/push/xxx?status=up'
+
+# Optional; the number of seconds between calls to `UPTIME_URL` Must be at least 15. Defaults to `300`
+UPTIME_INTERVAL_SECONDS=300
 ```
 
 **Do not commit this file to git** or your bot _will_ get "hacked".

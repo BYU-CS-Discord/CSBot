@@ -1,11 +1,10 @@
-import { EmbedBuilder, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
+import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { isAdmin, setUserSmitten } from '../helpers/smiteUtils.js';
 import { UserMessageError } from '../helpers/UserMessageError.js';
 
 const builder = new SlashCommandBuilder()
 	.setName('smite')
-	.setDescription('[ADMIN] Smite a user, preventing them from using bot commands')
-	.setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+	.setDescription('Smite a user, preventing them from using bot commands')
 	.addUserOption(option =>
 		option.setName('user').setDescription('The user to smite').setRequired(true)
 	);
@@ -21,7 +20,26 @@ export const smite: GuildedCommand = {
 
 		// Check if the executor is an admin
 		if (!isAdmin(member)) {
-			throw new UserMessageError("You don't have permission to use this command.");
+			// Non-admins get smitten for 60 seconds for trying to use this command
+			await setUserSmitten(user.id, guild.id, true);
+			
+			// Auto-unsmite after 60 seconds
+			setTimeout(async () => {
+				await setUserSmitten(user.id, guild.id, false);
+			}, 60000);
+
+			await reply({
+				embeds: [
+					new EmbedBuilder()
+						.setTitle('⚡ Hubris! ⚡')
+						.setDescription(
+							`You dare try to wield the power of the gods?\n\nYou have been smitten for 60 seconds for your insolence!`
+						)
+						.setImage(ODIN_SMITING_THOR_GIF)
+						.setColor(0xff0000), // Red
+				],
+			});
+			return;
 		}
 
 		// Check if user is trying to smite themselves
