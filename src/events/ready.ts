@@ -1,5 +1,6 @@
 import type { Client, ClientPresence } from 'discord.js';
 import { ActivityType } from 'discord.js';
+import { Worker } from 'node:worker_threads';
 
 import { appVersion } from '../constants/meta.js';
 import { deployCommands } from '../helpers/actions/deployCommands.js';
@@ -49,6 +50,16 @@ export const ready = onEvent('ready', {
 		// setupScraperCron('0 3 * * 1');        // 3 AM every Monday
 		// setupScraperCron('0 0 1 * *');        // Midnight on 1st of month
 		// setupScraperCron('0 2 * * 0', '20251'); // Specific semester
+
+		// Start uptime ping
+		const UPTIME_URL = process.env['UPTIME_URL'];
+		if (UPTIME_URL) {
+			const UPTIME_INTERVAL_SECONDS = process.env['UPTIME_INTERVAL_SECONDS'];
+			new Worker(new URL('../workers/uptime.js', import.meta.url), {
+				name: 'uptime-ping',
+				env: { UPTIME_URL, UPTIME_INTERVAL_SECONDS },
+			});
+		}
 
 		info('Ready!');
 	},
