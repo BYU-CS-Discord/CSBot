@@ -82,7 +82,7 @@ async function updateExistingPosts(reaction: MessageReaction, message: Message):
 		},
 	});
 
-	const updatePromises = reactboardPosts.map(async reactboardPost => {
+	const updatePromises = reactboardPosts.map(async (reactboardPost: { reactboard: { channelId: string }; reactboardMessageId: string }) => {
 		const reactboardChannel = await getChannel(reaction, reactboardPost.reactboard.channelId);
 		const reactboardMessage = await reactboardChannel.messages.fetch(
 			reactboardPost.reactboardMessageId
@@ -112,7 +112,7 @@ async function addNewPosts(reaction: MessageReaction, message: Message): Promise
 		},
 	});
 
-	const updatePromises = reactboardsToPostTo.map(async reactboard => {
+	const updatePromises = reactboardsToPostTo.map(async (reactboard: { id: number; channelId: string }) => {
 		const channel = await getChannel(reaction, reactboard.channelId);
 		const reactboardMessage = await channel.send({ embeds: [buildEmbed(reaction, message)] });
 		await db.reactboardPost.create({
