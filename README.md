@@ -102,7 +102,7 @@ Creates a new reactboard or updates an existing one. A reactboard is a channel w
 
 ### /smite
 
-**[Admin Only]** Temporarily prevents a user from using bot commands for one hour. Administrators cannot be smitten, and attempting to smite the bot will result in the executor being smitten instead. Users who smite themselves receive a special response.
+Temporarily prevents a user from using bot commands for one hour. Only administrators can successfully use this command - non-admins who attempt to use it will be smitten for 60 seconds. Administrators cannot be smitten, and attempting to smite the bot will result in the executor being smitten instead. Users who smite themselves receive a special response.
 
 ### /stats ( track / update / list / leaderboard / untrack )
 
