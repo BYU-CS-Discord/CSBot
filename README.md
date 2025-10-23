@@ -100,6 +100,10 @@ Not complete. For now, this command simply auto-completes the tag the user types
 
 Creates a new reactboard or updates an existing one. A reactboard is a channel where the bot will repost messages that recieve a specified number of a specified reaction. The primary use is for a starboard where messages that receive the right number of stars will be added, along with how many stars they received.
 
+### /smite
+
+**[Admin Only]** Temporarily prevents a user from using bot commands for one hour. Administrators cannot be smitten, and attempting to smite the bot will result in the executor being smitten instead. Users who smite themselves receive a special response.
+
 ### /stats ( track / update / list / leaderboard / untrack )
 
 Tracks a statistic for the issuer. Use the `track` subcommand to begin tracking, `update` to add or subtract to it, `list` to show all the stats being tracked for the issuer, `leaderboard` to show the users with the highest scores for a stat, and `untrack` to stop tracking a stat for you.
@@ -113,6 +117,10 @@ By using this command, you are acknowleding that your input will be sent to a th
 ### /tothegallows
 
 Begins a new game of Evil Hangman.
+
+### /unsmite
+
+**[Admin Only]** Removes the smite status from a user, restoring their ability to use bot commands immediately.
 
 ### /xkcd
 
