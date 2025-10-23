@@ -66,3 +66,13 @@ model Events {
     startTime String // TIME format: "HH:MM:SS"
     endTime   String // TIME format: "HH:MM:SS"
 }
+
+model User {
+    id        Int       @id @default(autoincrement())
+    userId    String    @unique // Discord user ID
+    guildId   String    // Discord guild ID
+    smitten   Boolean   @default(false)
+    smittenAt DateTime? // When the user was smitten (null if not smitten)
+
+    @@unique([userId, guildId], name: "user_guild")
+}

@@ -9,6 +9,7 @@ import { parseArgs } from '../helpers/parseArgs.js';
 import { verifyCommandDeployments } from '../helpers/actions/verifyCommandDeployments.js';
 import { info } from '../logger.js';
 import { setupScraperCron } from '../roomFinder/cron.js';
+import { setupAutoUnsmiteCron } from '../helpers/smiteCron.js';
 
 /**
  * The event handler for when the Discord Client is ready for action
@@ -49,6 +50,10 @@ export const ready = onEvent('ready', {
 		// setupScraperCron('0 3 * * 1');        // 3 AM every Monday
 		// setupScraperCron('0 0 1 * *');        // Midnight on 1st of month
 		// setupScraperCron('0 2 * * 0', '20251'); // Specific semester
+
+		// Set up automatic unsmiting of users after 1 hour
+		// This will check every hour and unsmite anyone who has been smitten for over an hour
+		setupAutoUnsmiteCron(); // Default: '0 * * * *' (every hour)
 
 		info('Ready!');
 	},

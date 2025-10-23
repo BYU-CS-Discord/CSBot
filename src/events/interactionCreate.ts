@@ -20,6 +20,7 @@ import { DISCORD_API_MAX_CHOICES } from '../constants/apiLimitations.js';
 import { logUser } from '../helpers/logUser.js';
 import { onEvent } from '../helpers/onEvent.js';
 import { UserMessageError } from '../helpers/UserMessageError.js';
+import { isUserSmitten, isAdmin } from '../helpers/smiteUtils.js';
 import { debug, error, warn } from '../logger.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -34,6 +35,32 @@ export const interactionCreate = onEvent('interactionCreate', {
 			// Don't respond to bots or ourselves
 			if (interaction.user.bot) return;
 			if (interaction.user.id === interaction.client.user.id) return;
+
+			// Check if user is smitten (but allow autocomplete for UX and admin smite commands)
+			if (interaction.guild && !interaction.isAutocomplete()) {
+				const smitten = await isUserSmitten(interaction.user.id, interaction.guild.id);
+				if (smitten) {
+					// Allow smitten admins to use smite/unsmite commands
+					const isCommand = interaction.isCommand();
+					const commandName = isCommand ? interaction.commandName : null;
+					const isSmiteCommand = commandName === 'smite' || commandName === 'unsmite';
+					
+					if (isSmiteCommand && interaction.member) {
+						// Check if the smitten user is an admin
+						const member = await interaction.guild.members.fetch(interaction.user.id);
+						if (isAdmin(member)) {
+							debug(`Smitten admin ${logUser(interaction.user)} allowed to use ${commandName}`);
+							// Allow the command to proceed
+						} else {
+							debug(`User ${logUser(interaction.user)} is smitten, ignoring interaction`);
+							return; // Silently ignore the interaction
+						}
+					} else {
+						debug(`User ${logUser(interaction.user)} is smitten, ignoring interaction`);
+						return; // Silently ignore the interaction
+					}
+				}
+			}
 
 			if (interaction.isCommand()) {
 				const context = await generateContext(interaction);
