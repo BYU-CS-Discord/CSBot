@@ -76,3 +76,16 @@ model User {
 
     @@unique([userId, guildId], name: "user_guild")
 }
+
+model Tag {
+    id        Int      @id @default(autoincrement())
+    guildId   String   // Discord guild ID - tags are per-guild
+    name      String   // Tag name (unique per guild)
+    content   String   // URL or text content
+    createdBy String   // Discord user ID of creator
+    createdAt DateTime @default(now())
+    useCount  Int      @default(0) // Track how many times tag has been used
+
+    @@unique([guildId, name], name: "guild_tag")
+    @@index([guildId])
+}
