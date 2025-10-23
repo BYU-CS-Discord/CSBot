@@ -48,6 +48,9 @@
 	"dependencies": {
 		"@discordjs/voice": "0.18.0",
 		"@prisma/client": "6.13.0",
+		"axios": "1.12.2",
+		"cheerio": "1.1.2",
+		"cron": "4.3.3",
 		"dectalk-tts": "1.0.1",
 		"discord.js": "14.19.1",
 		"ffmpeg-static": "5.2.0",
@@ -58,6 +61,7 @@
 	},
 	"devDependencies": {
 		"@stylistic/eslint-plugin": "4.4.1",
+		"@types/cheerio": "0.22.35",
 		"@types/node": "20.17.48",
 		"@types/semver": "7.7.0",
 		"@types/source-map-support": "0.5.10",
