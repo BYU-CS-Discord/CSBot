@@ -92,17 +92,29 @@ Retrieves the profile picture of the given user.
 
 **[Admin Only]** Manually triggers the room finder data scraper to update the database with current semester schedule information. This is useful for forcing an immediate update without waiting for the automatic Sunday schedule. Takes 10-15 minutes to complete and runs in the background. Shows real-time progress if a scrape is already running.
 
-### /sendtag
-
-Not complete. For now, this command simply auto-completes the tag the user types, but it does not send the tag.
-
 ### /setreactboard
 
 Creates a new reactboard or updates an existing one. A reactboard is a channel where the bot will repost messages that recieve a specified number of a specified reaction. The primary use is for a starboard where messages that receive the right number of stars will be added, along with how many stars they received.
 
+### /smite
+
+Temporarily prevents a user from using bot commands for one hour. Only administrators can successfully use this command - non-admins who attempt to use it will be smitten for 60 seconds. Administrators cannot be smitten, and attempting to smite the bot will result in the executor being smitten instead. Users who smite themselves receive a special response.
+
 ### /stats ( track / update / list / leaderboard / untrack )
 
 Tracks a statistic for the issuer. Use the `track` subcommand to begin tracking, `update` to add or subtract to it, `list` to show all the stats being tracked for the issuer, `leaderboard` to show the users with the highest scores for a stat, and `untrack` to stop tracking a stat for you.
+
+### /tag ( add / send / preview / list / remove )
+
+Manage and use tagged images and links within your server. Tags are server-specific and tracked with usage statistics.
+
+- **add** - Create a new tag with a name and content (URL or text). Maximum 100 characters for name, 2000 for content.
+- **send** - Post a tag publicly in the channel. Automatically displays images as embeds.
+- **preview** - View tag details privately (ephemeral), including creator, use count, and creation date.
+- **list** - List all available tags in the server with their creators and use counts.
+- **remove** - Delete a tag you created. Admins can delete any tag.
+
+Tag names support autocomplete for easy discovery.
 
 ### /talk
 
@@ -113,6 +125,10 @@ By using this command, you are acknowleding that your input will be sent to a th
 ### /tothegallows
 
 Begins a new game of Evil Hangman.
+
+### /unsmite
+
+**[Admin Only]** Removes the smite status from a user, restoring their ability to use bot commands immediately.
 
 ### /xkcd
 
@@ -183,11 +199,17 @@ Create a file called `.env` in the root of this project folder. Paste your token
 ```sh
 # .env
 
-DISCORD_TOKEN=YOUR_TOKEN_GOES_HERE
-# Required, token for your Discord bot
+# Required; token for your Discord bot
+DISCORD_TOKEN='xxx'
 
-DATABASE_URL=YOUR_DATABASE_URL_GOES_HERE
-# Required for any DB functionality, we will get this URL in a later section
+# Required; facilitates DB functionality, we will get this URL in a later section
+DATABASE_URL='file:/path/to/your/database.db'
+
+# Optional; a URL to GET periodically, e.g. an uptime-kuma Push Monitor
+UPTIME_URL='https://status.example.com/api/push/xxx?status=up'
+
+# Optional; the number of seconds between calls to `UPTIME_URL` Must be at least 15. Defaults to `300`
+UPTIME_INTERVAL_SECONDS=300
 ```
 
 **Do not commit this file to git** or your bot _will_ get "hacked".
