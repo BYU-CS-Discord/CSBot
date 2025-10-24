@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/unbound-method */
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { PrismaClient } from '@prisma/client';
 import {
@@ -32,7 +33,12 @@ describe('tagUtils', () => {
 				useCount: 0,
 			});
 
-			const result = await createTag('guild123', 'test', 'https://example.com/image.png', 'user123');
+			const result = await createTag(
+				'guild123',
+				'test',
+				'https://example.com/image.png',
+				'user123'
+			);
 
 			expect(result).toBeDefined();
 			expect(result.name).toBe('test');
@@ -285,12 +291,9 @@ describe('tagUtils', () => {
 
 	describe('searchTags', () => {
 		it('should return matching tag names', async () => {
-			const mockTags = [
-				{ name: 'test1' },
-				{ name: 'test2' },
-				{ name: 'testing' },
-			];
+			const mockTags = [{ name: 'test1' }, { name: 'test2' }, { name: 'testing' }];
 
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-explicit-any
 			vi.spyOn(db.tag, 'findMany').mockResolvedValue(mockTags as any);
 
 			const result = await searchTags('guild123', 'test');

@@ -62,7 +62,7 @@ export async function getTag(guildId: string, name: string): Promise<Tag | null>
  * @param guildId Discord guild ID
  * @returns Array of tags
  */
-export async function getAllTags(guildId: string): Promise<Tag[]> {
+export async function getAllTags(guildId: string): Promise<Array<Tag>> {
 	return db.tag.findMany({
 		where: {
 			guildId,
@@ -138,7 +138,11 @@ export async function deleteTag(
  * @param limit Maximum number of results
  * @returns Array of tag names
  */
-export async function searchTags(guildId: string, query: string, limit = 25): Promise<string[]> {
+export async function searchTags(
+	guildId: string,
+	query: string,
+	limit = 25
+): Promise<Array<string>> {
 	const tags = await db.tag.findMany({
 		where: {
 			guildId,
