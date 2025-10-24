@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { AutocompleteInteraction } from 'discord.js';
 import { tag } from './tag.js';
@@ -403,7 +404,10 @@ describe('tag command', () => {
 
 			vi.mocked(tagUtils.searchTags).mockResolvedValue(['test1', 'test2', 'testing']);
 
-			const result = await tag.autocomplete?.(mockInteraction);
+			const autocomplete = tag.autocomplete as (
+				interaction: AutocompleteInteraction
+			) => Promise<Array<{ name: string; value: string }>>;
+			const result = await autocomplete(mockInteraction);
 
 			expect(tagUtils.searchTags).toHaveBeenCalledWith('guild123', 'test');
 			expect(result).toEqual([
@@ -421,7 +425,10 @@ describe('tag command', () => {
 				},
 			} as unknown as AutocompleteInteraction;
 
-			const result = await tag.autocomplete?.(mockInteraction);
+			const autocomplete = tag.autocomplete as (
+				interaction: AutocompleteInteraction
+			) => Promise<Array<{ name: string; value: string }>>;
+			const result = await autocomplete(mockInteraction);
 
 			expect(result).toEqual([]);
 		});

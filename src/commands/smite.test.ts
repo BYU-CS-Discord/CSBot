@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Client, User } from 'discord.js';
 import { smite } from './smite.js';
@@ -67,11 +68,27 @@ describe('smite', () => {
 		});
 	});
 
-	it('should throw error if executor is not an admin', async () => {
+	it('should smite non-admin executor for 60 seconds when they try to use the command', async () => {
 		vi.mocked(smiteUtils.isAdmin).mockReturnValue(false);
 
-		await expect(smite.execute(context)).rejects.toThrow(UserMessageError);
-		await expect(smite.execute(context)).rejects.toThrow("You don't have permission");
+		await smite.execute(context);
+
+		expect(smiteUtils.setUserSmitten).toHaveBeenCalledWith(
+			mockExecutingUser.id,
+			'test-guild-id',
+			true
+		);
+		expect(mockReply).toHaveBeenCalledWith(
+			expect.objectContaining({
+				embeds: expect.arrayContaining([
+					expect.objectContaining({
+						data: expect.objectContaining({
+							title: '⚡ Hubris! ⚡',
+						}),
+					}),
+				]),
+			})
+		);
 	});
 
 	it('should show wack image if user tries to smite themselves', async () => {
@@ -97,8 +114,8 @@ describe('smite', () => {
 
 	it('should smite the executor if they try to smite the bot', async () => {
 		vi.mocked(smiteUtils.isAdmin).mockReturnValue(true);
-		mockTargetUser.id = mockClient.user!.id;
-		mockGetUser.mockReturnValue(mockTargetUser as User);
+		mockTargetUser.id = mockClient.user?.id ?? '';
+		mockGetUser.mockReturnValue(mockTargetUser);
 
 		await smite.execute(context);
 

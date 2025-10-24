@@ -1,21 +1,21 @@
 /**
  * BYU Room Finder Scraper
- * 
+ *
  * Scrapes class schedule data from BYU's class schedule system and populates the database.
  * Port of the Python scraper from Roomfinder-SQLite.
- * 
+ *
  * USAGE:
  * - Via Discord: /scraperooms <year_term>
  * - Via code: scrapeRoomData('20251')
  * - Via cron: Schedule scrapeRoomData() to run automatically
- * 
+ *
  * YEAR_TERM format: YYYYT where T is term (1=Winter, 3=Spring, 4=Summer, 5=Fall)
  */
 
 import axios from 'axios';
 import * as cheerio from 'cheerio';
-import * as fs from 'fs/promises';
-import * as path from 'path';
+import fs from 'node:fs/promises';
+import path from 'node:path';
 import { db } from '../database/index.js';
 import { error as logError, info as logInfo } from '../logger.js';
 
@@ -29,7 +29,7 @@ const COLUMNS = {
 let isScraperRunning = false;
 let currentScrapeYearTerm: string | null = null;
 let scrapeStartTime: Date | null = null;
-const recentLogs: string[] = [];
+const recentLogs: Array<string> = [];
 const MAX_LOG_BUFFER = 10;
 
 const TIME_FORMAT = /(\d{1,2}):(\d{2})(am|pm)/i;
@@ -37,19 +37,19 @@ const TIME_FORMAT = /(\d{1,2}):(\d{2})(am|pm)/i;
 // Retry configuration
 const MAX_RETRIES = 3;
 const INITIAL_RETRY_DELAY = 1000; // 1 second
-const REQUEST_TIMEOUT = 30000; // 30 seconds (BYU's server can be slow)
+const REQUEST_TIMEOUT = 30_000; // 30 seconds (BYU's server can be slow)
 
 interface ClassInfo {
 	name: string;
 	start: { hours: number; minutes: number; seconds: number };
 	end: { hours: number; minutes: number; seconds: number };
-	days: string[];
+	days: Array<string>;
 }
 
 interface RoomInfo {
 	description: string;
 	capacity: number;
-	classes: ClassInfo[];
+	classes: Array<ClassInfo>;
 }
 
 interface ScraperProgress {
@@ -85,7 +85,7 @@ export function getScraperStatus(): {
 	isRunning: boolean;
 	yearTerm: string | null;
 	startTime: Date | null;
-	recentLogs: string[];
+	recentLogs: Array<string>;
 } {
 	return {
 		isRunning: isScraperRunning,
@@ -137,34 +137,41 @@ async function retryWithBackoff<T>(
 	for (let attempt = 0; attempt <= retries; attempt++) {
 		try {
 			return await fn();
-		} catch (err) {
-			lastError = err as Error;
+		} catch (error) {
+			lastError = error as Error;
 
 			// Check if it's a network error that's worth retrying
 			const isRetryable =
-				err && typeof err === 'object' &&
-				('code' in err && (
-					err.code === 'ECONNRESET' ||
-					err.code === 'ETIMEDOUT' ||
-					err.code === 'ECONNREFUSED' ||
-					err.code === 'ENOTFOUND'
-				));
+				error &&
+				typeof error === 'object' &&
+				'code' in error &&
+				(error.code === 'ECONNRESET' ||
+					error.code === 'ETIMEDOUT' ||
+					error.code === 'ECONNREFUSED' ||
+					error.code === 'ENOTFOUND');
 
 			if (!isRetryable || attempt === retries) {
 				// Not retryable or out of retries
-				throw err;
+				throw error;
 			}
 
 			// Calculate backoff delay: 1s, 2s, 4s
 			const delay = INITIAL_RETRY_DELAY * Math.pow(2, attempt);
-			logInfo(`${context} failed (attempt ${attempt + 1}/${retries + 1}), retrying in ${delay}ms...`);
+			logInfo(
+				`${context} failed (attempt ${attempt + 1}/${retries + 1}), retrying in ${delay}ms...`
+			);
 			addLog(`Retry ${attempt + 1}/${retries + 1} for ${context} after ${delay}ms`);
 
 			await sleep(delay);
 		}
 	}
 
-	throw lastError;
+	if (lastError) {
+		throw lastError;
+	}
+
+	// This should never be reached, but TypeScript needs a guaranteed return/throw
+	throw new Error(`${context} failed: No error recorded`);
 }
 
 /**
@@ -179,22 +186,19 @@ async function openOrDownloadFile(
 	const cachePath = path.join(cacheDir, filename);
 
 	try {
-		const html = await fs.readFile(cachePath, 'utf-8');
+		const html = await fs.readFile(cachePath, 'utf8');
 		return html;
-	} catch (err) {
+	} catch {
 		// File doesn't exist, download it with retry logic
 		logInfo(`Downloading ${filename}...`);
 
-		const html = await retryWithBackoff(
-			fetchFn,
-			`Download ${filename}`
-		);
+		const html = await retryWithBackoff(fetchFn, `Download ${filename}`);
 
 		// Create cache directory
 		await fs.mkdir(cacheDir, { recursive: true });
 
 		// Save to cache
-		await fs.writeFile(cachePath, html, 'utf-8');
+		await fs.writeFile(cachePath, html, 'utf8');
 
 		// Sleep to avoid overwhelming the server
 		await sleep(150);
@@ -207,15 +211,15 @@ async function openOrDownloadFile(
  * Parses time string like "10:00am" or "2:30pm" to hours/minutes
  */
 function parseTime(timeStr: string): { hours: number; minutes: number; seconds: number } {
-	const match = timeStr.match(TIME_FORMAT);
+	const match = TIME_FORMAT.exec(timeStr);
 	if (!match) {
 		logError(`Failed to parse time: ${timeStr}`);
 		return { hours: 1, minutes: 0, seconds: 0 };
 	}
 
-	let hours = parseInt(match[1]!, 10);
-	const minutes = parseInt(match[2]!, 10);
-	const period = match[3]!.toLowerCase();
+	let hours = Number.parseInt(match[1] ?? '0', 10);
+	const minutes = Number.parseInt(match[2] ?? '0', 10);
+	const period = match[3]?.toLowerCase();
 
 	// Convert to 24-hour format
 	if (period === 'pm' && hours !== 12) {
@@ -250,8 +254,8 @@ function getClassInfo($: cheerio.Root, row: cheerio.Element): ClassInfo {
 		const timePeriod = $(cells[COLUMNS.class_period])
 			.text()
 			.trim()
-			.replace(/a/gi, 'am')  // Replace ALL 'a' with 'am' (global)
-			.replace(/p/gi, 'pm'); // Replace ALL 'p' with 'pm' (global)
+			.replaceAll(/a/gi, 'am') // Replace ALL 'a' with 'am' (global)
+			.replaceAll(/p/gi, 'pm'); // Replace ALL 'p' with 'pm' (global)
 
 		const [startStr, endStr] = timePeriod.split(' - ');
 
@@ -261,8 +265,8 @@ function getClassInfo($: cheerio.Root, row: cheerio.Element): ClassInfo {
 
 		start = parseTime(startStr);
 		end = parseTime(endStr);
-	} catch (err) {
-		logError(`Error parsing time: ${err}`);
+	} catch (error) {
+		logError(`Error parsing time: ${error}`);
 		start = { hours: 1, minutes: 0, seconds: 0 };
 		end = { hours: 1, minutes: 0, seconds: 0 };
 	}
@@ -270,13 +274,13 @@ function getClassInfo($: cheerio.Root, row: cheerio.Element): ClassInfo {
 	const daysText = $(cells[COLUMNS.days]).text().trim();
 
 	// Parse days - handle "Daily" or specific days like "MWF" or "T Th"
-	let days: string[];
+	let days: Array<string>;
 	if (daysText === 'Daily') {
 		days = ['M', 'T', 'W', 'Th', 'F'];
 	} else {
 		// Match: Th, Sa, Su, M, T, W, F (in that order to match Th before T)
 		const matches = daysText.match(/Th|Sa|Su|M|T|W|F/g);
-		days = matches || [];
+		days = matches ?? [];
 	}
 
 	return {
@@ -291,30 +295,26 @@ function getClassInfo($: cheerio.Root, row: cheerio.Element): ClassInfo {
  * Fetches and parses room information
  */
 async function getRoomInfo(yearTerm: string, building: string, room: string): Promise<RoomInfo> {
-	const html = await openOrDownloadFile(
-		yearTerm,
-		`${building}-${room}.html`,
-		async () => {
-			const response = await axios.post(
-				'https://y.byu.edu/class_schedule/cgi/classRoom2.cgi',
-				new URLSearchParams({
-					year_term: yearTerm,
-					building: building,
-					room: room,
-				}),
-				{ timeout: REQUEST_TIMEOUT }
-			);
-			return response.data;
-		}
-	);
+	const html = await openOrDownloadFile(yearTerm, `${building}-${room}.html`, async () => {
+		const response = await axios.post(
+			'https://y.byu.edu/class_schedule/cgi/classRoom2.cgi',
+			new URLSearchParams({
+				year_term: yearTerm,
+				building: building,
+				room: room,
+			}),
+			{ timeout: REQUEST_TIMEOUT }
+		);
+		return response.data as string;
+	});
 
 	const $ = cheerio.load(html);
 
-	const description = $('input[name="room_desc"]').val() as string || 'UNKNOWN';
-	const capacityStr = $('input[name="capacity"]').val() as string || '0';
-	const capacity = parseInt(capacityStr, 10) || 0;
+	const description = $('input[name="room_desc"]').val() || 'UNKNOWN';
+	const capacityStr = $('input[name="capacity"]').val() || '0';
+	const capacity = Number.parseInt(capacityStr, 10) || 0;
 
-	const classes: ClassInfo[] = [];
+	const classes: Array<ClassInfo> = [];
 
 	// Find the schedule table (contains "Instructor" header)
 	const scheduleHeader = $('th:contains("Instructor")');
@@ -339,25 +339,21 @@ async function getRoomInfo(yearTerm: string, building: string, room: string): Pr
  */
 async function* getBuildingsRooms(
 	yearTerm: string,
-	buildings: string[]
-): AsyncGenerator<[string, string[]]> {
+	buildings: Array<string>
+): AsyncGenerator<[string, Array<string>]> {
 	for (const building of buildings) {
-		const html = await openOrDownloadFile(
-			yearTerm,
-			`${building}-list.html`,
-			async () => {
-				const response = await axios.post(
-					'https://y.byu.edu/class_schedule/cgi/classRoom2.cgi',
-					new URLSearchParams({
-						e: '@loadRooms',
-						year_term: yearTerm,
-						building: building,
-					}),
-					{ timeout: REQUEST_TIMEOUT }
-				);
-				return response.data;
-			}
-		);
+		const html = await openOrDownloadFile(yearTerm, `${building}-list.html`, async () => {
+			const response = await axios.post(
+				'https://y.byu.edu/class_schedule/cgi/classRoom2.cgi',
+				new URLSearchParams({
+					e: '@loadRooms',
+					year_term: yearTerm,
+					building: building,
+				}),
+				{ timeout: REQUEST_TIMEOUT }
+			);
+			return response.data as string;
+		});
 
 		const $ = cheerio.load(html);
 		const rooms = $('table a')
@@ -375,7 +371,7 @@ export async function scrapeRoomData(
 	yearTerm?: string,
 	onProgress?: (progress: ScraperProgress) => void
 ): Promise<ScraperProgress> {
-	const term = yearTerm || getCurrentYearTerm();
+	const term = yearTerm ?? getCurrentYearTerm();
 
 	// Check if scraper is already running
 	if (isScraperRunning) {
@@ -412,24 +408,20 @@ export async function scrapeRoomData(
 		// Fetch building list from main page
 		logInfo('Fetching building list...');
 		addLog('Fetching building list from BYU...');
-		const indexHtml = await openOrDownloadFile(
-			term,
-			'classRoom2.cgi',
-			async () => {
-				const response = await axios.post(
-					'https://y.byu.edu/class_schedule/cgi/classRoom2.cgi',
-					new URLSearchParams({ year_term: term }),
-					{ timeout: REQUEST_TIMEOUT }
-				);
-				return response.data;
-			}
-		);
+		const indexHtml = await openOrDownloadFile(term, 'classRoom2.cgi', async () => {
+			const response = await axios.post(
+				'https://y.byu.edu/class_schedule/cgi/classRoom2.cgi',
+				new URLSearchParams({ year_term: term }),
+				{ timeout: REQUEST_TIMEOUT }
+			);
+			return response.data as string;
+		});
 
 		const $ = cheerio.load(indexHtml);
 		const buildings = $('select[name="Building"] option')
-			.map((_: number, el: cheerio.Element) => $(el).val() as string)
+			.map((_: number, el: cheerio.Element) => $(el).val())
 			.get()
-			.filter((val: string) => val && val.trim()); // Remove empty values
+			.filter((val: string) => (val ? val.trim() : '')) as Array<string>; // Remove empty values
 
 		logInfo(`Found ${buildings.length} buildings`);
 		addLog(`Found ${buildings.length} buildings to process`);
@@ -483,16 +475,19 @@ export async function scrapeRoomData(
 			}
 		}
 
-		logInfo(`Scrape complete! Buildings: ${progress.buildings}, Rooms: ${progress.rooms}, Events: ${progress.events}`);
-		addLog(`✅ Complete! ${progress.buildings} buildings, ${progress.rooms} rooms, ${progress.events} events`);
+		logInfo(
+			`Scrape complete! Buildings: ${progress.buildings}, Rooms: ${progress.rooms}, Events: ${progress.events}`
+		);
+		addLog(
+			`✅ Complete! ${progress.buildings} buildings, ${progress.rooms} rooms, ${progress.events} events`
+		);
 
 		return progress;
-
-	} catch (err) {
+	} catch (error) {
 		logError('Scraper error:');
-		logError(err);
-		addLog(`❌ Error: ${err instanceof Error ? err.message : 'Unknown error'}`);
-		throw err;
+		logError(error);
+		addLog(`❌ Error: ${error instanceof Error ? error.message : 'Unknown error'}`);
+		throw error;
 	} finally {
 		// Always clear running status when done
 		isScraperRunning = false;

@@ -13,11 +13,13 @@ vi.mock('../roomFinder/scraper.js', () => ({
 		startTime: null,
 		recentLogs: [],
 	})),
-	scrapeRoomData: vi.fn(() => Promise.resolve({
-		buildings: 25,
-		rooms: 2847,
-		events: 18392,
-	})),
+	scrapeRoomData: vi.fn(() =>
+		Promise.resolve({
+			buildings: 25,
+			rooms: 2847,
+			events: 18_392,
+		})
+	),
 }));
 
 // Mock the logger
@@ -26,7 +28,7 @@ vi.mock('../logger.js', () => ({
 	error: vi.fn(),
 }));
 
-import { getCurrentYearTerm, isValidYearTerm, getScraperStatus, scrapeRoomData } from '../roomFinder/scraper.js';
+import { getCurrentYearTerm, getScraperStatus, scrapeRoomData } from '../roomFinder/scraper.js';
 
 describe('scrapeRooms command', () => {
 	const mockReplyPrivately = vi.fn<TextInputCommandContext['replyPrivately']>();

@@ -44,7 +44,7 @@ export const interactionCreate = onEvent('interactionCreate', {
 					const isCommand = interaction.isCommand();
 					const commandName = isCommand ? interaction.commandName : null;
 					const isSmiteCommand = commandName === 'smite' || commandName === 'unsmite';
-					
+
 					if (isSmiteCommand && interaction.member) {
 						// Check if the smitten user is an admin
 						const member = await interaction.guild.members.fetch(interaction.user.id);

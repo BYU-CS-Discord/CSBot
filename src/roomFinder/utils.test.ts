@@ -104,6 +104,7 @@ describe('roomFinder utils', () => {
 
 			const result = await getAllBuildings();
 
+			// eslint-disable-next-line @typescript-eslint/unbound-method
 			expect(dbMock.buildings.findMany).toHaveBeenCalledWith({
 				orderBy: { name: 'asc' },
 			});
@@ -126,6 +127,7 @@ describe('roomFinder utils', () => {
 
 			const result = await getRoomsByBuilding('TMCB');
 
+			// eslint-disable-next-line @typescript-eslint/unbound-method
 			expect(dbMock.rooms.findMany).toHaveBeenCalledWith({
 				where: {
 					building: { name: 'TMCB' },
@@ -152,6 +154,7 @@ describe('roomFinder utils', () => {
 
 			const result = await getAllRooms();
 
+			// eslint-disable-next-line @typescript-eslint/unbound-method
 			expect(dbMock.rooms.findMany).toHaveBeenCalledWith({
 				include: { building: true },
 				orderBy: [{ building: { name: 'asc' } }, { number: 'asc' }],
@@ -176,6 +179,7 @@ describe('roomFinder utils', () => {
 
 			const result = await getRoomEvents(1, 'M');
 
+			// eslint-disable-next-line @typescript-eslint/unbound-method
 			expect(dbMock.events.findMany).toHaveBeenCalledWith({
 				where: {
 					roomId: 1,

@@ -111,7 +111,7 @@ export const tag: GuildedCommand = {
 					const embed = new EmbedBuilder()
 						.setTitle('✅ Tag Created')
 						.setDescription(`Tag \`${name}\` has been created!`)
-						.setColor(0x00ff00) // Green
+						.setColor(0x00_ff_00) // Green
 						.setFooter({ text: `Created by ${user.username}` });
 
 					// If it's an image, display it; otherwise show as text field
@@ -153,9 +153,7 @@ export const tag: GuildedCommand = {
 					// Send as embed with image
 					await reply({
 						embeds: [
-							new EmbedBuilder()
-								.setImage(tagData.content)
-								.setColor(0x5865f2), // Blurple
+							new EmbedBuilder().setImage(tagData.content).setColor(0x58_65_f2), // Blurple
 						],
 					});
 				} else {
@@ -198,7 +196,7 @@ export const tag: GuildedCommand = {
 							inline: true,
 						}
 					)
-					.setColor(0x5865f2); // Blurple
+					.setColor(0x58_65_f2); // Blurple
 
 				// If it's an image, display it; otherwise show as text
 				if (isImage) {
@@ -222,10 +220,8 @@ export const tag: GuildedCommand = {
 						embeds: [
 							new EmbedBuilder()
 								.setTitle('📋 Tags')
-								.setDescription(
-									'No tags available in this server.\n\nCreate one with `/tag add`!'
-								)
-								.setColor(0xffa500), // Orange
+								.setDescription('No tags available in this server.\n\nCreate one with `/tag add`!')
+								.setColor(0xff_a5_00), // Orange
 						],
 						ephemeral: true,
 					});
@@ -234,13 +230,13 @@ export const tag: GuildedCommand = {
 
 				// Split into multiple embeds if there are too many tags
 				const maxFieldsPerEmbed = 25;
-				const embeds: EmbedBuilder[] = [];
+				const embeds: Array<EmbedBuilder> = [];
 
 				for (let i = 0; i < tags.length; i += maxFieldsPerEmbed) {
 					const chunk = tags.slice(i, i + maxFieldsPerEmbed);
 					const embed = new EmbedBuilder()
 						.setTitle(i === 0 ? `📋 Tags (${tags.length} total)` : 'Tags (continued)')
-						.setColor(0x5865f2); // Blurple
+						.setColor(0x58_65_f2); // Blurple
 
 					for (const tagData of chunk) {
 						embed.addFields({
@@ -276,7 +272,7 @@ export const tag: GuildedCommand = {
 							new EmbedBuilder()
 								.setTitle('🗑️ Tag Removed')
 								.setDescription(`Tag \`${name}\` has been deleted.`)
-								.setColor(0xff0000), // Red
+								.setColor(0xff_00_00), // Red
 						],
 						ephemeral: true,
 					});
@@ -289,8 +285,9 @@ export const tag: GuildedCommand = {
 				break;
 			}
 
-			default:
+			default: {
 				throw new UserMessageError('Unknown subcommand');
+			}
 		}
 	},
 };

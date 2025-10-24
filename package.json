@@ -68,6 +68,7 @@
 		"@types/tmp": "0.2.6",
 		"@vitest/coverage-istanbul": "3.2.4",
 		"eslint": "9.38.0",
+		"eslint-config-prettier": "9.1.0",
 		"eslint-import-resolver-typescript": "4.4.4",
 		"eslint-plugin-file-progress": "3.0.2",
 		"eslint-plugin-import": "2.31.0",

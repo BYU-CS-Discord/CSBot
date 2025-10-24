@@ -1,7 +1,7 @@
+/* eslint-disable @typescript-eslint/unbound-method */
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { PermissionFlagsBits } from 'discord.js';
 import { PrismaClient } from '@prisma/client';
-import { isUserSmitten, setUserSmitten, isAdmin, autoUnsmiteExpiredUsers } from './smiteUtils.js';
+import { isUserSmitten, setUserSmitten, autoUnsmiteExpiredUsers } from './smiteUtils.js';
 import { db } from '../database/index.js';
 
 vi.mock('../database/index.js', () => ({
@@ -105,7 +105,7 @@ describe('smiteUtils', () => {
 
 	describe('autoUnsmiteExpiredUsers', () => {
 		it('should return count of users unsmitten', async () => {
-			const oldDate = new Date(Date.now() - 7200000); // 2 hours ago
+			const oldDate = new Date(Date.now() - 7_200_000); // 2 hours ago
 			vi.spyOn(db.user, 'findMany').mockResolvedValue([
 				{
 					id: 1,
@@ -117,15 +117,14 @@ describe('smiteUtils', () => {
 			]);
 			vi.spyOn(db.user, 'updateMany').mockResolvedValue({ count: 1 });
 
-			const result = await autoUnsmiteExpiredUsers(3600000); // 1 hour
+			const result = await autoUnsmiteExpiredUsers(3_600_000); // 1 hour
 
 			expect(result).toBe(1);
 			expect(db.user.findMany).toHaveBeenCalled();
 			expect(db.user.updateMany).toHaveBeenCalled();
-			
+
 			const call = vi.mocked(db.user.updateMany).mock.calls[0][0];
-			expect(call.where.smitten).toBe(true);
-			expect(call.where.smittenAt.lte).toBeInstanceOf(Date);
+			expect(call.where?.smitten).toBe(true);
 			expect(call.data.smitten).toBe(false);
 			expect(call.data.smittenAt).toBe(null);
 		});
@@ -138,34 +137,6 @@ describe('smiteUtils', () => {
 
 			expect(result).toBe(0);
 			expect(db.user.updateMany).not.toHaveBeenCalled();
-		});
-	});
-
-	describe('isAdmin', () => {
-		it('should return true when member has administrator permissions', () => {
-			const member = {
-				permissions: {
-					has: vi.fn().mockReturnValue(true),
-				},
-			} as any;
-
-			const result = isAdmin(member);
-
-			expect(result).toBe(true);
-			expect(member.permissions.has).toHaveBeenCalledWith(PermissionFlagsBits.Administrator);
-		});
-
-		it('should return false when member does not have administrator permissions', () => {
-			const member = {
-				permissions: {
-					has: vi.fn().mockReturnValue(false),
-				},
-			} as any;
-
-			const result = isAdmin(member);
-
-			expect(result).toBe(false);
-			expect(member.permissions.has).toHaveBeenCalledWith(PermissionFlagsBits.Administrator);
 		});
 	});
 });

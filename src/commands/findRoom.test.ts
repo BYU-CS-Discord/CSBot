@@ -8,11 +8,13 @@ vi.mock('../roomFinder/api.js', () => ({
 	searchNow: vi.fn(() => Promise.resolve({ Rooms: [] })),
 	searchAt: vi.fn(() => Promise.resolve({ Rooms: [] })),
 	searchBetween: vi.fn(() => Promise.resolve({ Rooms: [] })),
-	searchWhen: vi.fn(() => Promise.resolve({
-		isInUse: false,
-		busySince: '',
-		busyUntil: '',
-	})),
+	searchWhen: vi.fn(() =>
+		Promise.resolve({
+			isInUse: false,
+			busySince: '',
+			busyUntil: '',
+		})
+	),
 }));
 
 // Mock the logger
@@ -65,7 +67,7 @@ describe('findRoom command', () => {
 	describe('now subcommand', () => {
 		beforeEach(() => {
 			mockGetSubcommand.mockReturnValue('now');
-			mockGetString.mockImplementation((name) => {
+			mockGetString.mockImplementation(name => {
 				if (name === 'building') return 'TMCB';
 				return null;
 			});
@@ -73,7 +75,10 @@ describe('findRoom command', () => {
 
 		test('shows available rooms', async () => {
 			vi.mocked(searchNow).mockResolvedValue({
-				Rooms: [['TMCB', '350'], ['TMCB', '360']],
+				Rooms: [
+					['TMCB', '350'],
+					['TMCB', '360'],
+				],
 			});
 
 			await findRoom.execute(context);
@@ -96,11 +101,11 @@ describe('findRoom command', () => {
 			const call = mockReply.mock.calls[0] as [{ embeds: [EmbedBuilder] }];
 			const embed = call[0].embeds[0];
 			expect(embed.data.title).toContain('No rooms available');
-			expect(embed.data.color).toBe(0xff0000); // Red
+			expect(embed.data.color).toBe(0xff_00_00); // Red
 		});
 
 		test('uses "anywhere on campus" when building is ANY', async () => {
-			mockGetString.mockImplementation((name) => {
+			mockGetString.mockImplementation(name => {
 				if (name === 'building') return 'ANY';
 				return null;
 			});
@@ -117,7 +122,7 @@ describe('findRoom command', () => {
 	describe('at subcommand', () => {
 		beforeEach(() => {
 			mockGetSubcommand.mockReturnValue('at');
-			mockGetString.mockImplementation((name) => {
+			mockGetString.mockImplementation(name => {
 				if (name === 'building') return 'TMCB';
 				if (name === 'start_time') return '14:00:00';
 				if (name === 'day1') return 'Mon';
@@ -142,7 +147,7 @@ describe('findRoom command', () => {
 		});
 
 		test('handles multiple days', async () => {
-			mockGetString.mockImplementation((name) => {
+			mockGetString.mockImplementation(name => {
 				if (name === 'building') return 'TMCB';
 				if (name === 'start_time') return '14:00:00';
 				if (name === 'day1') return 'Mon';
@@ -160,7 +165,7 @@ describe('findRoom command', () => {
 	describe('between subcommand', () => {
 		beforeEach(() => {
 			mockGetSubcommand.mockReturnValue('between');
-			mockGetString.mockImplementation((name) => {
+			mockGetString.mockImplementation(name => {
 				if (name === 'building') return 'TMCB';
 				if (name === 'start_time') return '14:00:00';
 				if (name === 'end_time') return '16:00:00';
@@ -188,7 +193,7 @@ describe('findRoom command', () => {
 	describe('when subcommand', () => {
 		beforeEach(() => {
 			mockGetSubcommand.mockReturnValue('when');
-			mockGetString.mockImplementation((name) => {
+			mockGetString.mockImplementation(name => {
 				if (name === 'building') return 'TMCB';
 				if (name === 'room') return '350';
 				return null;
@@ -211,7 +216,7 @@ describe('findRoom command', () => {
 			const embed = call[0].embeds[0];
 			expect(embed.data.title).toContain('Room 350 in the TMCB');
 			expect(embed.data.description).toContain('currently busy');
-			expect(embed.data.color).toBe(0xff0000); // Red
+			expect(embed.data.color).toBe(0xff_00_00); // Red
 		});
 
 		test('shows room is currently free', async () => {
@@ -226,7 +231,7 @@ describe('findRoom command', () => {
 			const call = mockReply.mock.calls[0] as [{ embeds: [EmbedBuilder] }];
 			const embed = call[0].embeds[0];
 			expect(embed.data.description).toContain('currently free');
-			expect(embed.data.color).toBe(0x00ff00); // Green
+			expect(embed.data.color).toBe(0x00_ff_00); // Green
 		});
 
 		test('shows no information available', async () => {
@@ -261,7 +266,7 @@ describe('findRoom command', () => {
 	describe('error handling', () => {
 		test('handles API errors gracefully', async () => {
 			mockGetSubcommand.mockReturnValue('now');
-			mockGetString.mockImplementation((name) => {
+			mockGetString.mockImplementation(name => {
 				if (name === 'building') return 'TMCB';
 				return null;
 			});
@@ -273,7 +278,7 @@ describe('findRoom command', () => {
 			const embed = call[0].embeds[0];
 			expect(embed.data.title).toBe('Error');
 			expect(embed.data.description).toContain('API Error');
-			expect(embed.data.color).toBe(0xff0000);
+			expect(embed.data.color).toBe(0xff_00_00);
 		});
 	});
 

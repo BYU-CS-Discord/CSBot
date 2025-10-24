@@ -31,7 +31,7 @@ export const unsmite: GuildedCommand = {
 					.setDescription(
 						`${targetUser} has been unsmitten!\n\nThey can now use bot commands again.`
 					)
-					.setColor(0x57f287), // Green
+					.setColor(0x57_f2_87), // Green
 			],
 		});
 	},
