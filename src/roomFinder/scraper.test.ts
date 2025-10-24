@@ -98,23 +98,23 @@ describe('roomFinder scraper utilities', () => {
 	describe('getScraperStatus', () => {
 		test('returns status object with correct structure', () => {
 			const status = getScraperStatus();
-			
+
 			expect(status).toHaveProperty('isRunning');
 			expect(status).toHaveProperty('yearTerm');
 			expect(status).toHaveProperty('startTime');
 			expect(status).toHaveProperty('recentLogs');
-			
+
 			expect(typeof status.isRunning).toBe('boolean');
 			expect(Array.isArray(status.recentLogs)).toBe(true);
 		});
 
 		test('returns correct types', () => {
 			const status = getScraperStatus();
-			
+
 			if (status.yearTerm !== null) {
 				expect(typeof status.yearTerm).toBe('string');
 			}
-			
+
 			if (status.startTime !== null) {
 				expect(status.startTime).toBeInstanceOf(Date);
 			}

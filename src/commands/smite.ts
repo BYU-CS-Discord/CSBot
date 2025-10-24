@@ -9,8 +9,10 @@ const builder = new SlashCommandBuilder()
 		option.setName('user').setDescription('The user to smite').setRequired(true)
 	);
 
-const ODIN_SMITING_THOR_GIF = 'https://cdn.discordapp.com/attachments/781563734098575410/1083403217553084446/smite.gif?ex=68fb93df&is=68fa425f&hm=83b4a865179f0dd6fb1312f535c2a730673709734470c0095dd2a432908bfcba&';
-const WACK_IMAGE = 'https://i.kym-cdn.com/entries/icons/original/000/033/758/Screen_Shot_2020-04-28_at_12.21.48_PM.png';
+const ODIN_SMITING_THOR_GIF =
+	'https://cdn.discordapp.com/attachments/781563734098575410/1083403217553084446/smite.gif?ex=68fb93df&is=68fa425f&hm=83b4a865179f0dd6fb1312f535c2a730673709734470c0095dd2a432908bfcba&';
+const WACK_IMAGE =
+	'https://i.kym-cdn.com/entries/icons/original/000/033/758/Screen_Shot_2020-04-28_at_12.21.48_PM.png';
 export const smite: GuildedCommand = {
 	info: builder,
 	requiresGuild: true,
@@ -22,11 +24,11 @@ export const smite: GuildedCommand = {
 		if (!isAdmin(member)) {
 			// Non-admins get smitten for 60 seconds for trying to use this command
 			await setUserSmitten(user.id, guild.id, true);
-			
+
 			// Auto-unsmite after 60 seconds
-			setTimeout(async () => {
-				await setUserSmitten(user.id, guild.id, false);
-			}, 60000);
+			setTimeout(() => {
+				void setUserSmitten(user.id, guild.id, false);
+			}, 60_000);
 
 			await reply({
 				embeds: [
@@ -36,7 +38,7 @@ export const smite: GuildedCommand = {
 							`You dare try to wield the power of the gods?\n\nYou have been smitten for 60 seconds for your insolence!`
 						)
 						.setImage(ODIN_SMITING_THOR_GIF)
-						.setColor(0xff0000), // Red
+						.setColor(0xff_00_00), // Red
 				],
 			});
 			return;
@@ -46,10 +48,7 @@ export const smite: GuildedCommand = {
 		if (targetUser.id === user.id) {
 			await reply({
 				embeds: [
-					new EmbedBuilder()
-						.setTitle('Wack.')
-						.setImage(WACK_IMAGE)
-						.setColor(0xffa500), // Orange
+					new EmbedBuilder().setTitle('Wack.').setImage(WACK_IMAGE).setColor(0xff_a5_00), // Orange
 				],
 			});
 			return;
@@ -68,7 +67,7 @@ export const smite: GuildedCommand = {
 							`Only now do you understand.\n\nYou have been smitten for attempting to smite ${client.user.username}.`
 						)
 						.setImage(ODIN_SMITING_THOR_GIF)
-						.setColor(0xff0000), // Red
+						.setColor(0xff_00_00), // Red
 				],
 			});
 			return;
@@ -90,7 +89,7 @@ export const smite: GuildedCommand = {
 						`${targetUser} has been smitten by the gods!\n\nThey can no longer use bot commands for the next hour.`
 					)
 					.setImage(ODIN_SMITING_THOR_GIF)
-					.setColor(0x5865f2), // Blurple
+					.setColor(0x58_65_f2), // Blurple
 			],
 		});
 	},

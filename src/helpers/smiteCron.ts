@@ -8,7 +8,7 @@ import { info, error } from '../logger.js';
  */
 export function setupAutoUnsmiteCron(
 	cronSchedule: string = '0 * * * *',
-	maxDurationMs: number = 3600000
+	maxDurationMs: number = 3_600_000
 ): CronJob {
 	info(`[CRON] Setting up auto-unsmite cron: ${cronSchedule} (max duration: ${maxDurationMs}ms)`);
 
@@ -19,15 +19,15 @@ export function setupAutoUnsmiteCron(
 
 			try {
 				const count = await autoUnsmiteExpiredUsers(maxDurationMs);
-				
+
 				if (count > 0) {
 					info(`[CRON] Auto-unsmitten ${count} user(s)`);
 				} else {
 					info('[CRON] No users needed auto-unsmiting');
 				}
-			} catch (err) {
+			} catch (error_) {
 				error('[CRON] Auto-unsmite check failed:');
-				error(err);
+				error(error_);
 			}
 		},
 		null,

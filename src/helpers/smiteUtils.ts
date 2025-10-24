@@ -1,4 +1,4 @@
-import type { GuildMember, PermissionsBitField } from 'discord.js';
+import type { GuildMember } from 'discord.js';
 import { PermissionFlagsBits } from 'discord.js';
 import { db } from '../database/index.js';
 
@@ -57,7 +57,7 @@ export async function setUserSmitten(
  * @param maxDurationMs Maximum duration in milliseconds (default: 1 hour)
  * @returns Number of users auto-unsmitten
  */
-export async function autoUnsmiteExpiredUsers(maxDurationMs: number = 3600000): Promise<number> {
+export async function autoUnsmiteExpiredUsers(maxDurationMs: number = 3_600_000): Promise<number> {
 	const cutoffTime = new Date(Date.now() - maxDurationMs);
 
 	const expiredUsers = await db.user.findMany({

@@ -15,7 +15,7 @@ describe('roomFinder search', () => {
 
 	beforeEach(() => {
 		vi.clearAllMocks();
-		
+
 		// Mock current time to be consistent
 		vi.useFakeTimers();
 		vi.setSystemTime(new Date('2025-01-20T14:00:00.000Z')); // Monday 2pm UTC
@@ -48,9 +48,7 @@ describe('roomFinder search', () => {
 				days: [],
 			});
 
-			expect(result).toEqual([
-				{ roomNumber: '350', buildingName: 'TMCB' },
-			]);
+			expect(result).toEqual([{ roomNumber: '350', buildingName: 'TMCB' }]);
 		});
 
 		test('excludes rooms with conflicting events', async () => {
@@ -151,9 +149,7 @@ describe('roomFinder search', () => {
 				days: ['M', 'W'],
 			});
 
-			expect(result).toEqual([
-				{ roomNumber: '350', buildingName: 'TMCB' },
-			]);
+			expect(result).toEqual([{ roomNumber: '350', buildingName: 'TMCB' }]);
 		});
 
 		test('returns empty array when no days specified', async () => {
@@ -219,9 +215,7 @@ describe('roomFinder search', () => {
 				days: ['M', 'W', 'F'],
 			});
 
-			expect(result).toEqual([
-				{ roomNumber: '350', buildingName: 'TMCB' },
-			]);
+			expect(result).toEqual([{ roomNumber: '350', buildingName: 'TMCB' }]);
 		});
 
 		test('returns empty array when no days specified', async () => {
