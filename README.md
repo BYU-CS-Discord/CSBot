@@ -92,10 +92,6 @@ Retrieves the profile picture of the given user.
 
 **[Admin Only]** Manually triggers the room finder data scraper to update the database with current semester schedule information. This is useful for forcing an immediate update without waiting for the automatic Sunday schedule. Takes 10-15 minutes to complete and runs in the background. Shows real-time progress if a scrape is already running.
 
-### /sendtag
-
-Not complete. For now, this command simply auto-completes the tag the user types, but it does not send the tag.
-
 ### /setreactboard
 
 Creates a new reactboard or updates an existing one. A reactboard is a channel where the bot will repost messages that recieve a specified number of a specified reaction. The primary use is for a starboard where messages that receive the right number of stars will be added, along with how many stars they received.
@@ -107,6 +103,18 @@ Temporarily prevents a user from using bot commands for one hour. Only administr
 ### /stats ( track / update / list / leaderboard / untrack )
 
 Tracks a statistic for the issuer. Use the `track` subcommand to begin tracking, `update` to add or subtract to it, `list` to show all the stats being tracked for the issuer, `leaderboard` to show the users with the highest scores for a stat, and `untrack` to stop tracking a stat for you.
+
+### /tag ( add / send / preview / list / remove )
+
+Manage and use tagged images and links within your server. Tags are server-specific and tracked with usage statistics.
+
+- **add** - Create a new tag with a name and content (URL or text). Maximum 100 characters for name, 2000 for content.
+- **send** - Post a tag publicly in the channel. Automatically displays images as embeds.
+- **preview** - View tag details privately (ephemeral), including creator, use count, and creation date.
+- **list** - List all available tags in the server with their creators and use counts.
+- **remove** - Delete a tag you created. Admins can delete any tag.
+
+Tag names support autocomplete for easy discovery.
 
 ### /talk
 

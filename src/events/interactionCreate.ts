@@ -258,7 +258,7 @@ async function handleAutocompleteInteraction(interaction: AutocompleteInteractio
 		}
 
 		debug(`Calling autocomplete handler for command '${command.info.name}'`);
-		const options = command.autocomplete(interaction);
+		const options = await command.autocomplete(interaction);
 
 		// Return results (limited because of API reasons)
 		// Seriously, Discord WILL throw errors and refuse to deliver ANY
