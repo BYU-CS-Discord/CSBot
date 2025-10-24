@@ -70,7 +70,7 @@ model Events {
 model User {
     id        Int       @id @default(autoincrement())
     userId    String    @unique // Discord user ID
-    guildId   String    // Discord guild ID
+    guildId   String // Discord guild ID
     smitten   Boolean   @default(false)
     smittenAt DateTime? // When the user was smitten (null if not smitten)
 
@@ -79,10 +79,10 @@ model User {
 
 model Tag {
     id        Int      @id @default(autoincrement())
-    guildId   String   // Discord guild ID - tags are per-guild
-    name      String   // Tag name (unique per guild)
-    content   String   // URL or text content
-    createdBy String   // Discord user ID of creator
+    guildId   String // Discord guild ID - tags are per-guild
+    name      String // Tag name (unique per guild)
+    content   String // URL or text content
+    createdBy String // Discord user ID of creator
     createdAt DateTime @default(now())
     useCount  Int      @default(0) // Track how many times tag has been used
 
