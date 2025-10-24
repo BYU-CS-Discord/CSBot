@@ -1,65 +1,65 @@
 import { db } from '../database/index.js';
-import type { Building, Room, Event, RoomSearchParams, RoomAvailabilityResult, EventInfo } from './types.js';
+import type { Building, Room, Event, RoomAvailabilityResult } from './types.js';
 
 /**
  * Get all available buildings
  */
-export async function getAllBuildings(): Promise<Building[]> {
+export async function getAllBuildings(): Promise<Array<Building>> {
 	return await db.buildings.findMany({
 		orderBy: {
-			name: 'asc'
-		}
+			name: 'asc',
+		},
 	});
 }
 
 /**
  * Get all rooms for a specific building
  */
-export async function getRoomsByBuilding(buildingName: string): Promise<Room[]> {
+export async function getRoomsByBuilding(buildingName: string): Promise<Array<Room>> {
 	return await db.rooms.findMany({
 		where: {
 			building: {
-				name: buildingName
-			}
+				name: buildingName,
+			},
 		},
 		include: {
-			building: true
+			building: true,
 		},
 		orderBy: {
-			number: 'asc'
-		}
+			number: 'asc',
+		},
 	});
 }
 
 /**
  * Get all rooms
  */
-export async function getAllRooms(): Promise<Room[]> {
+export async function getAllRooms(): Promise<Array<Room>> {
 	return await db.rooms.findMany({
 		include: {
-			building: true
+			building: true,
 		},
-		orderBy: [
-			{ building: { name: 'asc' } },
-			{ number: 'asc' }
-		]
+		orderBy: [{ building: { name: 'asc' } }, { number: 'asc' }],
 	});
 }
 
 /**
  * Get events for a specific room on a specific day
  */
-export async function getRoomEvents(roomId: number, day: string): Promise<Omit<Event, 'room'>[]> {
+export async function getRoomEvents(
+	roomId: number,
+	day: string
+): Promise<Array<Omit<Event, 'room'>>> {
 	return await db.events.findMany({
 		where: {
 			roomId: roomId,
 			days: {
-				contains: `"${day}"`
-			}
+				contains: `"${day}"`,
+			},
 		},
 		orderBy: {
-			startTime: 'asc'
-		}
+			startTime: 'asc',
+		},
 	});
 }
 
@@ -81,9 +81,13 @@ export async function isRoomAvailable(roomId: number, time: string, day: string)
 /**
  * Get available rooms at a specific time
  */
-export async function getAvailableRooms(time: string, day: string, buildingName?: string): Promise<RoomAvailabilityResult[]> {
+export async function getAvailableRooms(
+	time: string,
+	day: string,
+	buildingName?: string
+): Promise<Array<RoomAvailabilityResult>> {
 	const allRooms = await getAllRooms();
-	const availableRooms: RoomAvailabilityResult[] = [];
+	const availableRooms: Array<RoomAvailabilityResult> = [];
 
 	for (const room of allRooms) {
 		// Skip if building filter is specified and doesn't match
@@ -95,7 +99,7 @@ export async function getAvailableRooms(time: string, day: string, buildingName?
 		if (isAvailable) {
 			availableRooms.push({
 				roomNumber: room.number,
-				buildingName: room.building.name
+				buildingName: room.building.name,
 			});
 		}
 	}
@@ -111,9 +115,9 @@ export async function getAvailableRooms(time: string, day: string, buildingName?
 /**
  * Parse days array from JSON string
  */
-export function parseDays(daysJson: string): string[] {
+export function parseDays(daysJson: string): Array<string> {
 	try {
-		const parsed = JSON.parse(daysJson);
+		const parsed = JSON.parse(daysJson) as Array<string>;
 		return Array.isArray(parsed) ? parsed : [];
 	} catch {
 		return [];
@@ -123,7 +127,7 @@ export function parseDays(daysJson: string): string[] {
 /**
  * Format days array to JSON string
  */
-export function formatDays(days: string[]): string {
+export function formatDays(days: Array<string>): string {
 	return JSON.stringify(days);
 }
 
@@ -146,5 +150,5 @@ export function getCurrentTime(): string {
  */
 export function getCurrentDay(): string {
 	const days = ['Su', 'M', 'T', 'W', 'Th', 'F', 'Sa'];
-	return days[new Date().getDay()] || '';
+	return days[new Date().getDay()] ?? '';
 }

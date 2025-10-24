@@ -1,5 +1,5 @@
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
-import { searchNow, searchAt, searchBetween, searchWhen, type RoomsResponse, type WhenResponse } from '../roomFinder/api.js';
+import { searchNow, searchAt, searchBetween, searchWhen } from '../roomFinder/api.js';
 import { error } from '../logger.js';
 
 const timeChoices = [
@@ -198,23 +198,25 @@ export const findRoom: GlobalCommand = {
 
 		let embedTitle = '';
 		let embedDescription = '';
-		let embedThumbnail = 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Brigham_Young_University_medallion.svg/240px-Brigham_Young_University_medallion.svg.png';
-		let embedColor = 0x0066cc;
+		let embedThumbnail =
+			'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Brigham_Young_University_medallion.svg/240px-Brigham_Young_University_medallion.svg.png';
+		let embedColor = 0x00_66_cc;
 
 		try {
 			switch (type) {
 				case 'now': {
 					if (input_bldg !== null) {
 						const requestedList = await searchNow(input_bldg);
-						const locationText = input_bldg === 'ANY' ? 'anywhere on campus' : `in the ${input_bldg}`;
+						const locationText =
+							input_bldg === 'ANY' ? 'anywhere on campus' : `in the ${input_bldg}`;
 						if (requestedList.Rooms.length === 0) {
 							embedTitle = `No rooms available now ${locationText}`;
 							embedDescription = 'Try again later!';
-							embedColor = 0xff0000; // Red
+							embedColor = 0xff_00_00; // Red
 						} else {
-							const roomString = requestedList.Rooms.map(room =>
-								`${room[1]}, ${room[0]}`
-							).join('\n');
+							const roomString = requestedList.Rooms.map(room => `${room[1]}, ${room[0]}`).join(
+								'\n'
+							);
 							embedTitle = `Rooms available now ${locationText}`;
 							embedDescription = roomString;
 						}
@@ -224,25 +226,22 @@ export const findRoom: GlobalCommand = {
 
 				case 'at': {
 					if (input_bldg !== null && input_timeA !== null) {
-						const days = [day1, day2].filter(d => d !== null) as string[];
+						const days = [day1, day2].filter(d => d !== null);
 						const requestedList = await searchAt(input_bldg, input_timeA, days);
-						const locationText = input_bldg === 'ANY' ? 'anywhere on campus' : `in the ${input_bldg}`;
+						const locationText =
+							input_bldg === 'ANY' ? 'anywhere on campus' : `in the ${input_bldg}`;
 						if (requestedList.Rooms.length === 0) {
-							embedTitle = `No rooms available at ${convertTo12Hour(
-								input_timeA
-							)} ${locationText}`;
-							embedDescription = days.length > 0
-								? `Days: ${days.join(', ')}\nTry again later!`
-								: 'Try again later!';
-							embedColor = 0xff0000;
+							embedTitle = `No rooms available at ${convertTo12Hour(input_timeA)} ${locationText}`;
+							embedDescription =
+								days.length > 0 ? `Days: ${days.join(', ')}\nTry again later!` : 'Try again later!';
+							embedColor = 0xff_00_00;
 						} else {
-							const roomString = requestedList.Rooms.map(room =>
-								`${room[1]}, ${room[0]}`
-							).join('\n');
+							const roomString = requestedList.Rooms.map(room => `${room[1]}, ${room[0]}`).join(
+								'\n'
+							);
 							embedTitle = `Rooms available ${locationText} at ${convertTo12Hour(input_timeA)}`;
-							embedDescription = days.length > 0
-								? `Days: ${days.join(', ')}\n\n${roomString}`
-								: roomString;
+							embedDescription =
+								days.length > 0 ? `Days: ${days.join(', ')}\n\n${roomString}` : roomString;
 						}
 					}
 					break;
@@ -250,27 +249,26 @@ export const findRoom: GlobalCommand = {
 
 				case 'between': {
 					if (input_bldg !== null && input_timeA !== null && input_timeB !== null) {
-						const days = [day1, day2].filter(d => d !== null) as string[];
+						const days = [day1, day2].filter(d => d !== null);
 						const requestedList = await searchBetween(input_bldg, input_timeA, input_timeB, days);
-						const locationText = input_bldg === 'ANY' ? 'anywhere on campus' : `in the ${input_bldg}`;
+						const locationText =
+							input_bldg === 'ANY' ? 'anywhere on campus' : `in the ${input_bldg}`;
 						if (requestedList.Rooms.length === 0) {
 							embedTitle = `No rooms available between ${convertTo12Hour(
 								input_timeA
 							)} and ${convertTo12Hour(input_timeB)}`;
-							embedDescription = days.length > 0
-								? `Days: ${days.join(', ')}\nTry again later!`
-								: 'Try again later!';
-							embedColor = 0xff0000;
+							embedDescription =
+								days.length > 0 ? `Days: ${days.join(', ')}\nTry again later!` : 'Try again later!';
+							embedColor = 0xff_00_00;
 						} else {
-							const roomString = requestedList.Rooms.map(room =>
-								`${room[1]}, ${room[0]}`
-							).join('\n');
+							const roomString = requestedList.Rooms.map(room => `${room[1]}, ${room[0]}`).join(
+								'\n'
+							);
 							embedTitle = `Rooms available ${locationText} between ${convertTo12Hour(
 								input_timeA
 							)} and ${convertTo12Hour(input_timeB)}`;
-							embedDescription = days.length > 0
-								? `Days: ${days.join(', ')}\n\n${roomString}`
-								: roomString;
+							embedDescription =
+								days.length > 0 ? `Days: ${days.join(', ')}\n\n${roomString}` : roomString;
 						}
 					}
 					break;
@@ -297,12 +295,12 @@ export const findRoom: GlobalCommand = {
 							roomString = `This room is currently busy from ${convertTo12Hour(
 								busySince
 							)} to ${convertTo12Hour(busyUntil)}`;
-							embedColor = 0xff0000;
+							embedColor = 0xff_00_00;
 						} else {
 							roomString = `Room ${input_room} is currently free, with its next event scheduled from ${convertTo12Hour(
 								busySince
 							)} to ${convertTo12Hour(busyUntil)}`;
-							embedColor = 0x00ff00; // Green
+							embedColor = 0x00_ff_00; // Green
 						}
 
 						embedTitle = `Room ${input_room} in the ${input_bldg}`;
@@ -317,7 +315,7 @@ export const findRoom: GlobalCommand = {
 			error(error_);
 			embedTitle = 'Error';
 			embedDescription = `An error occurred: ${error_ instanceof Error ? error_.message : 'Unknown error'}`;
-			embedColor = 0xff0000;
+			embedColor = 0xff_00_00;
 		}
 
 		// Build the embed

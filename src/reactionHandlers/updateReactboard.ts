@@ -82,13 +82,15 @@ async function updateExistingPosts(reaction: MessageReaction, message: Message):
 		},
 	});
 
-	const updatePromises = reactboardPosts.map(async (reactboardPost: { reactboard: { channelId: string }; reactboardMessageId: string }) => {
-		const reactboardChannel = await getChannel(reaction, reactboardPost.reactboard.channelId);
-		const reactboardMessage = await reactboardChannel.messages.fetch(
-			reactboardPost.reactboardMessageId
-		);
-		await reactboardMessage.edit({ embeds: [buildEmbed(reaction, message)] });
-	});
+	const updatePromises = reactboardPosts.map(
+		async (reactboardPost: { reactboard: { channelId: string }; reactboardMessageId: string }) => {
+			const reactboardChannel = await getChannel(reaction, reactboardPost.reactboard.channelId);
+			const reactboardMessage = await reactboardChannel.messages.fetch(
+				reactboardPost.reactboardMessageId
+			);
+			await reactboardMessage.edit({ embeds: [buildEmbed(reaction, message)] });
+		}
+	);
 
 	await Promise.all(updatePromises);
 }
@@ -112,18 +114,20 @@ async function addNewPosts(reaction: MessageReaction, message: Message): Promise
 		},
 	});
 
-	const updatePromises = reactboardsToPostTo.map(async (reactboard: { id: number; channelId: string }) => {
-		const channel = await getChannel(reaction, reactboard.channelId);
-		const reactboardMessage = await channel.send({ embeds: [buildEmbed(reaction, message)] });
-		await db.reactboardPost.create({
-			data: {
-				reactboardId: reactboard.id,
-				originalMessageId: reaction.message.id,
-				originalChannelId: reaction.message.channelId,
-				reactboardMessageId: reactboardMessage.id,
-			},
-		});
-	});
+	const updatePromises = reactboardsToPostTo.map(
+		async (reactboard: { id: number; channelId: string }) => {
+			const channel = await getChannel(reaction, reactboard.channelId);
+			const reactboardMessage = await channel.send({ embeds: [buildEmbed(reaction, message)] });
+			await db.reactboardPost.create({
+				data: {
+					reactboardId: reactboard.id,
+					originalMessageId: reaction.message.id,
+					originalChannelId: reaction.message.channelId,
+					reactboardMessageId: reactboardMessage.id,
+				},
+			});
+		}
+	);
 
 	await Promise.all(updatePromises);
 }
