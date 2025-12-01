@@ -74,7 +74,7 @@
 		"keep-a-changelog": "2.6.2",
 		"nodemon": "3.1.10",
 		"pm2": "6.0.8",
-		"prettier": "3.6.2",
+		"prettier": "3.7.3",
 		"prettier-plugin-prisma": "5.0.0",
 		"prisma": "6.9.0",
 		"semver": "7.7.2",
