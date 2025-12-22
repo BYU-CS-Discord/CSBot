@@ -47,7 +47,7 @@
 	},
 	"dependencies": {
 		"@discordjs/voice": "0.18.0",
-		"@prisma/client": "6.13.0",
+		"@prisma/client": "7.2.0",
 		"dectalk-tts": "1.0.1",
 		"discord.js": "14.19.1",
 		"ffmpeg-static": "5.2.0",
