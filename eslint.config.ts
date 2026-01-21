@@ -65,7 +65,7 @@ export default [
 		languageOptions: {
 			globals: globals.nodeBuiltin,
 			parserOptions: {
-				project: './tsconfig.eslint.json',
+				projectService: true,
 			},
 		},
 		linterOptions: {
