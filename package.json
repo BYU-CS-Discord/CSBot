@@ -36,7 +36,7 @@
 		"docker:container": "docker run --tty --interactive --rm --mount type=bind,source=$PWD,destination=/cs-bot cs-bot-image",
 		"docker:image": "docker build --tag cs-bot-image --label cs-bot .",
 		"export-version": "./node_modules/.bin/genversion ./src/constants/version.ts -es",
-		"lint": "./node_modules/.bin/eslint .",
+		"lint": "./node_modules/.bin/eslint",
 		"lint:fix": "npm run lint -- --fix",
 		"release": "./node_modules/.bin/tsx ./scripts/release.ts",
 		"setup": "npm ci && npm run export-version && npm run db:migrate && npm run build --production && npm run commands:deploy",
