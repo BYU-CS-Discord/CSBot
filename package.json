@@ -39,10 +39,8 @@
 		"lint": "./node_modules/.bin/eslint .",
 		"lint:fix": "npm run lint -- --fix",
 		"release": "./node_modules/.bin/tsx ./scripts/release.ts",
-		"restart": "./node_modules/.bin/pm2 restart cs-bot",
 		"setup": "npm ci && npm run export-version && npm run db:migrate && npm run build --production && npm run commands:deploy",
-		"start": "./node_modules/.bin/pm2 start ./dist/main.js --name cs-bot --node-args=\"--env-file=.env\"",
-		"stop": "./node_modules/.bin/pm2 delete cs-bot",
+		"start": "node --env-file=.env ./dist/main.js",
 		"test": "./node_modules/.bin/vitest"
 	},
 	"dependencies": {
@@ -72,7 +70,6 @@
 		"genversion": "3.2.0",
 		"keep-a-changelog": "2.8.0",
 		"nodemon": "3.1.11",
-		"pm2": "6.0.14",
 		"prettier": "3.8.0",
 		"prettier-plugin-prisma": "5.0.0",
 		"prisma": "6.9.0",
