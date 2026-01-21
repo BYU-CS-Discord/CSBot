@@ -95,7 +95,7 @@ export const setReactboard: GuildedCommand = {
 };
 
 function isUnicodeEmoji(str: string): boolean {
-	return Boolean(/^\p{Extended_Pictographic}$/u.test(str));
+	return /^\p{Extended_Pictographic}$/u.test(str);
 }
 
 async function getCustomReact(guild: Guild, str: string): Promise<GuildEmoji | undefined> {

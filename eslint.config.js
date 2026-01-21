@@ -29,8 +29,8 @@ export default [
 	}),
 	prettierRecommended,
 	unicorn.configs.recommended,
-	importPlugin.flatConfigs?.recommended,
-	importPlugin.flatConfigs?.typescript,
+	importPlugin.flatConfigs.recommended,
+	importPlugin.flatConfigs.typescript,
 	{
 		settings: {
 			'import/resolver': {
@@ -46,7 +46,7 @@ export default [
 	{
 		plugins: { 'file-progress': fileProgress },
 		rules: {
-			'file-progress/activate': 1,
+			'file-progress/activate': process.env.CI ? 0 : 1, // display progress indicator only when running locally
 		},
 	},
 	{

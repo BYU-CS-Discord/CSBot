@@ -10,11 +10,7 @@ class TestError extends Error {
 }
 
 class TestNonError {
-	public readonly name: string;
-
-	public constructor() {
-		this.name = 'TestNonError';
-	}
+	public readonly name = 'TestNonError';
 }
 
 describe('isError', () => {

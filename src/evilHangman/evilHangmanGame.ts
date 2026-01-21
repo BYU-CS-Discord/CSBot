@@ -92,13 +92,13 @@ export class EvilHangmanGame {
 	}
 
 	private removePossibleWords(guesses: ReadonlyArray<string>): void {
-		const allExceptGuessed = `(?![${guesses.join('')}])\\w`;
+		const allExceptGuessed = String.raw`(?![${guesses.join('')}])\w`;
 		const filterRegex = new RegExp(this.word.replaceAll('-', allExceptGuessed), 'u');
 		this.possibleWords = this.possibleWords.filter(word => filterRegex.test(word));
 	}
 
 	private getBestForm(guess: string): RegExp {
-		const possibilities = this.getFormScores(guess).sort((a, b) => b.score - a.score);
+		const possibilities = this.getFormScores(guess).toSorted((a, b) => b.score - a.score);
 		if (isNonEmptyArray(possibilities)) {
 			return possibilities[0].form;
 		}

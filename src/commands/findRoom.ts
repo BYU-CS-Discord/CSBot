@@ -233,7 +233,7 @@ export const findRoom: GlobalCommand = {
 						embedTitle = `No rooms available now in the ${input_bldg}`;
 						embedDescription = 'Try again later!';
 					} else {
-						const roomString = requestedList.Rooms.map(room => room.reverse().join(', ')).join(
+						const roomString = requestedList.Rooms.map(room => room.toReversed().join(', ')).join(
 							'\n'
 						);
 						embedTitle = `Rooms available now in the ${input_bldg}`;
@@ -252,7 +252,7 @@ export const findRoom: GlobalCommand = {
 						)} in the ${input_bldg}`;
 						embedDescription = 'Try again later!';
 					} else {
-						const roomString = requestedList.Rooms.map(room => room.reverse().join(', ')).join(
+						const roomString = requestedList.Rooms.map(room => room.toReversed().join(', ')).join(
 							'\n'
 						);
 						embedTitle = `Rooms available in the ${input_bldg} at ${convertTo12Hour(input_timeA)}`;
@@ -271,7 +271,7 @@ export const findRoom: GlobalCommand = {
 						)} and ${convertTo12Hour(input_timeB)}`;
 						embedDescription = 'Try again later!';
 					} else {
-						const roomString = requestedList.Rooms.map(room => room.reverse().join(', ')).join(
+						const roomString = requestedList.Rooms.map(room => room.toReversed().join(', ')).join(
 							'\n'
 						);
 						embedTitle = `Rooms available in the ${input_bldg} between ${convertTo12Hour(
