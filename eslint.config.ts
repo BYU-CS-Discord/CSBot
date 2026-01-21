@@ -7,15 +7,11 @@ import * as importPlugin from 'eslint-plugin-import';
 import prettierRecommended from 'eslint-plugin-prettier/recommended';
 import promise from 'eslint-plugin-promise';
 import unicorn from 'eslint-plugin-unicorn';
-import globals from 'globals';
 
 export default defineConfig(
 	{ files: ['**/*.{m,c,}{js,ts}{x,}'] },
 	globalIgnores(['dist', 'coverage', 'src/constants/version.ts']),
 	{
-		languageOptions: {
-			globals: globals.nodeBuiltin,
-		},
 		linterOptions: {
 			reportUnusedDisableDirectives: 'error',
 		},
