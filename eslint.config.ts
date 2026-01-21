@@ -44,7 +44,6 @@ export default defineConfig(
 		rules: {
 			// Overrides
 			'@typescript-eslint/array-type': ['error', { default: 'generic' }],
-			'@typescript-eslint/no-inferrable-types': 'off', // We like to be extra explicit with types sometimes
 			'@typescript-eslint/restrict-template-expressions': 'off', // FIXME Lots of errors
 			'@typescript-eslint/no-deprecated': 'warn', // Formerly handled by eslint-plugin-deprecation
 			'@typescript-eslint/no-misused-spread': 'off', // Lots of things are spreadable in discord.js that eslint can't see well
