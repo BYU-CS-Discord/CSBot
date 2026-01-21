@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- BREAKING: The `start` script (`npm start`, `npm run start`) no longer uses `pm2`. Instead, it runs the project directly using `node`. The `dev` script (`npm run dev`) does this as well, but wrapped with `nodemon`.
+- Updated dependencies.
+
+### Removed
+- Removed `pm2` helpers. `pm2` still works insofar as it can run just about any `node` application, but we no longer install it as a dependency, and we no longer have NPM scripts to run it.
+
 ## [0.15.0] - 2025-09-25
 
 ### Added
