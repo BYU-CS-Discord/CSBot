@@ -259,7 +259,7 @@ async function leaderboard(
 		throw new UserMessageError(`No one is tracking the stat "${statName}"`);
 	}
 
-	const scoresSorted = scoreboardEntries.sort((a, b) => b.score - a.score);
+	const scoresSorted = scoreboardEntries.toSorted((a, b) => b.score - a.score);
 
 	const embedDescription = scoresSorted
 		.map(entry => {

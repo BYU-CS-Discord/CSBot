@@ -71,11 +71,11 @@ async function diffGuildCommandDeployments(
 	const expectedCommandNames = Array.from(allCommands.values())
 		.filter(c => c.requiresGuild)
 		.map(c => c.info.name)
-		.sort(sortAlphabetically);
+		.toSorted(sortAlphabetically);
 
 	for (const guild of guilds) {
 		const commands = await guild.commands.fetch();
-		const actualCommandNames = commands.map(c => c.name).sort(sortAlphabetically);
+		const actualCommandNames = commands.map(c => c.name).toSorted(sortAlphabetically);
 
 		const diff = diffArrays(expectedCommandNames, actualCommandNames);
 		if (diff) return { ...diff, guild };
@@ -88,10 +88,10 @@ async function diffGlobalCommandDeployments(client: Client<true>): Promise<Diff 
 	const expectedCommandNames = Array.from(allCommands.values())
 		.filter(c => !c.requiresGuild)
 		.map(c => c.info.name)
-		.sort(sortAlphabetically);
+		.toSorted(sortAlphabetically);
 
 	const commands = await client.application.commands.fetch();
-	const actualCommandNames = commands.map(c => c.name).sort(sortAlphabetically);
+	const actualCommandNames = commands.map(c => c.name).toSorted(sortAlphabetically);
 
 	return diffArrays(expectedCommandNames, actualCommandNames);
 }
