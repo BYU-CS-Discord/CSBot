@@ -1,4 +1,4 @@
-import { URL } from 'node:url';
+import type { URL } from 'node:url';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type { Struct, StructError } from 'superstruct';
 import { assert } from 'superstruct';
