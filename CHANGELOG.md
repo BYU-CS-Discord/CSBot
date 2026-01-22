@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated dependencies.
 - Modernize TypeScript and ESLint configurations
 - Refactor GitHub workflows
+- **Breaking:** upgrade to Node 24
 
 ### Removed
 

@@ -1,6 +1,6 @@
 # TODO: extend prod#builder
 
-FROM node:20-slim
+FROM node:24-slim
 RUN apt update
 RUN apt upgrade --yes
 
