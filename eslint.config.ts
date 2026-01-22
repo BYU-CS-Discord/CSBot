@@ -2,7 +2,7 @@ import { defineConfig, globalIgnores } from 'eslint/config';
 import js from '@eslint/js';
 import stylistic from '@stylistic/eslint-plugin';
 import { configs as typescriptConfigs } from 'typescript-eslint';
-import fileProgress from 'eslint-plugin-file-progress';
+import progress from 'eslint-plugin-file-progress';
 import * as importPlugin from 'eslint-plugin-import';
 import prettierRecommended from 'eslint-plugin-prettier/recommended';
 import promise from 'eslint-plugin-promise';
@@ -112,12 +112,7 @@ export default defineConfig(
 		},
 	},
 
-	{
-		plugins: { 'file-progress': fileProgress },
-		rules: {
-			'file-progress/activate': process.env['CI'] ? 0 : 1, // display progress indicator only when running locally
-		},
-	},
+	progress.configs['recommended-ci'],
 	{
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		plugins: { promise },
