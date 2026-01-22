@@ -1,4 +1,4 @@
-name: Validate
+name: CI
 # Lints, builds, and tests the project whenever a pull request is opened or merged
 
 on:
