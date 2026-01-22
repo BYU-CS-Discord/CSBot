@@ -77,12 +77,10 @@ export default defineConfig(
 		rules: {
 			// Handled by Prettier
 			'unicorn/no-nested-ternary': 'off',
-			'unicorn/number-literal-case': 'off',
 
 			// Overrides
 			'unicorn/filename-case': 'off', // We use camelCase
 			'unicorn/no-array-callback-reference': 'off',
-			'unicorn/no-array-for-each': 'off',
 			'unicorn/no-null': 'off', // We use null
 			'unicorn/prefer-spread': 'off',
 			'unicorn/prefer-ternary': 'off',
