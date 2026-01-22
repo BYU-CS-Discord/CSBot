@@ -8,11 +8,16 @@ on:
     branches: [main]
   workflow_dispatch:
 
+permissions: {}
+
 jobs:
   lint:
     name: Lint
 
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: read # Required for actions/checkout
 
     steps:
       - name: Checkout repository
@@ -41,6 +46,9 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: read # Required for actions/checkout
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -67,6 +75,9 @@ jobs:
     name: Test
 
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: read # Required for actions/checkout
 
     steps:
       - name: Checkout repository
@@ -98,6 +109,9 @@ jobs:
     # Ensure that package.json and package-lock.json have the same version, and that CHANGELOG.md is spec-compliant
 
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: read # Required for actions/checkout
 
     steps:
       - name: Checkout repository

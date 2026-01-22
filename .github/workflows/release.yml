@@ -6,17 +6,19 @@ on:
     branches: [main]
   workflow_dispatch:
 
-# This sets appropriate permissions for the default `GITHUB_TOKEN`.
-# Protected tags are incompatible with this arrangement for now.
-permissions:
-  contents: write
-  discussions: write
+permissions: {}
 
 jobs:
   release:
     name: Create release
 
     runs-on: ubuntu-latest
+
+    # This sets appropriate permissions for the default `GITHUB_TOKEN`.
+    # Protected tags are incompatible with this arrangement for now.
+    permissions:
+      contents: write
+      discussions: write
 
     steps:
       - name: Checkout repository

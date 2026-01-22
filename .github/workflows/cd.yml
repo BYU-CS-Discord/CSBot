@@ -7,6 +7,8 @@ on:
     # Publish semver tags as releases.
     tags: ["v*.*.*"]
 
+permissions: {}
+
 env:
   # TODO: Also publish to Codeberg
   REGISTRY: ghcr.io
@@ -18,8 +20,9 @@ jobs:
     name: Publish image
 
     runs-on: ubuntu-latest
+  
     permissions:
-      contents: read
+      contents: read # Required for actions/checkout
       packages: write
 
     steps:
