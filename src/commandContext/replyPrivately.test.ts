@@ -1,5 +1,5 @@
 import type { Mock } from 'vitest';
-import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
 
 import type { RepliableInteraction } from 'discord.js';
 
@@ -32,10 +32,6 @@ describe('ephemeral and DM replies', () => {
 		} as unknown as RepliableInteraction;
 
 		replyPrivately = factory(interaction);
-	});
-
-	afterEach(() => {
-		vi.resetAllMocks();
 	});
 
 	test('sends an ephemeral reply to check DMs', async () => {
