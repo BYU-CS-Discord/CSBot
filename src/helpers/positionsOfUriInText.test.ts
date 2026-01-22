@@ -1,4 +1,5 @@
 import { describe, expect, test, vi } from 'vitest';
+import { URL } from 'node:url';
 
 // As far as we know, the uriRegex will only match strings that are valid URIs.
 // But in order to test what would happen if not, we need to override the URL.canParse method to
