@@ -102,10 +102,6 @@ export default defineConfig(
 	},
 
 	progress.configs['recommended-ci'],
-	{
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-		plugins: { promise },
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-		rules: promise.configs.recommended.rules,
-	}
+
+	promise.configs['flat/recommended']
 );
