@@ -132,12 +132,12 @@ If you've read this far, and don't plan to run or develop on the bot yourself, o
 
 ### Prerequisites
 
-This project requires [NodeJS](https://nodejs.org/) (version 18.17 or later) and [NPM](https://npmjs.org/). To make sure you have them available on your machine, try running the following command:
+This project requires [NodeJS](https://nodejs.org/) (version 22.12.0 or later) and [NPM](https://npmjs.org/). To make sure you have them available on your machine, try running the following command:
 
 ```sh
 $ node -v && npm -v
-v18.17.1
-9.6.7
+v24.12.0
+10.9.0
 ```
 
 If you don't want to install Node or any other dependencies on your machine, you may also use [Docker](https://www.docker.com/). Docker runs the project in a lightweight virtual Linux environment will all dependencies pre-installed, so functionality will be identical on any operating system.
@@ -148,7 +148,7 @@ You can install Docker from their website linked above. To make sure Docker is a
 
 ```sh
 $ docker -v
-Docker version 20.10.22, build 3a2c30b
+Docker version 29.1.3, build f52814d
 ```
 
 ### Clone the Repo
@@ -229,19 +229,19 @@ If you're running in Docker, the database file will be created for you, at the p
 
 First decide where you want your database file to go, then edit this line in your `.env` file:
 
-```
+```sh
 DATABASE_URL=file:/path/to/your/database.db
 ```
 
 The first time you run this project, you should run the following command to initialize the database at the configured path:
 
-```
+```sh
 $ npm run db:init
 ```
 
 Migrations can be run on the database with the following command:
 
-```
+```sh
 $ npm run db:migrate
 ```
 
