@@ -9,16 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- BREAKING: The `start` script (`npm start`, `npm run start`) no longer uses `pm2`. Instead, it runs the project directly using `node`. The `dev` script (`npm run dev`) does this as well, but wrapped with `nodemon`.
-- Updated dependencies.
+- Update dependencies
 - Modernize TypeScript and ESLint configurations
 - Refactor GitHub workflows
 - **Breaking:** set minimum Node version to 22.12.0
 - **Breaking:** upgrade to Node 24
+- Replace `nodemon` with `node --watch` for the `npm run dev` script
 
 ### Removed
 
-- Removed `pm2` dependency and relevant scripts (`restart`, `stop`). `pm2` still works insofar as it can run just about any `node` application, but we no longer install it as a dependency, and we no longer have NPM scripts to run it.
+- **Breaking:** remove `pm2` from the `npm start` script
 
 ## [0.15.0] - 2025-09-25
 
