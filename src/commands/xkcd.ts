@@ -1,5 +1,4 @@
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
-import { URL } from 'node:url';
 import { number, string, type as schema } from 'superstruct';
 
 import { fetchJson } from '../helpers/fetch.js';

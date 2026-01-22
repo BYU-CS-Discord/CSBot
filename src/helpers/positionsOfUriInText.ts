@@ -1,5 +1,3 @@
-import { URL } from 'node:url';
-
 export interface Range {
 	start: number;
 	end: number;

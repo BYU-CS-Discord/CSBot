@@ -1,6 +1,5 @@
-import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
 
-import { URL } from 'node:url';
 import { string, type as schema, StructError } from 'superstruct';
 
 import { fetchJson } from './fetch.js';
@@ -17,10 +16,6 @@ describe('fetchJson', () => {
 
 	beforeEach(() => {
 		mockFetch.mockRejectedValue(new Error('This is a test'));
-	});
-
-	afterEach(() => {
-		vi.resetAllMocks();
 	});
 
 	test('returns well-formed data with 200 response', async () => {

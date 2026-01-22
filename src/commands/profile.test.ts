@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
 
 import type { GuildMember, User } from 'discord.js';
 import { DiscordAPIError, EmbedBuilder, userMention } from 'discord.js';
@@ -61,10 +61,6 @@ describe('profile', () => {
 		mockGetUser.mockReturnValue(otherUser);
 		mockAvatarURL.mockReturnValue(testAvatar);
 		mockGuildMembersFetch.mockResolvedValue(otherUser as unknown as GuildMember);
-	});
-
-	afterEach(() => {
-		vi.resetAllMocks();
 	});
 
 	test('Throws an error when we fail to fetch the target member for an API reason', async () => {

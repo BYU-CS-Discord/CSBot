@@ -1,23 +1,9 @@
 import { describe, expect, test, vi } from 'vitest';
 
-import type { URL } from 'node:url';
-
 // As far as we know, the uriRegex will only match strings that are valid URIs.
 // But in order to test what would happen if not, we need to override the URL.canParse method to
 // return false for a specific string. For all other tests, we want to use the default implementation.
-const canParseMock = vi.hoisted(vi.fn<typeof URL.canParse>);
-vi.mock('node:url', async () => {
-	const nodeURL = await vi.importActual<typeof import('node:url')>('node:url');
-	return {
-		...nodeURL,
-		URL: {
-			...nodeURL.URL,
-			canParse: canParseMock.mockImplementation((input: string, base?: string) =>
-				nodeURL.URL.canParse(input, base)
-			),
-		},
-	};
-});
+const canParseMock = vi.spyOn(URL, 'canParse');
 
 import type { Range } from './positionsOfUriInText.js';
 import { positionsOfUriInText } from './positionsOfUriInText.js';

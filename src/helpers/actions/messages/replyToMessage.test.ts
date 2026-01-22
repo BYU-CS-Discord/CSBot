@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
 
 import type {
 	InteractionResponse,
@@ -36,10 +36,6 @@ describe('Replies', () => {
 				},
 				reply: mockReply,
 			} as unknown as RepliableInteraction;
-		});
-
-		afterEach(() => {
-			vi.resetAllMocks();
 		});
 
 		test('sends an ephemeral reply with text', async () => {
@@ -157,10 +153,6 @@ describe('Replies', () => {
 			} as unknown as Message;
 		});
 
-		afterEach(() => {
-			vi.resetAllMocks();
-		});
-
 		test('sends a DM with a return prefix from text', async () => {
 			const content = 'yo';
 			await expect(replyWithPrivateMessage(message, content, true)).resolves.toBeTypeOf('object');
@@ -247,10 +239,6 @@ describe('Cold calls', () => {
 			send: mockChannelSend,
 			type: ChannelType.GuildText,
 		} as unknown as TextChannel;
-	});
-
-	afterEach(() => {
-		vi.resetAllMocks();
 	});
 
 	test('sends a message in the given channel', async () => {
