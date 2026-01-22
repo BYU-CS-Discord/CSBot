@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, test, vi } from 'vitest';
 import type {
 	InteractionResponse,
 	Message,
+	PartialTextBasedChannelFields,
 	RepliableInteraction,
 	TextChannel,
 	User,
@@ -131,7 +132,7 @@ describe('Replies', () => {
 
 	describe('to messages', () => {
 		const mockReply = vi.fn<RepliableInteraction['reply']>();
-		const mockChannelSend = vi.fn<Message['channel']['send']>();
+		const mockChannelSend = vi.fn<PartialTextBasedChannelFields['send']>();
 		let author: User;
 		let message: Message;
 
