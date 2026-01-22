@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
-import { string, type as schema, StructError } from 'superstruct';
 import { URL } from 'node:url';
+import { string, type as schema, StructError } from 'superstruct';
 
 import { fetchJson } from './fetch.js';
 import { HttpStatusCode } from './HttpStatusCode.js';
