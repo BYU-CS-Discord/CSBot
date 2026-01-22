@@ -1,10 +1,10 @@
 # Builds the Docker image and publishes to the GitHub container registry
 
-name: Publish Docker Image
+name: CD
 
 on:
   push:
-    branches: ["main"]
+    branches: [main]
     # Publish semver tags as releases.
     tags: ["v*.*.*"]
 
@@ -15,7 +15,9 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  build-and-push-image:
+  publish-image:
+    name: Publish image
+
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -48,7 +50,7 @@ jobs:
             type=semver,pattern={{major}}
             type=sha
 
-      - name: Build and push Docker image
+      - name: Build and push image
         # docker/build-push-action@v6.18.0
         uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83
         with:
