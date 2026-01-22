@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - BREAKING: The `start` script (`npm start`, `npm run start`) no longer uses `pm2`. Instead, it runs the project directly using `node`. The `dev` script (`npm run dev`) does this as well, but wrapped with `nodemon`.
 - Updated dependencies.
+- Modernize TypeScript and ESLint configurations
 
 ### Removed
 
