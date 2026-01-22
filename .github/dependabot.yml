@@ -6,6 +6,15 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    groups:
+      prisma:
+        patterns:
+          - "prisma"
+          - "@prisma/client"
+      vitest:
+        patterns:
+          - "vitest"
+          - "@vitest/coverage-istanbul"
     versioning-strategy: increase
     open-pull-requests-limit: 1000
 
