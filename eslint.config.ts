@@ -3,7 +3,7 @@ import js from '@eslint/js';
 import stylistic from '@stylistic/eslint-plugin';
 import { configs as typescriptConfigs } from 'typescript-eslint';
 import progress from 'eslint-plugin-file-progress';
-import * as importPlugin from 'eslint-plugin-import';
+import importPlugin from 'eslint-plugin-import';
 import prettierRecommended from 'eslint-plugin-prettier/recommended';
 import promise from 'eslint-plugin-promise';
 import unicorn from 'eslint-plugin-unicorn';
@@ -95,20 +95,9 @@ export default defineConfig(
 	{
 		settings: {
 			'import/resolver': {
-				typescript: {
-					alwaysTryTypes: true,
-					project: ['./tsconfig.json'],
-				},
+				typescript: true,
+				node: true,
 			},
-		},
-		rules: {
-			'import/no-unresolved': 'off', // Handled by TypeScript
-		},
-	},
-	{
-		files: ['**/*.test.{m,c,}{js,ts}{x,}', '**/__mocks__/**'],
-		rules: {
-			'import/namespace': 'off', // FIXME False positives in test files
 		},
 	},
 
