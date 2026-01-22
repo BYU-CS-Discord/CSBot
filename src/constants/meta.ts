@@ -1,3 +1,5 @@
+import { URL } from 'node:url';
+
 /**
  * A link to the bot's public git repository.
  */

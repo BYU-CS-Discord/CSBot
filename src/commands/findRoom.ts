@@ -1,5 +1,6 @@
 import { array, boolean, string, tuple, type as schema } from 'superstruct';
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { URL } from 'node:url';
 
 import { fetchJson } from '../helpers/fetch.js';
 import { error } from '../logger.js';

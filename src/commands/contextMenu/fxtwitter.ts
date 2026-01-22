@@ -1,4 +1,5 @@
 import { ApplicationCommandType, ContextMenuCommandBuilder } from 'discord.js';
+import { URL } from 'node:url';
 
 import { positionsOfUriInText } from '../../helpers/positionsOfUriInText.js';
 
