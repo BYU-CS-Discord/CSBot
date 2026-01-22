@@ -1,6 +1,5 @@
-# Builds the Docker image and publishes to the GitHub container registry
-
 name: CD
+description: Builds and publishes a Docker image to the GitHub container registry when a semver tag is pushed
 
 on:
   push:
