@@ -1,5 +1,5 @@
 name: Release
-description: On push to main, if the latest version in CHANGELOG.md is different from the latest version tag, create a new tag and release
+# On push to main, if the latest version in CHANGELOG.md is different from the latest version tag, creates a new tag and release
 
 on:
   push:
