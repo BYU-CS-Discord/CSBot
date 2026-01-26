@@ -18,6 +18,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Removed `pm2` dependency and relevant scripts (`restart`, `stop`). `pm2` still works insofar as it can run just about any `node` application, but we no longer install it as a dependency, and we no longer have NPM scripts to run it.
 
+### Fixed
+
+- Fix Prisma type errors from `npm run setup` script
+
 ## [0.15.0] - 2025-09-25
 
 ### Added
