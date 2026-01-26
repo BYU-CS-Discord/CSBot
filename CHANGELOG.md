@@ -20,6 +20,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Breaking:** remove `pm2` from the `npm start` script
 
+### Fixed
+
+- Fix Prisma type errors from `npm run setup` script
+
 ## [0.15.0] - 2025-09-25
 
 ### Added
