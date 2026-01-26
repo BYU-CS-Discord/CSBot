@@ -21,7 +21,7 @@
 	"type": "module",
 	"main": "./dist/main.js",
 	"scripts": {
-		"build": "rm -rf dist && ./node_modules/.bin/tsc -p tsconfig.build.json && npm run db:generate",
+		"build": "npm run db:generate && rm -rf dist && ./node_modules/.bin/tsc -p tsconfig.build.json",
 		"commands:deploy": "node --env-file=.env . --deploy # TODO: Replace these with automatic command deployment",
 		"commands:revoke": "node --env-file=.env . --revoke",
 		"db:generate": "./node_modules/.bin/prisma generate --no-hints --schema ./prisma/schema.prisma",
@@ -39,7 +39,7 @@
 		"lint": "./node_modules/.bin/eslint",
 		"lint:fix": "npm run lint -- --fix",
 		"release": "./node_modules/.bin/tsx ./scripts/release.ts",
-		"setup": "npm ci && npm run export-version && npm run db:migrate && npm run build --production && npm run commands:deploy",
+		"setup": "npm ci && npm run export-version && npm run db:migrate && npm run build --omit=dev && npm run commands:deploy",
 		"start": "node --env-file=.env ./dist/main.js",
 		"test": "./node_modules/.bin/vitest"
 	},
