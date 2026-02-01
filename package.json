@@ -48,7 +48,6 @@
 	"dependencies": {
 		"@discordjs/voice": "0.18.0",
 		"@prisma/client": "6.13.0",
-		"axios": "1.12.2",
 		"cheerio": "1.1.2",
 		"cron": "4.3.3",
 		"dectalk-tts": "1.0.1",

@@ -1,10 +1,10 @@
-import type { ChatInputCommandInteraction } from 'discord.js';
 import {
+	type ChatInputCommandInteraction,
 	EmbedBuilder,
 	SlashCommandBuilder,
-	SlashCommandSubcommandBuilder,
-	SlashCommandStringOption,
-	SlashCommandNumberOption,
+	type SlashCommandSubcommandBuilder,
+	type SlashCommandStringOption,
+	type SlashCommandNumberOption,
 	userMention,
 } from 'discord.js';
 

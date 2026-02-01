@@ -74,7 +74,7 @@ Searches for available classrooms on BYU Campus using real-time schedule data. B
 - **between** - Find rooms available during a time range on specific day(s)
 - **when** - Check when a specific room is next available
 
-The room finder automatically updates its database every Sunday at 2 AM to stay current with the semester schedule.
+The room finder automatically updates its database every Sunday at 2 AM to stay current with the semester schedule. Use [`/scraperooms`](#scraperooms) to update the database manually.
 
 ### /help
 
@@ -90,7 +90,7 @@ Retrieves the profile picture of the given user.
 
 ### /scraperooms
 
-**[Admin Only]** Manually triggers the room finder data scraper to update the database with current semester schedule information. This is useful for forcing an immediate update without waiting for the automatic Sunday schedule. Takes 10-15 minutes to complete and runs in the background. Shows real-time progress if a scrape is already running.
+**[Admin Only by default]** Manually triggers the room finder data scraper to update the database with current semester schedule information. This is useful for forcing an immediate update without waiting for the automatic Sunday schedule. Takes 10-15 minutes to complete and runs in the background. Shows real-time progress if a scrape is already running.
 
 ### /sendtag
 
