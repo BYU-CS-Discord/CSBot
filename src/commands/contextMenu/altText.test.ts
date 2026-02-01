@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
 
 import type { Attachment } from 'discord.js';
 import { Collection } from 'discord.js';
@@ -19,10 +19,6 @@ describe('Get Alt Text', () => {
 			},
 			replyPrivately: mockReplyPrivately,
 		} as unknown as MessageContextMenuCommandContext;
-	});
-
-	afterEach(() => {
-		vi.resetAllMocks();
 	});
 
 	test('tells the user when there are no images', async () => {

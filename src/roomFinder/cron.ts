@@ -22,7 +22,7 @@ import { info, error } from '../logger.js';
  * - '0 0 1 * *' = Midnight on the 1st of every month
  * - '0 2 1,15 * *' = 2 AM on the 1st and 15th of every month
  */
-export function setupScraperCron(cronSchedule: string = '0 2 * * 0', yearTerm?: string): CronJob {
+export function setupScraperCron(cronSchedule = '0 2 * * 0', yearTerm?: string): CronJob {
 	info(`[CRON] Setting up room scraper cron: ${cronSchedule}`);
 
 	const job = new CronJob(

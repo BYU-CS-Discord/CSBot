@@ -12,7 +12,6 @@
  * YEAR_TERM format: YYYYT where T is term (1=Winter, 3=Spring, 4=Summer, 5=Fall)
  */
 
-import axios from 'axios';
 import * as cheerio from 'cheerio';
 import fs from 'node:fs/promises';
 import path from 'node:path';
@@ -142,13 +141,15 @@ async function retryWithBackoff<T>(
 
 			// Check if it's a network error that's worth retrying
 			const isRetryable =
-				error &&
-				typeof error === 'object' &&
-				'code' in error &&
-				(error.code === 'ECONNRESET' ||
-					error.code === 'ETIMEDOUT' ||
-					error.code === 'ECONNREFUSED' ||
-					error.code === 'ENOTFOUND');
+				error instanceof TypeError ||
+				(error instanceof DOMException && error.name === 'TimeoutError') ||
+				(error &&
+					typeof error === 'object' &&
+					'code' in error &&
+					(error.code === 'ECONNRESET' ||
+						error.code === 'ETIMEDOUT' ||
+						error.code === 'ECONNREFUSED' ||
+						error.code === 'ENOTFOUND'));
 
 			if (!isRetryable || attempt === retries) {
 				// Not retryable or out of retries
@@ -296,16 +297,16 @@ function getClassInfo($: cheerio.Root, row: cheerio.Element): ClassInfo {
  */
 async function getRoomInfo(yearTerm: string, building: string, room: string): Promise<RoomInfo> {
 	const html = await openOrDownloadFile(yearTerm, `${building}-${room}.html`, async () => {
-		const response = await axios.post(
-			'https://y.byu.edu/class_schedule/cgi/classRoom2.cgi',
-			new URLSearchParams({
+		const response = await fetch('https://y.byu.edu/class_schedule/cgi/classRoom2.cgi', {
+			method: 'POST',
+			body: new URLSearchParams({
 				year_term: yearTerm,
 				building: building,
 				room: room,
 			}),
-			{ timeout: REQUEST_TIMEOUT }
-		);
-		return response.data as string;
+			signal: AbortSignal.timeout(REQUEST_TIMEOUT),
+		});
+		return await response.text();
 	});
 
 	const $ = cheerio.load(html);
@@ -343,16 +344,16 @@ async function* getBuildingsRooms(
 ): AsyncGenerator<[string, Array<string>]> {
 	for (const building of buildings) {
 		const html = await openOrDownloadFile(yearTerm, `${building}-list.html`, async () => {
-			const response = await axios.post(
-				'https://y.byu.edu/class_schedule/cgi/classRoom2.cgi',
-				new URLSearchParams({
+			const response = await fetch('https://y.byu.edu/class_schedule/cgi/classRoom2.cgi', {
+				method: 'POST',
+				body: new URLSearchParams({
 					e: '@loadRooms',
 					year_term: yearTerm,
 					building: building,
 				}),
-				{ timeout: REQUEST_TIMEOUT }
-			);
-			return response.data as string;
+				signal: AbortSignal.timeout(REQUEST_TIMEOUT),
+			});
+			return await response.text();
 		});
 
 		const $ = cheerio.load(html);
@@ -409,12 +410,12 @@ export async function scrapeRoomData(
 		logInfo('Fetching building list...');
 		addLog('Fetching building list from BYU...');
 		const indexHtml = await openOrDownloadFile(term, 'classRoom2.cgi', async () => {
-			const response = await axios.post(
-				'https://y.byu.edu/class_schedule/cgi/classRoom2.cgi',
-				new URLSearchParams({ year_term: term }),
-				{ timeout: REQUEST_TIMEOUT }
-			);
-			return response.data as string;
+			const response = await fetch('https://y.byu.edu/class_schedule/cgi/classRoom2.cgi', {
+				method: 'POST',
+				body: new URLSearchParams({ year_term: term }),
+				signal: AbortSignal.timeout(REQUEST_TIMEOUT),
+			});
+			return await response.text();
 		});
 
 		const $ = cheerio.load(indexHtml);

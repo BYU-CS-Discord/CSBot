@@ -72,7 +72,7 @@ declare global {
 				| string //
 				| Omit<MessageReplyOptions, 'flags'>
 				| Omit<InteractionReplyOptions, 'flags'>,
-			viaDM?: true
+			viaDM?: boolean
 		) => Promise<void>;
 
 		/** Replies to the command invocation, optionally pinging the command's sender. */

@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { mockDeep } from 'vitest-mock-extended';
 import type { DeepMockProxy } from 'vitest-mock-extended';
 
@@ -135,10 +135,6 @@ describe('updateReactboard', () => {
 		mockSend.mockResolvedValue({
 			id: mockReactboardPostId,
 		});
-	});
-
-	afterEach(() => {
-		vi.resetAllMocks();
 	});
 
 	test('does nothing if the react isnt in a guild', async () => {

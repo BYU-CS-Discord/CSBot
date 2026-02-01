@@ -326,7 +326,7 @@ export const findRoom: GlobalCommand = {
 			.setColor(embedColor)
 			.setTimestamp()
 			.setFooter({
-				text: 'BYU Room Finder (Native)',
+				text: 'BYU Room Finder',
 				iconURL:
 					'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Brigham_Young_University_medallion.svg/240px-Brigham_Young_University_medallion.svg.png',
 			});

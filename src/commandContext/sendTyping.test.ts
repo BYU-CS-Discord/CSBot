@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
-import type { RepliableInteraction } from 'discord.js';
+import type { RepliableInteraction, TextBasedChannelFields } from 'discord.js';
 import { ChannelType } from 'discord.js';
 
 // Mock the logger so nothing is printed
@@ -9,7 +9,7 @@ vi.mock('../logger.js');
 import { sendTypingFactory as factory } from './sendTyping.js';
 
 describe('typing indicator', () => {
-	const mockSendTyping = vi.fn<NonNullable<RepliableInteraction['channel']>['sendTyping']>();
+	const mockSendTyping = vi.fn<TextBasedChannelFields['sendTyping']>();
 	let interaction: RepliableInteraction;
 	let sendTyping: () => void;
 

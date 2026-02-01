@@ -1,4 +1,4 @@
-import { afterEach, assert, describe, expect, test, vi } from 'vitest';
+import { assert, describe, expect, test, vi } from 'vitest';
 
 import { Colors } from 'discord.js';
 
@@ -17,10 +17,6 @@ describe('isCasDown', () => {
 	const badResponse = {
 		status: 404,
 	} as Response;
-
-	afterEach(() => {
-		vi.resetAllMocks();
-	});
 
 	test('Returns the success embed when CAS returns a good response', async () => {
 		fetchMock.mockResolvedValueOnce(goodResponse);

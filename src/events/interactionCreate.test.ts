@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
 
 import type {
 	AutocompleteInteraction,
@@ -215,10 +215,6 @@ function defaultInteraction(): Interaction {
 describe('on(interactionCreate)', () => {
 	beforeEach(() => {
 		mockGlobalAutocomplete.mockReturnValue([{ name: 'Sample', value: 'sample' }]);
-	});
-
-	afterEach(() => {
-		vi.resetAllMocks();
 	});
 
 	describe('commands', () => {

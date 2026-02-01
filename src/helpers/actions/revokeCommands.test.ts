@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
 
 import type { Client, Guild, OAuth2Guild } from 'discord.js';
 import { Collection } from 'discord.js';
@@ -47,10 +47,6 @@ describe('Command revocations', () => {
 						} as unknown as Guild),
 				} as OAuth2Guild)
 		);
-	});
-
-	afterEach(() => {
-		vi.resetAllMocks();
 	});
 
 	test('clears global commands', async () => {
