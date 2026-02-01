@@ -1,8 +1,9 @@
-import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
 
 import type {
 	InteractionResponse,
 	Message,
+	PartialTextBasedChannelFields,
 	RepliableInteraction,
 	TextChannel,
 	User,
@@ -36,10 +37,6 @@ describe('Replies', () => {
 				},
 				reply: mockReply,
 			} as unknown as RepliableInteraction;
-		});
-
-		afterEach(() => {
-			vi.resetAllMocks();
 		});
 
 		test('sends an ephemeral reply with text', async () => {
@@ -135,7 +132,7 @@ describe('Replies', () => {
 
 	describe('to messages', () => {
 		const mockReply = vi.fn<RepliableInteraction['reply']>();
-		const mockChannelSend = vi.fn<Message['channel']['send']>();
+		const mockChannelSend = vi.fn<PartialTextBasedChannelFields['send']>();
 		let author: User;
 		let message: Message;
 
@@ -155,10 +152,6 @@ describe('Replies', () => {
 				},
 				reply: mockReply,
 			} as unknown as Message;
-		});
-
-		afterEach(() => {
-			vi.resetAllMocks();
 		});
 
 		test('sends a DM with a return prefix from text', async () => {
@@ -247,10 +240,6 @@ describe('Cold calls', () => {
 			send: mockChannelSend,
 			type: ChannelType.GuildText,
 		} as unknown as TextChannel;
-	});
-
-	afterEach(() => {
-		vi.resetAllMocks();
 	});
 
 	test('sends a message in the given channel', async () => {

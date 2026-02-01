@@ -296,12 +296,4 @@ For production purposes, consider using [Podman](https://podman.io/) or [Docker]
 DISCORD_TOKEN=YOUR_TOKEN_HERE
 ```
 
-Alternatively, you can run directly like so:
-
-```sh
-$ npm start
-$ npm run stop
-$ npm run restart
-```
-
-This will spawn a separate thread using [PM2](https://pm2.io/) that will run in the background.
+Alternatively, you can run the bot directly using `npm start`.

@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
 
 import { letterButtons } from '../evilHangman/hangmanLetterButtons.js';
 import { UserMessageError } from '../helpers/UserMessageError.js';
@@ -24,10 +24,6 @@ describe('hangmanMoreButton', () => {
 			},
 			message,
 		} as unknown as ButtonContext;
-	});
-
-	afterEach(() => {
-		vi.resetAllMocks();
 	});
 
 	test('different letter buttons have unique ids', () => {

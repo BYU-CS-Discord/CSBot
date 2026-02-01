@@ -33,6 +33,8 @@ export function _add(button: Button): void {
 }
 
 /**  Install buttons here:  **/
-letterButtons.forEach(_add);
+for (const button of letterButtons) {
+	_add(button);
+}
 _add(hangmanMoreButton);
 _add(hangmanLessButton);

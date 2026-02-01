@@ -80,7 +80,7 @@ export const xkcd: GlobalCommand = {
 
 	// entry point for command execution
 	async execute({ options, reply, sendTyping }) {
-		let comic: string = '';
+		let comic = '';
 		// not making this nullable, instead filling with dummy data to be later filled.
 		let results: GetComicResponse = {
 			month: '',
