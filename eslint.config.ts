@@ -77,6 +77,7 @@ export default defineConfig(
 		rules: {
 			// Handled by Prettier
 			'unicorn/no-nested-ternary': 'off',
+			'unicorn/number-literal-case': 'off',
 
 			// Overrides
 			'unicorn/filename-case': 'off', // We use camelCase
