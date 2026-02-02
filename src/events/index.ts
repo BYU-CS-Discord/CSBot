@@ -53,12 +53,14 @@ export function registerEventHandlers(client: Client): void {
 }
 
 // Install event handlers
+import { autoModerationActionExecution } from './autoModerationActionExecution.js';
 import { error } from './error.js';
 import { interactionCreate } from './interactionCreate.js';
 import { messageReactionAdd } from './messageReactionAdd.js';
 import { messageReactionRemove } from './messageReactionRemove.js';
 import { ready } from './ready.js';
 
+_add(autoModerationActionExecution as EventHandler);
 _add(error as EventHandler);
 _add(interactionCreate as EventHandler);
 _add(messageReactionAdd as EventHandler);

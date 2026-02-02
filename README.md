@@ -153,6 +153,23 @@ Can be used to repeat the same 'talk' command without typing it out again.
 
 ---
 
+## Automatic Features
+
+### AutoMod Response
+
+The bot automatically monitors Discord's AutoMod system and responds when messages are blocked for profanity or custom keyword violations. When a user's message is deleted by AutoMod due to banned words, the bot will:
+
+- Post a lighthearted "Tsk tsk" message mentioning the user
+- Display a humorous image
+
+This feature works automatically with your server's existing AutoMod rules - no configuration needed. It only responds to keyword-based message deletions (profanity filters and custom word lists).
+
+---
+
+### Uptime
+
+The bot may be [configured](#configure-the-bot) to automatically ping an uptime monitor of your choosing every few minutes, to keep easier track of server downtime.
+
 ## Usage or Development
 
 If you've read this far, and don't plan to run or develop on the bot yourself, or are not curious how to do so, you may leave now. This part is quite boring. But feel free to read on anyway!
