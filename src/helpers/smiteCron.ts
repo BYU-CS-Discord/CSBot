@@ -7,7 +7,7 @@ import { info, error } from '../logger.js';
  * Runs on a cron schedule to check for and unsmite users who have been smitten for too long
  */
 export function setupAutoUnsmiteCron(
-	cronSchedule: string = '0 * * * *',
+	cronSchedule: string = '* * * * *',
 	maxDurationMs: number = 3_600_000
 ): CronJob {
 	info(`[CRON] Setting up auto-unsmite cron: ${cronSchedule} (max duration: ${maxDurationMs}ms)`);

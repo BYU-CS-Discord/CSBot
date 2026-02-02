@@ -120,7 +120,7 @@ Begins a new game of Evil Hangman.
 
 ### /unsmite
 
-**[Admin Only]** Removes the smite status from a user, restoring their ability to use bot commands immediately.
+**[Admin Only by default]** Removes the smite status from a user, restoring their ability to use bot commands immediately.
 
 ### /xkcd
 

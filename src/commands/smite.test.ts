@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Client, User } from 'discord.js';
+import { AttachmentBuilder } from 'discord.js';
 import { smite } from './smite.js';
 import * as smiteUtils from '../helpers/smiteUtils.js';
 import { UserMessageError } from '../helpers/UserMessageError.js';
@@ -84,9 +85,11 @@ describe('smite', () => {
 					expect.objectContaining({
 						data: expect.objectContaining({
 							title: '⚡ Hubris! ⚡',
+							image: expect.objectContaining({ url: 'attachment://smite.gif' }),
 						}),
 					}),
 				]),
+				files: [expect.any(AttachmentBuilder)],
 			})
 		);
 	});
@@ -104,9 +107,11 @@ describe('smite', () => {
 					expect.objectContaining({
 						data: expect.objectContaining({
 							title: 'Wack.',
+							image: expect.objectContaining({ url: 'attachment://wack.webp' }),
 						}),
 					}),
 				]),
+				files: [expect.any(AttachmentBuilder)],
 			})
 		);
 		expect(smiteUtils.setUserSmitten).not.toHaveBeenCalled();
@@ -130,9 +135,11 @@ describe('smite', () => {
 					expect.objectContaining({
 						data: expect.objectContaining({
 							title: 'You fool!',
+							image: expect.objectContaining({ url: 'attachment://smite.gif' }),
 						}),
 					}),
 				]),
+				files: [expect.any(AttachmentBuilder)],
 			})
 		);
 	});
@@ -160,9 +167,11 @@ describe('smite', () => {
 					expect.objectContaining({
 						data: expect.objectContaining({
 							title: '⚡ SMITTEN! ⚡',
+							image: expect.objectContaining({ url: 'attachment://smite.gif' }),
 						}),
 					}),
 				]),
+				files: [expect.any(AttachmentBuilder)],
 			})
 		);
 	});
