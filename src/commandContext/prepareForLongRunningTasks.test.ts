@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, test, vi } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
 
 import type { RepliableInteraction } from 'discord.js';
 
@@ -16,10 +16,6 @@ describe('prepareForLongRunningTasks', () => {
 	} as unknown as RepliableInteraction;
 
 	const prepareForLongRunningTasks = factory(interaction);
-
-	afterEach(() => {
-		vi.resetAllMocks();
-	});
 
 	test('requests interaction deferrment', async () => {
 		await prepareForLongRunningTasks();

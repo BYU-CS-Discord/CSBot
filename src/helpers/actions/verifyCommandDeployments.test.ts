@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
 
 import type { Client, Guild } from 'discord.js';
 import { Collection, SlashCommandBuilder } from 'discord.js';
@@ -92,10 +92,6 @@ describe('Verify command deployments', () => {
 				deployedGlobal.set(cmd.info.name, cmd);
 			}
 		}
-	});
-
-	afterEach(() => {
-		vi.resetAllMocks();
 	});
 
 	describe('Guild commands', () => {

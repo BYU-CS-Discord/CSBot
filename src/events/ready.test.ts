@@ -55,6 +55,9 @@ const mockVerifyCommandDeployments = verifyCommandDeployments as Mock<
 // Mock the logger so nothing is printed
 vi.mock('../logger.js');
 
+// Mock the room scraper cron so it doesn't start during tests
+vi.mock('../roomFinder/cron.js');
+
 // Import the code to test
 import { ready } from './ready.js';
 

@@ -7,7 +7,7 @@ import { error, info } from '../logger.js';
 export function replyPrivatelyFactory(
 	interaction: RepliableInteraction
 ): CommandContext['replyPrivately'] {
-	return async function replyPrivately(options, viaDM: boolean = false) {
+	return async function replyPrivately(options, viaDM = false) {
 		if (viaDM) {
 			// We need to say *something* to the interaction itself, or Discord will think we died.
 			const content = ':paperclip: Check your DMs';

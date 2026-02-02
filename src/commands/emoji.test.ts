@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
 
 import type { GuildEmoji } from 'discord.js';
 import { EmbedBuilder } from 'discord.js';
@@ -38,10 +38,6 @@ describe('profile', () => {
 
 		mockEmojiName.mockReturnValue('existing emoji');
 		mockShouldRespondEphemeral.mockReturnValue(true);
-	});
-
-	afterEach(() => {
-		vi.resetAllMocks();
 	});
 
 	test('Throws an error when the target emoji does not exist', async () => {

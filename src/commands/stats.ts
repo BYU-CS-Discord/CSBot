@@ -1,10 +1,10 @@
-import type { ChatInputCommandInteraction } from 'discord.js';
 import {
+	type ChatInputCommandInteraction,
 	EmbedBuilder,
 	SlashCommandBuilder,
-	SlashCommandSubcommandBuilder,
-	SlashCommandStringOption,
-	SlashCommandNumberOption,
+	type SlashCommandSubcommandBuilder,
+	type SlashCommandStringOption,
+	type SlashCommandNumberOption,
 	userMention,
 } from 'discord.js';
 
@@ -268,9 +268,7 @@ async function leaderboard(
 		throw new UserMessageError(`No one is tracking the stat "${statName}"`);
 	}
 
-	const scoresSorted = scoreboardEntries.sort(
-		(a: { score: number }, b: { score: number }) => b.score - a.score
-	);
+	const scoresSorted = scoreboardEntries.toSorted((a, b) => b.score - a.score);
 
 	const embedDescription = scoresSorted
 		.map((entry: { userId: string; score: number }) => {

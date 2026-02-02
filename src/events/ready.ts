@@ -53,8 +53,8 @@ export const ready = onEvent('ready', {
 		// setupScraperCron('0 2 * * 0', '20251'); // Specific semester
 
 		// Set up automatic unsmiting of users after 1 hour
-		// This will check every hour and unsmite anyone who has been smitten for over an hour
-		setupAutoUnsmiteCron(); // Default: '0 * * * *' (every hour)
+		// This will check every minute and unsmite anyone who has been smitten for over an hour
+		setupAutoUnsmiteCron(); // Default: '* * * * *' (every minute)
 
 		// Start uptime ping
 		const UPTIME_URL = process.env['UPTIME_URL'];

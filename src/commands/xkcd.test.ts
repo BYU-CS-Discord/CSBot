@@ -1,5 +1,5 @@
 import type { Mock } from 'vitest';
-import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
 
 import { fetchJson } from '../helpers/fetch.js';
 import { HttpStatusCode } from '../helpers/HttpStatusCode.js';
@@ -61,10 +61,6 @@ describe('xkcd', () => {
 			},
 		} as unknown as TextInputCommandContext;
 		mockGetInteger.mockReturnValue(null);
-	});
-
-	afterEach(() => {
-		vi.resetAllMocks();
 	});
 
 	test('Throws an error when the number is out of bounds', async () => {

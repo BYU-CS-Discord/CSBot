@@ -169,6 +169,8 @@ describe('roomFinder search', () => {
 		});
 
 		test('throws error when timeA is missing', async () => {
+			dbMock.buildings.findFirst.mockResolvedValue({ id: 1, name: 'TMCB' });
+
 			await expect(
 				lookup({
 					building: 'TMCB',
@@ -179,6 +181,8 @@ describe('roomFinder search', () => {
 		});
 
 		test('throws error when timeA is invalid format', async () => {
+			dbMock.buildings.findFirst.mockResolvedValue({ id: 1, name: 'TMCB' });
+
 			await expect(
 				lookup({
 					building: 'TMCB',
@@ -236,6 +240,8 @@ describe('roomFinder search', () => {
 		});
 
 		test('throws error when timeA is missing', async () => {
+			dbMock.buildings.findFirst.mockResolvedValue({ id: 1, name: 'TMCB' });
+
 			await expect(
 				lookup({
 					building: 'TMCB',
@@ -247,6 +253,8 @@ describe('roomFinder search', () => {
 		});
 
 		test('throws error when timeB is missing', async () => {
+			dbMock.buildings.findFirst.mockResolvedValue({ id: 1, name: 'TMCB' });
+
 			await expect(
 				lookup({
 					building: 'TMCB',
@@ -260,6 +268,7 @@ describe('roomFinder search', () => {
 
 	describe('lookup - when', () => {
 		test('returns current events for specific room', async () => {
+			const mockBuilding = { id: 1, name: 'TMCB' };
 			const mockEvents = [
 				{
 					id: 1,
@@ -271,11 +280,12 @@ describe('roomFinder search', () => {
 					room: {
 						id: 1,
 						number: '350',
-						building: { id: 1, name: 'TMCB' },
+						building: mockBuilding,
 					},
 				},
 			];
 
+			dbMock.buildings.findFirst.mockResolvedValue(mockBuilding);
 			dbMock.events.findMany.mockResolvedValue(mockEvents);
 
 			const result = await lookup({
@@ -305,6 +315,8 @@ describe('roomFinder search', () => {
 		});
 
 		test('throws error when room is missing', async () => {
+			dbMock.buildings.findFirst.mockResolvedValue({ id: 1, name: 'TMCB' });
+
 			await expect(
 				lookup({
 					building: 'TMCB',

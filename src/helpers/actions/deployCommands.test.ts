@@ -1,5 +1,5 @@
 import type { Mock } from 'vitest';
-import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
 
 import type { Client, Guild, OAuth2Guild } from 'discord.js';
 import { Collection, InteractionContextType, SlashCommandBuilder } from 'discord.js';
@@ -106,10 +106,6 @@ describe('Command deployments', () => {
 		for (const cmd of mockCommands) {
 			mockAllCommands.set(cmd.info.name, cmd);
 		}
-	});
-
-	afterEach(() => {
-		vi.resetAllMocks();
 	});
 
 	test('does no deployments if there are no commands to deploy', async () => {

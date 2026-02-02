@@ -37,11 +37,11 @@ const builder = new SlashCommandBuilder()
 	)
 	.addStringOption(option => {
 		option.setRequired(false).setName('speaker').setDescription('Whose voice to use');
-		Object.keys(Speaker).forEach(name => {
+		for (const name of Object.keys(Speaker)) {
 			const value = (Speaker as Record<string, string>)[name];
-			if (value === undefined) return;
+			if (value === undefined) continue;
 			option = option.addChoices({ name, value });
-		});
+		}
 		return option;
 	});
 

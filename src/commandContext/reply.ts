@@ -50,6 +50,8 @@ export function replyFactory(interaction: RepliableInteraction): CommandContext[
 		if (
 			typeof options !== 'string' &&
 			'ephemeral' in options &&
+			// FIXME Can't use `options.flags` because it is omitted from `options`
+			// eslint-disable-next-line @typescript-eslint/no-deprecated
 			options.ephemeral === true &&
 			!didFailToReply
 		) {

@@ -1,4 +1,4 @@
-import { afterEach, assert, beforeEach, describe, expect, test, vi } from 'vitest';
+import { assert, beforeEach, describe, expect, test, vi } from 'vitest';
 
 import { toTheGallows } from './toTheGallows.js';
 
@@ -26,10 +26,6 @@ describe('toTheGallows', () => {
 		} as unknown as TextInputCommandContext;
 
 		mockGetInteger.mockReturnValue(null);
-	});
-
-	afterEach(() => {
-		vi.resetAllMocks();
 	});
 
 	test('begins a game of evil hangman', async () => {

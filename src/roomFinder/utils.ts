@@ -104,7 +104,7 @@ export async function getAvailableRooms(
 		}
 	}
 
-	return availableRooms.sort((a, b) => {
+	return availableRooms.toSorted((a, b) => {
 		if (a.buildingName !== b.buildingName) {
 			return a.buildingName.localeCompare(b.buildingName);
 		}
