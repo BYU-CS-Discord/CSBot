@@ -1,4 +1,4 @@
-import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { AttachmentBuilder, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import {
 	createTag,
 	getTag,
@@ -6,12 +6,14 @@ import {
 	incrementTagUseCount,
 	deleteTag,
 	searchTags,
+	validateImageAttachment,
+	downloadAttachment,
 } from '../helpers/tagUtils.js';
 import { UserMessageError } from '../helpers/UserMessageError.js';
 import { isAdmin } from '../helpers/smiteUtils.js';
 
 const NameOption = 'name';
-const ContentOption = 'content';
+const ImageOption = 'image';
 
 const AddSubcommand = 'add';
 const SendSubcommand = 'send';
@@ -21,11 +23,11 @@ const RemoveSubcommand = 'remove';
 
 const builder = new SlashCommandBuilder()
 	.setName('tag')
-	.setDescription('Manage and use tagged images/links')
+	.setDescription('Manage and use tagged images')
 	.addSubcommand(subcommand =>
 		subcommand
 			.setName(AddSubcommand)
-			.setDescription('Create a new tag')
+			.setDescription('Create a new tag from an image')
 			.addStringOption(option =>
 				option
 					.setName(NameOption)
@@ -33,12 +35,11 @@ const builder = new SlashCommandBuilder()
 					.setRequired(true)
 					.setMaxLength(100)
 			)
-			.addStringOption(option =>
+			.addAttachmentOption(option =>
 				option
-					.setName(ContentOption)
-					.setDescription('The URL or text content for the tag')
+					.setName(ImageOption)
+					.setDescription('The image to store (PNG, JPEG, GIF, WebP, max 10 MB)')
 					.setRequired(true)
-					.setMaxLength(2000)
 			)
 	)
 	.addSubcommand(subcommand =>
@@ -99,30 +100,31 @@ export const tag: GuildedCommand = {
 		switch (subcommand) {
 			case AddSubcommand: {
 				const name = options.getString(NameOption, true);
-				const content = options.getString(ContentOption, true);
+				const attachment = options.getAttachment(ImageOption, true);
 
 				try {
-					await createTag(guild.id, name, content, user.id);
+					validateImageAttachment(attachment.contentType, attachment.size);
+					const imageData = await downloadAttachment(attachment.url);
+					await createTag(
+						guild.id,
+						name,
+						imageData,
+						attachment.name,
+						attachment.contentType!,
+						user.id
+					);
 
-					// Check if content is an image URL
-					const imageUrlRegex = /^https?:\/\/.+\.(jpg|jpeg|png|gif|webp|bmp|svg|ico)(\?.*)?$/i;
-					const isImage = imageUrlRegex.test(content);
-
+					const file = new AttachmentBuilder(imageData, { name: attachment.name });
 					const embed = new EmbedBuilder()
-						.setTitle('✅ Tag Created')
+						.setTitle('Tag Created')
 						.setDescription(`Tag \`${name}\` has been created!`)
+						.setImage(`attachment://${attachment.name}`)
 						.setColor(0x00_ff_00) // Green
 						.setFooter({ text: `Created by ${user.username}` });
 
-					// If it's an image, display it; otherwise show as text field
-					if (isImage) {
-						embed.setImage(content);
-					} else {
-						embed.addFields({ name: 'Content', value: content });
-					}
-
 					await reply({
 						embeds: [embed],
+						files: [file],
 						ephemeral: true,
 					});
 				} catch (error) {
@@ -147,19 +149,11 @@ export const tag: GuildedCommand = {
 				// Increment use count
 				await incrementTagUseCount(guild.id, name);
 
-				// Check if content is an image URL
-				const imageUrlRegex = /^https?:\/\/.+\.(jpg|jpeg|png|gif|webp|bmp|svg|ico)(\?.*)?$/i;
-				if (imageUrlRegex.test(tagData.content)) {
-					// Send as embed with image
-					await reply({
-						embeds: [
-							new EmbedBuilder().setImage(tagData.content).setColor(0x58_65_f2), // Blurple
-						],
-					});
-				} else {
-					// Send as plain text (for non-image URLs or text)
-					await reply({ content: tagData.content });
-				}
+				const file = new AttachmentBuilder(Buffer.from(tagData.imageData), {
+					name: tagData.fileName,
+				});
+
+				await reply({ files: [file] });
 				break;
 			}
 
@@ -173,12 +167,13 @@ export const tag: GuildedCommand = {
 					);
 				}
 
-				// Check if content is an image URL
-				const imageUrlRegex = /^https?:\/\/.+\.(jpg|jpeg|png|gif|webp|bmp|svg|ico)(\?.*)?$/i;
-				const isImage = imageUrlRegex.test(tagData.content);
+				const file = new AttachmentBuilder(Buffer.from(tagData.imageData), {
+					name: tagData.fileName,
+				});
 
 				const embed = new EmbedBuilder()
 					.setTitle(`Preview: ${name}`)
+					.setImage(`attachment://${tagData.fileName}`)
 					.addFields(
 						{
 							name: 'Created By',
@@ -194,19 +189,18 @@ export const tag: GuildedCommand = {
 							name: 'Created',
 							value: tagData.createdAt.toLocaleDateString(),
 							inline: true,
+						},
+						{
+							name: 'File',
+							value: tagData.fileName,
+							inline: true,
 						}
 					)
 					.setColor(0x58_65_f2); // Blurple
 
-				// If it's an image, display it; otherwise show as text
-				if (isImage) {
-					embed.setImage(tagData.content);
-				} else {
-					embed.setDescription(tagData.content);
-				}
-
 				await reply({
 					embeds: [embed],
+					files: [file],
 					ephemeral: true,
 				});
 				break;
@@ -219,7 +213,7 @@ export const tag: GuildedCommand = {
 					await reply({
 						embeds: [
 							new EmbedBuilder()
-								.setTitle('📋 Tags')
+								.setTitle('Tags')
 								.setDescription('No tags available in this server.\n\nCreate one with `/tag add`!')
 								.setColor(0xff_a5_00), // Orange
 						],
@@ -235,7 +229,7 @@ export const tag: GuildedCommand = {
 				for (let i = 0; i < tags.length; i += maxFieldsPerEmbed) {
 					const chunk = tags.slice(i, i + maxFieldsPerEmbed);
 					const embed = new EmbedBuilder()
-						.setTitle(i === 0 ? `📋 Tags (${tags.length} total)` : 'Tags (continued)')
+						.setTitle(i === 0 ? `Tags (${tags.length} total)` : 'Tags (continued)')
 						.setColor(0x58_65_f2); // Blurple
 
 					for (const tagData of chunk) {
@@ -270,7 +264,7 @@ export const tag: GuildedCommand = {
 					await reply({
 						embeds: [
 							new EmbedBuilder()
-								.setTitle('🗑️ Tag Removed')
+								.setTitle('Tag Removed')
 								.setDescription(`Tag \`${name}\` has been deleted.`)
 								.setColor(0xff_00_00), // Red
 						],
