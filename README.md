@@ -1,6 +1,6 @@
 # CSBot
 
-> This project is undergoing rapid development and should be considered experimental. Use it at your own risk. 🤙
+> This project is currently in active development and should be considered experimental. Use it at your own risk. 🤙
 
 A bot to help manage the activities and community of BYU's Computer Science Discord server.
 
@@ -67,7 +67,14 @@ Retrieves the internal picture for a custom emoji. By default responds ephemeral
 
 ### /findroom ( now / at / between / when )
 
-Searches for open rooms on BYU Campus. _'Now'_, _'At'_, and _'Between'_ allow you to filter your search by time. \_'When'\_ allows you to see when a specified room is available.
+Searches for available classrooms on BYU Campus using real-time schedule data. Built with native TypeScript and features automatic retry logic for reliable data fetching.
+
+- **now** - Find rooms available right now
+- **at** - Find rooms available at a specific time and day(s)
+- **between** - Find rooms available during a time range on specific day(s)
+- **when** - Check when a specific room is next available
+
+The room finder automatically updates its database every Sunday at 2 AM to stay current with the semester schedule. Use [`/scraperooms`](#scraperooms) to update the database manually.
 
 ### /help
 
@@ -80,6 +87,10 @@ Checks whether BYU's CAS system is operational, because it crashes fairly often.
 ### /profile
 
 Retrieves the profile picture of the given user.
+
+### /scraperooms
+
+**[Admin Only by default]** Manually triggers the room finder data scraper to update the database with current semester schedule information. This is useful for forcing an immediate update without waiting for the automatic Sunday schedule. Takes 10-15 minutes to complete and runs in the background. Shows real-time progress if a scrape is already running.
 
 ### /sendtag
 

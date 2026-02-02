@@ -1,5 +1,12 @@
-import type { ChatInputCommandInteraction } from 'discord.js';
-import { EmbedBuilder, SlashCommandBuilder, userMention } from 'discord.js';
+import {
+	type ChatInputCommandInteraction,
+	EmbedBuilder,
+	SlashCommandBuilder,
+	type SlashCommandSubcommandBuilder,
+	type SlashCommandStringOption,
+	type SlashCommandNumberOption,
+	userMention,
+} from 'discord.js';
 
 import { db } from '../database/index.js';
 import { sanitize } from '../helpers/sanitize.js';
@@ -17,53 +24,53 @@ const LeaderboardSubcommand = 'leaderboard';
 const builder = new SlashCommandBuilder()
 	.setName('stats')
 	.setDescription('Track and display stats and leaderboards')
-	.addSubcommand(subcommand =>
+	.addSubcommand((subcommand: SlashCommandSubcommandBuilder) =>
 		subcommand
 			.setName(TrackSubcommand)
 			.setDescription('Begin tracking a stat for you')
-			.addStringOption(option =>
+			.addStringOption((option: SlashCommandStringOption) =>
 				option
 					.setName(StatNameOption)
 					.setDescription('The name of the stat you would like to track')
 					.setRequired(true)
 			)
 	)
-	.addSubcommand(subcommand =>
+	.addSubcommand((subcommand: SlashCommandSubcommandBuilder) =>
 		subcommand
 			.setName(UpdateSubcommand)
 			.setDescription("Adds to a stat you're tracking")
-			.addStringOption(option =>
+			.addStringOption((option: SlashCommandStringOption) =>
 				option
 					.setName(StatNameOption)
 					.setDescription('The name of the stat to update')
 					.setRequired(true)
 			)
-			.addNumberOption(option =>
+			.addNumberOption((option: SlashCommandNumberOption) =>
 				option
 					.setName(AmountOption)
 					.setDescription('The amount to update the stat')
 					.setRequired(true)
 			)
 	)
-	.addSubcommand(subcommand =>
+	.addSubcommand((subcommand: SlashCommandSubcommandBuilder) =>
 		subcommand.setName(ListSubcommand).setDescription("List all stats I'm tracking for you")
 	)
-	.addSubcommand(subcommand =>
+	.addSubcommand((subcommand: SlashCommandSubcommandBuilder) =>
 		subcommand
 			.setName(UntrackSubcommand)
 			.setDescription('Stops tracking a stat for you')
-			.addStringOption(option =>
+			.addStringOption((option: SlashCommandStringOption) =>
 				option
 					.setName(StatNameOption)
 					.setDescription('The name of the stat you would like to stop tracking')
 					.setRequired(true)
 			)
 	)
-	.addSubcommand(subcommand =>
+	.addSubcommand((subcommand: SlashCommandSubcommandBuilder) =>
 		subcommand
 			.setName(LeaderboardSubcommand)
 			.setDescription('Show the leaderboard for a stat')
-			.addStringOption(option =>
+			.addStringOption((option: SlashCommandStringOption) =>
 				option
 					.setName(StatNameOption)
 					.setDescription('The name of the stat for which to show the leaderboard')
@@ -194,7 +201,9 @@ async function list(
 
 	const embedDescription =
 		scoreboardEntries.length > 0
-			? scoreboardEntries.map(entry => `${entry.name}: ${entry.score}`).join('\n')
+			? scoreboardEntries
+					.map((entry: { name: string; score: number }) => `${entry.name}: ${entry.score}`)
+					.join('\n')
 			: "You're not currently tracking anything!";
 
 	const embed = new EmbedBuilder()
@@ -262,7 +271,7 @@ async function leaderboard(
 	const scoresSorted = scoreboardEntries.toSorted((a, b) => b.score - a.score);
 
 	const embedDescription = scoresSorted
-		.map(entry => {
+		.map((entry: { userId: string; score: number }) => {
 			return `${userMention(entry.userId)}: ${entry.score}`;
 		})
 		.join('\n');

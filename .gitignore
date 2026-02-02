@@ -13,6 +13,7 @@ node_modules
 db
 dist
 coverage
+scraper
 src/constants/version.ts
 tmp
 temp

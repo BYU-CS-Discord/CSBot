@@ -2,55 +2,90 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+    provider = "sqlite"
+    url      = env("DATABASE_URL")
 }
 
 model Reactboard {
-	id Int @id @default(autoincrement())
-	guildId String
-	channelId String
-	react String
-	isCustomReact Boolean
-	threshold Int
+    id            Int     @id @default(autoincrement())
+    guildId       String
+    channelId     String
+    react         String
+    isCustomReact Boolean
+    threshold     Int
 
-	@@unique([guildId, channelId], name: "location")
+    reactboardPosts ReactboardPost[]
 
-	reactboardPosts ReactboardPost[]
+    @@unique([guildId, channelId], name: "location")
 }
 
 model ReactboardPost {
-	id Int @id @default(autoincrement())
-	reactboardId Int
-	reactboard Reactboard @relation(fields: [reactboardId], references: [id])
-	originalMessageId String
-	originalChannelId String
-	reactboardMessageId String
+    id                  Int        @id @default(autoincrement())
+    reactboardId        Int
+    reactboard          Reactboard @relation(fields: [reactboardId], references: [id])
+    originalMessageId   String
+    originalChannelId   String
+    reactboardMessageId String
 }
 
 model Scoreboard {
-  id      Int    @id @default(autoincrement())
-  userId  String
-  guildId String
-  name    String
-  score   Float
+    id      Int    @id @default(autoincrement())
+    userId  String
+    guildId String
+    name    String
+    score   Float
 }
 
-// model Tag {
-// 	id        Int      @id @default(autoincrement())
-// 	createdAt DateTime @default(now())
-// 	name      String   @unique
-// 	content   String
-// }
+model Buildings {
+    id   Int    @id @default(autoincrement())
+    name String
 
-// model User {
-// 	id             Int      @id @default(autoincrement())
-// 	createdAt      DateTime @default(now())
-// 	userId         String   @unique
-//  starredCount   Int
-//  leaderboards   Leaderboard[]
-// }
+    rooms Rooms[]
+}
+
+model Rooms {
+    id          Int       @id @default(autoincrement())
+    buildingId  Int
+    building    Buildings @relation(fields: [buildingId], references: [id], onDelete: Cascade)
+    number      String
+    description String
+
+    events Events[]
+}
+
+model Events {
+    id        Int    @id @default(autoincrement())
+    roomId    Int
+    room      Rooms  @relation(fields: [roomId], references: [id], onDelete: Cascade)
+    name      String
+    days      String // JSON array of days: ["M", "T", "W", "Th", "F", "Sa", "Su"]
+    startTime String // TIME format: "HH:MM:SS"
+    endTime   String // TIME format: "HH:MM:SS"
+}
+
+model User {
+    id        Int       @id @default(autoincrement())
+    userId    String    @unique // Discord user ID
+    guildId   String    // Discord guild ID
+    smitten   Boolean   @default(false)
+    smittenAt DateTime? // When the user was smitten (null if not smitten)
+
+    @@unique([userId, guildId], name: "user_guild")
+}
+
+model Tag {
+    id        Int      @id @default(autoincrement())
+    guildId   String   // Discord guild ID - tags are per-guild
+    name      String   // Tag name (unique per guild)
+    content   String   // URL or text content
+    createdBy String   // Discord user ID of creator
+    createdAt DateTime @default(now())
+    useCount  Int      @default(0) // Track how many times tag has been used
+
+    @@unique([guildId, name], name: "guild_tag")
+    @@index([guildId])
+}
