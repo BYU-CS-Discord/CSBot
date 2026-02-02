@@ -168,7 +168,7 @@ This feature works automatically with your server's existing AutoMod rules - no 
 
 ### Uptime
 
-The bot automatically pings an uptime monitor every 5 minutes to keep the server running. This is configured in the `.env` file.
+The bot may be [configured](#configure-the-bot) to automatically ping an uptime monitor of your choosing every few minutes, to keep easier track of server downtime.
 
 ## Usage or Development
 

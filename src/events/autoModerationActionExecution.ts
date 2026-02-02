@@ -1,7 +1,12 @@
-import { AutoModerationActionType, AutoModerationRuleTriggerType } from 'discord.js';
+import { AttachmentBuilder, AutoModerationActionType, AutoModerationRuleTriggerType } from 'discord.js';
+import { fileURLToPath } from 'node:url';
+import path from 'node:path';
 
 import { onEvent } from '../helpers/onEvent.js';
 import { debug, error, info } from '../logger.js';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const assetsDir = path.resolve(__dirname, '..', 'assets');
 
 /**
  * The event handler for AutoMod action executions
@@ -42,11 +47,12 @@ export const autoModerationActionExecution = onEvent('autoModerationActionExecut
 			);
 
 			// Send a message mentioning the user with the Christian server image
+			const attachment = new AttachmentBuilder(path.join(assetsDir, 'christian-server.jpg'), {
+				name: 'christian-server.jpg',
+			});
 			await channel.send({
 				content: `Tsk tsk, <@${actionExecution.userId}>`,
-				files: [
-					'https://media.discordapp.net/attachments/357672131691282437/968540850453884988/christian-server.jpg?ex=68fba175&is=68fa4ff5&hm=bff87ada39923c27edad25ff90ad3ea79f96f456ddb59931571e3ca9f5d0ddc0&=&format=webp&width=1434&height=944',
-				],
+				files: [attachment],
 			});
 		} catch (error_) {
 			error('Failed to handle AutoMod action execution:', error_);
