@@ -30,7 +30,9 @@ declare global {
 		 */
 		autocomplete?: (
 			interaction: Omit<AutocompleteInteraction, 'respond'>
-		) => Array<ApplicationCommandOptionChoiceData>;
+		) =>
+			| Array<ApplicationCommandOptionChoiceData>
+			| Promise<Array<ApplicationCommandOptionChoiceData>>;
 	}
 
 	interface GlobalCommand extends BaseCommand {

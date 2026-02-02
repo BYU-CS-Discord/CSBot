@@ -67,7 +67,9 @@ CREATE TABLE "Tag" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "guildId" TEXT NOT NULL,
     "name" TEXT NOT NULL,
-    "content" TEXT NOT NULL,
+    "imageData" BLOB NOT NULL,
+    "fileName" TEXT NOT NULL,
+    "contentType" TEXT NOT NULL,
     "createdBy" TEXT NOT NULL,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "useCount" INTEGER NOT NULL DEFAULT 0
