@@ -1,0 +1,130 @@
+name: CI
+description: Lints, builds, tests, and checks versions of the project when a pull request is opened or merged
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  lint:
+    name: Lint
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read # Required for actions/checkout
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Setup node
+        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm clean-install
+
+      - name: Generate Prisma client
+        run: npm run db:generate
+
+      - name: Generate version
+        run: npm run export-version
+
+      - name: Lint
+        run: npm run lint
+
+  build:
+    name: Build
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read # Required for actions/checkout
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Setup node
+        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm clean-install
+
+      - name: Generate Prisma client
+        run: npm run db:generate
+
+      - name: Generate version
+        run: npm run export-version
+
+      - name: Build
+        run: npm run build
+
+  test:
+    name: Test
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read # Required for actions/checkout
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Setup node
+        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm clean-install
+
+      - name: Generate Prisma client
+        run: npm run db:generate
+
+      - name: Generate version
+        run: npm run export-version
+
+      - name: Test
+        run: npm test
+
+      # - name: Report coverage
+      #   uses: ArtiomTr/jest-coverage-report-action@v2.2.2
+
+  check-versions:
+    name: Check versions
+    # Ensure that package.json and package-lock.json have the same version, and that CHANGELOG.md is spec-compliant
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read # Required for actions/checkout
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Setup node
+        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm clean-install
+
+      - name: Check versions
+        run: npm run release

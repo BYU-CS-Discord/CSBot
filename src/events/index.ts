@@ -39,7 +39,7 @@ export function _add(eventHandler: EventHandler): void {
  * @public
  */
 export function registerEventHandlers(client: Client): void {
-	_allEventHandlers.forEach(eventHandler => {
+	for (const eventHandler of _allEventHandlers.values()) {
 		// Register the event handler with the correct endpoint
 		const eventName = eventHandler.name;
 		if (eventHandler.once) {
@@ -49,7 +49,7 @@ export function registerEventHandlers(client: Client): void {
 		}
 
 		info(`Registered event handler ${eventHandler.once ? 'once' : 'on'}(${eventName})`);
-	});
+	}
 }
 
 // Install event handlers

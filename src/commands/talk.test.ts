@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
 
 import { ChannelType } from 'discord.js';
 import type dectalk from 'dectalk-tts';
@@ -41,10 +41,6 @@ describe('Talk Slash Command', () => {
 			if (name === 'speaker') return speakerMock();
 			return null;
 		});
-	});
-
-	afterEach(() => {
-		vi.resetAllMocks();
 	});
 
 	test('Fails if channel is undefined', async () => {

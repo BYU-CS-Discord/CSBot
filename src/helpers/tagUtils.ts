@@ -1,11 +1,46 @@
 import { db } from '../database/index.js';
 import type { Tag } from '@prisma/client';
 
+const ALLOWED_IMAGE_TYPES = new Set(['image/png', 'image/jpeg', 'image/gif', 'image/webp']);
+const MAX_IMAGE_SIZE_BYTES = 10 * 1024 * 1024; // 10 MB
+
+/**
+ * Validates an image attachment's content type and size.
+ * @throws Error if content type is not allowed or size exceeds limit
+ */
+export function validateImageAttachment(contentType: string | null, size: number): void {
+	if (!contentType || !ALLOWED_IMAGE_TYPES.has(contentType)) {
+		throw new Error(
+			`Invalid image type: ${contentType ?? 'unknown'}. Allowed types: PNG, JPEG, GIF, WebP.`
+		);
+	}
+
+	if (size > MAX_IMAGE_SIZE_BYTES) {
+		throw new Error(`Image is too large (${(size / 1024 / 1024).toFixed(1)} MB). Maximum size is 10 MB.`);
+	}
+}
+
+/**
+ * Downloads binary data from a URL (e.g. Discord CDN attachment URL).
+ * @param url URL to download from
+ * @returns Buffer of the downloaded data
+ */
+export async function downloadAttachment(url: string): Promise<Buffer> {
+	const response = await fetch(url);
+	if (!response.ok) {
+		throw new Error(`Failed to download attachment: ${response.status} ${response.statusText}`);
+	}
+	const arrayBuffer = await response.arrayBuffer();
+	return Buffer.from(arrayBuffer);
+}
+
 /**
  * Creates a new tag for a guild.
  * @param guildId Discord guild ID
  * @param name Tag name
- * @param content Tag content (URL or text)
+ * @param imageData Binary image data
+ * @param fileName Original filename
+ * @param contentType MIME type
  * @param createdBy Discord user ID of creator
  * @returns The created tag
  * @throws Error if tag with that name already exists
@@ -13,7 +48,9 @@ import type { Tag } from '@prisma/client';
 export async function createTag(
 	guildId: string,
 	name: string,
-	content: string,
+	imageData: Buffer,
+	fileName: string,
+	contentType: string,
 	createdBy: string
 ): Promise<Tag> {
 	// Check if tag already exists
@@ -34,7 +71,9 @@ export async function createTag(
 		data: {
 			guildId,
 			name: name.toLowerCase(),
-			content,
+			imageData,
+			fileName,
+			contentType,
 			createdBy,
 		},
 	});
@@ -57,15 +96,29 @@ export async function getTag(guildId: string, name: string): Promise<Tag | null>
 	});
 }
 
+// TODO: Consider adding image compression before storing (e.g., sharp library)
+// to reduce database size. For v1, images are stored at their original size.
+
 /**
  * Gets all tags for a guild, sorted by name.
+ * Excludes imageData to avoid loading all image binaries into memory.
  * @param guildId Discord guild ID
- * @returns Array of tags
+ * @returns Array of tags (without imageData)
  */
-export async function getAllTags(guildId: string): Promise<Array<Tag>> {
+export async function getAllTags(guildId: string): Promise<Array<Omit<Tag, 'imageData'>>> {
 	return db.tag.findMany({
 		where: {
 			guildId,
+		},
+		select: {
+			id: true,
+			guildId: true,
+			name: true,
+			fileName: true,
+			contentType: true,
+			createdBy: true,
+			createdAt: true,
+			useCount: true,
 		},
 		orderBy: {
 			name: 'asc',

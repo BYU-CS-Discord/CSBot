@@ -1,5 +1,5 @@
 import type { Mock } from 'vitest';
-import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
 
 import type { Message, RepliableInteraction } from 'discord.js';
 
@@ -20,10 +20,6 @@ describe('follow-up message', () => {
 	beforeEach(() => {
 		mockSendMessageInChannel.mockResolvedValue(testMessage);
 		mockInteractionFollowUp.mockResolvedValue(testMessage);
-	});
-
-	afterEach(() => {
-		vi.resetAllMocks();
 	});
 
 	const interaction = {

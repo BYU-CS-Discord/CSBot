@@ -6,21 +6,30 @@ import * as tagUtils from '../helpers/tagUtils.js';
 
 vi.mock('../helpers/tagUtils.js');
 
+const fakeImageData = Buffer.from('fake-image-data');
+
 describe('tag command', () => {
 	const mockReply = vi.fn<GuildedCommandContext['reply']>();
 	const mockGetString = vi.fn<GuildedCommandContext['options']['getString']>();
 	const mockGetSubcommand = vi.fn<GuildedCommandContext['options']['getSubcommand']>();
+	const mockGetAttachment = vi.fn();
 
 	let context: GuildedCommandContext;
 
 	beforeEach(() => {
 		vi.clearAllMocks();
 
+		vi.mocked(tagUtils.downloadAttachment).mockResolvedValue(fakeImageData);
+		vi.mocked(tagUtils.validateImageAttachment).mockImplementation(() => {
+			// no-op, valid by default
+		});
+
 		context = {
 			reply: mockReply,
 			options: {
 				getString: mockGetString,
 				getSubcommand: mockGetSubcommand,
+				getAttachment: mockGetAttachment,
 				getFocused: () => '',
 			},
 			guild: {
@@ -49,18 +58,26 @@ describe('tag command', () => {
 			mockGetSubcommand.mockReturnValue('add');
 		});
 
-		it('should create a tag with embedded image for image URLs', async () => {
+		it('should create a tag with an image attachment', async () => {
 			mockGetString.mockImplementation((name: string) => {
 				if (name === 'name') return 'testtag';
-				if (name === 'content') return 'https://example.com/image.png';
 				return null;
+			});
+
+			mockGetAttachment.mockReturnValue({
+				name: 'photo.png',
+				contentType: 'image/png',
+				size: 1024,
+				url: 'https://cdn.discord.com/attachments/photo.png',
 			});
 
 			vi.mocked(tagUtils.createTag).mockResolvedValue({
 				id: 1,
 				guildId: 'guild123',
 				name: 'testtag',
-				content: 'https://example.com/image.png',
+				imageData: fakeImageData,
+				fileName: 'photo.png',
+				contentType: 'image/png',
 				createdBy: 'user123',
 				createdAt: new Date(),
 				useCount: 0,
@@ -68,10 +85,16 @@ describe('tag command', () => {
 
 			await tag.execute(context);
 
+			expect(tagUtils.validateImageAttachment).toHaveBeenCalledWith('image/png', 1024);
+			expect(tagUtils.downloadAttachment).toHaveBeenCalledWith(
+				'https://cdn.discord.com/attachments/photo.png'
+			);
 			expect(tagUtils.createTag).toHaveBeenCalledWith(
 				'guild123',
 				'testtag',
-				'https://example.com/image.png',
+				fakeImageData,
+				'photo.png',
+				'image/png',
 				'user123'
 			);
 			expect(mockReply).toHaveBeenCalledWith(
@@ -80,52 +103,11 @@ describe('tag command', () => {
 					embeds: expect.arrayContaining([
 						expect.objectContaining({
 							data: expect.objectContaining({
-								title: '✅ Tag Created',
-								image: expect.objectContaining({
-									url: 'https://example.com/image.png',
-								}),
+								title: 'Tag Created',
 							}),
 						}),
 					]),
-				})
-			);
-		});
-
-		it('should create a tag with text field for non-image content', async () => {
-			mockGetString.mockImplementation((name: string) => {
-				if (name === 'name') return 'texttag';
-				if (name === 'content') return 'Just some text content';
-				return null;
-			});
-
-			vi.mocked(tagUtils.createTag).mockResolvedValue({
-				id: 1,
-				guildId: 'guild123',
-				name: 'texttag',
-				content: 'Just some text content',
-				createdBy: 'user123',
-				createdAt: new Date(),
-				useCount: 0,
-			});
-
-			await tag.execute(context);
-
-			expect(mockReply).toHaveBeenCalledWith(
-				expect.objectContaining({
-					ephemeral: true,
-					embeds: expect.arrayContaining([
-						expect.objectContaining({
-							data: expect.objectContaining({
-								title: '✅ Tag Created',
-								fields: expect.arrayContaining([
-									expect.objectContaining({
-										name: 'Content',
-										value: 'Just some text content',
-									}),
-								]),
-							}),
-						}),
-					]),
+					files: expect.any(Array),
 				})
 			);
 		});
@@ -133,8 +115,14 @@ describe('tag command', () => {
 		it('should handle duplicate tag name error', async () => {
 			mockGetString.mockImplementation((name: string) => {
 				if (name === 'name') return 'existing';
-				if (name === 'content') return 'https://example.com/image.png';
 				return null;
+			});
+
+			mockGetAttachment.mockReturnValue({
+				name: 'photo.png',
+				contentType: 'image/png',
+				size: 1024,
+				url: 'https://cdn.discord.com/attachments/photo.png',
 			});
 
 			vi.mocked(tagUtils.createTag).mockRejectedValue(
@@ -150,14 +138,16 @@ describe('tag command', () => {
 			mockGetSubcommand.mockReturnValue('send');
 		});
 
-		it('should send image URLs as embeds', async () => {
+		it('should send image as file attachment', async () => {
 			mockGetString.mockReturnValue('testtag');
 
 			vi.mocked(tagUtils.getTag).mockResolvedValue({
 				id: 1,
 				guildId: 'guild123',
 				name: 'testtag',
-				content: 'https://example.com/image.png',
+				imageData: fakeImageData,
+				fileName: 'photo.png',
+				contentType: 'image/png',
 				createdBy: 'user123',
 				createdAt: new Date(),
 				useCount: 5,
@@ -171,39 +161,9 @@ describe('tag command', () => {
 			expect(tagUtils.incrementTagUseCount).toHaveBeenCalledWith('guild123', 'testtag');
 			expect(mockReply).toHaveBeenCalledWith(
 				expect.objectContaining({
-					embeds: expect.arrayContaining([
-						expect.objectContaining({
-							data: expect.objectContaining({
-								image: expect.objectContaining({
-									url: 'https://example.com/image.png',
-								}),
-							}),
-						}),
-					]),
+					files: expect.any(Array),
 				})
 			);
-		});
-
-		it('should send non-image content as plain text', async () => {
-			mockGetString.mockReturnValue('texttag');
-
-			vi.mocked(tagUtils.getTag).mockResolvedValue({
-				id: 2,
-				guildId: 'guild123',
-				name: 'texttag',
-				content: 'Just some text or a non-image URL',
-				createdBy: 'user123',
-				createdAt: new Date(),
-				useCount: 2,
-			});
-
-			vi.mocked(tagUtils.incrementTagUseCount).mockResolvedValue();
-
-			await tag.execute(context);
-
-			expect(mockReply).toHaveBeenCalledWith({
-				content: 'Just some text or a non-image URL',
-			});
 		});
 
 		it('should throw error if tag not found', async () => {
@@ -219,7 +179,7 @@ describe('tag command', () => {
 			mockGetSubcommand.mockReturnValue('preview');
 		});
 
-		it('should show image preview with embedded image', async () => {
+		it('should show image preview with metadata', async () => {
 			mockGetString.mockReturnValue('testtag');
 
 			const mockDate = new Date('2023-01-01');
@@ -227,7 +187,9 @@ describe('tag command', () => {
 				id: 1,
 				guildId: 'guild123',
 				name: 'testtag',
-				content: 'https://example.com/image.png',
+				imageData: fakeImageData,
+				fileName: 'photo.png',
+				contentType: 'image/png',
 				createdBy: 'user123',
 				createdAt: mockDate,
 				useCount: 10,
@@ -244,42 +206,18 @@ describe('tag command', () => {
 							data: expect.objectContaining({
 								title: 'Preview: testtag',
 								image: expect.objectContaining({
-									url: 'https://example.com/image.png',
+									url: 'attachment://photo.png',
 								}),
+								fields: expect.arrayContaining([
+									expect.objectContaining({
+										name: 'File',
+										value: 'photo.png',
+									}),
+								]),
 							}),
 						}),
 					]),
-				})
-			);
-		});
-
-		it('should show text preview with description', async () => {
-			mockGetString.mockReturnValue('texttag');
-
-			const mockDate = new Date('2023-01-01');
-			vi.mocked(tagUtils.getTag).mockResolvedValue({
-				id: 2,
-				guildId: 'guild123',
-				name: 'texttag',
-				content: 'Just some text content',
-				createdBy: 'user123',
-				createdAt: mockDate,
-				useCount: 5,
-			});
-
-			await tag.execute(context);
-
-			expect(mockReply).toHaveBeenCalledWith(
-				expect.objectContaining({
-					ephemeral: true,
-					embeds: expect.arrayContaining([
-						expect.objectContaining({
-							data: expect.objectContaining({
-								title: 'Preview: texttag',
-								description: 'Just some text content',
-							}),
-						}),
-					]),
+					files: expect.any(Array),
 				})
 			);
 		});
@@ -298,12 +236,14 @@ describe('tag command', () => {
 		});
 
 		it('should list all tags', async () => {
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-explicit-any
 			vi.mocked(tagUtils.getAllTags).mockResolvedValue([
 				{
 					id: 1,
 					guildId: 'guild123',
 					name: 'tag1',
-					content: 'content1',
+					fileName: 'img1.png',
+					contentType: 'image/png',
 					createdBy: 'user1',
 					createdAt: new Date(),
 					useCount: 5,
@@ -312,7 +252,8 @@ describe('tag command', () => {
 					id: 2,
 					guildId: 'guild123',
 					name: 'tag2',
-					content: 'content2',
+					fileName: 'img2.gif',
+					contentType: 'image/gif',
 					createdBy: 'user2',
 					createdAt: new Date(),
 					useCount: 10,
@@ -368,7 +309,7 @@ describe('tag command', () => {
 					embeds: expect.arrayContaining([
 						expect.objectContaining({
 							data: expect.objectContaining({
-								title: '🗑️ Tag Removed',
+								title: 'Tag Removed',
 							}),
 						}),
 					]),

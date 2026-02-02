@@ -1,0 +1,10 @@
+{
+	"extends": "./tsconfig.json",
+	"include": ["src"],
+	"exclude": ["**/*.test.*", "**/__mocks__/**"],
+	"compilerOptions": {
+		"outDir": "dist",
+		"removeComments": true,
+		"sourceMap": true,
+	}
+}

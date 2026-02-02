@@ -1,6 +1,6 @@
-import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
 
-import type { GuildMember, User } from 'discord.js';
+import type { ClientUser, GuildMember, User, UserResolvable } from 'discord.js';
 import { DiscordAPIError, EmbedBuilder, userMention } from 'discord.js';
 
 import { DiscordErrorCode } from '../helpers/DiscordErrorCode.js';
@@ -11,15 +11,15 @@ vi.mock('../logger.js');
 describe('profile', () => {
 	const mockReply = vi.fn<TextInputCommandContext['reply']>();
 	const mockReplyPrivately = vi.fn<TextInputCommandContext['replyPrivately']>();
-	const mockGetUser = vi.fn<TextInputCommandContext['options']['getUser']>();
-	const mockGuildMembersFetch = vi.fn<TextInputCommandContext['guild']['members']['fetch']>();
+	const mockGetUser = vi.fn<(name: string, required: true) => User | null | undefined>();
+	const mockGuildMembersFetch = vi.fn<(user: UserResolvable) => Promise<GuildMember>>();
 	const mockAvatarURL = vi.fn<User['avatarURL']>();
 
 	const testAvatar = 'https://example.com/avatars/1234567890/abcdef1234567890.png';
 	let context: TextInputCommandContext;
 	let user: User;
 	let otherUser: User;
-	let botUser: User;
+	let botUser: ClientUser;
 
 	beforeEach(() => {
 		user = {
@@ -38,7 +38,7 @@ describe('profile', () => {
 			username: 'BotBot',
 			id: '1234567892',
 			avatarURL: mockAvatarURL,
-		} as unknown as User;
+		} as unknown as ClientUser;
 
 		context = {
 			client: {
@@ -56,15 +56,11 @@ describe('profile', () => {
 				},
 			},
 			source: 'guild',
-		};
+		} as unknown as TextInputCommandContext;
 
 		mockGetUser.mockReturnValue(otherUser);
 		mockAvatarURL.mockReturnValue(testAvatar);
 		mockGuildMembersFetch.mockResolvedValue(otherUser as unknown as GuildMember);
-	});
-
-	afterEach(() => {
-		vi.resetAllMocks();
 	});
 
 	test('Throws an error when we fail to fetch the target member for an API reason', async () => {
@@ -122,7 +118,11 @@ describe('profile', () => {
 	});
 
 	test("Throws an error when trying to get another user's profile picture in DMs", async () => {
-		context = { ...(context as object), guild: null, source: 'dm' };
+		context = {
+			...(context as object),
+			guild: null,
+			source: 'dm',
+		} as unknown as TextInputCommandContext;
 
 		await expect(profile.execute(context)).rejects.toThrow();
 		// "That user isn't here!"
@@ -153,7 +153,11 @@ describe('profile', () => {
 		"Returns the url of the caller's profile picture (in DMs: %p, explicitly: %p)",
 		async (inDMs, explicitly) => {
 			if (inDMs) {
-				context = { ...(context as object), guild: null, source: 'dm' };
+				context = {
+					...(context as object),
+					guild: null,
+					source: 'dm',
+				} as unknown as TextInputCommandContext;
 			}
 			if (explicitly) {
 				mockGetUser.mockReturnValue(user); // param was given
@@ -182,7 +186,11 @@ describe('profile', () => {
 		false,
 	])("Returns the url of the bot's profile picture (in DMs: %p)", async inDMs => {
 		if (inDMs) {
-			context = { ...(context as object), guild: null, source: 'dm' };
+			context = {
+				...(context as object),
+				guild: null,
+				source: 'dm',
+			} as unknown as TextInputCommandContext;
 		}
 		mockGetUser.mockReturnValue(botUser);
 		mockGuildMembersFetch.mockResolvedValue(botUser as unknown as GuildMember);

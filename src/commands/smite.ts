@@ -1,4 +1,6 @@
-import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { AttachmentBuilder, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { fileURLToPath } from 'node:url';
+import path from 'node:path';
 import { isAdmin, setUserSmitten } from '../helpers/smiteUtils.js';
 import { UserMessageError } from '../helpers/UserMessageError.js';
 
@@ -9,10 +11,19 @@ const builder = new SlashCommandBuilder()
 		option.setName('user').setDescription('The user to smite').setRequired(true)
 	);
 
-const ODIN_SMITING_THOR_GIF =
-	'https://cdn.discordapp.com/attachments/781563734098575410/1083403217553084446/smite.gif?ex=68fb93df&is=68fa425f&hm=83b4a865179f0dd6fb1312f535c2a730673709734470c0095dd2a432908bfcba&';
-const WACK_IMAGE =
-	'https://i.kym-cdn.com/entries/icons/original/000/033/758/Screen_Shot_2020-04-28_at_12.21.48_PM.png';
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const assetsDir = path.resolve(__dirname, '..', 'assets');
+
+function smiteGifAttachment(): AttachmentBuilder {
+	return new AttachmentBuilder(path.join(assetsDir, 'smite.gif'), { name: 'smite.gif' });
+}
+
+function wackImageAttachment(): AttachmentBuilder {
+	return new AttachmentBuilder(path.join(assetsDir, 'bonk.webp'), { name: 'bonk.webp' });
+}
+
+const ODIN_SMITING_THOR_GIF = 'attachment://smite.gif';
+const WACK_IMAGE = 'attachment://bonk.webp';
 export const smite: GuildedCommand = {
 	info: builder,
 	requiresGuild: true,
@@ -40,6 +51,7 @@ export const smite: GuildedCommand = {
 						.setImage(ODIN_SMITING_THOR_GIF)
 						.setColor(0xff_00_00), // Red
 				],
+				files: [smiteGifAttachment()],
 			});
 			return;
 		}
@@ -50,6 +62,7 @@ export const smite: GuildedCommand = {
 				embeds: [
 					new EmbedBuilder().setTitle('Wack.').setImage(WACK_IMAGE).setColor(0xff_a5_00), // Orange
 				],
+				files: [wackImageAttachment()],
 			});
 			return;
 		}
@@ -69,6 +82,7 @@ export const smite: GuildedCommand = {
 						.setImage(ODIN_SMITING_THOR_GIF)
 						.setColor(0xff_00_00), // Red
 				],
+				files: [smiteGifAttachment()],
 			});
 			return;
 		}
@@ -91,6 +105,7 @@ export const smite: GuildedCommand = {
 					.setImage(ODIN_SMITING_THOR_GIF)
 					.setColor(0x58_65_f2), // Blurple
 			],
+			files: [smiteGifAttachment()],
 		});
 	},
 };

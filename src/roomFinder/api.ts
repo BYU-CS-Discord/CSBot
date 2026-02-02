@@ -39,17 +39,17 @@ export async function searchNow(building: string): Promise<RoomsResponse> {
 	if (building.toUpperCase() === 'ANY' && rooms.length > 0) {
 		const shuffled = rooms
 			.map(value => ({ value, sort: Math.random() }))
-			.sort((a, b) => a.sort - b.sort)
+			.toSorted((a, b) => a.sort - b.sort)
 			.map(({ value }) => value)
 			.slice(0, Math.min(24, rooms.length));
 
 		// Sort by building name, then room number
-		shuffled.sort((a, b) => {
+		const sorted = shuffled.toSorted((a, b) => {
 			if (a[1] !== b[1]) return a[1].localeCompare(b[1]);
 			return a[0].localeCompare(b[0]);
 		});
 
-		return { Rooms: shuffled };
+		return { Rooms: sorted };
 	}
 
 	return { Rooms: rooms };

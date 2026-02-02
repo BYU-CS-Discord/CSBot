@@ -1,0 +1,41 @@
+name: Release
+description: On push to main, if the latest version in CHANGELOG.md is different from the latest version tag, create a new tag and release
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  release:
+    name: Create release
+
+    runs-on: ubuntu-latest
+
+    # This sets appropriate permissions for the default `GITHUB_TOKEN`.
+    # Protected tags are incompatible with this arrangement for now.
+    permissions:
+      contents: write
+      discussions: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Parse changelog
+        id: changelog
+        uses: coditory/changelog-parser@4f567c6914ee75eff434b4d946393dfd254f8f98 # v1.0.2
+
+      - name: Create new tag and release
+        if: steps.changelog.outputs.status != 'unreleased'
+        # This action doesn't create a new release if the tag already exists
+        uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b # v2.5.0
+        with:
+          # Can't use GITHUB_TOKEN for tags, or our deploy workflow won't trigger. See https://docs.github.com/en/actions/security-for-github-actions/security-guides/automatic-token-authentication#using-the-github_token-in-a-workflow
+          token: ${{ secrets.RELEASE_TOKEN }}
+          tag_name: v${{ steps.changelog.outputs.version }}
+          name: v${{ steps.changelog.outputs.version }}
+          body: ${{ steps.changelog.outputs.description }}
+          prerelease: true # TODO: Change based on semver?
