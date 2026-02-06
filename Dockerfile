@@ -1,4 +1,4 @@
-FROM node:20-slim as builder
+FROM node:24-slim as builder
 
 RUN apt-get update -y
 RUN apt-get install -y openssl
@@ -11,7 +11,7 @@ RUN npm ci
 RUN npm run export-version
 RUN npm run build --omit=dev
 
-FROM node:20-slim as runner
+FROM node:24-slim as runner
 
 RUN apt-get update -y
 RUN apt-get install -y openssl
