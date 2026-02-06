@@ -54,7 +54,7 @@
 		"tmp": "0.2.5"
 	},
 	"devDependencies": {
-		"@stylistic/eslint-plugin": "5.7.0",
+		"@stylistic/eslint-plugin": "5.7.1",
 		"@types/node": "24.10.9",
 		"@types/semver": "7.7.1",
 		"@types/source-map-support": "0.5.10",
