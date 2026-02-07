@@ -73,7 +73,7 @@
 		"keep-a-changelog": "2.8.0",
 		"prettier": "3.8.1",
 		"prettier-plugin-prisma": "5.0.0",
-		"prisma": "6.9.0",
+		"prisma": "7.3.0",
 		"semver": "7.7.3",
 		"tsx": "4.21.0",
 		"typescript": "5.9.3",
