@@ -92,13 +92,11 @@ async function handleCommandInteraction(
 		context = {
 			...vagueContext,
 			source: 'guild',
-			options: interaction.options,
 		} as GuildedCommandContext;
 	} else {
 		context = {
 			...vagueContext,
 			source: 'dm',
-			options: interaction.options,
 		} as DMCommandContext;
 	}
 
