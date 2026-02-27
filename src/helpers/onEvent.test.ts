@@ -11,11 +11,11 @@ describe('Creating event handlers', () => {
 	// few arguments, or arguments of the wrong type.
 
 	test('creates a proper event handler', () => {
-		const handler = onEvent('ready', {
+		const handler = onEvent('clientReady', {
 			once: true,
 			execute: executeMock,
 		});
-		expect(handler).toHaveProperty('name', 'ready');
+		expect(handler).toHaveProperty('name', 'clientReady');
 		expect(handler).toHaveProperty('once', true);
 		expect(handler).toHaveProperty('execute', executeMock);
 	});
