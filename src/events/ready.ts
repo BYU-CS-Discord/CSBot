@@ -1,5 +1,3 @@
-import type { Client, ClientPresence } from 'discord.js';
-import { ActivityType } from 'discord.js';
 import { Worker } from 'node:worker_threads';
 
 import { appVersion } from '../constants/meta.js';
