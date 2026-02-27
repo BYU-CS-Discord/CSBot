@@ -38,10 +38,6 @@ export const ready = onEvent('ready', {
 		info('Verifying command deployments...');
 		await verifyCommandDeployments(client);
 
-		// Set user activity
-		info('Setting user activity');
-		setActivity(client);
-
 		// Start uptime ping
 		const UPTIME_URL = process.env['UPTIME_URL'];
 		if (UPTIME_URL) {
@@ -55,11 +51,3 @@ export const ready = onEvent('ready', {
 		info('Ready!');
 	},
 });
-
-function setActivity(client: Client<true>): ClientPresence {
-	// Let users know where to go for info
-	return client.user.setActivity({
-		type: ActivityType.Playing,
-		name: '/help for info',
-	});
-}
