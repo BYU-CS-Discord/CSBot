@@ -53,7 +53,7 @@ describe('allEvents', () => {
 		(allEventHandlers as Map<string, unknown>).clear();
 
 		const fakeReadyEvent: EventHandler = {
-			name: 'ready',
+			name: 'clientReady',
 			once: true,
 			execute: vi.fn(),
 		};
