@@ -32,7 +32,7 @@ describe('Command deployments', () => {
 		guilds: {
 			fetch: mockFetchOauthGuilds,
 		},
-	} as unknown as Client;
+	} as unknown as Client<true>;
 
 	beforeEach(() => {
 		mockGuildCommandsSet.mockImplementation(() => Promise.resolve(new Collection()));
@@ -119,7 +119,7 @@ describe('Command deployments', () => {
 
 	test('revokes commands before deploying', async () => {
 		mockRevokeCommands.mockRejectedValue(new Error('This is a test'));
-		await expect(deployCommands(mockClient)).rejects.toThrowError();
+		await expect(deployCommands(mockClient)).rejects.toThrow();
 		expect(mockRevokeCommands).toHaveBeenCalledOnce();
 		expect(mockApplicationCommandsSet).not.toHaveBeenCalled();
 		expect(mockGuildCommandsSet).not.toHaveBeenCalled();
