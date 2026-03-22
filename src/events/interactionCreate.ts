@@ -5,7 +5,7 @@ import type {
 	GuildMember,
 	RepliableInteraction,
 } from 'discord.js';
-import { EmbedBuilder, Colors, ApplicationCommandType, ChannelType } from 'discord.js';
+import { EmbedBuilder, Colors, ApplicationCommandType, ChannelType, Events } from 'discord.js';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -27,7 +27,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 /**
  * The event handler for Discord Interactions (usually chat commands)
  */
-export const interactionCreate = onEvent('interactionCreate', {
+export const interactionCreate = onEvent(Events.InteractionCreate, {
 	once: false,
 	async execute(interaction) {
 		try {
