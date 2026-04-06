@@ -1,4 +1,4 @@
-import type { Console } from 'node:console';
+import * as console from 'node:console';
 
 /**
  * The default logger for this application. Set to the console for now.
@@ -8,7 +8,7 @@ import type { Console } from 'node:console';
  * If you add any more endpoints to this file, remember to mock them in './\_\_mocks\_\_/logger.ts'
  * @private
  */
-const logger: Console = console;
+const logger = console;
 
 /**
  * The logger endpoint for `debug` logging

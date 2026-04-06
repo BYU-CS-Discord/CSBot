@@ -3,7 +3,7 @@ import { hangmanLetterButton } from '../buttons/hangmanLetterButton.js';
 
 const alphabet: ReadonlyArray<Letter> = Array.from({ length: 26 })
 	.fill(null)
-	.map((x, i) => String.fromCodePoint(i + 97) as Letter);
+	.map((_, i) => String.fromCodePoint(i + 97) as Letter);
 
 const buttonMap: ReadonlyMap<Letter, Button> = new Map(
 	alphabet.map(letter => [letter, hangmanLetterButton(letter)])
