@@ -3,8 +3,9 @@
 	"include": ["src"],
 	"exclude": ["**/*.test.*", "**/__mocks__/**"],
 	"compilerOptions": {
+		"rootDir": "src",
+
 		"outDir": "dist",
-		"removeComments": true,
 		"sourceMap": true,
 	}
 }
