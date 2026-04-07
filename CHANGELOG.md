@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Breaking:** upgrade to Node 24
 - Replace `nodemon` with `node --watch` for the `npm run dev` script
 - Replace `tsx` with native Node for `release.ts` script
+- Replace `jiti` with native Node for loading `eslint.config.ts`
 
 ### Removed
 
