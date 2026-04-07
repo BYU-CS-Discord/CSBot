@@ -38,7 +38,7 @@
 		"export-version": "./node_modules/.bin/genversion ./src/constants/version.ts -es",
 		"lint": "./node_modules/.bin/eslint",
 		"lint:fix": "npm run lint -- --fix",
-		"release": "./node_modules/.bin/tsx ./scripts/release.ts",
+		"release": "node ./scripts/release.ts",
 		"setup": "npm ci && npm run export-version && npm run db:migrate && npm run build --omit=dev && npm run commands:deploy",
 		"start": "node --env-file=.env ./dist/main.js",
 		"test": "./node_modules/.bin/vitest"
