@@ -53,15 +53,15 @@ export function registerEventHandlers(client: Client): void {
 }
 
 // Install event handlers
+import { clientReady } from './clientReady.js';
 import { error } from './error.js';
 import { interactionCreate } from './interactionCreate.js';
 import { messageReactionAdd } from './messageReactionAdd.js';
 import { messageReactionRemove } from './messageReactionRemove.js';
-import { ready } from './ready.js';
 
+_add(clientReady as EventHandler);
 _add(error as EventHandler);
 _add(interactionCreate as EventHandler);
 _add(messageReactionAdd as EventHandler);
 _add(messageReactionRemove as EventHandler);
-_add(ready as EventHandler);
 // Not sure why these type casts are necessary, but they seem sound. We can remove them when TS gets smarter, or we learn what I did wrong
