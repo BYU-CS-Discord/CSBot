@@ -1,6 +1,6 @@
 import 'source-map-support/register.js';
 
-import { Client, GatewayIntentBits, Partials } from 'discord.js';
+import { ActivityType, Client, GatewayIntentBits, Partials } from 'discord.js';
 
 import { registerEventHandlers } from './events/index.js';
 import { error, info } from './logger.js';
@@ -11,8 +11,14 @@ import { error, info } from './logger.js';
 export async function _main(): Promise<void> {
 	info('*Yawn* Good morning!');
 
+	const activity = {
+		type: ActivityType.Playing,
+		name: '/help for info',
+	};
+
 	// Set up the client
-	const client = new Client({
+	const client = new Client<false>({
+		presence: { activities: [activity] },
 		intents: [
 			GatewayIntentBits.Guilds,
 			GatewayIntentBits.GuildMessages,
