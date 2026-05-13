@@ -15,7 +15,7 @@ describe('profile', () => {
 	const testEmojiURL = 'https://example.com/emojis/1234567890/abcdef1234567890.png';
 
 	let context: TextInputCommandContext;
-	let existingEmoji;
+	let existingEmoji: GuildEmoji;
 
 	beforeEach(() => {
 		existingEmoji = {
