@@ -19,7 +19,7 @@
 	"license": "0BSD",
 	"author": "BYU CS",
 	"type": "module",
-	"main": "./dist/main.js",
+	"main": "src/main.ts",
 	"scripts": {
 		"build": "npm run db:generate && rm -rf dist && ./node_modules/.bin/tsc -p tsconfig.build.json",
 		"commands:deploy": "node --env-file=.env . --deploy # TODO: Replace these with automatic command deployment",
@@ -30,7 +30,7 @@
 		"db:introspect": "./node_modules/.bin/prisma db pull",
 		"db:migrate": "./node_modules/.bin/prisma migrate deploy",
 		"db:migrations:generate": "./node_modules/.bin/prisma migrate dev --create-only",
-		"dev": "NODE_ENV=development node --watch --env-file=.env ./dist/main.js",
+		"dev": "NODE_ENV=development node --watch --env-file=.env .",
 		"docker": "npm run docker:image && npm run docker:cleanup && npm run docker:container",
 		"docker:cleanup": "docker system prune --force --filter='label=cs-bot'",
 		"docker:container": "docker run --tty --interactive --rm --mount type=bind,source=$PWD,destination=/cs-bot cs-bot-image",
@@ -40,8 +40,8 @@
 		"lint:fix": "npm run lint -- --fix",
 		"release": "node ./scripts/release.ts",
 		"setup": "npm ci && npm run export-version && npm run db:migrate && npm run build --omit=dev && npm run commands:deploy",
-		"start": "node --env-file=.env ./dist/main.js",
 		"test": "./node_modules/.bin/vitest"
+		"start": "node --env-file=.env .",
 	},
 	"dependencies": {
 		"@discordjs/voice": "0.19.2",
