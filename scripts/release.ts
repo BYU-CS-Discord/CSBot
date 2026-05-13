@@ -1,10 +1,7 @@
-#!/usr/bin/env tsx
-
-import './assertTsx.js';
-
 import { parser as changelogParser } from 'keep-a-changelog';
 import { readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
+import { exit } from 'node:process';
 import { fileURLToPath } from 'node:url';
 import { parse as parseSemVer } from 'semver';
 import { assert, literal, string, type } from 'superstruct';
@@ -134,5 +131,5 @@ if (didFixPackageLockJson) {
 // If we fixed the changelog or updated package.json, throw
 if (didFixChangelog || didFixPackageJson || didFixPackageLockJson) {
 	logger.warn('⚠️  We made some changes. Please review them and re-run. ⚠️');
-	process.exit(1); // this should fail us in CI
+	exit(1); // This should cause CI to fail
 }
