@@ -1,7 +1,4 @@
-FROM node:24-slim as builder
-
-RUN apt-get update -y
-RUN apt-get install -y openssl
+FROM node:24-slim AS builder
 
 WORKDIR /app
 
@@ -9,20 +6,21 @@ COPY . .
 
 RUN npm ci
 RUN npm run export-version
-RUN npm run build --omit=dev
 
-FROM node:24-slim as runner
+FROM node:24-slim AS runner
 
-RUN apt-get update -y
+ENV NODE_ENV=production
+
 RUN apt-get install -y openssl
 
 WORKDIR /app
 
-COPY --from=builder /app/dist/ ./dist/
-COPY --from=builder /app/res/ ./res/
+COPY --exclude=**/*.test.* --exclude=**/__mocks__/** src ./src/
+COPY --from=builder /app/src/constants/version.ts ./src/constants/
+COPY res ./res/
 COPY package*.json ./
 COPY prisma prisma/
-COPY scripts/launch_in_docker.sh .
+COPY scripts/launch_in_docker.sh ./scripts/
 
 RUN npm ci --omit=dev
 
@@ -30,4 +28,4 @@ RUN npm ci --omit=dev
 ENV DATABASE_URL="file:/db/db.sqlite"
 
 # Using bash here to get consistent behavior and configurations
-CMD ["bash", "/app/launch_in_docker.sh"]
+CMD ["bash", "/app/scripts/launch_in_docker.sh"]
