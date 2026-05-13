@@ -3,6 +3,7 @@ import type { URL } from 'node:url';
 import type { Struct, StructError } from 'superstruct';
 import { assert } from 'superstruct';
 
+import { HttpStatusCode } from './HttpStatusCode.js';
 import { NetworkError } from './NetworkError.js';
 
 /**
@@ -24,9 +25,9 @@ export async function fetchJson<T, S>(
 ): Promise<T> {
 	const res = await fetch(input, init);
 
-	const status = res.status;
-	// FIXME: Use HttpStatusCode instead
-	if (status !== 200) {
+	// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+	const status = res.status as HttpStatusCode;
+	if (status !== HttpStatusCode.OK) {
 		throw new NetworkError(status);
 	}
 
