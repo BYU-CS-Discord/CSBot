@@ -12,10 +12,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update dependencies
 - Modernize TypeScript and ESLint configurations
 - Refactor GitHub workflows
-- **Breaking:** set minimum Node version to 22.12.0
+- **Breaking:** set minimum Node version to 22.18.0
 - **Breaking:** upgrade to Node 24
 - Replace `nodemon` with `node --watch` for the `npm run dev` script
 - Use `Events` enum for event handler names
+- Replace `tsx` with native Node for `release.ts` script
+- Replace `jiti` with native Node for loading `eslint.config.ts`
 
 ### Removed
 
@@ -24,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fix Prisma type errors from `npm run setup` script
+- Set user activity on Client initialization, keeps presence from disappearing as much
 
 ## [0.15.0] - 2025-09-25
 

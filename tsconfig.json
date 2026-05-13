@@ -1,14 +1,16 @@
 {
 	"compilerOptions": {
-		"target": "ESNext",
-		"module": "NodeNext",
-		"strict": true,
-		"noUncheckedIndexedAccess": true,
-		"noImplicitReturns": true,
+		// "exactOptionalPropertyTypes": true, // Correct but annoying
+		"noFallthroughCasesInSwitch": true,
 		"noImplicitOverride": true,
+		"noImplicitReturns": true,
 		"noPropertyAccessFromIndexSignature": true,
-		"noUncheckedSideEffectImports": true,
+		"noUncheckedIndexedAccess": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+
+		"module": "nodenext",
+
 		"verbatimModuleSyntax": true,
-		"isolatedModules": true,
 	}
 }

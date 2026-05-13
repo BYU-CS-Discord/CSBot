@@ -54,6 +54,19 @@ describe('main', () => {
 		vi.restoreAllMocks();
 	});
 
+	test('sets client activity', async () => {
+		await _main();
+		expect(mockConstructClient).toHaveBeenCalledWith(
+			expect.objectContaining({
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+				presence: expect.objectContaining({
+					// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+					activities: expect.arrayContaining([expect.objectContaining({})]),
+				}),
+			})
+		);
+	});
+
 	test('disables @everyone pings', async () => {
 		await _main();
 		expect(mockConstructClient).toHaveBeenCalledWith(
