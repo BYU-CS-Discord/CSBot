@@ -1,6 +1,6 @@
 import type { Client } from 'discord.js';
 
-import { info } from '../../logger.js';
+import { info } from '../../logger.ts';
 
 /**
  * Unregisters all command interactions globally and in each guild for this account.

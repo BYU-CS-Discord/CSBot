@@ -5,18 +5,18 @@ import type { Client, Guild, OAuth2Guild } from 'discord.js';
 import { Collection, InteractionContextType, SlashCommandBuilder } from 'discord.js';
 
 // Mock the logger so nothing is printed
-vi.mock('../../logger.js');
+vi.mock('../../logger.ts');
 
 const mockAllCommands = vi.hoisted(() => new Map<string, Command>());
-vi.mock('../../commands/index.js', () => ({
+vi.mock('../../commands/index.ts', () => ({
 	allCommands: mockAllCommands,
 }));
 
-vi.mock('./revokeCommands.js');
-import { revokeCommands } from './revokeCommands.js';
+vi.mock('./revokeCommands.ts');
+import { revokeCommands } from './revokeCommands.ts';
 const mockRevokeCommands = revokeCommands as Mock<typeof revokeCommands>;
 
-import { deployCommands } from './deployCommands.js';
+import { deployCommands } from './deployCommands.ts';
 
 describe('Command deployments', () => {
 	const mockApplicationCommandsSet = vi.fn<NonNullable<Client['application']>['commands']['set']>();

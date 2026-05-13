@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 
-import { isNonEmptyArray } from './isNonEmptyArray.js';
+import { isNonEmptyArray } from './isNonEmptyArray.ts';
 
 describe('Nonempty array', () => {
 	test('returns false for an empty array', () => {

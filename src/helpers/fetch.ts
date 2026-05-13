@@ -3,8 +3,8 @@ import type { URL } from 'node:url';
 import type { Struct, StructError } from 'superstruct';
 import { assert } from 'superstruct';
 
-import { HttpStatusCode } from './HttpStatusCode.js';
-import { NetworkError } from './NetworkError.js';
+import { HttpStatusCode } from './HttpStatusCode.ts';
+import { NetworkError } from './NetworkError.ts';
 
 /**
  * Performs a network request.

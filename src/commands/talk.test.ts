@@ -8,10 +8,10 @@ const dectalkMock = vi.hoisted(() => vi.fn<typeof dectalk>());
 vi.mock('dectalk-tts', () => ({ default: dectalkMock }));
 
 // Mock the logger so nothing is printed
-vi.mock('../logger');
+vi.mock('../logger.ts');
 
 // Import the code to test
-import { Speaker, talk } from './talk.js';
+import { Speaker, talk } from './talk.ts';
 
 describe('Talk Slash Command', () => {
 	const speakerMock = vi.fn<() => Speaker | null>();

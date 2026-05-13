@@ -15,7 +15,6 @@ import dectalk from 'dectalk-tts';
 import { writeFileSync, createReadStream } from 'node:fs';
 import { fileSync } from 'tmp';
 
-import { info } from '../logger.js';
 
 export enum Speaker {
 	Paul = 'PAUL',
@@ -28,6 +27,7 @@ export enum Speaker {
 	Rita = 'RITA',
 	Wendy = 'WENDY',
 }
+import { info } from '../logger.ts';
 
 const builder = new SlashCommandBuilder()
 	.setName('talk')

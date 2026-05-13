@@ -3,10 +3,10 @@ import { beforeEach, describe, expect, test, vi } from 'vitest';
 import type { ClientUser, GuildMember, User, UserResolvable } from 'discord.js';
 import { DiscordAPIError, EmbedBuilder, userMention } from 'discord.js';
 
-import { DiscordErrorCode } from '../helpers/DiscordErrorCode.js';
-import { profile } from './profile.js';
+import { DiscordErrorCode } from '../helpers/DiscordErrorCode.ts';
+import { profile } from './profile.ts';
 
-vi.mock('../logger.js');
+vi.mock('../logger.ts');
 
 describe('profile', () => {
 	const mockReply = vi.fn<TextInputCommandContext['reply']>();

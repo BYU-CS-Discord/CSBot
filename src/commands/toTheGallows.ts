@@ -1,7 +1,7 @@
 import { SlashCommandBuilder } from 'discord.js';
 
-import { EvilHangmanGame } from '../evilHangman/evilHangmanGame.js';
-import { buildEvilHangmanMessage } from '../evilHangman/evilHangmanMessage.js';
+import { EvilHangmanGame } from '../evilHangman/evilHangmanGame.ts';
+import { buildEvilHangmanMessage } from '../evilHangman/evilHangmanMessage.ts';
 
 const LengthOption = 'wordlength';
 const GuessesOption = 'numguesses';

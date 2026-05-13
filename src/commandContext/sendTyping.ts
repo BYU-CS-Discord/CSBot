@@ -1,7 +1,7 @@
 import { PartialGroupDMChannel } from 'discord.js';
 import type { RepliableInteraction } from 'discord.js';
 
-import { debug } from '../logger.js';
+import { debug } from '../logger.ts';
 
 export function sendTypingFactory(interaction: RepliableInteraction): CommandContext['sendTyping'] {
 	return function sendTyping() {

@@ -17,11 +17,11 @@ import {
 	SlashCommandBuilder,
 } from 'discord.js';
 
-import { UserMessageError } from '../helpers/UserMessageError.js';
+import { UserMessageError } from '../helpers/UserMessageError.ts';
 
 // Mock allCommands to isolate our test code
 const mockAllCommands = vi.hoisted(() => new Map<string, Command>());
-vi.mock('../commands/index.js', () => ({
+vi.mock('../commands/index.ts', () => ({
 	allCommands: mockAllCommands,
 }));
 
@@ -140,7 +140,7 @@ mockAllCommands.set(mockUserMessageErrorGlobalCommand.info.name, mockUserMessage
 
 // Mock allButtons to isolate our test code
 const mockAllButtons = vi.hoisted(() => new Map<string, Button>());
-vi.mock('../buttons/index.js', () => ({
+vi.mock('../buttons/index.ts', () => ({
 	allButtons: mockAllButtons,
 }));
 
@@ -161,11 +161,11 @@ const mockErrorButton: Button = {
 mockAllButtons.set(mockErrorButton.customId, mockErrorButton);
 
 // Mock the logger to track output
-vi.mock('../logger.js');
-import { error as mockLoggerError } from '../logger.js';
+vi.mock('../logger.ts');
+import { error as mockLoggerError } from '../logger.ts';
 
 // Import the code to test
-import { interactionCreate } from './interactionCreate.js';
+import { interactionCreate } from './interactionCreate.ts';
 
 // Constants for testing
 const interactionError = new Error('Failed to handle interaction. This is a test.');

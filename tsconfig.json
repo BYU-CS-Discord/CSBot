@@ -9,6 +9,7 @@
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
 
+		"allowImportingTsExtensions": true,
 		"module": "nodenext",
 
 		"verbatimModuleSyntax": true,

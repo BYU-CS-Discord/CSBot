@@ -2,7 +2,7 @@ import { describe, expect, test } from 'vitest';
 
 import { Events } from 'discord.js';
 
-import { onEvent } from './onEvent.js';
+import { onEvent } from './onEvent.ts';
 
 const executeMock = (): void => undefined;
 

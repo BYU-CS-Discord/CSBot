@@ -1,8 +1,8 @@
 import { Events } from 'discord.js';
 
-import { onEvent } from '../helpers/onEvent.js';
-import { removeReactionHandlers } from '../reactionHandlers/remove.js';
-import { buildExecute } from './messageReaction.js';
+import { onEvent } from '../helpers/onEvent.ts';
+import { removeReactionHandlers } from '../reactionHandlers/remove.ts';
+import { buildExecute } from './messageReaction.ts';
 
 /**
  * The event handler for when reactions are removed from messages.

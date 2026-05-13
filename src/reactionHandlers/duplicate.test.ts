@@ -3,10 +3,10 @@ import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
 import type { MessageReaction, User } from 'discord.js';
 
-import { duplicate } from './duplicate.js';
+import { duplicate } from './duplicate.ts';
 
 // Mock the logger so nothing is printed
-vi.mock('../logger.js');
+vi.mock('../logger.ts');
 
 describe('Reaction duplication', () => {
 	const mockResendReact = vi.fn<MessageReaction['react']>();

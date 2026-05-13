@@ -9,8 +9,8 @@ import type {
 } from 'discord.js';
 import { ChannelType, PartialGroupDMChannel, channelMention, userMention } from 'discord.js';
 
-import { error, info } from '../../../logger.js';
-import { logUser } from '../../logUser.js';
+import { error, info } from '../../../logger.ts';
+import { logUser } from '../../logUser.ts';
 
 /**
  * Attempts to send a direct message to a user.

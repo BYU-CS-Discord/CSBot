@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, test, vi } from 'vitest';
 
 import type { AutocompleteInteraction } from 'discord.js';
 
-import { sendtag } from './sendtag.js';
+import { sendtag } from './sendtag.ts';
 
 describe('sendtag', () => {
 	const mockReply = vi.fn<GuildedCommandContext['reply']>();

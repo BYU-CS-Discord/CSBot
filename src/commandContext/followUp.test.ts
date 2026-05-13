@@ -3,15 +3,15 @@ import { beforeEach, describe, expect, test, vi } from 'vitest';
 
 import type { Message, RepliableInteraction } from 'discord.js';
 
-vi.mock('../helpers/actions/messages/replyToMessage.js');
-import { sendMessageInChannel } from '../helpers/actions/messages/replyToMessage.js';
+vi.mock('../helpers/actions/messages/replyToMessage.ts');
+import { sendMessageInChannel } from '../helpers/actions/messages/replyToMessage.ts';
 const mockSendMessageInChannel = sendMessageInChannel as Mock<typeof sendMessageInChannel>;
 
 // Mock the logger to track output
-vi.mock('../logger.js');
-import { error as mockLoggerError } from '../logger.js';
+vi.mock('../logger.ts');
+import { error as mockLoggerError } from '../logger.ts';
 
-import { followUpFactory as factory } from './followUp.js';
+import { followUpFactory as factory } from './followUp.ts';
 
 describe('follow-up message', () => {
 	const testMessage = { id: 'test-message' } as Message;

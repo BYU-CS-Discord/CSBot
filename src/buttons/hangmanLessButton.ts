@@ -1,7 +1,7 @@
 import { ButtonBuilder } from '@discordjs/builders';
 import { ButtonStyle } from 'discord.js';
 
-import { parseEvilHangmanMessage } from '../evilHangman/parseEvilHangmanMessage.js';
+import { parseEvilHangmanMessage } from '../evilHangman/parseEvilHangmanMessage.ts';
 
 const customId = 'hangmanLessButton';
 export const hangmanLessButton: Button = {

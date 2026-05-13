@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 
-import { getHangmanArt } from './evilHangmanAsciiArt.js';
+import { getHangmanArt } from './evilHangmanAsciiArt.ts';
 
 describe('evilHangmanAsciiArt.ts', () => {
 	const tests = [

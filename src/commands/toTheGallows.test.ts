@@ -1,10 +1,10 @@
 import { assert, beforeEach, describe, expect, test, vi } from 'vitest';
 
-import { toTheGallows } from './toTheGallows.js';
+import { toTheGallows } from './toTheGallows.ts';
 
-vi.mock('../constants/meta.js', async () => {
+vi.mock('../constants/meta.ts', async () => {
 	const { repo } =
-		await vi.importActual<typeof import('../constants/meta.js')>('../constants/meta.js');
+		await vi.importActual<typeof import('../constants/meta.ts')>('../constants/meta.ts');
 	return {
 		// Version changes frequently, so use a consistent version number to test with:
 		appVersion: 'X.X.X',

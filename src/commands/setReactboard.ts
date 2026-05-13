@@ -7,8 +7,8 @@ import {
 	SlashCommandStringOption,
 } from 'discord.js';
 
-import { UserMessageError } from '../helpers/UserMessageError.js';
-import { db } from '../database/index.js';
+import { UserMessageError } from '../helpers/UserMessageError.ts';
+import { db } from '../database/index.ts';
 
 const channelOption = 'channel';
 const thresholdOption = 'threshold';

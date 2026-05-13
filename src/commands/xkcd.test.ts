@@ -1,16 +1,16 @@
 import type { Mock } from 'vitest';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
-import { fetchJson } from '../helpers/fetch.js';
-import { HttpStatusCode } from '../helpers/HttpStatusCode.js';
-import { NetworkError } from '../helpers/NetworkError.js';
+import { fetchJson } from '../helpers/fetch.ts';
+import { HttpStatusCode } from '../helpers/HttpStatusCode.ts';
+import { NetworkError } from '../helpers/NetworkError.ts';
 
-vi.mock('../helpers/fetch.js', () => ({ fetchJson: vi.fn<typeof fetchJson>() }));
+vi.mock('../helpers/fetch.ts', () => ({ fetchJson: vi.fn<typeof fetchJson>() }));
 
 const mockedFetchJson = fetchJson as Mock<typeof fetchJson>;
 
 // Mock the logger so nothing is printed
-vi.mock('../logger.js');
+vi.mock('../logger.ts');
 
 const latestGood = {
 	month: '9',
@@ -44,7 +44,7 @@ const chosen = {
 const badResponse = new NetworkError(HttpStatusCode.BAD_REQUEST);
 
 // Import the code to test
-import { xkcd } from './xkcd.js';
+import { xkcd } from './xkcd.ts';
 
 describe('xkcd', () => {
 	const mockReply = vi.fn<TextInputCommandContext['reply']>();

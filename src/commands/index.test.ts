@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 
-import { _add, allCommands } from './index.js';
+import { _add, allCommands } from './index.ts';
 
 describe('allCommands', () => {
 	test('index is not empty', () => {

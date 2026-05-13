@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, test, vi } from 'vitest';
 import type { Attachment } from 'discord.js';
 import { Collection } from 'discord.js';
 
-import { altText } from './altText.js';
+import { altText } from './altText.ts';
 
 describe('Get Alt Text', () => {
 	const mockReplyPrivately = vi.fn<MessageContextMenuCommandContext['replyPrivately']>();

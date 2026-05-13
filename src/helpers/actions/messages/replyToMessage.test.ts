@@ -11,10 +11,10 @@ import type {
 import { ChannelType } from 'discord.js';
 
 // Mock the logger to track output
-vi.mock('../../../logger.js');
-import { error as mockLoggerError } from '../../../logger.js';
+vi.mock('../../../logger.ts');
+import { error as mockLoggerError } from '../../../logger.ts';
 
-import { replyWithPrivateMessage, sendMessageInChannel } from './replyToMessage.js';
+import { replyWithPrivateMessage, sendMessageInChannel } from './replyToMessage.ts';
 
 describe('Replies', () => {
 	const mockUserSend = vi.fn<RepliableInteraction['user']['send']>();

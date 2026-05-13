@@ -3,9 +3,9 @@ import { beforeEach, describe, expect, test, vi } from 'vitest';
 import type { GuildEmoji } from 'discord.js';
 import { EmbedBuilder } from 'discord.js';
 
-import { emoji } from './emoji.js';
+import { emoji } from './emoji.ts';
 
-vi.mock('../logger.js');
+vi.mock('../logger.ts');
 
 describe('profile', () => {
 	const mockReply = vi.fn<TextInputCommandContext['reply']>();

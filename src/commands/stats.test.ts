@@ -4,9 +4,9 @@ import { mockDeep } from 'vitest-mock-extended';
 
 import type { PrismaClient, Scoreboard } from '@prisma/client';
 
-vi.mock('../constants/meta.js', async () => {
+vi.mock('../constants/meta.ts', async () => {
 	const { repo } =
-		await vi.importActual<typeof import('../constants/meta.js')>('../constants/meta.js');
+		await vi.importActual<typeof import('../constants/meta.ts')>('../constants/meta.ts');
 	return {
 		// Version changes frequently, so use a consistent version number to test with:
 		appVersion: 'X.X.X',
@@ -14,12 +14,12 @@ vi.mock('../constants/meta.js', async () => {
 	};
 });
 
-vi.mock('../database', () => ({
+vi.mock('../database/index.ts', () => ({
 	db: mockDeep<PrismaClient>(),
 }));
 
-import { stats } from './stats.js';
-import { db } from '../database/index.js';
+import { stats } from './stats.ts';
+import { db } from '../database/index.ts';
 
 describe('stats', () => {
 	const dbMock = db as DeepMockProxy<PrismaClient>;

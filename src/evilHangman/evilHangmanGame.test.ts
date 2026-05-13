@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test } from 'vitest';
 
-import { EvilHangmanGame, EvilHangmanWinState } from './evilHangmanGame.js';
+import { EvilHangmanGame, EvilHangmanWinState } from './evilHangmanGame.ts';
 
 describe('EvilHangmanGame', () => {
 	let game: EvilHangmanGame;

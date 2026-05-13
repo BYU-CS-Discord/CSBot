@@ -4,9 +4,9 @@ import type { Client, Guild, OAuth2Guild } from 'discord.js';
 import { Collection } from 'discord.js';
 
 // Mock the logger so nothing is printed
-vi.mock('../../logger.js');
+vi.mock('../../logger.ts');
 
-import { revokeCommands } from './revokeCommands.js';
+import { revokeCommands } from './revokeCommands.ts';
 
 describe('Command revocations', () => {
 	const mockApplicationCommandsSet = vi.fn<NonNullable<Client['application']>['commands']['set']>();

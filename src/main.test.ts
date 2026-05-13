@@ -31,16 +31,16 @@ const mockToken = 'TEST_TOKEN';
 process.env['DISCORD_TOKEN'] = mockToken;
 
 // Mock the event handler index so we can track it
-vi.mock('./events/index.js');
-import { registerEventHandlers } from './events/index.js';
+vi.mock('./events/index.ts');
+import { registerEventHandlers } from './events/index.ts';
 const mockRegisterEventHandlers = registerEventHandlers as Mock<typeof registerEventHandlers>;
 
 // Mock the logger to track output
-vi.mock('./logger.js');
-import { error as mockLoggerError } from './logger.js';
+vi.mock('./logger.ts');
+import { error as mockLoggerError } from './logger.ts';
 
 // Import the code to test
-import { _main } from './main.js';
+import { _main } from './main.ts';
 
 // A basic error to test with
 const loginError = new Error('Failed to log in. This is a test.');
