@@ -267,7 +267,7 @@ export async function sendErrorMessage(
 ): Promise<void> {
 	const errorMessage = error_ instanceof Error ? error_.message : JSON.stringify(error_);
 	// for privacy, strip out any mention of the internal directory
-	const privateDir = __dirname.slice(0, __dirname.lastIndexOf('dist'));
+	const privateDir = __dirname.slice(0, __dirname.lastIndexOf('src'));
 	const safeErrorMessage = errorMessage.replace(privateDir, '...');
 
 	const embed = new EmbedBuilder().setTitle('Error');

@@ -11,7 +11,6 @@ logs
 # Generated files
 node_modules
 db
-dist
 coverage
 src/constants/version.ts
 tmp

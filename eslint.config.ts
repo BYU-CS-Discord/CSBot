@@ -13,7 +13,7 @@ import unicorn from 'eslint-plugin-unicorn';
 
 export default defineConfig(
 	{ files: ['**/*.{m,c,}{js,ts}{x,}'] },
-	globalIgnores(['dist', 'coverage', 'src/constants/version.ts']),
+	globalIgnores(['coverage', 'src/constants/version.ts']),
 	{
 		linterOptions: {
 			reportUnusedDisableDirectives: 'error',

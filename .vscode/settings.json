@@ -1,13 +1,12 @@
 {
-	"typescript.tsdk": "node_modules/typescript/lib",
+	"js/ts.tsdk.path": "node_modules/typescript/lib",
 	"editor.detectIndentation": false,
 	"editor.insertSpaces": false,
 	"git.branchProtection": ["main"],
-	"todo-tree.filtering.excludeGlobs": ["**/dist/**", "**/node_modules/**", "coverage/**"],
+	"todo-tree.filtering.excludeGlobs": ["**/node_modules/**", "coverage/**"],
 	"files.eol": "auto",
 	"terminal.integrated.defaultProfile.windows": "Git Bash",
 	"editor.formatOnSave": true,
-	"eslint.useFlatConfig": true,
 	"yaml.schemas": {
 		"https://json.schemastore.org/github-workflow.json": "**/workflows/*.yml"
 	}
