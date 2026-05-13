@@ -20,7 +20,7 @@ vi.mock('discord.js', async () => {
 });
 
 // Re-import Client (which is now MockedClient) so we can use it
-import { Client } from 'discord.js';
+import { Client, Events } from 'discord.js';
 const client = new Client({ intents: [] });
 
 // Mock the logger so nothing is printed
@@ -35,7 +35,7 @@ describe('allEvents', () => {
 	});
 
 	test('fails to install another event handler with the same name', () => {
-		const mockErrorHandler = { name: 'error' } as unknown as EventHandler;
+		const mockErrorHandler = { name: Events.Error } as unknown as EventHandler;
 		expect(() => {
 			_add(mockErrorHandler);
 		}).toThrow(TypeError);
@@ -53,12 +53,12 @@ describe('allEvents', () => {
 		(allEventHandlers as Map<string, unknown>).clear();
 
 		const fakeReadyEvent: EventHandler = {
-			name: 'ready',
+			name: Events.ClientReady,
 			once: true,
 			execute: vi.fn(),
 		};
 		const fakeMessageEvent: EventHandler = {
-			name: 'messageCreate',
+			name: Events.MessageCreate,
 			once: false,
 			execute: vi.fn(),
 		};
