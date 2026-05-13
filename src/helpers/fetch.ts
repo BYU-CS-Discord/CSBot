@@ -3,7 +3,6 @@ import type { URL } from 'node:url';
 import type { Struct, StructError } from 'superstruct';
 import { assert } from 'superstruct';
 
-import { HttpStatusCode } from './HttpStatusCode.js';
 import { NetworkError } from './NetworkError.js';
 
 /**
@@ -25,9 +24,10 @@ export async function fetchJson<T, S>(
 ): Promise<T> {
 	const res = await fetch(input, init);
 
-	const status = HttpStatusCode[res.status];
-	if (status !== HttpStatusCode.OK) {
-		throw new NetworkError(res.status);
+	const status = res.status;
+	// FIXME: Use HttpStatusCode instead
+	if (status !== 200) {
+		throw new NetworkError(status);
 	}
 
 	const data: unknown = await res.json();
