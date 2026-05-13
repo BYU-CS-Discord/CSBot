@@ -36,9 +36,9 @@
 		"docker:container": "docker run --tty --interactive --rm --mount type=bind,source=$PWD,destination=/cs-bot cs-bot-image",
 		"docker:image": "docker build --tag cs-bot-image --label cs-bot .",
 		"export-version": "./node_modules/.bin/genversion ./src/constants/version.ts -es",
-		"lint": "./node_modules/.bin/eslint",
+		"lint": "./node_modules/.bin/eslint --flag unstable_native_nodejs_ts_config",
 		"lint:fix": "npm run lint -- --fix",
-		"release": "./node_modules/.bin/tsx ./scripts/release.ts",
+		"release": "node ./scripts/release.ts",
 		"setup": "npm ci && npm run export-version && npm run db:migrate && npm run build --omit=dev && npm run commands:deploy",
 		"start": "node --env-file=.env ./dist/main.js",
 		"test": "./node_modules/.bin/vitest"
@@ -54,12 +54,12 @@
 		"tmp": "0.2.5"
 	},
 	"devDependencies": {
-		"@stylistic/eslint-plugin": "5.8.0",
+		"@stylistic/eslint-plugin": "5.10.0",
 		"@types/node": "24.10.9",
 		"@types/semver": "7.7.1",
 		"@types/source-map-support": "0.5.10",
 		"@types/tmp": "0.2.6",
-		"@vitest/coverage-istanbul": "4.0.18",
+		"@vitest/coverage-istanbul": "4.1.0",
 		"eslint": "9.39.2",
 		"eslint-config-prettier": "10.1.8",
 		"eslint-import-resolver-typescript": "4.4.4",
@@ -67,21 +67,25 @@
 		"eslint-plugin-import": "2.32.0",
 		"eslint-plugin-prettier": "5.5.5",
 		"eslint-plugin-promise": "7.2.1",
-		"eslint-plugin-unicorn": "63.0.0",
+		"eslint-plugin-unicorn": "64.0.0",
 		"genversion": "3.2.0",
-		"jiti": "2.6.1",
-		"keep-a-changelog": "2.8.0",
+		"keep-a-changelog": "3.0.2",
 		"prettier": "3.8.1",
 		"prettier-plugin-prisma": "5.0.0",
 		"prisma": "6.9.0",
 		"semver": "7.7.4",
-		"tsx": "4.21.0",
-		"typescript": "5.9.3",
-		"typescript-eslint": "8.53.1",
-		"vitest": "4.0.18",
-		"vitest-mock-extended": "3.1.0"
+		"typescript": "6.0.2",
+		"typescript-eslint": "8.58.0",
+		"vitest": "4.1.0",
+		"vitest-mock-extended": "4.0.0"
 	},
 	"engines": {
-		"node": ">=22.12.0"
+		"node": ">=22.18.0"
+	},
+	"devEngines": {
+		"runtime": {
+			"name": "node",
+			"version": ">=22.18.0"
+		}
 	}
 }
