@@ -215,7 +215,7 @@ The docker script will take care of every part of the docker development process
 
 ### Build the bot
 
-Be sure to install dependencies, run a quick lint to generate needed files, compile the source, and deploy commands. Here's a handy command to do all of that:
+Be sure to install dependencies, generate necessary files, initialize the database, and deploy commands. Here's a handy command to do all of that:
 
 ```sh
 $ npm run setup
@@ -270,8 +270,6 @@ If you have added new code, you should write new unit tests to cover all the cod
 For development purposes:
 
 ```sh
-$ node --env-file=.env .
-# or
 $ npm run dev
 ```
 

@@ -21,7 +21,6 @@
 	"type": "module",
 	"main": "src/main.ts",
 	"scripts": {
-		"build": "npm run db:generate && rm -rf dist && ./node_modules/.bin/tsc -p tsconfig.build.json",
 		"commands:deploy": "node --env-file=.env . --deploy # TODO: Replace these with automatic command deployment",
 		"commands:revoke": "node --env-file=.env . --revoke",
 		"db:generate": "./node_modules/.bin/prisma generate --no-hints --schema ./prisma/schema.prisma",
@@ -39,9 +38,10 @@
 		"lint": "./node_modules/.bin/eslint --flag unstable_native_nodejs_ts_config",
 		"lint:fix": "npm run lint -- --fix",
 		"release": "node ./scripts/release.ts",
-		"setup": "npm ci && npm run export-version && npm run db:migrate && npm run build --omit=dev && npm run commands:deploy",
-		"test": "./node_modules/.bin/vitest"
+		"setup": "npm ci && npm run export-version && npm run db:migrate && npm run db:generate && npm run commands:deploy",
 		"start": "node --env-file=.env .",
+		"test": "./node_modules/.bin/vitest",
+		"type-check": "./node_modules/.bin/tsc --noEmit"
 	},
 	"dependencies": {
 		"@discordjs/voice": "0.19.2",
