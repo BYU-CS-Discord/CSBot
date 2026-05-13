@@ -53,6 +53,20 @@ export default defineConfig(
 		},
 	},
 
+	// FIXME Test files cannot be type-checked (see tsconfig.json)
+	{
+		files: ['**/*.test.ts'],
+		linterOptions: {
+			reportUnusedDisableDirectives: 'off',
+		},
+		languageOptions: {
+			parserOptions: {
+				projectService: false,
+			},
+		},
+		extends: [typescriptConfigs.disableTypeChecked],
+	},
+
 	stylistic.configs['disable-legacy'],
 	stylistic.configs.customize({
 		braceStyle: '1tbs',

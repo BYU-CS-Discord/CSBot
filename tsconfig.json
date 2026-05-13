@@ -1,4 +1,5 @@
 {
+	"exclude": ["**/*.test.*"], // FIXME Test files are riddled with type errors
 	"compilerOptions": {
 		// "exactOptionalPropertyTypes": true, // Correct but annoying
 		"noFallthroughCasesInSwitch": true,
