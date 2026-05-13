@@ -25,8 +25,7 @@ export async function fetchJson<T, S>(
 ): Promise<T> {
 	const res = await fetch(input, init);
 
-	// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-	const status = res.status as HttpStatusCode;
+	const status: HttpStatusCode = res.status;
 	if (status !== HttpStatusCode.OK) {
 		throw new NetworkError(status);
 	}
