@@ -12,7 +12,7 @@ import { info } from '../logger.js';
 /**
  * The event handler for when the Discord Client is ready for action
  */
-export const ready = onEvent(Events.ClientReady, {
+export const clientReady = onEvent(Events.ClientReady, {
 	once: true,
 	async execute(client) {
 		info(`Starting ${client.user.username} v${appVersion}...`);
