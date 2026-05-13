@@ -132,7 +132,7 @@ If you've read this far, and don't plan to run or develop on the bot yourself, o
 
 ### Prerequisites
 
-This project requires [NodeJS](https://nodejs.org/) (version 22.12.0 or later) and [NPM](https://npmjs.org/). To make sure you have them available on your machine, try running the following command:
+This project requires [NodeJS](https://nodejs.org/) and [NPM](https://npmjs.org/). To make sure you have them available on your machine, try running the following command:
 
 ```sh
 $ node -v && npm -v
