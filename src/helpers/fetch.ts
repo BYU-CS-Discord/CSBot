@@ -25,7 +25,7 @@ export async function fetchJson<T, S>(
 ): Promise<T> {
 	const res = await fetch(input, init);
 
-	const status: HttpStatusCode = res.status;
+	const status = res.status as HttpStatusCode;
 	if (status !== HttpStatusCode.OK) {
 		throw new NetworkError(status);
 	}

@@ -152,18 +152,18 @@ export type EvilHangmanDisplayInfo = {
 
 type DisplayInfoWinStateExtension =
 	| {
-			winState: EvilHangmanWinState.LOST;
+			winState: typeof EvilHangmanWinState.LOST;
 			correctWord: string;
 	  }
 	| {
-			winState: EvilHangmanWinState.WON | EvilHangmanWinState.IN_PROGRESS;
+			winState: typeof EvilHangmanWinState.WON | typeof EvilHangmanWinState.IN_PROGRESS;
 	  };
 
-export enum EvilHangmanWinState {
-	WON = 'won',
-	IN_PROGRESS = 'in progress',
-	LOST = 'lost',
-}
+export const EvilHangmanWinState = {
+	WON: 'won',
+	IN_PROGRESS: 'in progress',
+	LOST: 'lost',
+} as const;
 
 interface FormScore {
 	form: RegExp;

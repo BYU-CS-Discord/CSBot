@@ -12,6 +12,7 @@
 		"allowImportingTsExtensions": true,
 		"module": "nodenext",
 
+		"erasableSyntaxOnly": true,
 		"verbatimModuleSyntax": true,
 	}
 }

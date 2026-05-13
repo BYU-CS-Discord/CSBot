@@ -11,7 +11,8 @@ vi.mock('dectalk-tts', () => ({ default: dectalkMock }));
 vi.mock('../logger.ts');
 
 // Import the code to test
-import { Speaker, talk } from './talk.ts';
+import { talk } from './talk.ts';
+import type { Speaker } from './talk.ts';
 
 describe('Talk Slash Command', () => {
 	const speakerMock = vi.fn<() => Speaker | null>();
@@ -61,7 +62,7 @@ describe('Talk Slash Command', () => {
 	});
 
 	test('Prepends the speaker name to the message if provided', async () => {
-		const name = Speaker.Paul;
+		const name = 'PAUL';
 		speakerMock.mockReturnValueOnce(name);
 
 		await talk.execute(context);
