@@ -1,5 +1,3 @@
-import 'source-map-support/register.js';
-
 import { ActivityType, Client, GatewayIntentBits, Partials } from 'discord.js';
 
 import { registerEventHandlers } from './events/index.ts';
