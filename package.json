@@ -70,7 +70,7 @@
 		"eslint-plugin-unicorn": "64.0.0",
 		"genversion": "3.2.0",
 		"keep-a-changelog": "3.0.5",
-		"prettier": "3.8.3",
+		"prettier": "3.8.4",
 		"prettier-plugin-prisma": "5.0.0",
 		"prisma": "6.9.0",
 		"semver": "7.7.4",
