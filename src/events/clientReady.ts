@@ -1,13 +1,13 @@
 import { Events } from 'discord.js';
 import { Worker } from 'node:worker_threads';
 
-import { appVersion } from '../constants/meta.js';
-import { deployCommands } from '../helpers/actions/deployCommands.js';
-import { revokeCommands } from '../helpers/actions/revokeCommands.js';
-import { onEvent } from '../helpers/onEvent.js';
-import { parseArgs } from '../helpers/parseArgs.js';
-import { verifyCommandDeployments } from '../helpers/actions/verifyCommandDeployments.js';
-import { info } from '../logger.js';
+import { appVersion } from '../constants/meta.ts';
+import { deployCommands } from '../helpers/actions/deployCommands.ts';
+import { revokeCommands } from '../helpers/actions/revokeCommands.ts';
+import { onEvent } from '../helpers/onEvent.ts';
+import { parseArgs } from '../helpers/parseArgs.ts';
+import { verifyCommandDeployments } from '../helpers/actions/verifyCommandDeployments.ts';
+import { info } from '../logger.ts';
 
 /**
  * The event handler for when the Discord Client is ready for action
@@ -41,7 +41,7 @@ export const clientReady = onEvent(Events.ClientReady, {
 		const UPTIME_URL = process.env['UPTIME_URL'];
 		if (UPTIME_URL) {
 			const UPTIME_INTERVAL_SECONDS = process.env['UPTIME_INTERVAL_SECONDS'];
-			new Worker(new URL('../workers/uptime.js', import.meta.url), {
+			new Worker(new URL('../workers/uptime.ts', import.meta.url), {
 				name: 'uptime-ping',
 				env: { UPTIME_URL, UPTIME_INTERVAL_SECONDS },
 			});

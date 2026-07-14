@@ -6,7 +6,7 @@ const fetchMock = vi.fn<typeof fetch>();
 vi.stubGlobal('fetch', fetchMock);
 
 // Import the code to test
-import { isCasDown } from './isCasDown.js';
+import { isCasDown } from './isCasDown.ts';
 
 describe('isCasDown', () => {
 	const mockReply = vi.fn<TextInputCommandContext['reply']>();

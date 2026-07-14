@@ -13,7 +13,7 @@ import unicorn from 'eslint-plugin-unicorn';
 
 export default defineConfig(
 	{ files: ['**/*.{m,c,}{js,ts}{x,}'] },
-	globalIgnores(['dist', 'coverage', 'src/constants/version.ts']),
+	globalIgnores(['coverage', 'src/constants/version.ts']),
 	{
 		linterOptions: {
 			reportUnusedDisableDirectives: 'error',
@@ -51,6 +51,20 @@ export default defineConfig(
 			'@typescript-eslint/explicit-member-accessibility': 'error',
 			'@typescript-eslint/no-shadow': 'error',
 		},
+	},
+
+	// FIXME Test files cannot be type-checked (see tsconfig.json)
+	{
+		files: ['**/*.test.ts'],
+		linterOptions: {
+			reportUnusedDisableDirectives: 'off',
+		},
+		languageOptions: {
+			parserOptions: {
+				projectService: false,
+			},
+		},
+		extends: [typescriptConfigs.disableTypeChecked],
 	},
 
 	stylistic.configs['disable-legacy'],

@@ -4,9 +4,9 @@ import type { RepliableInteraction, TextBasedChannelFields } from 'discord.js';
 import { ChannelType } from 'discord.js';
 
 // Mock the logger so nothing is printed
-vi.mock('../logger.js');
+vi.mock('../logger.ts');
 
-import { sendTypingFactory as factory } from './sendTyping.js';
+import { sendTypingFactory as factory } from './sendTyping.ts';
 
 describe('typing indicator', () => {
 	const mockSendTyping = vi.fn<TextBasedChannelFields['sendTyping']>();

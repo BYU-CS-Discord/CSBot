@@ -1,15 +1,15 @@
 import type { ButtonBuilder, MessageReplyOptions } from 'discord.js';
 import { ActionRowBuilder, EmbedBuilder } from 'discord.js';
 
-import { hangmanLessButton } from '../buttons/hangmanLessButton.js';
-import { hangmanMoreButton } from '../buttons/hangmanMoreButton.js';
-import { appVersion } from '../constants/meta.js';
-import { format } from '../helpers/format.js';
-import { getHangmanArt } from './evilHangmanAsciiArt.js';
-import type { EvilHangmanDisplayInfo } from './evilHangmanGame.js';
-import { EvilHangmanWinState } from './evilHangmanGame.js';
-import { GAME_INFO_FORMAT } from './gameInfoParser.js';
-import { getButtonsForAllLettersExcept } from './hangmanLetterButtons.js';
+import { hangmanLessButton } from '../buttons/hangmanLessButton.ts';
+import { hangmanMoreButton } from '../buttons/hangmanMoreButton.ts';
+import { appVersion } from '../constants/meta.ts';
+import { format } from '../helpers/format.ts';
+import { getHangmanArt } from './evilHangmanAsciiArt.ts';
+import type { EvilHangmanDisplayInfo } from './evilHangmanGame.ts';
+import { EvilHangmanWinState } from './evilHangmanGame.ts';
+import { GAME_INFO_FORMAT } from './gameInfoParser.ts';
+import { getButtonsForAllLettersExcept } from './hangmanLetterButtons.ts';
 
 type Page = 0 | 1;
 export async function buildEvilHangmanMessage(

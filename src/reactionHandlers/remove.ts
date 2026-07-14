@@ -25,6 +25,6 @@ export function _add(handler: ReactionHandler): void {
 }
 
 /**  Install handlers here:  **/
-import { buildUpdateReactboard } from './updateReactboard.js';
+import { buildUpdateReactboard } from './updateReactboard.ts';
 
 _add(buildUpdateReactboard('messageReactionRemove'));

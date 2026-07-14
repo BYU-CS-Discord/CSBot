@@ -7,11 +7,11 @@ const mockAllCommands = vi.hoisted(() => new Map<string, Command>());
 vi.mock('../../commands', () => ({ allCommands: mockAllCommands }));
 
 // Mock the logger to track output
-vi.mock('../../logger.js');
-import { warn as mockLoggerWarn } from '../../logger.js';
+vi.mock('../../logger.ts');
+import { warn as mockLoggerWarn } from '../../logger.ts';
 
-import { deployableCommand } from './deployCommands.js';
-import { verifyCommandDeployments } from './verifyCommandDeployments.js';
+import { deployableCommand } from './deployCommands.ts';
+import { verifyCommandDeployments } from './verifyCommandDeployments.ts';
 
 describe('Verify command deployments', () => {
 	const commands: Array<Command> = [

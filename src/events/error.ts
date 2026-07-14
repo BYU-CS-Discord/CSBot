@@ -1,7 +1,7 @@
 import { Events } from 'discord.js';
 
-import { onEvent } from '../helpers/onEvent.js';
-import { error as logErr } from '../logger.js';
+import { onEvent } from '../helpers/onEvent.ts';
+import { error as logErr } from '../logger.ts';
 
 /**
  * The event handler for Discord Client errors

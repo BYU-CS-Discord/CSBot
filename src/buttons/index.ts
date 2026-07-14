@@ -1,6 +1,6 @@
-import { letterButtons } from '../evilHangman/hangmanLetterButtons.js';
-import { hangmanLessButton } from './hangmanLessButton.js';
-import { hangmanMoreButton } from './hangmanMoreButton.js';
+import { letterButtons } from '../evilHangman/hangmanLetterButtons.ts';
+import { hangmanLessButton } from './hangmanLessButton.ts';
+import { hangmanMoreButton } from './hangmanMoreButton.ts';
 
 /**
  * The private list of all buttons. You can use this to edit the list within this file.

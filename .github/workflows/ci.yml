@@ -1,5 +1,5 @@
 name: CI
-# Lints, builds, tests, and checks versions of the project when a pull request is opened or merged
+# Lints, type-checks, tests, and checks versions of the project when a pull request is opened or merged
 
 on:
   pull_request:
@@ -41,8 +41,8 @@ jobs:
       - name: Lint
         run: npm run lint
 
-  build:
-    name: Build
+  type-check:
+    name: Type check
 
     runs-on: ubuntu-latest
 
@@ -68,8 +68,8 @@ jobs:
       - name: Generate version
         run: npm run export-version
 
-      - name: Build
-        run: npm run build
+      - name: Type check
+        run: npm run type-check
 
   test:
     name: Test

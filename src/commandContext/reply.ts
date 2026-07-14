@@ -1,7 +1,7 @@
 import type { InteractionReplyOptions, RepliableInteraction } from 'discord.js';
 
-import { logUser } from '../helpers/logUser.js';
-import { error, info } from '../logger.js';
+import { logUser } from '../helpers/logUser.ts';
+import { error, info } from '../logger.ts';
 
 export function replyFactory(interaction: RepliableInteraction): CommandContext['reply'] {
 	return async function reply(options) {

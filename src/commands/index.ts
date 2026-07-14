@@ -29,21 +29,21 @@ export function _add(cmd: Command): void {
 }
 
 /**  Install commands here:  **/
-import { emoji } from './emoji.js';
-import { findRoom } from './findRoom.js';
-import { help } from './help.js';
-import { isCasDown } from './isCasDown.js';
-import { profile } from './profile.js';
-import { sendtag } from './sendtag.js';
-import { setReactboard } from './setReactboard.js';
-import { stats } from './stats.js';
-import { talk } from './talk.js';
-import { toTheGallows } from './toTheGallows.js';
-import { xkcd } from './xkcd.js';
+import { emoji } from './emoji.ts';
+import { findRoom } from './findRoom.ts';
+import { help } from './help.ts';
+import { isCasDown } from './isCasDown.ts';
+import { profile } from './profile.ts';
+import { sendtag } from './sendtag.ts';
+import { setReactboard } from './setReactboard.ts';
+import { stats } from './stats.ts';
+import { talk } from './talk.ts';
+import { toTheGallows } from './toTheGallows.ts';
+import { xkcd } from './xkcd.ts';
 
-import { altText } from './contextMenu/altText.js';
-import { fxtwitter } from './contextMenu/fxtwitter.js';
-import { talk as talk_context } from './contextMenu/talk.js';
+import { altText } from './contextMenu/altText.ts';
+import { fxtwitter } from './contextMenu/fxtwitter.ts';
+import { talk as talk_context } from './contextMenu/talk.ts';
 
 _add(emoji);
 _add(findRoom);

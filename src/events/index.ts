@@ -1,6 +1,6 @@
 import type { Client } from 'discord.js';
 
-import { info } from '../logger.js';
+import { info } from '../logger.ts';
 
 /**
  * The private list of all event handlers. You can use this to edit the list within this file.
@@ -53,11 +53,11 @@ export function registerEventHandlers(client: Client): void {
 }
 
 // Install event handlers
-import { clientReady } from './clientReady.js';
-import { error } from './error.js';
-import { interactionCreate } from './interactionCreate.js';
-import { messageReactionAdd } from './messageReactionAdd.js';
-import { messageReactionRemove } from './messageReactionRemove.js';
+import { clientReady } from './clientReady.ts';
+import { error } from './error.ts';
+import { interactionCreate } from './interactionCreate.ts';
+import { messageReactionAdd } from './messageReactionAdd.ts';
+import { messageReactionRemove } from './messageReactionRemove.ts';
 
 _add(clientReady as EventHandler);
 _add(error as EventHandler);

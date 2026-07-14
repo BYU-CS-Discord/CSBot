@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
 import type { MessageReaction, User } from 'discord.js';
 
-import { buildExecute } from './messageReaction.js';
+import { buildExecute } from './messageReaction.ts';
 
 const mockHandlerExecute = vi.fn<ReactionHandler['execute']>();
 const mockReactionHandler = {

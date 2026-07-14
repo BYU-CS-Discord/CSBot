@@ -1,9 +1,9 @@
 import type { EmbedBuilder } from 'discord.js';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
-vi.mock('../constants/meta.js', async () => {
+vi.mock('../constants/meta.ts', async () => {
 	const { repo } =
-		await vi.importActual<typeof import('../constants/meta.js')>('../constants/meta.js');
+		await vi.importActual<typeof import('../constants/meta.ts')>('../constants/meta.ts');
 	return {
 		// Version changes frequently, so use a consistent version number to test with:
 		appVersion: 'X.X.X',
@@ -11,7 +11,7 @@ vi.mock('../constants/meta.js', async () => {
 	};
 });
 
-import { help } from './help.js';
+import { help } from './help.ts';
 
 describe('help', () => {
 	const mockReply = vi.fn<TextInputCommandContext['reply']>();

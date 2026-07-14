@@ -6,8 +6,8 @@ import { URL } from 'node:url';
 // return false for a specific string. For all other tests, we want to use the default implementation.
 const canParseMock = vi.spyOn(URL, 'canParse');
 
-import type { Range } from './positionsOfUriInText.js';
-import { positionsOfUriInText } from './positionsOfUriInText.js';
+import type { Range } from './positionsOfUriInText.ts';
+import { positionsOfUriInText } from './positionsOfUriInText.ts';
 
 describe('Identifying URIs in strings', () => {
 	test.each`

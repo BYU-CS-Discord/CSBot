@@ -1,6 +1,6 @@
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 
-import { appVersion, repo } from '../constants/meta.js';
+import { appVersion, repo } from '../constants/meta.ts';
 
 const builder = new SlashCommandBuilder()
 	.setName('help')

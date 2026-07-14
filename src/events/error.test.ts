@@ -1,11 +1,11 @@
 import { describe, expect, test, vi } from 'vitest';
 
 // Mock the logger to track output
-vi.mock('../logger.js');
-import { error as mockLoggerError } from '../logger.js';
+vi.mock('../logger.ts');
+import { error as mockLoggerError } from '../logger.ts';
 
 // Import the code to test
-import { error } from './error.js';
+import { error } from './error.ts';
 
 // A basic error to test with
 const mockClientError = new Error('This is a test error');

@@ -1,8 +1,8 @@
 import { Events } from 'discord.js';
 
-import { onEvent } from '../helpers/onEvent.js';
-import { addReactionHandlers } from '../reactionHandlers/add.js';
-import { buildExecute } from './messageReaction.js';
+import { onEvent } from '../helpers/onEvent.ts';
+import { addReactionHandlers } from '../reactionHandlers/add.ts';
+import { buildExecute } from './messageReaction.ts';
 
 /**
  * The event handler for emoji reactions.

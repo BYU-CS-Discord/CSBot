@@ -1,5 +1,5 @@
-import type { HttpStatusCode } from './HttpStatusCode.js';
-import { describeCode } from './HttpStatusCode.js';
+import type { HttpStatusCode } from './HttpStatusCode.ts';
+import { describeCode } from './HttpStatusCode.ts';
 
 /**
  * An object that represents an HTTP status returned from an API request.

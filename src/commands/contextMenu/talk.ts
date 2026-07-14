@@ -1,6 +1,6 @@
 import { ApplicationCommandType, ContextMenuCommandBuilder } from 'discord.js';
 
-import { speak } from '../talk.js';
+import { speak } from '../talk.ts';
 
 const builder = new ContextMenuCommandBuilder().setName('Talk');
 

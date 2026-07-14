@@ -1,7 +1,7 @@
 import type { Message } from 'discord.js';
 
-import { EvilHangmanGame } from './evilHangmanGame.js';
-import { parser } from './gameInfoParser.js';
+import { EvilHangmanGame } from './evilHangmanGame.ts';
+import { parser } from './gameInfoParser.ts';
 
 const FORMAT_ERROR_MESSAGE = 'Incorrect message format for Evil Hangman';
 

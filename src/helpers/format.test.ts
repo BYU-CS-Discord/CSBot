@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 
-import { format } from './format.js';
+import { format } from './format.ts';
 
 describe('format template strings', () => {
 	test('creates "foo bar baz" as documented', () => {

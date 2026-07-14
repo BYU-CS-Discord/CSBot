@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 
-import { parseArgs } from './parseArgs.js';
+import { parseArgs } from './parseArgs.ts';
 
 describe('Args parser', () => {
 	test('defaults both flags to `false`', () => {

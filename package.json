@@ -19,9 +19,8 @@
 	"license": "0BSD",
 	"author": "BYU CS",
 	"type": "module",
-	"main": "./dist/main.js",
+	"main": "src/main.ts",
 	"scripts": {
-		"build": "npm run db:generate && rm -rf dist && ./node_modules/.bin/tsc -p tsconfig.build.json",
 		"commands:deploy": "node --env-file=.env . --deploy # TODO: Replace these with automatic command deployment",
 		"commands:revoke": "node --env-file=.env . --revoke",
 		"db:generate": "./node_modules/.bin/prisma generate --no-hints --schema ./prisma/schema.prisma",
@@ -30,7 +29,7 @@
 		"db:introspect": "./node_modules/.bin/prisma db pull",
 		"db:migrate": "./node_modules/.bin/prisma migrate deploy",
 		"db:migrations:generate": "./node_modules/.bin/prisma migrate dev --create-only",
-		"dev": "NODE_ENV=development node --watch --env-file=.env ./dist/main.js",
+		"dev": "NODE_ENV=development node --watch --env-file=.env .",
 		"docker": "npm run docker:image && npm run docker:cleanup && npm run docker:container",
 		"docker:cleanup": "docker system prune --force --filter='label=cs-bot'",
 		"docker:container": "docker run --tty --interactive --rm --mount type=bind,source=$PWD,destination=/cs-bot cs-bot-image",
@@ -39,9 +38,10 @@
 		"lint": "./node_modules/.bin/eslint --flag unstable_native_nodejs_ts_config",
 		"lint:fix": "npm run lint -- --fix",
 		"release": "node ./scripts/release.ts",
-		"setup": "npm ci && npm run export-version && npm run db:migrate && npm run build --omit=dev && npm run commands:deploy",
-		"start": "node --env-file=.env ./dist/main.js",
-		"test": "./node_modules/.bin/vitest"
+		"setup": "npm ci && npm run export-version && npm run db:migrate && npm run db:generate && npm run commands:deploy",
+		"start": "node --env-file=.env .",
+		"test": "./node_modules/.bin/vitest",
+		"type-check": "./node_modules/.bin/tsc --noEmit"
 	},
 	"dependencies": {
 		"@discordjs/voice": "0.19.2",
@@ -49,7 +49,6 @@
 		"dectalk-tts": "1.0.1",
 		"discord.js": "14.26.4",
 		"ffmpeg-static": "5.3.0",
-		"source-map-support": "0.5.21",
 		"superstruct": "2.0.2",
 		"tmp": "0.2.5"
 	},
@@ -57,7 +56,6 @@
 		"@stylistic/eslint-plugin": "5.10.0",
 		"@types/node": "24.10.9",
 		"@types/semver": "7.7.1",
-		"@types/source-map-support": "0.5.10",
 		"@types/tmp": "0.2.6",
 		"@vitest/coverage-istanbul": "4.1.6",
 		"eslint": "9.39.2",
@@ -80,12 +78,6 @@
 		"vitest-mock-extended": "4.0.0"
 	},
 	"engines": {
-		"node": ">=22.18.0"
-	},
-	"devEngines": {
-		"runtime": {
-			"name": "node",
-			"version": ">=22.18.0"
-		}
+		"node": "^22.18.0 || >=24.0.0"
 	}
 }

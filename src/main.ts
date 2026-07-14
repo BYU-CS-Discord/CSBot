@@ -1,9 +1,7 @@
-import 'source-map-support/register.js';
-
 import { ActivityType, Client, GatewayIntentBits, Partials } from 'discord.js';
 
-import { registerEventHandlers } from './events/index.js';
-import { error, info } from './logger.js';
+import { registerEventHandlers } from './events/index.ts';
+import { error, info } from './logger.ts';
 
 // We *could* do all of this at the top level, but then
 // none of this setup would be testable :P

@@ -1,6 +1,6 @@
 import { assert, beforeEach, describe, expect, test, vi } from 'vitest';
 
-import { hangmanMoreButton } from './hangmanMoreButton.js';
+import { hangmanMoreButton } from './hangmanMoreButton.ts';
 
 describe('hangmanMoreButton', () => {
 	const mockUpdate = vi.fn<ButtonContext['interaction']['update']>();

@@ -3,8 +3,8 @@ import type { URL } from 'node:url';
 import type { Struct, StructError } from 'superstruct';
 import { assert } from 'superstruct';
 
-import { HttpStatusCode } from './HttpStatusCode.js';
-import { NetworkError } from './NetworkError.js';
+import { HttpStatusCode } from './HttpStatusCode.ts';
+import { NetworkError } from './NetworkError.ts';
 
 /**
  * Performs a network request.
@@ -25,7 +25,7 @@ export async function fetchJson<T, S>(
 ): Promise<T> {
 	const res = await fetch(input, init);
 
-	const status: HttpStatusCode = res.status;
+	const status = res.status as HttpStatusCode;
 	if (status !== HttpStatusCode.OK) {
 		throw new NetworkError(status);
 	}

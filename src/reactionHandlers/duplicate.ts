@@ -1,5 +1,5 @@
-import { chances, DEFAULT_CHANCE } from '../constants/reactionDuplication.js';
-import { debug } from '../logger.js';
+import { chances, DEFAULT_CHANCE } from '../constants/reactionDuplication.ts';
+import { debug } from '../logger.ts';
 
 export const duplicate: ReactionHandler = {
 	async execute({ reaction }) {

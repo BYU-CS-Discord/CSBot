@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
-import { letterButtons } from '../evilHangman/hangmanLetterButtons.js';
-import { UserMessageError } from '../helpers/UserMessageError.js';
+import { letterButtons } from '../evilHangman/hangmanLetterButtons.ts';
+import { UserMessageError } from '../helpers/UserMessageError.ts';
 
 describe('hangmanMoreButton', () => {
 	const mockUpdate = vi.fn<ButtonContext['interaction']['update']>();

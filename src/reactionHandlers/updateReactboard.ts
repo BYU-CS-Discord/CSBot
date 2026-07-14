@@ -13,8 +13,8 @@ import {
 	VoiceChannel,
 } from 'discord.js';
 
-import { db } from '../database/index.js';
-import { appVersion } from '../constants/meta.js';
+import { db } from '../database/index.ts';
+import { appVersion } from '../constants/meta.ts';
 
 export function buildUpdateReactboard(
 	eventType: 'messageReactionAdd' | 'messageReactionRemove'

@@ -9,18 +9,18 @@ import { EmbedBuilder, Colors, ApplicationCommandType, ChannelType, Events } fro
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { allButtons } from '../buttons/index.js';
-import { allCommands } from '../commands/index.js';
-import { followUpFactory } from '../commandContext/followUp.js';
-import { prepareForLongRunningTasksFactory } from '../commandContext/prepareForLongRunningTasks.js';
-import { replyFactory } from '../commandContext/reply.js';
-import { replyPrivatelyFactory } from '../commandContext/replyPrivately.js';
-import { sendTypingFactory } from '../commandContext/sendTyping.js';
-import { DISCORD_API_MAX_CHOICES } from '../constants/apiLimitations.js';
-import { logUser } from '../helpers/logUser.js';
-import { onEvent } from '../helpers/onEvent.js';
-import { UserMessageError } from '../helpers/UserMessageError.js';
-import { debug, error, warn } from '../logger.js';
+import { allButtons } from '../buttons/index.ts';
+import { allCommands } from '../commands/index.ts';
+import { followUpFactory } from '../commandContext/followUp.ts';
+import { prepareForLongRunningTasksFactory } from '../commandContext/prepareForLongRunningTasks.ts';
+import { replyFactory } from '../commandContext/reply.ts';
+import { replyPrivatelyFactory } from '../commandContext/replyPrivately.ts';
+import { sendTypingFactory } from '../commandContext/sendTyping.ts';
+import { DISCORD_API_MAX_CHOICES } from '../constants/apiLimitations.ts';
+import { logUser } from '../helpers/logUser.ts';
+import { onEvent } from '../helpers/onEvent.ts';
+import { UserMessageError } from '../helpers/UserMessageError.ts';
+import { debug, error, warn } from '../logger.ts';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -267,7 +267,7 @@ export async function sendErrorMessage(
 ): Promise<void> {
 	const errorMessage = error_ instanceof Error ? error_.message : JSON.stringify(error_);
 	// for privacy, strip out any mention of the internal directory
-	const privateDir = __dirname.slice(0, __dirname.lastIndexOf('dist'));
+	const privateDir = __dirname.slice(0, __dirname.lastIndexOf('src'));
 	const safeErrorMessage = errorMessage.replace(privateDir, '...');
 
 	const embed = new EmbedBuilder().setTitle('Error');

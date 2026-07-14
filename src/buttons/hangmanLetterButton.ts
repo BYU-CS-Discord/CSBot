@@ -1,7 +1,7 @@
 import { ButtonBuilder, ButtonStyle } from 'discord.js';
 
-import { parseEvilHangmanMessage } from '../evilHangman/parseEvilHangmanMessage.js';
-import { UserMessageError } from '../helpers/UserMessageError.js';
+import { parseEvilHangmanMessage } from '../evilHangman/parseEvilHangmanMessage.ts';
+import { UserMessageError } from '../helpers/UserMessageError.ts';
 
 export type Letter =
 	| 'a'
@@ -36,7 +36,7 @@ export function hangmanLetterButton(letter: Letter): Button {
 	return {
 		customId,
 		async execute({ interaction, message }): Promise<void> {
-			const { buildEvilHangmanMessage } = await import('../evilHangman/evilHangmanMessage.js');
+			const { buildEvilHangmanMessage } = await import('../evilHangman/evilHangmanMessage.ts');
 			const game = parseEvilHangmanMessage(message);
 
 			const guessErrorMessage = game.checkGuess(letter);

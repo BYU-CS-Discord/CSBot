@@ -132,7 +132,7 @@ If you've read this far, and don't plan to run or develop on the bot yourself, o
 
 ### Prerequisites
 
-This project requires [NodeJS](https://nodejs.org/) (version 22.12.0 or later) and [NPM](https://npmjs.org/). To make sure you have them available on your machine, try running the following command:
+This project requires [NodeJS](https://nodejs.org/) and [NPM](https://npmjs.org/). To make sure you have them available on your machine, try running the following command:
 
 ```sh
 $ node -v && npm -v
@@ -215,7 +215,7 @@ The docker script will take care of every part of the docker development process
 
 ### Build the bot
 
-Be sure to install dependencies, run a quick lint to generate needed files, compile the source, and deploy commands. Here's a handy command to do all of that:
+Be sure to install dependencies, generate necessary files, initialize the database, and deploy commands. Here's a handy command to do all of that:
 
 ```sh
 $ npm run setup
@@ -270,8 +270,6 @@ If you have added new code, you should write new unit tests to cover all the cod
 For development purposes:
 
 ```sh
-$ node --env-file=.env .
-# or
 $ npm run dev
 ```
 

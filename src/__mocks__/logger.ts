@@ -1,6 +1,6 @@
 import { vi } from 'vitest';
 
-import type * as logger from '../logger.js';
+import type * as logger from '../logger.ts';
 
 /**
  * The mock function serving as the `debug` method of the logger.

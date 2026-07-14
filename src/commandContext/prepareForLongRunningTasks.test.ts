@@ -3,10 +3,10 @@ import { describe, expect, test, vi } from 'vitest';
 import type { RepliableInteraction } from 'discord.js';
 
 // Mock the logger to track output
-vi.mock('../logger.js');
-import { error as mockLoggerError } from '../logger.js';
+vi.mock('../logger.ts');
+import { error as mockLoggerError } from '../logger.ts';
 
-import { prepareForLongRunningTasksFactory as factory } from './prepareForLongRunningTasks.js';
+import { prepareForLongRunningTasksFactory as factory } from './prepareForLongRunningTasks.ts';
 
 describe('prepareForLongRunningTasks', () => {
 	const mockInteractionDeferReply = vi.fn<RepliableInteraction['deferReply']>();

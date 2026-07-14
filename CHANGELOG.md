@@ -12,13 +12,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update dependencies
 - Modernize TypeScript and ESLint configurations
 - Refactor GitHub workflows
-- **Breaking:** set minimum Node version to 22.18.0
+- **Breaking:** set minimum Node version to `^22.18.0 || >=24.0.0`
 - **Breaking:** upgrade to Node 24
-- Replace `nodemon` with `node --watch` for the `npm run dev` script
 - Use `clientReady` event instead of `ready` to fix deprecation warning
 - Use `Events` enum for event handler names
-- Replace `tsx` with native Node for `release.ts` script
-- Replace `jiti` with native Node for loading `eslint.config.ts`
+- Replace `nodemon` with `node --watch` for the `npm run dev` script
+- Replace `tsx` with native Node.js for `release.ts` script
+- Replace `jiti` with native Node.js for loading `eslint.config.ts`
+- Replace build step with native Node.js for running the bot
 
 ### Removed
 

@@ -15,19 +15,20 @@ import dectalk from 'dectalk-tts';
 import { writeFileSync, createReadStream } from 'node:fs';
 import { fileSync } from 'tmp';
 
-import { info } from '../logger.js';
+import { info } from '../logger.ts';
 
-export enum Speaker {
-	Paul = 'PAUL',
-	Betty = 'BETTY',
-	Harry = 'HARRY',
-	Frank = 'FRANK',
-	Dennis = 'DENNIS',
-	Kit = 'KIT',
-	Ursula = 'URSULA',
-	Rita = 'RITA',
-	Wendy = 'WENDY',
-}
+const SPEAKERS = {
+	Paul: 'PAUL',
+	Betty: 'BETTY',
+	Harry: 'HARRY',
+	Frank: 'FRANK',
+	Dennis: 'DENNIS',
+	Kit: 'KIT',
+	Ursula: 'URSULA',
+	Rita: 'RITA',
+	Wendy: 'WENDY',
+} as const;
+export type Speaker = (typeof SPEAKERS)[keyof typeof SPEAKERS];
 
 const builder = new SlashCommandBuilder()
 	.setName('talk')
@@ -37,9 +38,7 @@ const builder = new SlashCommandBuilder()
 	)
 	.addStringOption(option => {
 		option.setRequired(false).setName('speaker').setDescription('Whose voice to use');
-		for (const name of Object.keys(Speaker)) {
-			const value = (Speaker as Record<string, string>)[name];
-			if (value === undefined) continue;
+		for (const [name, value] of Object.entries(SPEAKERS)) {
 			option = option.addChoices({ name, value });
 		}
 		return option;

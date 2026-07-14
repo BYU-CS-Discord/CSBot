@@ -1,4 +1,5 @@
 {
+	"exclude": ["**/*.test.*"], // FIXME Test files are riddled with type errors
 	"compilerOptions": {
 		// "exactOptionalPropertyTypes": true, // Correct but annoying
 		"noFallthroughCasesInSwitch": true,
@@ -9,8 +10,12 @@
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
 
+		"allowImportingTsExtensions": true,
 		"module": "nodenext",
 
+		"noEmit": true,
+
+		"erasableSyntaxOnly": true,
 		"verbatimModuleSyntax": true,
 	}
 }

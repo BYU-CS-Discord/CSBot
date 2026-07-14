@@ -1,5 +1,5 @@
-import type { Letter } from '../buttons/hangmanLetterButton.js';
-import { hangmanLetterButton } from '../buttons/hangmanLetterButton.js';
+import type { Letter } from '../buttons/hangmanLetterButton.ts';
+import { hangmanLetterButton } from '../buttons/hangmanLetterButton.ts';
 
 const alphabet: ReadonlyArray<Letter> = Array.from({ length: 26 })
 	.fill(null)
