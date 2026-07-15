@@ -4,8 +4,8 @@
 
 This is a collaborative project meant to add comedy and utility to the denizens of the BYU CS Discord
 server. We have certain strict technical restrictions in place to keep our `main` branch and release
-tags to help maintain accountability, but most aspects of the development process here requires work on
-the part of the contributor.
+tags safe, and to help maintain accountability, but most aspects of the development process here
+requires work on the part of the contributor.
 
 ## Issues
 
