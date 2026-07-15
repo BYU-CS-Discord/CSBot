@@ -71,6 +71,25 @@ jobs:
       - name: Type check
         run: npm run type-check
 
+  try-docker:
+    name: Test Docker build
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read # Required for actions/checkout
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Build image
+        uses: docker/build-push-action@bcafcacb16a39f128d818304e6c9c0c18556b85f # v7.1.0
+        with:
+          context: .
+          file: ./Dockerfile
+          push: false
+
   test:
     name: Test
 
