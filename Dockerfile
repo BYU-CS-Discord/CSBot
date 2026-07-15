@@ -11,7 +11,7 @@ FROM node:24-slim AS runner
 
 ENV NODE_ENV=production
 
-RUN apt-get install -y openssl
+RUN apt-get update && apt-get install -y openssl
 
 WORKDIR /app
 
