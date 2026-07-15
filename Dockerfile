@@ -15,7 +15,7 @@ RUN apt-get install -y openssl
 
 WORKDIR /app
 
-COPY --exclude=**/*.test.* --exclude=**/__mocks__/** src ./src/
+COPY src ./src/
 COPY --from=builder /app/src/constants/version.ts ./src/constants/
 COPY res ./res/
 COPY package*.json ./
