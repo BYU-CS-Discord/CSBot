@@ -2,6 +2,11 @@
 
 # Contributing
 
+This is a collaborative project meant to add comedy and utility to the denizens of the BYU CS Discord
+server. We have certain strict technical restrictions in place to keep our `main` branch and release
+tags safe, and to help maintain accountability, but most aspects of the development process here
+requires work on the part of the contributor.
+
 ## Issues
 
 [Issues](https://github.com/BYU-CS-Discord/CSBot/issues/new/choose) are very valuable to this project.
@@ -12,6 +17,17 @@
   experience
 
 Thank you for creating them.
+
+### AI-generated issues
+
+Please write your own issues yourself, in whatever language you feel most comfortable writing in. Please
+do not use a text generator to fill your submission with plausible-sounding text. If you have difficulty
+explaining your problem or feature request, try explaining it out loud to an imaginary friend or a small
+rubber ducky before putting it into writing.
+
+This is a collaborative project. If you have a question you wish to ask ChatGPT or the like, consider
+asking a maintainer in [our Discord server](https://discord.gg/CMhcP99p93) instead. We'll be happy to
+help you out to the best of our ability!
 
 ## Pull Requests
 
@@ -45,7 +61,7 @@ the action you have taken to solve it.
   [Grammarly](https://www.grammarly.com) or [Hemingway
   App](https://hemingwayapp.com)
 
-### Does it move this repository closer to my vision for the project?
+### Does it move this repository closer to our vision for the project?
 
 The aim of this project is:
 
@@ -56,3 +72,12 @@ The aim of this project is:
 ### Does it follow the contributor covenant?
 
 Please follow our [Code of Conduct](/CODE_OF_CONDUCT.md) in all communications and contributions.
+
+### AI-generated code
+
+Please write your own code. This project primarily serves a school-related Discord server, and as
+such, learning to write your own instructions to the computer is a valuable skill to develop.
+
+Please explain your own code. If you cannot do so yourself, without the aid of a text generator,
+your code is less likely to be reviewed, and even less likely to merge in. If you have questions
+about how to get started, ask us in our Discord server.
