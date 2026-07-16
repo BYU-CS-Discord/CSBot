@@ -54,7 +54,7 @@
 	},
 	"devDependencies": {
 		"@stylistic/eslint-plugin": "5.10.0",
-		"@types/node": "24.10.9",
+		"@types/node": "26.1.1",
 		"@types/semver": "7.7.1",
 		"@types/tmp": "0.2.6",
 		"@vitest/coverage-istanbul": "4.1.10",
