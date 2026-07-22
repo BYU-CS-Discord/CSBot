@@ -73,7 +73,7 @@
 		"prisma": "6.9.0",
 		"semver": "7.8.5",
 		"typescript": "6.0.3",
-		"typescript-eslint": "8.64.0",
+		"typescript-eslint": "8.65.0",
 		"vitest": "4.1.10",
 		"vitest-mock-extended": "5.0.0"
 	},
