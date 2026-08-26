@@ -57,7 +57,7 @@
 		"@types/node": "24.13.3",
 		"@types/semver": "7.7.1",
 		"@types/tmp": "0.2.6",
-		"@vitest/coverage-istanbul": "4.1.10",
+		"@vitest/coverage-istanbul": "4.1.11",
 		"eslint": "9.39.2",
 		"eslint-config-prettier": "10.1.8",
 		"eslint-import-resolver-typescript": "4.4.5",
@@ -74,7 +74,7 @@
 		"semver": "7.8.5",
 		"typescript": "6.0.3",
 		"typescript-eslint": "8.64.0",
-		"vitest": "4.1.10",
+		"vitest": "4.1.11",
 		"vitest-mock-extended": "5.0.0"
 	},
 	"engines": {
