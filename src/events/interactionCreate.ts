@@ -209,7 +209,7 @@ async function handleAutocompleteInteraction(interaction: AutocompleteInteractio
 		}
 
 		// Command must be a chat-input command
-		if (command.type !== ApplicationCommandType.ChatInput && command.type !== undefined) {
+		if (command.type !== ApplicationCommandType.ChatInput) {
 			warn(
 				`Received an autocomplete request for command '${command.info.name}'. This command must be of type 'ChatInput', but was found instead to be of a different type (${command.type}).`
 			);

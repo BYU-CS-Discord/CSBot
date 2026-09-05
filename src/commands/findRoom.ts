@@ -1,5 +1,5 @@
 import { array, boolean, string, tuple, type as schema } from 'superstruct';
-import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { ApplicationCommandType, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { URL } from 'node:url';
 
 import { fetchJson } from '../helpers/fetch.ts';
@@ -213,6 +213,7 @@ const builder = new SlashCommandBuilder()
 
 export const findRoom: GlobalCommand = {
 	info: builder,
+	type: ApplicationCommandType.ChatInput,
 	requiresGuild: false,
 	async execute({ replyPrivately, options }): Promise<void> {
 		const input_bldg = options.getString('building');
