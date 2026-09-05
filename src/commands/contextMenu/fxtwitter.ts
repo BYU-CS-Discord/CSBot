@@ -10,7 +10,9 @@ const x = 'x.com';
 const xPermutations = new Set([x, `www.${x}`]);
 
 export const fxtwitter: MessageContextMenuCommand = {
-	info: new ContextMenuCommandBuilder().setName('Fix Twitter/X Links'),
+	info: new ContextMenuCommandBuilder()
+		.setName('Fix Twitter/X Links')
+		.setType(ApplicationCommandType.Message),
 	type: ApplicationCommandType.Message,
 	requiresGuild: false,
 	async execute({ targetMessage, replyPrivately }) {

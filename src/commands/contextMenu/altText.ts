@@ -4,7 +4,9 @@ import { ApplicationCommandType, ContextMenuCommandBuilder } from 'discord.js';
 import { isNonEmptyArray } from '../../helpers/guards/isNonEmptyArray.ts';
 
 export const altText: MessageContextMenuCommand = {
-	info: new ContextMenuCommandBuilder().setName('Get Alt Text'),
+	info: new ContextMenuCommandBuilder()
+		.setName('Get Alt Text')
+		.setType(ApplicationCommandType.Message),
 	type: ApplicationCommandType.Message,
 	requiresGuild: false,
 	async execute({ targetMessage, replyPrivately }) {
