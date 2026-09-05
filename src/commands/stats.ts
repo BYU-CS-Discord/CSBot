@@ -1,5 +1,5 @@
 import type { ChatInputCommandInteraction } from 'discord.js';
-import { EmbedBuilder, SlashCommandBuilder, userMention } from 'discord.js';
+import { ApplicationCommandType, EmbedBuilder, SlashCommandBuilder, userMention } from 'discord.js';
 
 import { db } from '../database/index.ts';
 import { sanitize } from '../helpers/sanitize.ts';
@@ -73,8 +73,8 @@ const builder = new SlashCommandBuilder()
 
 export const stats: GuildedCommand = {
 	info: builder,
+	type: ApplicationCommandType.ChatInput,
 	requiresGuild: true,
-
 	async execute({ reply, replyPrivately, interaction, guild }): Promise<void> {
 		const subcommand = interaction.options.getSubcommand();
 

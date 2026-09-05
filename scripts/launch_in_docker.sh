@@ -13,8 +13,5 @@ else
 	npm run db:init
 fi
 
-# Deploy commands
-node . --deploy
-
 # Launch
 node .

@@ -2,7 +2,9 @@ import { ApplicationCommandType, ContextMenuCommandBuilder } from 'discord.js';
 
 import { speak } from '../talk.ts';
 
-const builder = new ContextMenuCommandBuilder().setName('Talk');
+const builder = new ContextMenuCommandBuilder()
+	.setName('Talk')
+	.setType(ApplicationCommandType.Message);
 
 export const talk: MessageContextMenuCommand = {
 	info: builder,
