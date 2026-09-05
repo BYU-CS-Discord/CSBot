@@ -2,7 +2,7 @@ import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
 	test: {
-		mockReset: true,
+		clearMocks: true, // Can be removed in vitest v5
 		typecheck: {
 			checker: 'tsc',
 			tsconfig: './tsconfig.json',
