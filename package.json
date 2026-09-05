@@ -21,8 +21,6 @@
 	"type": "module",
 	"main": "src/main.ts",
 	"scripts": {
-		"commands:deploy": "node --env-file=.env . --deploy # TODO: Replace these with automatic command deployment",
-		"commands:revoke": "node --env-file=.env . --revoke",
 		"db:generate": "./node_modules/.bin/prisma generate --no-hints --schema ./prisma/schema.prisma",
 		"db:init": "npm run db:migrate:initial || ./node_modules/.bin/prisma db push && npm run db:migrate:initial",
 		"db:migrate:initial": "./node_modules/.bin/prisma migrate resolve --applied 20240905171155_initial_state",
@@ -38,7 +36,7 @@
 		"lint": "./node_modules/.bin/eslint --flag unstable_native_nodejs_ts_config",
 		"lint:fix": "npm run lint -- --fix",
 		"release": "node ./scripts/release.ts",
-		"setup": "npm ci && npm run export-version && npm run db:migrate && npm run db:generate && npm run commands:deploy",
+		"setup": "npm ci && npm run export-version && npm run db:migrate && npm run db:generate",
 		"start": "node --env-file=.env .",
 		"test": "./node_modules/.bin/vitest",
 		"type-check": "./node_modules/.bin/tsc --noEmit"
