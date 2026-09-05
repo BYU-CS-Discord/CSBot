@@ -75,7 +75,7 @@ async function handleCommandInteraction(
 		// Fixes weird hangs when the command list is out of date:
 		await sendErrorMessage(
 			interaction,
-			`Unknown command name '${interaction.commandName}'. Contact the bot operator and make sure they deployed the latest set of commands.`
+			`Unknown command name '${interaction.commandName}'. Contact the bot operator and make sure they registered the latest set of commands.`
 		);
 		return;
 	}
@@ -316,7 +316,7 @@ async function handleButtonInteraction(
 		warn(`Received request to execute unknown button with id '${interaction.customId}'`);
 		await sendErrorMessage(
 			interaction,
-			`Unknown button '${interaction.customId}'. Contact the bot operator and make sure they deployed the latest set of commands.`
+			`Unknown button '${interaction.customId}'. Contact the bot operator and make sure they registered the latest set of commands.`
 		);
 		return;
 	}
