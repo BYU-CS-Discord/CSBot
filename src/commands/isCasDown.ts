@@ -1,4 +1,4 @@
-import { EmbedBuilder, SlashCommandBuilder, Colors } from 'discord.js';
+import { EmbedBuilder, SlashCommandBuilder, Colors, ApplicationCommandType } from 'discord.js';
 
 const statusURI = 'https://cas.byu.edu/cas/serviceValidate';
 
@@ -18,6 +18,7 @@ const builder = new SlashCommandBuilder()
 
 export const isCasDown: GlobalCommand = {
 	info: builder,
+	type: ApplicationCommandType.ChatInput,
 	requiresGuild: false,
 	async execute({ reply }) {
 		const res = await fetch(statusURI);

@@ -31,6 +31,7 @@ const mockGlobalCommand: ChatInputCommand = {
 	info: new SlashCommandBuilder() //
 		.setName('global-test')
 		.setDescription('lolcat'),
+	type: ApplicationCommandType.ChatInput,
 	requiresGuild: false,
 	execute: mockGlobalExecute,
 };
@@ -41,6 +42,7 @@ const mockGlobalAutocompleteCommand: ChatInputCommand = {
 	info: new SlashCommandBuilder() //
 		.setName('global-autocomplete-test')
 		.setDescription('lolcat'),
+	type: ApplicationCommandType.ChatInput,
 	requiresGuild: false,
 	execute: mockGlobalExecute,
 	autocomplete: mockGlobalAutocomplete,
@@ -99,6 +101,7 @@ const mockGuildedCommand: ChatInputCommand = {
 	info: new SlashCommandBuilder() //
 		.setName('guilded-test')
 		.setDescription('lolcat'),
+	type: ApplicationCommandType.ChatInput,
 	requiresGuild: true,
 	execute: mockGuildedExecute,
 };
@@ -108,6 +111,7 @@ const mockErrorGlobalCommand: Command = {
 	info: new SlashCommandBuilder() //
 		.setName('global-error-test')
 		.setDescription('whoops'),
+	type: ApplicationCommandType.ChatInput,
 	requiresGuild: false,
 	execute: () => {
 		throw new Error('Command error, this is a test');
@@ -119,6 +123,7 @@ const mockErrorGuildedCommand: Command = {
 	info: new SlashCommandBuilder() //
 		.setName('guilded-error-test')
 		.setDescription('whoops'),
+	type: ApplicationCommandType.ChatInput,
 	requiresGuild: true,
 	execute: () => {
 		throw new Error('Command error, this is a test');
@@ -131,6 +136,7 @@ const mockUserMessageErrorGlobalCommand: Command = {
 	info: new SlashCommandBuilder() //
 		.setName('global-error-test')
 		.setDescription('whoops'),
+	type: ApplicationCommandType.ChatInput,
 	requiresGuild: false,
 	execute: () => {
 		throw new UserMessageError(userErrorMessage);

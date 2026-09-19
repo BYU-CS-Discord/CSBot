@@ -1,4 +1,4 @@
-import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { ApplicationCommandType, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 
 import { appVersion, repo } from '../constants/meta.ts';
 
@@ -8,6 +8,7 @@ const builder = new SlashCommandBuilder()
 
 export const help: GlobalCommand = {
 	info: builder,
+	type: ApplicationCommandType.ChatInput,
 	requiresGuild: false,
 	async execute({ reply }) {
 		const embed = new EmbedBuilder()

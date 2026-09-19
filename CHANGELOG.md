@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add automatic command registration
+
 ### Changed
 
 - Update dependencies
@@ -24,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 - **Breaking:** remove `pm2` from the `npm start` script
+- Remove `commands:deploy` and `commands:revoke` scripts
 
 ### Fixed
 

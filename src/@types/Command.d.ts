@@ -19,7 +19,7 @@ declare global {
 			| Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'>;
 
 		/** The type of the command. */
-		type?: ApplicationCommandType.ChatInput;
+		type: ApplicationCommandType.ChatInput;
 
 		/**
 		 * A handler for autocomplete requests.

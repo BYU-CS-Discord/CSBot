@@ -2,11 +2,8 @@ import { Events } from 'discord.js';
 import { Worker } from 'node:worker_threads';
 
 import { appVersion } from '../constants/meta.ts';
-import { deployCommands } from '../helpers/actions/deployCommands.ts';
-import { revokeCommands } from '../helpers/actions/revokeCommands.ts';
 import { onEvent } from '../helpers/onEvent.ts';
-import { parseArgs } from '../helpers/parseArgs.ts';
-import { verifyCommandDeployments } from '../helpers/actions/verifyCommandDeployments.ts';
+import { registerCommands } from '../helpers/actions/registerCommands.ts';
 import { info } from '../logger.ts';
 
 /**
@@ -17,25 +14,7 @@ export const clientReady = onEvent(Events.ClientReady, {
 	async execute(client) {
 		info(`Starting ${client.user.username} v${appVersion}...`);
 
-		const args = parseArgs();
-
-		// If we're only here to deploy commands, do that and then exit
-		if (args.deploy) {
-			await deployCommands(client);
-			await client.destroy();
-			return;
-		}
-
-		// If we're only here to revoke commands, do that and then exit
-		if (args.revoke) {
-			await revokeCommands(client);
-			await client.destroy();
-			return;
-		}
-
-		// Sanity check for commands
-		info('Verifying command deployments...');
-		await verifyCommandDeployments(client);
+		await registerCommands(client);
 
 		// Start uptime ping
 		const UPTIME_URL = process.env['UPTIME_URL'];

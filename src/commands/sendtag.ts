@@ -1,4 +1,4 @@
-import { SlashCommandBuilder } from 'discord.js';
+import { ApplicationCommandType, SlashCommandBuilder } from 'discord.js';
 
 const NameOption = 'name';
 
@@ -15,6 +15,7 @@ const info = new SlashCommandBuilder()
 
 export const sendtag: GuildedCommand = {
 	info,
+	type: ApplicationCommandType.ChatInput,
 	requiresGuild: true,
 	autocomplete(interaction) {
 		// Get the user-provided intermediate value

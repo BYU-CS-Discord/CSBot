@@ -1,4 +1,5 @@
 import {
+	ApplicationCommandType,
 	Guild,
 	GuildEmoji,
 	SlashCommandBuilder,
@@ -44,6 +45,7 @@ interface ReactboardReactInfo {
 
 export const setReactboard: GuildedCommand = {
 	info: builder,
+	type: ApplicationCommandType.ChatInput,
 	requiresGuild: true,
 	async execute({ guild, options, replyPrivately }) {
 		const channel = options.getChannel(channelOption, true);

@@ -75,7 +75,7 @@ async function handleCommandInteraction(
 		// Fixes weird hangs when the command list is out of date:
 		await sendErrorMessage(
 			interaction,
-			`Unknown command name '${interaction.commandName}'. Contact the bot operator and make sure they deployed the latest set of commands.`
+			`Unknown command name '${interaction.commandName}'. Contact the bot operator and make sure they registered the latest set of commands.`
 		);
 		return;
 	}
@@ -209,7 +209,7 @@ async function handleAutocompleteInteraction(interaction: AutocompleteInteractio
 		}
 
 		// Command must be a chat-input command
-		if (command.type !== ApplicationCommandType.ChatInput && command.type !== undefined) {
+		if (command.type !== ApplicationCommandType.ChatInput) {
 			warn(
 				`Received an autocomplete request for command '${command.info.name}'. This command must be of type 'ChatInput', but was found instead to be of a different type (${command.type}).`
 			);
@@ -316,7 +316,7 @@ async function handleButtonInteraction(
 		warn(`Received request to execute unknown button with id '${interaction.customId}'`);
 		await sendErrorMessage(
 			interaction,
-			`Unknown button '${interaction.customId}'. Contact the bot operator and make sure they deployed the latest set of commands.`
+			`Unknown button '${interaction.customId}'. Contact the bot operator and make sure they registered the latest set of commands.`
 		);
 		return;
 	}

@@ -215,7 +215,7 @@ The docker script will take care of every part of the docker development process
 
 ### Build the bot
 
-Be sure to install dependencies, generate necessary files, initialize the database, and deploy commands. Here's a handy command to do all of that:
+Be sure to install dependencies, generate necessary files, and initialize the database. Here's a handy command to do all of that:
 
 ```sh
 $ npm run setup
@@ -243,16 +243,6 @@ Migrations can be run on the database with the following command:
 
 ```sh
 $ npm run db:migrate
-```
-
-### Register Slash Commands
-
-If you want support for Discord [Slash Commands](https://support.discord.com/hc/en-us/articles/1500000368501-Slash-Commands-FAQ), you'll need to deploy the commands directly. To avoid rate limits, use a command-line tool, rather than deploying on startup.
-
-Once you have your bot's account token in the .env file, run the following command to tell Discord about our commands:
-
-```sh
-$ npm run commands:deploy
 ```
 
 ### Test the bot

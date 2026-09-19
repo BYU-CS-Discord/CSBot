@@ -1,5 +1,10 @@
 import type { AttachmentPayload } from 'discord.js';
-import { SlashCommandBuilder, ChannelType, PermissionFlagsBits } from 'discord.js';
+import {
+	SlashCommandBuilder,
+	ChannelType,
+	PermissionFlagsBits,
+	ApplicationCommandType,
+} from 'discord.js';
 import type { AudioResource } from '@discordjs/voice';
 import {
 	createAudioResource,
@@ -46,6 +51,7 @@ const builder = new SlashCommandBuilder()
 
 export const talk: GlobalCommand = {
 	info: builder,
+	type: ApplicationCommandType.ChatInput,
 	requiresGuild: false,
 	async execute(context) {
 		const options = context.options;

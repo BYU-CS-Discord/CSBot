@@ -1,4 +1,4 @@
-import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { ApplicationCommandType, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 
 import { UserMessageError } from '../helpers/UserMessageError.ts';
 
@@ -21,6 +21,7 @@ const builder = new SlashCommandBuilder()
 
 export const emoji: GlobalCommand = {
 	info: builder,
+	type: ApplicationCommandType.ChatInput,
 	requiresGuild: false,
 	async execute({ reply, client, options }): Promise<void> {
 		const emojiName = options.getString(EmojiName, true);

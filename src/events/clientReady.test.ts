@@ -1,98 +1,44 @@
-import type { Mock } from 'vitest';
-import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+import { afterEach, describe, expect, test, vi } from 'vitest';
+
+import type { Worker } from 'node:worker_threads';
 
 import type { Client } from 'discord.js';
 
-// Mock parseArgs so we can control what the args are
-import type { parseArgs } from '../helpers/parseArgs.ts';
-const mockParseArgs = vi.hoisted(() => vi.fn<typeof parseArgs>());
-vi.mock('../helpers/parseArgs', () => ({ parseArgs: mockParseArgs }));
+import { registerCommands } from '../helpers/actions/registerCommands.ts';
+import { clientReady } from './clientReady.ts';
 
-// Mock deployCommands so we can track it
-vi.mock('../helpers/actions/deployCommands.ts');
-import { deployCommands } from '../helpers/actions/deployCommands.ts';
-const mockDeployCommands = deployCommands as Mock<typeof deployCommands>;
+vi.mock(import('../helpers/actions/registerCommands.ts'));
 
-// Mock revokeCommands so we can track it
-vi.mock('../helpers/actions/revokeCommands.ts');
-import { revokeCommands } from '../helpers/actions/revokeCommands.ts';
-const mockRevokeCommands = revokeCommands as Mock<typeof revokeCommands>;
-
-// Mock verifyCommandDeployments so we can track it
-vi.mock('../helpers/actions/verifyCommandDeployments.ts');
-import { verifyCommandDeployments } from '../helpers/actions/verifyCommandDeployments.ts';
-const mockVerifyCommandDeployments = verifyCommandDeployments as Mock<
-	typeof verifyCommandDeployments
->;
-
-// Mock the logger so nothing is printed
 vi.mock('../logger.ts');
 
-// Import the code to test
-import { clientReady } from './clientReady.ts';
+const mockWorkerConstructor = vi.fn();
+vi.mock(import('node:worker_threads'), () => ({
+	// eslint-disable-next-line @typescript-eslint/no-extraneous-class
+	Worker: class {
+		public constructor() {
+			mockWorkerConstructor();
+		}
+	} as unknown as typeof Worker,
+}));
 
 describe('once(clientReady)', () => {
 	const client = {
-		user: { username: 'Ze Kaiser Jr.' },
-		destroy() {
-			// nop
-		},
+		user: { username: 'mock_user' },
 	} as Client<true>;
 
-	beforeEach(() => {
-		// Default is no deploy, no revoke, no method behavior
-		mockParseArgs.mockReturnValue({
-			deploy: false,
-			revoke: false,
-		});
-	});
-
 	afterEach(() => {
-		vi.restoreAllMocks();
+		vi.unstubAllEnvs();
 	});
 
-	test("doesn't touch commands if the `deploy` and `revoke` flags are not set", async () => {
-		mockParseArgs.mockReturnValue({
-			deploy: false,
-			revoke: false,
-		});
+	test('syncs commands', async () => {
 		await clientReady.execute(client);
-		expect(mockDeployCommands).not.toHaveBeenCalled();
-		expect(mockRevokeCommands).not.toHaveBeenCalled();
+		expect(vi.mocked(registerCommands)).toHaveBeenCalled();
 	});
 
-	test('deploys commands if the `deploy` flag is set', async () => {
-		mockParseArgs.mockReturnValue({
-			deploy: true,
-			revoke: false,
-		});
+	test('starts uptime ping worker if UPTIME_URL is set', async () => {
+		vi.stubEnv('UPTIME_URL', 'https://example.com');
 		await clientReady.execute(client);
-		expect(mockDeployCommands).toHaveBeenCalledWith(client);
-		expect(mockRevokeCommands).not.toHaveBeenCalled();
-	});
-
-	test('revokes commands if the `revoke` flag is set', async () => {
-		mockParseArgs.mockReturnValue({
-			deploy: false,
-			revoke: true,
-		});
-		await clientReady.execute(client);
-		expect(mockDeployCommands).not.toHaveBeenCalled();
-		expect(mockRevokeCommands).toHaveBeenCalledWith(client);
-	});
-
-	test('deploys commands if both the `revoke` and `deploy` flags are set', async () => {
-		mockParseArgs.mockReturnValue({
-			deploy: true,
-			revoke: true,
-		});
-		await clientReady.execute(client);
-		expect(mockDeployCommands).toHaveBeenCalledWith(client);
-		expect(mockRevokeCommands).not.toHaveBeenCalled();
-	});
-
-	test('verifies command deployments', async () => {
-		await clientReady.execute(client);
-		expect(mockVerifyCommandDeployments).toHaveBeenCalledWith(client);
+		expect(mockWorkerConstructor).toHaveBeenCalled();
+		mockWorkerConstructor.mockClear();
 	});
 });

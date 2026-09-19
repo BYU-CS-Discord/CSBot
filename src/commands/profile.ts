@@ -1,5 +1,11 @@
 import type { User } from 'discord.js';
-import { DiscordAPIError, EmbedBuilder, SlashCommandBuilder, userMention } from 'discord.js';
+import {
+	ApplicationCommandType,
+	DiscordAPIError,
+	EmbedBuilder,
+	SlashCommandBuilder,
+	userMention,
+} from 'discord.js';
 
 import { DiscordErrorCode } from '../helpers/DiscordErrorCode.ts';
 
@@ -14,6 +20,7 @@ const builder = new SlashCommandBuilder()
 
 export const profile: GlobalCommand = {
 	info: builder,
+	type: ApplicationCommandType.ChatInput,
 	requiresGuild: false,
 	async execute({ client, user, options, reply, guild, source }) {
 		const otherUser = options.getUser(UserParamName);

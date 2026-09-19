@@ -1,4 +1,4 @@
-import { SlashCommandBuilder } from 'discord.js';
+import { ApplicationCommandType, SlashCommandBuilder } from 'discord.js';
 
 import { EvilHangmanGame } from '../evilHangman/evilHangmanGame.ts';
 import { buildEvilHangmanMessage } from '../evilHangman/evilHangmanMessage.ts';
@@ -25,6 +25,7 @@ const builder = new SlashCommandBuilder()
 
 export const toTheGallows: GlobalCommand = {
 	info: builder,
+	type: ApplicationCommandType.ChatInput,
 	requiresGuild: false,
 	async execute({ reply, options }): Promise<void> {
 		const wordLength = options.getInteger(LengthOption);

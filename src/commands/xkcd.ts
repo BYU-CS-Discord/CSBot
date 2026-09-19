@@ -1,4 +1,4 @@
-import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { ApplicationCommandType, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { URL } from 'node:url';
 import { number, string, type as schema } from 'superstruct';
 
@@ -75,10 +75,9 @@ const builder = new SlashCommandBuilder()
 	);
 
 export const xkcd: GlobalCommand = {
-	requiresGuild: false,
 	info: builder,
-
-	// entry point for command execution
+	type: ApplicationCommandType.ChatInput,
+	requiresGuild: false,
 	async execute({ options, reply, sendTyping }) {
 		let comic = '';
 		// not making this nullable, instead filling with dummy data to be later filled.
