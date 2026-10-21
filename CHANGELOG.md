@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Nothing yet
+
+## [0.16.0] - 2026-10-21
+
 ### Added
 
 - Add automatic command registration
@@ -331,7 +335,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Development Environment for needed dependencies.
 
-[Unreleased]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.15.0...HEAD
+[Unreleased]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.16.0...HEAD
+[0.16.0]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.15.0...v0.16.0
 [0.15.0]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.14.3...v0.15.0
 [0.14.3]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.14.2...v0.14.3
 [0.14.2]: https://github.com/BYU-CS-Discord/CSBot/compare/v0.14.1...v0.14.2
