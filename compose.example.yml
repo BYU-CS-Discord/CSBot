@@ -15,6 +15,12 @@ services:
     # image: ghcr.io/byu-cs-discord/csbot:latest
     container_name: csbot
     restart: unless-stopped
+    # use the same user ID as the owner of the `db` directory:
+    user: 1000:1000
+    cap_drop:
+      - ALL
+    security_opt:
+      - "no-new-privileges:true"
     environment:
       # Create a .env file and set DISCORD_TOKEN there:
       DISCORD_TOKEN: ${DISCORD_TOKEN}
