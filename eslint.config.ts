@@ -1,5 +1,5 @@
 // FIXME Need the `unstable_native_nodejs_ts_config` flag to use `eslint.config.ts`
-// https://github.com/eslint/eslint/issues/19985
+// https://github.com/eslint/eslint/issues/19985, https://github.com/eslint/eslint/issues/20903
 
 import { defineConfig, globalIgnores } from 'eslint/config';
 import js from '@eslint/js';
