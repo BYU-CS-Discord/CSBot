@@ -9,5 +9,11 @@
 	"editor.formatOnSave": true,
 	"yaml.schemas": {
 		"https://json.schemastore.org/github-workflow.json": "**/workflows/*.yml"
-	}
+	},
+	"eslint.options": {
+		"flags": [
+			// FIXME https://github.com/eslint/eslint/issues/19985, https://github.com/eslint/eslint/issues/20903
+			"unstable_native_nodejs_ts_config",
+		],
+	},
 }
